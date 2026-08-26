@@ -17,7 +17,7 @@ El proyecto compila y corre, y el esquema de la base está versionado.
 |---|---|---|
 | 7 | Stack, testing, deploy | ✅ scaffold |
 | 3 | Modelo de datos + RLS | ✅ migraciones |
-| 4 | Motor de packing | ⬜ pendiente |
+| 4 | Motor de packing | ✅ motor + tests |
 | 5 | Motor de presupuesto | ⬜ pendiente |
 | 6 | Flujo de usuario y persistencia | ⬜ pendiente |
 
@@ -44,6 +44,7 @@ nueva.
 | `20260826120100_session_tables.sql` | `trips`, `trip_packing_items`, `trip_budget_items` |
 | `20260826120200_rls_policies.sql` | RLS de los dos grupos de tablas |
 | `20260826120300_seed_climate_thresholds.sql` | Buckets de clima iniciales |
+| `20260826140000_precip_probability_scale.sql` | `precip_probability` acotada a 0-100 |
 
 Aplicarlas:
 
@@ -67,9 +68,38 @@ documentado arriba de todo en `20260826120200_rls_policies.sql`.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
 ```
 
-18 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
+21 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
 `updated_at` y el borrado en cascada. Corre dentro de una transacción y termina
 con `rollback`, así que se puede correr contra una base con datos.
+
+## Los motores
+
+La lógica de negocio vive en funciones puras que no saben que Supabase existe:
+reciben los datos ya leídos y devuelven el resultado. Persistir es trabajo de la
+Server Action que las llama. Es lo que las hace testeables sin base de datos, y
+es donde el spec pone el foco de testing (sección 7).
+
+### Motor de packing (`src/lib/packing`)
+
+```ts
+import { generatePackingList } from "@/lib/packing";
+
+const lista = generatePackingList({
+  trip: { startDate: "2026-04-16", endDate: "2026-05-15", tripType: "urbano" },
+  climateProfiles,
+  climateThresholds,
+  catalog,
+});
+```
+
+Determinístico y sin LLM. Resuelve los meses que toca el viaje, mapea cada uno a
+buckets de clima, filtra el catálogo por clima × tipo de viaje y escala las
+cantidades por duración.
+
+Devuelve además `monthsWithoutClimateData`: si a un mes del viaje le falta la
+fila en `climate_profiles`, la lista sale más corta de lo que debería y quien
+llama tiene que poder avisarlo en vez de mostrar una lista incompleta sin
+explicación.
 
 ## Desarrollo
 
@@ -104,6 +134,11 @@ src/
 ├── components/
 │   └── ui/              # componentes de Shadcn
 └── lib/
+    ├── packing/         # motor de packing (sección 4)
+    │   ├── dates.ts     # meses cubiertos y duración, todo en UTC
+    │   ├── climate.ts   # resolución de buckets de clima
+    │   ├── quantity.ts  # escalado de cantidades por duración
+    │   └── engine.ts    # generatePackingList()
     ├── utils.ts         # cn()
     └── utils.test.ts
 ```
