@@ -10,13 +10,13 @@ de dependencias.
 
 ## Estado
 
-Scaffold inicial (sección 7 del spec). El proyecto compila y corre; **todavía
-no hay lógica de negocio**.
+El proyecto compila y corre, y el esquema de la base está versionado.
+**Todavía no hay lógica de negocio.**
 
 | Sección | Qué es | Estado |
 |---|---|---|
 | 7 | Stack, testing, deploy | ✅ scaffold |
-| 3 | Modelo de datos + RLS | ⬜ pendiente |
+| 3 | Modelo de datos + RLS | ✅ migraciones |
 | 4 | Motor de packing | ⬜ pendiente |
 | 5 | Motor de presupuesto | ⬜ pendiente |
 | 6 | Flujo de usuario y persistencia | ⬜ pendiente |
@@ -30,6 +30,46 @@ no hay lógica de negocio**.
   escrituras exclusivamente vía Server Actions que validan `edit_token`
 - **cobe** para el globo interactivo de la landing
 - **Vitest** para los tests de los motores
+
+## Base de datos
+
+Las migraciones son archivos versionados en `supabase/migrations/`, en el
+formato del CLI de Supabase (`<timestamp>_<nombre>.sql`). Se aplican en orden
+alfabético y no se editan una vez aplicadas: los cambios van en una migración
+nueva.
+
+| Migración | Contenido |
+|---|---|
+| `20260826120000_reference_tables.sql` | `destinations`, `climate_profiles`, `climate_thresholds`, `products`, `packing_catalog` |
+| `20260826120100_session_tables.sql` | `trips`, `trip_packing_items`, `trip_budget_items` |
+| `20260826120200_rls_policies.sql` | RLS de los dos grupos de tablas |
+| `20260826120300_seed_climate_thresholds.sql` | Buckets de clima iniciales |
+
+Aplicarlas:
+
+```bash
+npx supabase db push          # contra el proyecto remoto
+npx supabase start            # o levantar Supabase local con Docker
+```
+
+### El modelo de acceso en una línea
+
+Los datos de referencia se leen desde cualquier lado y no se escriben desde el
+cliente. Los datos de sesión no se tocan desde el cliente en absoluto: todo
+pasa por Server Actions que validan el `edit_token` y usan la service role key.
+
+Esto es más restrictivo que lo que pide la sección 3 del spec, y el porqué está
+documentado arriba de todo en `20260826120200_rls_policies.sql`.
+
+### Verificar
+
+```bash
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
+```
+
+18 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
+`updated_at` y el borrado en cascada. Corre dentro de una transacción y termina
+con `rollback`, así que se puede correr contra una base con datos.
 
 ## Desarrollo
 
@@ -52,6 +92,10 @@ npm run build       # build de producción
 ## Estructura
 
 ```
+supabase/
+├── migrations/          # historial versionado del esquema
+└── tests/
+    └── rls_smoke.sql    # verificación de RLS y constraints
 src/
 ├── app/                 # rutas del App Router
 │   ├── layout.tsx
