@@ -320,4 +320,42 @@ exception
     raise notice 'OK  no se puede borrar catálogo en uso';
 end $$;
 
+-- ---------------------------------------------------------------------------
+-- 10. precip_probability respeta la escala 0-100
+--
+-- El check acota el rango, no la escala: 0.6 pasa porque es un 0,6% válido.
+-- Que la columna esté en 0-100 y no en 0-1 lo fija el comment de la columna y
+-- el proceso de carga, no el constraint. Lo que sí se verifica es que no entren
+-- valores fuera de rango.
+-- ---------------------------------------------------------------------------
+
+do $$
+begin
+  insert into climate_profiles (destination_id, month, temp_min, temp_max, precip_probability)
+  values ('11111111-1111-1111-1111-111111111111', 7, 8, 15, 150);
+  raise exception 'FALLO: se aceptó precip_probability = 150';
+exception
+  when check_violation then
+    raise notice 'OK  se rechaza precip_probability fuera de 0-100';
+end $$;
+
+do $$
+begin
+  insert into climate_profiles (destination_id, month, temp_min, temp_max, precip_probability)
+  values ('11111111-1111-1111-1111-111111111111', 8, 8, 15, -1);
+  raise exception 'FALLO: se aceptó precip_probability negativa';
+exception
+  when check_violation then
+    raise notice 'OK  se rechaza precip_probability negativa';
+end $$;
+
+do $$
+begin
+  insert into climate_profiles (destination_id, month, temp_min, temp_max, precip_probability)
+  values ('11111111-1111-1111-1111-111111111111',  9, 8, 15,   0),
+         ('11111111-1111-1111-1111-111111111111', 10, 8, 15,  60),
+         ('11111111-1111-1111-1111-111111111111', 11, 8, 15, 100);
+  raise notice 'OK  se aceptan 0, 60 y 100';
+end $$;
+
 rollback;
