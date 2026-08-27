@@ -4,6 +4,13 @@ export type { BudgetLineItem, BudgetTotals } from "./engine";
 export { conversionRate, hasAllQuotes, selectQuote } from "./quotes";
 
 export {
+  DOLARAPI_URL,
+  fetchDolarApiQuotes,
+  parseDolarApiQuotes,
+} from "./dolarapi";
+export type { FetchQuotesOptions } from "./dolarapi";
+
+export {
   DEFAULT_STALE_AFTER_DAYS,
   resolvePriceFreshness,
 } from "./freshness";
