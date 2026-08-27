@@ -1,38 +1,55 @@
 import { Luggage, Wallet } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { GlobeHero } from "@/components/landing/globe-hero";
+import { RecentTrips } from "@/components/landing/recent-trips";
 
 /**
- * Placeholder de scaffold. La landing real (globo interactivo + slide-over de
- * fechas y tipo de viaje) se implementa en la sección 6 del spec.
+ * Landing (spec, sección 6A).
+ *
+ * Server Component sin formulario tradicional: el globo es la entrada. Todo lo
+ * interactivo vive en GlobeHero y RecentTrips.
  */
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center justify-center p-8">
-      <div className="flex w-full max-w-md flex-col gap-6 rounded-xl border bg-card p-8 text-card-foreground">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Kit de viaje
+    <main className="flex flex-1 flex-col items-center gap-12 px-6 py-12 md:py-20">
+      <div className="flex w-full max-w-5xl flex-col items-center gap-10 md:flex-row md:justify-between md:gap-16">
+        <div className="flex max-w-md flex-col gap-5 text-center md:text-left">
+          <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
+            Tu kit de viaje a Buenos Aires
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Equipaje y presupuesto para Buenos Aires, sin registro. Proyecto
-            inicializado — todavía sin lógica de negocio.
+
+          <p className="text-lg text-pretty text-muted-foreground">
+            Qué llevar y cuánto vas a gastar, en la misma pantalla. Elegí las
+            fechas y el tipo de viaje: el resto lo armamos nosotros.
+          </p>
+
+          <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+            <li className="flex items-center justify-center gap-2 md:justify-start">
+              <Luggage className="size-4 shrink-0 text-foreground" />
+              Equipaje según el clima del mes y el tipo de viaje
+            </li>
+            <li className="flex items-center justify-center gap-2 md:justify-start">
+              <Wallet className="size-4 shrink-0 text-foreground" />
+              Presupuesto en pesos, convertido a la cotización que elijas
+            </li>
+          </ul>
+        </div>
+
+        {/*
+          El panel oscuro no es decoración suelta: cobe dibuja el globo con
+          iluminación para fondo oscuro, y sobre el fondo claro de la app el
+          borde de la esfera se pierde.
+        */}
+        <div className="w-full max-w-[460px] rounded-2xl bg-slate-950 p-6 md:p-8">
+          <GlobeHero />
+
+          <p className="mt-2 text-center text-sm text-slate-400">
+            Tocá el marcador para empezar
           </p>
         </div>
-
-        <div className="flex flex-col gap-2 text-sm">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Luggage className="text-foreground" />
-            <span>Motor de equipaje — pendiente (sección 4)</span>
-          </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Wallet className="text-foreground" />
-            <span>Motor de presupuesto — pendiente (sección 5)</span>
-          </div>
-        </div>
-
-        <Button disabled>Empezar un viaje</Button>
       </div>
+
+      <RecentTrips />
     </main>
   );
 }

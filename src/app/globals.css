@@ -81,3 +81,62 @@
     @apply bg-background text-foreground;
   }
 }
+
+/*
+ * Impresión (spec, sección 7, criterio 4).
+ *
+ * "Exportar a PDF" no genera un PDF: abre el diálogo del navegador para que el
+ * usuario elija "Guardar como PDF". Todo el trabajo es de este bloque.
+ *
+ * Radix desmonta el panel del tab inactivo, así que lo que se imprime es
+ * siempre la lista que el usuario está mirando. Lo que hay que sacar es el
+ * cromo —botones, tabs, avisos— y eso lo marca cada componente con la variante
+ * `print:hidden` de Tailwind.
+ */
+@media print {
+  :root {
+    /* La app se imprime siempre en claro, aunque el sistema esté en oscuro:
+       un fondo oscuro en papel es media cartucho de tinta. */
+    color-scheme: light;
+    --background: white;
+    --foreground: black;
+    --card: white;
+    --card-foreground: black;
+    --muted: white;
+    --muted-foreground: oklch(0.45 0 0);
+    --border: oklch(0.8 0 0);
+  }
+
+  body {
+    background: white;
+  }
+
+  main {
+    /* Sin márgenes de pantalla: los del papel los pone @page. */
+    max-width: none;
+    padding: 0;
+  }
+
+  /* Que un ítem no quede partido entre dos hojas. */
+  li,
+  section {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  /* Los checkboxes de Radix son un botón con un ícono adentro: sin esto el
+     navegador imprime el borde y no el estado. */
+  [data-slot="checkbox"] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+@page {
+  margin: 1.5cm;
+}
