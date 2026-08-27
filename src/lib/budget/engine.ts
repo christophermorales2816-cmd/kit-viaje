@@ -39,8 +39,9 @@ export interface BudgetTotals {
  * de packing (spec, sección 5: "Así el motor de presupuesto genera una lista
  * default al crear el trip, en vez de arrancar vacío").
  *
- * `products` llega ya filtrado por destino: el filtro es de la query, no del
- * motor.
+ * `products` llega ya filtrado por destino: ese filtro es de la query. El de
+ * `includeByDefault` sí es del motor, porque define qué es un presupuesto
+ * inicial razonable y no qué productos existen.
  */
 export function generateBudgetList(
   trip: BudgetTrip,
@@ -49,6 +50,9 @@ export function generateBudgetList(
   const durationDays = durationInDays(trip.startDate, trip.endDate);
 
   return products
+    // Sin este filtro el presupuesto suma las alternativas excluyentes de cada
+    // categoría: cuatro alojamientos a la vez eran el 76% del total.
+    .filter((product) => product.includeByDefault)
     .map((product) => {
       const qty = resolveQuantity(product, durationDays);
       return {

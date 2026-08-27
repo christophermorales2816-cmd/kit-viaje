@@ -41,6 +41,7 @@ function product(
     basePrice,
     currency: "ARS",
     updatedAt: "2026-08-20T12:00:00.000Z",
+    includeByDefault: true,
     baseQty: 1,
     scalesWithDays: false,
     daysPerUnit: null,
@@ -109,6 +110,69 @@ describe("generateBudgetList", () => {
       "transporte",
     ]);
     expect(lista[1].product.name).toBe("Café con leche + medialuna");
+  });
+
+  it("deja afuera los productos que no van por default", () => {
+    const conAlternativas = [
+      product("hotel3", "alojamiento", "Hotel 3 estrellas", 65_000, {
+        scalesWithDays: true,
+        daysPerUnit: 1,
+      }),
+      product("hotel4", "alojamiento", "Hotel 4 estrellas", 110_000, {
+        scalesWithDays: true,
+        daysPerUnit: 1,
+        includeByDefault: false,
+      }),
+      product("hostel", "alojamiento", "Hostel", 22_000, {
+        scalesWithDays: true,
+        daysPerUnit: 1,
+        includeByDefault: false,
+      }),
+    ];
+
+    const generada = generateBudgetList(VIAJE, conAlternativas);
+    expect(generada.map((linea) => linea.product.id)).toEqual(["hotel3"]);
+  });
+
+  it("cobra un solo alojamiento, no los tres", () => {
+    const conAlternativas = [
+      product("hotel3", "alojamiento", "Hotel 3 estrellas", 65_000, {
+        scalesWithDays: true,
+        daysPerUnit: 1,
+      }),
+      product("hotel4", "alojamiento", "Hotel 4 estrellas", 110_000, {
+        scalesWithDays: true,
+        daysPerUnit: 1,
+        includeByDefault: false,
+      }),
+    ];
+
+    const totales = calculateBudget(
+      generateBudgetList(VIAJE, conAlternativas),
+      selectQuote(QUOTES, "blue"),
+    );
+    expect(totales.totalBase).toBe(65_000 * 7);
+  });
+
+  it("si ningún producto va por default, la lista queda vacía", () => {
+    const ninguno = CATALOGO.map((p) => ({ ...p, includeByDefault: false }));
+    expect(generateBudgetList(VIAJE, ninguno)).toEqual([]);
+  });
+
+  it("calculateBudget no filtra: suma lo que le den", () => {
+    // El filtro es de la generación. Si el usuario agrega a mano un producto que
+    // no venía por default, el total tiene que incluirlo.
+    const agregadoAMano = [
+      {
+        product: product("hostel", "alojamiento", "Hostel", 22_000, {
+          includeByDefault: false,
+        }),
+        qty: 3,
+        subtotal: 66_000,
+      },
+    ];
+    const totales = calculateBudget(agregadoAMano, selectQuote(QUOTES, "blue"));
+    expect(totales.totalBase).toBe(66_000);
   });
 
   it("con una lista vacía de productos no explota", () => {

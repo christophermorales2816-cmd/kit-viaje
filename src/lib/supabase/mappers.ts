@@ -109,6 +109,7 @@ export function mapProduct(row: ProductRow): BudgetProduct {
     basePrice: toNumber(row.base_price, "base_price"),
     currency: row.currency,
     updatedAt: row.updated_at,
+    includeByDefault: row.include_by_default,
     baseQty: row.base_qty,
     scalesWithDays: row.scales_with_days,
     daysPerUnit: row.days_per_unit,
