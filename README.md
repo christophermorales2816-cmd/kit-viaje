@@ -19,7 +19,7 @@ El proyecto compila y corre, y el esquema de la base está versionado.
 | 3 | Modelo de datos + RLS | ✅ migraciones |
 | 4 | Motor de packing | ✅ motor + tests |
 | 5 | Motor de presupuesto | ✅ motor + tests |
-| 6 | Flujo de usuario y persistencia | ⬜ pendiente |
+| 6 | Flujo de usuario y persistencia | 🔨 capa de datos lista, falta la UI |
 
 ## Stack
 
@@ -45,6 +45,9 @@ nueva.
 | `20260826120200_rls_policies.sql` | RLS de los dos grupos de tablas |
 | `20260826120300_seed_climate_thresholds.sql` | Buckets de clima iniciales |
 | `20260826140000_precip_probability_scale.sql` | `precip_probability` acotada a 0-100 |
+| `20260827100000_seed_buenos_aires.sql` | Destino y 12 meses de perfil climático |
+| `20260827100100_seed_packing_catalog.sql` | 33 ítems de equipaje |
+| `20260827100200_seed_products.sql` | 18 productos, 4-5 por categoría |
 
 Aplicarlas:
 
@@ -123,6 +126,29 @@ Dos detalles que no son obvios:
   acumula error; con ARS de cinco cifras no cambia lo que se muestra, pero la
   cuenta que sale mal cuesta lo mismo que la que sale bien.
 
+## Acceso a datos
+
+Dos clientes, y la diferencia importa:
+
+| | Clave | Puede |
+|---|---|---|
+| `createPublicClient()` | anon | leer las tablas de referencia, nada más |
+| `createAdminClient()` | service role | todo — bypassea RLS |
+
+El de admin lleva `import "server-only"` arriba de todo. Si alguien lo importa
+desde un Client Component, el build de Next falla en vez de mandar la service
+role key al browser.
+
+Las filas se traducen en `mappers.ts` antes de tocar el resto de la aplicación:
+del `snake_case` de Postgres al dominio, y de `numeric` a número de verdad —
+PostgREST puede serializarlo como string, y sumar strings no da un total.
+
+### Cotizaciones
+
+`fetchDolarApiQuotes()` trae las cuatro de dolarapi.com en un request. El
+parseo está separado del fetch para poder testearlo con fixtures. Los nombres
+no coinciden con los del spec: `bolsa` es MEP y `contadoconliqui` es CCL.
+
 ## Desarrollo
 
 ```bash
@@ -165,6 +191,12 @@ src/
     │   ├── money.ts     # aritmética en centavos enteros
     │   ├── freshness.ts # antigüedad de los precios
     │   └── engine.ts    # generateBudgetList() / calculateBudget()
+    ├── supabase/        # borde con la base
+    │   ├── env.ts       # validación de variables de entorno
+    │   ├── client.ts    # cliente anon, solo lectura de referencia
+    │   ├── admin.ts     # cliente service role, server-only
+    │   ├── mappers.ts   # snake_case → dominio
+    │   └── reference.ts # queries de las tablas de referencia
     ├── quantity.ts      # escalado por duración, usado por los dos motores
     └── utils.ts         # cn()
 ```
