@@ -12,7 +12,7 @@ export {
   resolveClimateBuckets,
 } from "./climate";
 export type { ResolvedClimate } from "./climate";
-export { resolveQuantity } from "./quantity";
+export { resolveQuantity } from "@/lib/quantity";
 
 export { TRIP_TYPES } from "./types";
 export type {

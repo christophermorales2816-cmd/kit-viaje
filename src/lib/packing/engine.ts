@@ -1,6 +1,6 @@
 import { durationInDays, monthsCovered } from "./dates";
 import { resolveClimateBuckets } from "./climate";
-import { resolveQuantity } from "./quantity";
+import { resolveQuantity } from "@/lib/quantity";
 import type {
   ClimateBucketId,
   ClimateProfile,

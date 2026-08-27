@@ -18,7 +18,7 @@ El proyecto compila y corre, y el esquema de la base está versionado.
 | 7 | Stack, testing, deploy | ✅ scaffold |
 | 3 | Modelo de datos + RLS | ✅ migraciones |
 | 4 | Motor de packing | ✅ motor + tests |
-| 5 | Motor de presupuesto | ⬜ pendiente |
+| 5 | Motor de presupuesto | ✅ motor + tests |
 | 6 | Flujo de usuario y persistencia | ⬜ pendiente |
 
 ## Stack
@@ -101,6 +101,28 @@ fila en `climate_profiles`, la lista sale más corta de lo que debería y quien
 llama tiene que poder avisarlo en vez de mostrar una lista incompleta sin
 explicación.
 
+### Motor de presupuesto (`src/lib/budget`)
+
+```ts
+import { calculateBudget, generateBudgetList, selectQuote } from "@/lib/budget";
+
+const lineas = generateBudgetList(trip, products);            // una vez, al crear el viaje
+const totales = calculateBudget(lineas, selectQuote(quotes, "blue"));  // en cada render
+```
+
+Las cotizaciones entran **como dato**, no las va a buscar el motor: así el
+cálculo se testea con valores fijos y no depende de una API externa. El monto
+convertido no se persiste nunca — se recalcula contra la cotización vigente.
+
+Dos detalles que no son obvios:
+
+- **Se convierte con la compra, no con la venta.** El viajero llega con dólares
+  y la casa se los compra: con blue en 1000/1050 entrega un dólar y recibe 1000
+  pesos. También es la estimación más conservadora.
+- **Los totales se suman en centavos enteros.** Sumar precios como float
+  acumula error; con ARS de cinco cifras no cambia lo que se muestra, pero la
+  cuenta que sale mal cuesta lo mismo que la que sale bien.
+
 ## Desarrollo
 
 ```bash
@@ -137,10 +159,14 @@ src/
     ├── packing/         # motor de packing (sección 4)
     │   ├── dates.ts     # meses cubiertos y duración, todo en UTC
     │   ├── climate.ts   # resolución de buckets de clima
-    │   ├── quantity.ts  # escalado de cantidades por duración
     │   └── engine.ts    # generatePackingList()
-    ├── utils.ts         # cn()
-    └── utils.test.ts
+    ├── budget/          # motor de presupuesto (sección 5)
+    │   ├── quotes.ts    # selección de cotización y tasa
+    │   ├── money.ts     # aritmética en centavos enteros
+    │   ├── freshness.ts # antigüedad de los precios
+    │   └── engine.ts    # generateBudgetList() / calculateBudget()
+    ├── quantity.ts      # escalado por duración, usado por los dos motores
+    └── utils.ts         # cn()
 ```
 
 ## Sobre los componentes de Shadcn
