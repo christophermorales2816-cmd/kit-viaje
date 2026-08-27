@@ -48,6 +48,8 @@ nueva.
 | `20260827100000_seed_buenos_aires.sql` | Destino y 12 meses de perfil climático |
 | `20260827100100_seed_packing_catalog.sql` | 33 ítems de equipaje |
 | `20260827100200_seed_products.sql` | 18 productos, 4-5 por categoría |
+| `20260827160000_products_include_by_default.sql` | Qué productos entran en el presupuesto inicial |
+| `20260827170000_create_trip_function.sql` | `create_trip()`: crea el viaje y sus listas en una transacción |
 
 Aplicarlas:
 
@@ -71,8 +73,8 @@ documentado arriba de todo en `20260826120200_rls_policies.sql`.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
 ```
 
-21 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
-`updated_at` y el borrado en cascada. Corre dentro de una transacción y termina
+25 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
+`updated_at`, el borrado en cascada y la atomicidad de `create_trip`. Corre dentro de una transacción y termina
 con `rollback`, así que se puede correr contra una base con datos.
 
 ## Los motores
@@ -149,6 +151,18 @@ PostgREST puede serializarlo como string, y sumar strings no da un total.
 parseo está separado del fetch para poder testearlo con fixtures. Los nombres
 no coinciden con los del spec: `bolsa` es MEP y `contadoconliqui` es CCL.
 
+## Crear un viaje
+
+`createTripAction` es el único camino: valida, corre los dos motores, persiste y
+redirige a `/viaje/{edit_token}`. La lógica testeable vive afuera de la acción —
+`parseTripInput` y `buildTripDraft` son puras.
+
+La escritura pasa por la función `create_trip()` de Postgres y no por tres
+inserts. Cada llamada de PostgREST es su propia transacción: si el segundo
+insert fallara, quedaría un viaje sin equipaje ni presupuesto y el usuario
+aterrizaría en un dashboard vacío sin ninguna pista. Adentro de la función es
+todo o nada, y solo `service_role` puede ejecutarla.
+
 ## Desarrollo
 
 ```bash
@@ -197,6 +211,10 @@ src/
     │   ├── admin.ts     # cliente service role, server-only
     │   ├── mappers.ts   # snake_case → dominio
     │   └── reference.ts # queries de las tablas de referencia
+    ├── trips/           # creación del viaje
+    │   ├── input.ts     # validación de lo que manda el formulario
+    │   └── draft.ts     # orquesta los dos motores
+    ├── actions/         # Server Actions
     ├── quantity.ts      # escalado por duración, usado por los dos motores
     └── utils.ts         # cn()
 ```
