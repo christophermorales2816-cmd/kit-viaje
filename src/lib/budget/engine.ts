@@ -1,3 +1,4 @@
+import { byCatalogEntry } from "@/lib/catalog-order";
 import { durationInDays } from "@/lib/packing/dates";
 import { resolveQuantity } from "@/lib/quantity";
 
@@ -49,20 +50,26 @@ export function generateBudgetList(
   const durationDays = durationInDays(trip.startDate, trip.endDate);
 
   return products
-    .map((product) => {
-      const qty = resolveQuantity(product, durationDays);
-      return {
-        product,
-        qty,
-        subtotal: fromCents(toCents(product.basePrice) * qty),
-      };
-    })
-    .sort(
-      (a, b) =>
-        a.product.category.localeCompare(b.product.category, "es") ||
-        a.product.name.localeCompare(b.product.name, "es") ||
-        a.product.id.localeCompare(b.product.id),
-    );
+    .map((product) => toBudgetLine(product, resolveQuantity(product, durationDays)))
+    .sort(byCatalogEntry((line) => line.product));
+}
+
+/**
+ * Una línea con su subtotal ya calculado.
+ *
+ * Se exporta porque la lectura de un viaje guardado arma las mismas líneas con
+ * las cantidades que el usuario editó, y el subtotal tiene que salir de la
+ * misma cuenta en centavos que usa la generación.
+ */
+export function toBudgetLine(
+  product: BudgetProduct,
+  qty: number,
+): BudgetLineItem {
+  return {
+    product,
+    qty,
+    subtotal: fromCents(toCents(product.basePrice) * qty),
+  };
 }
 
 /**

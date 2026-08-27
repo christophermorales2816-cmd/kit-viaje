@@ -1,4 +1,4 @@
-export { calculateBudget, generateBudgetList } from "./engine";
+export { calculateBudget, generateBudgetList, toBudgetLine } from "./engine";
 export type { BudgetLineItem, BudgetTotals } from "./engine";
 
 export { conversionRate, hasAllQuotes, selectQuote } from "./quotes";

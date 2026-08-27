@@ -1,5 +1,6 @@
 import { durationInDays, monthsCovered } from "./dates";
 import { resolveClimateBuckets } from "./climate";
+import { byCatalogEntry } from "@/lib/catalog-order";
 import { resolveQuantity } from "@/lib/quantity";
 import type {
   ClimateBucketId,
@@ -74,12 +75,7 @@ export function generatePackingList(input: PackingEngineInput): PackingList {
     })
     // Orden estable: la lista se renderiza agrupada por categoría, y sin un
     // criterio fijo dos corridas iguales podrían devolver órdenes distintos.
-    .sort(
-      (a, b) =>
-        a.item.category.localeCompare(b.item.category, "es") ||
-        a.item.name.localeCompare(b.item.name, "es") ||
-        a.item.id.localeCompare(b.item.id),
-    );
+    .sort(byCatalogEntry((entry) => entry.item));
 
   const totalWeightG = items.reduce((sum, entry) => sum + entry.totalWeightG, 0);
 

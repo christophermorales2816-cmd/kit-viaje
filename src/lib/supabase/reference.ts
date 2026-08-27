@@ -13,11 +13,13 @@ import { referenceClient } from "./client";
 /**
  * Lectura de los datos de referencia y traducción al dominio.
  *
- * Este archivo es el ÚNICO lugar del código donde se escribe snake_case. Los
- * motores de packing y presupuesto son funciones puras que no saben que
- * Supabase existe (secciones 4 y 5): reciben datos ya leídos, en camelCase, y
- * devuelven el resultado. Meter una query adentro de src/lib/packing o
- * src/lib/budget rompería justamente lo que los hace testeables sin base.
+ * Este archivo es el único lugar donde se escribe el snake_case de las tablas
+ * de referencia — las de sesión se traducen en src/lib/trips/read.ts, que
+ * reutiliza los mapeos de acá para las filas embebidas. Los motores de packing
+ * y presupuesto son funciones puras que no saben que Supabase existe (secciones
+ * 4 y 5): reciben datos ya leídos, en camelCase, y devuelven el resultado.
+ * Meter una query adentro de src/lib/packing o src/lib/budget rompería
+ * justamente lo que los hace testeables sin base.
  */
 
 /** El corredor único del MVP (spec, sección 2). */
@@ -96,6 +98,33 @@ export async function getDestination(
   };
 }
 
+/**
+ * El destino de un viaje ya creado. La lectura del dashboard tiene el
+ * `destination_id` guardado en la fila de `trips` y no debería volver a
+ * resolverlo por corredor: si mañana el corredor suma un segundo destino, un
+ * viaje viejo tiene que seguir mostrando el suyo.
+ */
+export async function getDestinationById(id: string): Promise<Destination> {
+  const { data, error } = await referenceClient()
+    .from("destinations")
+    .select("id, name, corridor, base_currency")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) fail("el destino", error);
+
+  if (!data) {
+    throw new Error(`No existe el destino "${id}".`);
+  }
+
+  return {
+    id: data.id,
+    name: data.name,
+    corridor: data.corridor,
+    baseCurrency: data.base_currency,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // climate_profiles / climate_thresholds
 // ---------------------------------------------------------------------------
@@ -139,16 +168,31 @@ export async function getClimateThresholds(): Promise<ClimateThreshold[]> {
 // packing_catalog
 // ---------------------------------------------------------------------------
 
-export async function getPackingCatalog(): Promise<PackingCatalogItem[]> {
-  const { data, error } = await referenceClient()
-    .from("packing_catalog")
-    .select(
-      "id, category, name, weight_g, climate_tags, trip_type_tags, base_qty, scales_with_days, days_per_unit, max_qty",
-    );
+/**
+ * Se exporta la lista de columnas, y no solo la query, porque la lectura de un
+ * viaje trae estas mismas filas embebidas dentro de trip_packing_items. Dos
+ * listas separadas se desincronizan en cuanto alguien agregue una columna.
+ */
+export const PACKING_CATALOG_COLUMNS =
+  "id, category, name, weight_g, climate_tags, trip_type_tags, base_qty, scales_with_days, days_per_unit, max_qty";
 
-  if (error) fail("el catálogo de equipaje", error);
+export interface PackingCatalogRow {
+  id: string;
+  category: string;
+  name: string;
+  weight_g: number;
+  climate_tags: string[];
+  trip_type_tags: string[];
+  base_qty: number;
+  scales_with_days: boolean;
+  days_per_unit: number | null;
+  max_qty: number | null;
+}
 
-  return (data ?? []).map((row) => ({
+export function toPackingCatalogItem(
+  row: PackingCatalogRow,
+): PackingCatalogItem {
+  return {
     id: row.id,
     category: row.category,
     name: row.name,
@@ -161,26 +205,41 @@ export async function getPackingCatalog(): Promise<PackingCatalogItem[]> {
     scalesWithDays: row.scales_with_days,
     daysPerUnit: row.days_per_unit,
     maxQty: row.max_qty,
-  }));
+  };
+}
+
+export async function getPackingCatalog(): Promise<PackingCatalogItem[]> {
+  const { data, error } = await referenceClient()
+    .from("packing_catalog")
+    .select(PACKING_CATALOG_COLUMNS);
+
+  if (error) fail("el catálogo de equipaje", error);
+
+  return (data ?? []).map(toPackingCatalogItem);
 }
 
 // ---------------------------------------------------------------------------
 // products
 // ---------------------------------------------------------------------------
 
-export async function getProducts(
-  destinationId: string,
-): Promise<BudgetProduct[]> {
-  const { data, error } = await referenceClient()
-    .from("products")
-    .select(
-      "id, category, name, base_price, currency, updated_at, base_qty, scales_with_days, days_per_unit, max_qty",
-    )
-    .eq("destination_id", destinationId);
+export const PRODUCT_COLUMNS =
+  "id, category, name, base_price, currency, updated_at, base_qty, scales_with_days, days_per_unit, max_qty";
 
-  if (error) fail("el catálogo de precios", error);
+export interface ProductRow {
+  id: string;
+  category: string;
+  name: string;
+  base_price: number | string;
+  currency: string;
+  updated_at: string;
+  base_qty: number;
+  scales_with_days: boolean;
+  days_per_unit: number | null;
+  max_qty: number | null;
+}
 
-  return (data ?? []).map((row) => ({
+export function toBudgetProduct(row: ProductRow): BudgetProduct {
+  return {
     id: row.id,
     category: row.category,
     name: row.name,
@@ -191,5 +250,18 @@ export async function getProducts(
     scalesWithDays: row.scales_with_days,
     daysPerUnit: row.days_per_unit,
     maxQty: row.max_qty,
-  }));
+  };
+}
+
+export async function getProducts(
+  destinationId: string,
+): Promise<BudgetProduct[]> {
+  const { data, error } = await referenceClient()
+    .from("products")
+    .select(PRODUCT_COLUMNS)
+    .eq("destination_id", destinationId);
+
+  if (error) fail("el catálogo de precios", error);
+
+  return (data ?? []).map(toBudgetProduct);
 }
