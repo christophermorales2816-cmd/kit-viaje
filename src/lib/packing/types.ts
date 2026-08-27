@@ -1,3 +1,5 @@
+import type { QuantityRule } from "@/lib/quantity";
+
 /**
  * Tipos del dominio del motor de packing (spec, sección 4).
  *
@@ -36,19 +38,6 @@ export interface ClimateProfile {
   precipProbability: number | null;
 }
 
-/**
- * Reglas de cantidad por duración. Las comparten `packing_catalog` y
- * `products`: el spec aplica el mismo patrón de escalado en las secciones 4 y 5.
- */
-export interface QuantityRule {
-  baseQty: number;
-  scalesWithDays: boolean;
-  /** Días que cubre una unidad. Requerido si `scalesWithDays`. */
-  daysPerUnit: number | null;
-  /** Tope de unidades. `null` = sin tope. */
-  maxQty: number | null;
-}
-
 export interface PackingCatalogItem extends QuantityRule {
   id: string;
   category: string;
@@ -65,3 +54,5 @@ export interface PackingTrip {
   endDate: string;
   tripType: TripType;
 }
+
+export type { QuantityRule };

@@ -1,16 +1,28 @@
-import type { QuantityRule } from "./types";
+/**
+ * Escalado de cantidades por duración del viaje.
+ *
+ * Vive fuera de los dos motores porque el spec aplica exactamente la misma
+ * regla en dos lugares: a `packing_catalog` en la sección 4 y a `products` en
+ * la sección 5. Las columnas son las mismas y la cuenta también.
+ */
+
+export interface QuantityRule {
+  baseQty: number;
+  scalesWithDays: boolean;
+  /** Días que cubre una unidad. Requerido si `scalesWithDays`. */
+  daysPerUnit: number | null;
+  /** Tope de unidades. `null` = sin tope. */
+  maxQty: number | null;
+}
 
 /**
- * Cantidad por ítem según la duración del viaje (spec, sección 4, paso 4).
+ * Cantidad para un ítem dada la duración del viaje.
  *
  *   scalesWithDays = false → qty = baseQty
  *   scalesWithDays = true  → qty = min(ceil(durationDays / daysPerUnit), maxQty)
  *
  * Nota sobre `baseQty`: el spec lo ignora cuando el ítem escala. Se respeta tal
  * cual — un ítem que escala arranca en la cuenta por días, no en baseQty × días.
- *
- * La misma regla la usa el motor de presupuesto sobre `products` (sección 5),
- * por eso vive acá y no adentro del motor de packing.
  */
 export function resolveQuantity(rule: QuantityRule, durationDays: number): number {
   if (!Number.isFinite(durationDays) || durationDays < 1) {
@@ -21,8 +33,8 @@ export function resolveQuantity(rule: QuantityRule, durationDays: number): numbe
     return rule.baseQty;
   }
 
-  // La base ya lo garantiza (constraint packing_catalog_days_per_unit_required),
-  // pero el motor no depende de que los datos vengan de esa base.
+  // La base ya lo garantiza (constraints *_days_per_unit_required), pero los
+  // motores no dependen de que los datos vengan de esa base.
   if (rule.daysPerUnit === null || rule.daysPerUnit <= 0) {
     throw new RangeError(
       "Un ítem con scalesWithDays necesita daysPerUnit mayor que cero.",

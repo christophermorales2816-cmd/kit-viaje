@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveQuantity } from "@/lib/packing/quantity";
-import type { QuantityRule } from "@/lib/packing/types";
+import { resolveQuantity } from "@/lib/quantity";
+import type { QuantityRule } from "@/lib/quantity";
 
 function rule(overrides: Partial<QuantityRule> = {}): QuantityRule {
   return {
