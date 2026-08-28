@@ -45,12 +45,6 @@ export interface BudgetProduct extends QuantityRule {
   currency: string;
   /** ISO 8601 con offset. Lo mantiene el trigger products_set_updated_at. */
   updatedAt: string;
-  /**
-   * Si entra en el presupuesto que se genera al crear el viaje. Los `false`
-   * siguen en el catálogo para agregarse a mano: son alternativas a un producto
-   * que ya entra (cuatro alojamientos no se pagan a la vez) o extras opcionales.
-   */
-  includeByDefault: boolean;
 }
 
 export interface BudgetTrip {

@@ -19,7 +19,7 @@ El proyecto compila y corre, y el esquema de la base está versionado.
 | 3 | Modelo de datos + RLS | ✅ migraciones |
 | 4 | Motor de packing | ✅ motor + tests |
 | 5 | Motor de presupuesto | ✅ motor + tests |
-| 6 | Flujo de usuario y persistencia | 🔨 landing lista, falta el dashboard |
+| 6 | Flujo de usuario y persistencia | ⬜ pendiente |
 
 ## Stack
 
@@ -45,19 +45,12 @@ nueva.
 | `20260826120200_rls_policies.sql` | RLS de los dos grupos de tablas |
 | `20260826120300_seed_climate_thresholds.sql` | Buckets de clima iniciales |
 | `20260826140000_precip_probability_scale.sql` | `precip_probability` acotada a 0-100 |
-| `20260827100000_seed_buenos_aires.sql` | Destino y 12 meses de perfil climático |
-| `20260827100100_seed_packing_catalog.sql` | 33 ítems de equipaje |
-| `20260827100200_seed_products.sql` | 18 productos, 4-5 por categoría |
-| `20260827160000_products_include_by_default.sql` | Qué productos entran en el presupuesto inicial |
-| `20260827170000_create_trip_function.sql` | `create_trip()`: crea el viaje y sus listas en una transacción |
 
-Para conectar un proyecto de Supabase desde cero, seguí
-[`docs/configurar-supabase.md`](./docs/configurar-supabase.md). El resumen:
+Aplicarlas:
 
 ```bash
-npx supabase login
-npx supabase link --project-ref <TU_PROJECT_REF>
-npx supabase db push
+npx supabase db push          # contra el proyecto remoto
+npx supabase start            # o levantar Supabase local con Docker
 ```
 
 ### El modelo de acceso en una línea
@@ -75,8 +68,8 @@ documentado arriba de todo en `20260826120200_rls_policies.sql`.
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
 ```
 
-25 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
-`updated_at`, el borrado en cascada y la atomicidad de `create_trip`. Corre dentro de una transacción y termina
+21 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
+`updated_at` y el borrado en cascada. Corre dentro de una transacción y termina
 con `rollback`, así que se puede correr contra una base con datos.
 
 ## Los motores
@@ -130,56 +123,6 @@ Dos detalles que no son obvios:
   acumula error; con ARS de cinco cifras no cambia lo que se muestra, pero la
   cuenta que sale mal cuesta lo mismo que la que sale bien.
 
-## Acceso a datos
-
-Dos clientes, y la diferencia importa:
-
-| | Clave | Puede |
-|---|---|---|
-| `createPublicClient()` | anon | leer las tablas de referencia, nada más |
-| `createAdminClient()` | service role | todo — bypassea RLS |
-
-El de admin lleva `import "server-only"` arriba de todo. Si alguien lo importa
-desde un Client Component, el build de Next falla en vez de mandar la service
-role key al browser.
-
-Las filas se traducen en `mappers.ts` antes de tocar el resto de la aplicación:
-del `snake_case` de Postgres al dominio, y de `numeric` a número de verdad —
-PostgREST puede serializarlo como string, y sumar strings no da un total.
-
-### Cotizaciones
-
-`fetchDolarApiQuotes()` trae las cuatro de dolarapi.com en un request. El
-parseo está separado del fetch para poder testearlo con fixtures. Los nombres
-no coinciden con los del spec: `bolsa` es MEP y `contadoconliqui` es CCL.
-
-## Crear un viaje
-
-`createTripAction` es el único camino: valida, corre los dos motores, persiste y
-redirige a `/viaje/{edit_token}`. La lógica testeable vive afuera de la acción —
-`parseTripInput` y `buildTripDraft` son puras.
-
-La escritura pasa por la función `create_trip()` de Postgres y no por tres
-inserts. Cada llamada de PostgREST es su propia transacción: si el segundo
-insert fallara, quedaría un viaje sin equipaje ni presupuesto y el usuario
-aterrizaría en un dashboard vacío sin ninguna pista. Adentro de la función es
-todo o nada, y solo `service_role` puede ejecutarla.
-
-## Sobre los componentes de Shadcn
-
-Están escritos a mano con la misma API que los oficiales, porque el registro de
-`ui.shadcn.com` no es alcanzable desde el entorno donde se desarrolló. Las
-librerías de abajo (Radix, react-day-picker) sí vienen de npm, así que lo único
-propio son los wrappers.
-
-Correr `npx shadcn@latest add sheet calendar popover` los reemplaza por los
-oficiales sin que nada más lo note, y es lo recomendable cuando se pueda.
-
-Un detalle que costó: `Calendar` está escrito contra la API real de
-react-day-picker **v10**, leída de `node_modules`, no contra la v9 que asume el
-Calendar oficial. Los nombres de `classNames` cambiaron entre versiones, y
-usar los viejos deja un calendario sin estilos que igual compila.
-
 ## Desarrollo
 
 ```bash
@@ -212,9 +155,6 @@ src/
 │   └── globals.css      # Tailwind v4 + tokens de tema de Shadcn
 ├── components/
 │   └── ui/              # componentes de Shadcn
-├── components/
-│   ├── landing/         # globo cobe y formulario de creación
-│   └── ui/              # componentes de Shadcn
 └── lib/
     ├── packing/         # motor de packing (sección 4)
     │   ├── dates.ts     # meses cubiertos y duración, todo en UTC
@@ -225,16 +165,6 @@ src/
     │   ├── money.ts     # aritmética en centavos enteros
     │   ├── freshness.ts # antigüedad de los precios
     │   └── engine.ts    # generateBudgetList() / calculateBudget()
-    ├── supabase/        # borde con la base
-    │   ├── env.ts       # validación de variables de entorno
-    │   ├── client.ts    # cliente anon, solo lectura de referencia
-    │   ├── admin.ts     # cliente service role, server-only
-    │   ├── mappers.ts   # snake_case → dominio
-    │   └── reference.ts # queries de las tablas de referencia
-    ├── trips/           # creación del viaje
-    │   ├── input.ts     # validación de lo que manda el formulario
-    │   └── draft.ts     # orquesta los dos motores
-    ├── actions/         # Server Actions
     ├── quantity.ts      # escalado por duración, usado por los dos motores
     └── utils.ts         # cn()
 ```

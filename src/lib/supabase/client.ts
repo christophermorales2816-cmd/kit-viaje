@@ -1,19 +1,32 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-import { readPublicSupabaseEnv } from "./env";
+import { requireEnv } from "./env";
 
 /**
- * Cliente con la anon key.
+ * Cliente de lectura de los datos de referencia (spec, sección 3).
  *
- * Sirve para las tablas de referencia, que tienen lectura pública (migración
- * 20260826120200). Contra las tablas de sesión no puede hacer nada: quedaron
- * con RLS habilitada, sin políticas y sin privilegios para anon. Eso es a
- * propósito, no una omisión — ver el encabezado de esa migración.
+ * Usa la anon key, que es pública por diseño: las cinco tablas de referencia
+ * tienen una política de select con `using (true)` y los privilegios de
+ * escritura revocados. No puede tocar las tablas de sesión — esas tienen RLS
+ * habilitada y cero políticas.
+ *
+ * PEREZOSO A PROPÓSITO: crear el cliente al importar el módulo haría que
+ * `next build` explote en cualquier entorno sin .env.local, incluso en rutas
+ * que no leen nada de la base. Así el error aparece cuando alguien realmente
+ * consulta, y dice qué variable falta.
  */
-export function createPublicClient() {
-  const { url, anonKey } = readPublicSupabaseEnv();
+let client: SupabaseClient | null = null;
 
-  return createClient(url, anonKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+export function referenceClient(): SupabaseClient {
+  client ??= createClient(
+    requireEnv("NEXT_PUBLIC_SUPABASE_URL", process.env.NEXT_PUBLIC_SUPABASE_URL),
+    requireEnv(
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    ),
+    // Sin login no hay sesión que persistir ni token que refrescar.
+    { auth: { persistSession: false, autoRefreshToken: false } },
+  );
+
+  return client;
 }
