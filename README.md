@@ -19,7 +19,7 @@ El proyecto compila y corre, y el esquema de la base está versionado.
 | 3 | Modelo de datos + RLS | ✅ migraciones |
 | 4 | Motor de packing | ✅ motor + tests |
 | 5 | Motor de presupuesto | ✅ motor + tests |
-| 6 | Flujo de usuario y persistencia | 🔨 capa de datos lista, falta la UI |
+| 6 | Flujo de usuario y persistencia | 🔨 landing lista, falta el dashboard |
 
 ## Stack
 
@@ -163,6 +163,21 @@ insert fallara, quedaría un viaje sin equipaje ni presupuesto y el usuario
 aterrizaría en un dashboard vacío sin ninguna pista. Adentro de la función es
 todo o nada, y solo `service_role` puede ejecutarla.
 
+## Sobre los componentes de Shadcn
+
+Están escritos a mano con la misma API que los oficiales, porque el registro de
+`ui.shadcn.com` no es alcanzable desde el entorno donde se desarrolló. Las
+librerías de abajo (Radix, react-day-picker) sí vienen de npm, así que lo único
+propio son los wrappers.
+
+Correr `npx shadcn@latest add sheet calendar popover` los reemplaza por los
+oficiales sin que nada más lo note, y es lo recomendable cuando se pueda.
+
+Un detalle que costó: `Calendar` está escrito contra la API real de
+react-day-picker **v10**, leída de `node_modules`, no contra la v9 que asume el
+Calendar oficial. Los nombres de `classNames` cambiaron entre versiones, y
+usar los viejos deja un calendario sin estilos que igual compila.
+
 ## Desarrollo
 
 ```bash
@@ -194,6 +209,9 @@ src/
 │   ├── page.tsx         # landing (placeholder por ahora)
 │   └── globals.css      # Tailwind v4 + tokens de tema de Shadcn
 ├── components/
+│   └── ui/              # componentes de Shadcn
+├── components/
+│   ├── landing/         # globo cobe y formulario de creación
 │   └── ui/              # componentes de Shadcn
 └── lib/
     ├── packing/         # motor de packing (sección 4)

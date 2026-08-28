@@ -1,37 +1,32 @@
 import { Luggage, Wallet } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { CreateTripPanel } from "@/components/landing/create-trip-panel";
 
-/**
- * Placeholder de scaffold. La landing real (globo interactivo + slide-over de
- * fechas y tipo de viaje) se implementa en la sección 6 del spec.
- */
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center justify-center p-8">
-      <div className="flex w-full max-w-md flex-col gap-6 rounded-xl border bg-card p-8 text-card-foreground">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Kit de viaje
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Equipaje y presupuesto para Buenos Aires, sin registro. Proyecto
-            inicializado — todavía sin lógica de negocio.
-          </p>
-        </div>
+    <main className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-12">
+      <div className="flex max-w-lg flex-col items-center gap-3 text-center">
+        <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+          Qué llevar y cuánto vas a gastar
+        </h1>
+        <p className="text-muted-foreground text-balance">
+          Decinos cuándo viajás a Buenos Aires y qué tipo de viaje es. Armamos el
+          equipaje según el clima de esas fechas y el presupuesto convertido a la
+          cotización que quieras mirar. Sin registro.
+        </p>
+      </div>
 
-        <div className="flex flex-col gap-2 text-sm">
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Luggage className="text-foreground" />
-            <span>Motor de equipaje — pendiente (sección 4)</span>
-          </div>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Wallet className="text-foreground" />
-            <span>Motor de presupuesto — pendiente (sección 5)</span>
-          </div>
-        </div>
+      <CreateTripPanel />
 
-        <Button disabled>Empezar un viaje</Button>
+      <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+        <span className="flex items-center gap-2">
+          <Luggage className="size-4" />
+          Equipaje por clima y tipo de viaje
+        </span>
+        <span className="flex items-center gap-2">
+          <Wallet className="size-4" />
+          Presupuesto en oficial, blue, MEP o CCL
+        </span>
       </div>
     </main>
   );
