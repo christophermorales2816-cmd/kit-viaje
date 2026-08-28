@@ -16,6 +16,7 @@ function product(id: string, updatedAt: string): BudgetProduct {
     basePrice: 8500,
     currency: "ARS",
     updatedAt,
+    includeByDefault: true,
     baseQty: 1,
     scalesWithDays: false,
     daysPerUnit: null,

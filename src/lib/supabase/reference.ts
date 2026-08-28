@@ -97,7 +97,7 @@ export async function fetchProducts(destinationId: string): Promise<BudgetProduc
   const result = await createPublicClient()
     .from("products")
     .select(
-      "id, category, name, base_price, currency, updated_at, base_qty, scales_with_days, days_per_unit, max_qty",
+      "id, category, name, base_price, currency, updated_at, include_by_default, base_qty, scales_with_days, days_per_unit, max_qty",
     )
     .eq("destination_id", destinationId)
     .returns<ProductRow[]>();

@@ -48,6 +48,7 @@ export interface ProductRow {
   base_price: number | string;
   currency: string;
   updated_at: string;
+  include_by_default: boolean;
   base_qty: number;
   scales_with_days: boolean;
   days_per_unit: number | null;
