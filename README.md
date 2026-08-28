@@ -51,11 +51,13 @@ nueva.
 | `20260827160000_products_include_by_default.sql` | Qué productos entran en el presupuesto inicial |
 | `20260827170000_create_trip_function.sql` | `create_trip()`: crea el viaje y sus listas en una transacción |
 
-Aplicarlas:
+Para conectar un proyecto de Supabase desde cero, seguí
+[`docs/configurar-supabase.md`](./docs/configurar-supabase.md). El resumen:
 
 ```bash
-npx supabase db push          # contra el proyecto remoto
-npx supabase start            # o levantar Supabase local con Docker
+npx supabase login
+npx supabase link --project-ref <TU_PROJECT_REF>
+npx supabase db push
 ```
 
 ### El modelo de acceso en una línea
