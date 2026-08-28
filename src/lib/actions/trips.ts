@@ -8,6 +8,7 @@ import { createTrip } from "@/lib/supabase/trips";
 import type { CreatedTrip } from "@/lib/supabase/trips";
 import { buildTripDraft } from "@/lib/trips/draft";
 import { parseTripInput } from "@/lib/trips/input";
+import type { CreateTripState } from "@/lib/trips/state";
 
 /**
  * Server Action de la landing (spec, sección 6A).
@@ -16,12 +17,6 @@ import { parseTripInput } from "@/lib/trips/input";
  * Toda la lógica que se puede testear vive afuera: acá solo queda el pegamento
  * y la I/O.
  */
-
-export interface CreateTripState {
-  errors: string[];
-}
-
-export const EMPTY_CREATE_TRIP_STATE: CreateTripState = { errors: [] };
 
 export async function createTripAction(
   _previous: CreateTripState,
