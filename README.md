@@ -12,16 +12,31 @@ de dependencias.
 
 ## Estado
 
-El proyecto compila y corre, y el esquema de la base está versionado.
-**Todavía no hay lógica de negocio.**
+**MVP completo contra el spec.** Las cinco secciones implementadas y los siete
+criterios de aceptación de la sección 7 cumplidos.
 
 | Sección | Qué es | Estado |
 |---|---|---|
-| 7 | Stack, testing, deploy | ✅ scaffold |
-| 3 | Modelo de datos + RLS | ✅ migraciones |
-| 4 | Motor de packing | ✅ motor + tests |
-| 5 | Motor de presupuesto | ✅ motor + tests |
-| 6 | Flujo de usuario y persistencia | ⬜ pendiente |
+| 3 | Modelo de datos + RLS | ✅ |
+| 4 | Motor de packing | ✅ |
+| 5 | Motor de presupuesto | ✅ |
+| 6 | Flujo de usuario y persistencia | ✅ |
+| 7 | Stack, testing, deploy | ✅ |
+
+### Criterios de aceptación
+
+| # | Criterio | Cómo se verifica |
+|---|---|---|
+| 1 | Crear un viaje sin cuenta y llegar a las dos listas | Manual, y el flujo entero está en `src/lib/trips/` |
+| 2 | El presupuesto se recalcula con las 4 cotizaciones | `src/lib/quotes/map.test.ts` |
+| 3 | El `share_slug` abre en solo lectura | Ruta `/viaje/ver/[shareSlug]` con `isReadOnly` |
+| 4 | Exportar a PDF y CSV | `src/lib/export/csv.test.ts` y CSS de impresión |
+| 5 | Viajes recientes al volver a `/` | `src/lib/trips/storage.test.ts` |
+| 6 | Los tests de los motores pasan en CI | Job `web` del [workflow](./.github/workflows/ci.yml) |
+| 7 | Ninguna escritura sin `edit_token` válido | Job `database`: 21 aserciones en `supabase/tests/rls_smoke.sql` |
+
+Fuera del MVP y sin planificar: cuentas, más corredores, i18n, monetización y
+tracking de gastos reales. La sección 2 del spec explica el porqué de cada uno.
 
 ## Stack
 
