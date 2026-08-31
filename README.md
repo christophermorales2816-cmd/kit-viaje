@@ -1,5 +1,7 @@
 # Kit de viaje
 
+[![CI](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml)
+
 Aplicación web sin registro que resuelve dos cosas para viajar a destinos con
 alta volatilidad económica y multiplicidad cambiaria: **qué empacar** y
 **cuánto vas a gastar**. MVP acotado a un corredor: Buenos Aires, Argentina.
@@ -122,6 +124,20 @@ Dos detalles que no son obvios:
 - **Los totales se suman en centavos enteros.** Sumar precios como float
   acumula error; con ARS de cinco cifras no cambia lo que se muestra, pero la
   cuenta que sale mal cuesta lo mismo que la que sale bien.
+
+## CI
+
+Cada push y cada pull request corren [dos jobs](./.github/workflows/ci.yml):
+
+**`web`** — lint, tests, build y typecheck. El build va **antes** del typecheck
+a propósito: `next build` genera los tipos de las rutas (`PageProps`,
+`LayoutProps`) en `.next/types`, y sin ellos `tsc --noEmit` falla en un
+checkout limpio por archivos que todavía no existen.
+
+**`database`** — levanta un Postgres 16, aplica las migraciones en orden y
+corre el smoke test de RLS. Cubre el criterio de aceptación 7 del spec:
+ninguna escritura a las tablas de sesión es posible sin un `edit_token`
+válido, verificado en cada PR y no una sola vez a mano.
 
 ## Desarrollo
 

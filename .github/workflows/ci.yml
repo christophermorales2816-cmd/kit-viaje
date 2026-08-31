@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Un push nuevo sobre la misma rama cancela la corrida anterior: no tiene
+# sentido esperar el resultado de un commit que ya quedó viejo.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Lint, tipos, tests y build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      # El build va antes que el typecheck a propósito: `next build` genera los
+      # tipos de las rutas (PageProps, LayoutProps) en .next/types, y sin ellos
+      # `tsc --noEmit` falla en un checkout limpio por archivos que no existen
+      # todavía.
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://ci.example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: ci-service-role-key
+
+      - name: Typecheck
+        run: npm run typecheck
+
+  database:
+    name: Migraciones y RLS
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: postgres
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Preparar los roles de Supabase
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/setup-roles.sql
+
+      # En orden alfabético, que es el orden en que las aplica `supabase db push`.
+      # Si una migración no es válida, o depende de otra que va después, esto
+      # falla acá y no cuando alguien la aplica contra la base de verdad.
+      - name: Aplicar las migraciones
+        run: |
+          set -euo pipefail
+          for f in supabase/migrations/*.sql; do
+            echo "→ $(basename "$f")"
+            psql -v ON_ERROR_STOP=1 -f "$f"
+          done
+
+      # Cubre el criterio de aceptación 7 del spec: ninguna escritura a las
+      # tablas de sesión es posible sin un edit_token válido.
+      - name: Smoke test de RLS
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
