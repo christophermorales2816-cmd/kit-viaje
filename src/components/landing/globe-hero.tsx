@@ -1,23 +1,16 @@
 "use client";
 
 import createGlobe from "cobe";
-import { useEffect, useRef, useState } from "react";
-
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-
-import { NewTripForm } from "./new-trip-form";
+import { useEffect, useRef } from "react";
 
 /**
- * Hero de la landing (spec, sección 6A).
+ * Hero de la landing (spec, secciones 6A y 8.1).
  *
  * Globo con un marcador único en Buenos Aires: el corredor está fijo para el
- * MVP. Click en el marcador → slide-over con las fechas y el tipo de viaje.
+ * MVP. El marcador ya no abre el slide-over de fechas — despliega la guía del
+ * destino, que es el bloque siguiente. Elegir destino y elegir fechas dejan de
+ * ser el mismo gesto, porque ahora hay algo que leer en el medio: el
+ * datepicker vive en el último bloque de la página.
  *
  * EL GLOBO NO GIRA, Y ESO ES A PROPÓSITO
  *
@@ -29,9 +22,13 @@ import { NewTripForm } from "./new-trip-form";
  * botón en cada frame para terminar con un blanco móvil, que es peor de
  * clickear y bastante peor de usar con teclado.
  *
- * Como el botón es HTML, además: se llega con Tab, se activa con Enter, tiene
- * nombre accesible y sigue funcionando si WebGL no está disponible. El canvas
- * queda como decoración (aria-hidden).
+ * Como el marcador es HTML, además: se llega con Tab, se activa con Enter,
+ * tiene nombre accesible y sigue funcionando si WebGL no está disponible. El
+ * canvas queda como decoración (aria-hidden).
+ *
+ * Y como ahora solo navega, es un <a href="#guia"> y no un <button>: el salto
+ * funciona con JavaScript deshabilitado, se puede abrir en otra pestaña y el
+ * scroll suave lo pone el CSS del layout, respetando prefers-reduced-motion.
  */
 
 const BUENOS_AIRES: [number, number] = [-34.6037, -58.3816];
@@ -51,7 +48,6 @@ const [PHI, THETA] = locationToAngles(...BUENOS_AIRES);
 
 export function GlobeHero() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [abierto, setAbierto] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -89,52 +85,30 @@ export function GlobeHero() {
   }, []);
 
   return (
-    <>
-      <div className="relative mx-auto aspect-square w-full max-w-[420px]">
-        <canvas
-          ref={canvasRef}
-          aria-hidden
-          className="size-full [contain:layout_paint_size]"
-        />
+    <div className="relative mx-auto aspect-square w-full max-w-[420px]">
+      <canvas
+        ref={canvasRef}
+        aria-hidden
+        className="size-full [contain:layout_paint_size]"
+      />
 
-        {/*
-          El marcador clickeable, centrado sobre el punto que dibuja cobe: el
-          globo está fijo con Buenos Aires al frente, así que ese punto es el
-          centro exacto del canvas.
-        */}
-        <button
-          type="button"
-          onClick={() => setAbierto(true)}
-          className="group absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-lg p-2 focus-visible:ring-[3px] focus-visible:ring-white/60 focus-visible:outline-none"
-        >
-          <span className="relative flex size-4 items-center justify-center">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-orange-400/70" />
-            <span className="relative inline-flex size-3 rounded-full bg-orange-500 ring-2 ring-white/80" />
-          </span>
-          <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white/20">
-            Buenos Aires
-          </span>
-        </button>
-      </div>
-
-      <Sheet open={abierto} onOpenChange={setAbierto}>
-        <SheetContent
-          side="right"
-          className="w-full overflow-y-auto sm:max-w-md"
-        >
-          <SheetHeader>
-            <SheetTitle>Tu viaje a Buenos Aires</SheetTitle>
-            <SheetDescription>
-              Con las fechas y el tipo de viaje alcanza: armamos la lista de
-              equipaje y el presupuesto.
-            </SheetDescription>
-          </SheetHeader>
-
-          <div className="px-4 pb-8">
-            <NewTripForm />
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
+      {/*
+        El marcador, centrado sobre el punto que dibuja cobe: el globo está
+        fijo con Buenos Aires al frente, así que ese punto es el centro exacto
+        del canvas.
+      */}
+      <a
+        href="#guia"
+        className="group absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-lg p-2 focus-visible:ring-[3px] focus-visible:ring-white/60 focus-visible:outline-none"
+      >
+        <span className="relative flex size-4 items-center justify-center">
+          <span className="absolute inline-flex size-full animate-ping rounded-full bg-orange-400/70" />
+          <span className="relative inline-flex size-3 rounded-full bg-orange-500 ring-2 ring-white/80" />
+        </span>
+        <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white/20">
+          Argentina
+        </span>
+      </a>
+    </div>
   );
 }
