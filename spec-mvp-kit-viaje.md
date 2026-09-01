@@ -31,9 +31,11 @@ Ledger vivo, no lista cerrada de una sola vez — a medida que aparezcan decisio
 - Motor de presupuesto: catálogo curado (15-20 productos, 4 categorías), 4 cotizaciones.
 - Export PDF (impresión del navegador vía CSS de impresión, sin librería) y CSV, para packing y para presupuesto.
 - Analytics de uso con Vercel Web Analytics.
+- Guía informativa de Argentina como landing, con el planner como último bloque de esa misma página (sección 8).
 
 **Fuera del MVP por ahora** (no descartado — se revisa si aparece una razón concreta, no una lista cerrada):
 - Cuentas/login.
+- Captura de email para descargar una plantilla. Rompe "sin registro", que es lo que sostiene el modelo de seguridad de la sección 3, y no hace falta: el export CSV de la sección 6B ya es la planilla, con el viaje real del usuario adentro (sección 8.1).
 - Más de un corredor.
 - Inglés / i18n.
 - Monetización — consistente con que esto es portfolio, no producto a monetizar.
@@ -201,6 +203,8 @@ Así el motor de presupuesto genera una lista default al crear el trip —igual 
 
 **A. Entrada (Landing — `/`)**
 
+> **Actualizado por la sección 8.** Desde el pivote a guía de destino, `/` ya no abre con el globo: abre con la guía de Argentina, y lo que sigue es el bloque 4 de esa página ("Planificá tu viaje"). El globo baja a ese bloque, donde el marcador vuelve a significar "elegí este corredor". La mecánica descrita acá —los dos inputs, el Server Action, el redirect— no cambia; cambia dónde vive.
+
 Hero con globo 3D interactivo (librería `cobe`, ~5kB, renderizado vía WebGL sobre un `<canvas>`, sin depender de Three.js) con un marcador único en Buenos Aires — el corredor está fijo para este MVP. Sin formulario tradicional.
 
 1. Click en el marcador → slide-over con dos inputs: datepicker (rango de fechas, 1-30 días) y tipo de viaje (playa/urbano/aventura/negocios) como chips de un tap. Sigue siendo una sola interacción, no dos pantallas — pero el tipo de viaje no puede quedar implícito: `packing_catalog.trip_type_tags` (sección 4) es una de las dos dimensiones que filtran qué se genera, sin ese dato el motor no distingue equipaje de playa de equipaje de negocios.
@@ -251,3 +255,146 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 5. Volver a `/` en el mismo navegador después de crear un trip muestra el acceso rápido en "Tus viajes recientes".
 6. Los tests del motor de packing y del motor de presupuesto pasan en CI.
 7. Ninguna escritura a `trips`, `trip_packing_items` o `trip_budget_items` es posible sin un `edit_token` válido — verificable intentando una mutación directa contra la API de Supabase con la anon key.
+
+Los criterios 8 a 10, propios de la guía de destino, están en la sección 8.7.
+
+## 8. Guía de destino (landing)
+
+Pivote de producto, decidido después de tener el planner funcionando. La landing deja de ser el globo + datepicker y pasa a ser una **guía informativa de Argentina**; el planner no se elimina ni se mueve de ruta, se convierte en el último bloque de esa misma página.
+
+**Por qué.** Una herramienta suelta se lee como un ejercicio; una guía que termina en una herramienta se lee como un producto. Además resuelve un problema real del embudo actual: quien cae en `/` sin saber nada de Argentina no tiene motivo para elegir fechas todavía. La guía le da ese motivo y lo deja parado justo arriba del planner.
+
+**Alcance geográfico:** país, no ciudad. El corredor de datos sigue siendo Buenos Aires (sección 3: un solo `destination`); la guía habla de Argentina. No es una inconsistencia a ocultar — es lo que el MVP puede sostener hoy, y el texto lo dice donde corresponde en vez de fingir cobertura nacional en los cálculos.
+
+**Idioma:** español, sin cambios (sección 2).
+
+### 8.1 Estructura de la página (`/`)
+
+Cuatro bloques, en orden:
+
+1. **Hero** — foto, nombre del país, una línea de subtítulo y **cuatro números destacados**. Sin llamadas de red: los cuatro son contenido editorial estático. Se evaluó traer uno en vivo (la brecha entre oficial y blue, con `dolarapi.ts` y `freshness.ts` que ya existen) y se descartó para el hero: agrega un failure mode y un estado de carga en lo primero que ve el usuario, a cambio de un dato que en el bloque 2 queda mejor contextualizado.
+2. **"Todo lo que hay que saber antes de reservar"** — tablero informativo, redactado a mano, con **fecha de actualización visible**. Es la sección con más riesgo del producto: información desactualizada acá es peor que no tener la sección. Ver 8.4.
+3. **Puntajes por dimensión** — barras, más "dónde brilla" y "dónde te cuesta". Valoración editorial declarada como tal, no un índice con pretensión de objetividad.
+4. **"Planificá tu viaje"** — el planner actual (sección 6A) embebido como sección: el selector de fechas + tipo de viaje y "Tus viajes recientes". El CTA de los bloques 1-3 ancla acá, no a un formulario.
+
+**Sin captura de email.** El patrón de referencia ("completá el formulario y recibí la plantilla gratis") rompe la decisión de "sin registro" de la sección 2, que es la que sostiene todo el modelo de seguridad de la sección 3 — pedir un mail obliga a tratarlo como dato personal, con base legal, borrado y un canal de contacto que hoy no existe. Y es innecesario: **el export CSV de la sección 6B ya es la planilla**, y es mejor que una plantilla genérica porque viene con el viaje real del usuario adentro. El CTA lleva al bloque 4; la planilla se obtiene después, con datos propios.
+
+**Destino del globo 3D.** El globo (`cobe`) sale del hero y baja al bloque 4, donde el marcador de Buenos Aires vuelve a tener sentido: ahí sí es "elegí este corredor". En el hero lo reemplaza una foto — un globo con un solo punto no comunica "guía de país".
+
+### 8.2 Modelo de contenido: en el repo, no en Postgres
+
+El contenido de la guía vive en `src/content/guias/argentina.ts`, tipado contra una interfaz en `src/content/guias/types.ts`. **No** se agrega una tabla de referencia en Supabase. Razones, en orden de peso:
+
+1. **La fecha de actualización no puede mentir.** Es lo único que hace defendible el bloque 2 (8.4). Si el texto vive en la base, alguien lo edita desde el dashboard de Supabase y se olvida de mover la fecha, y no hay nada que lo detecte. Si vive en git, cambiar el texto sin mover la fecha es un diff visible en un PR, y además un test lo puede exigir (8.5).
+2. **Latencia en la página más visitada.** `/` es la puerta de entrada; un round trip a Postgres para prosa que cambia dos veces por año se paga en cada visita.
+3. **Corregir una errata no debería necesitar una migración.**
+4. **La capa de datos ya está demostrada.** 7 migraciones, RLS con 21 aserciones en CI. Meter prosa en una octava tabla no prueba nada nuevo; elegir dónde *no* va cada cosa, sí.
+
+Cuando aparezca un segundo corredor, el archivo pasa a ser `src/content/guias/{slug}.ts` con un índice — la interfaz ya está pensada por destino, no como singleton.
+
+```ts
+// src/content/guias/types.ts
+
+/** Un número del hero. `value` es texto, no número: "UTC−3", "90 días". */
+export interface GuideHighlight {
+  value: string;
+  label: string;
+  note: string;
+}
+
+/** Una entrada del tablero "todo lo que hay que saber antes de reservar". */
+export interface GuideFact {
+  id: string;
+  title: string;
+  /** Párrafos. Texto plano, sin markdown ni HTML: no hay renderer y no hace falta. */
+  body: string[];
+}
+
+/** Una dimensión puntuada. 0-10, un decimal como máximo. */
+export interface GuideScore {
+  dimension: string;
+  score: number;
+  rationale: string;
+}
+
+export interface GuideImage {
+  src: string;
+  alt: string;
+  /** Atribución. Obligatoria aunque la licencia no la exija. */
+  credit: string;
+  creditUrl: string;
+}
+
+export interface DestinationGuide {
+  slug: string;
+  country: string;
+  subhead: string;
+  hero: GuideImage;
+  highlights: GuideHighlight[];   // exactamente 4
+  facts: GuideFact[];
+  /** ISO date (YYYY-MM-DD) de la última revisión del contenido de `facts`. */
+  factsUpdatedAt: string;
+  scores: GuideScore[];
+  shines: string[];
+  costs: string[];
+  /** Alcance real de los cálculos del planner, dicho en la página. */
+  dataScopeNote: string;
+}
+```
+
+### 8.3 Los cuatro números del hero
+
+| Valor | Etiqueta | Nota |
+| --- | --- | --- |
+| **4** | cotizaciones simultáneas | oficial, blue, MEP y CCL. Cuál usás cambia el total, no el redondeo. |
+| **UTC−3** | todo el año | sin horario de verano: la diferencia con tu país no se mueve en el viaje. |
+| **90 días** | sin visa | para la mayoría de los pasaportes de América y la UE. Verificá el tuyo. |
+| **3.700 km** | de norte a sur | de Jujuy a Ushuaia. No es un destino: son varios climas a la vez. |
+
+El cuarto número es el que justifica el motor de packing: en un país con esa extensión, "qué llevo" no tiene una respuesta única.
+
+### 8.4 El bloque de información: qué se dice y qué no
+
+Este es el bloque que puede envejecer mal, así que las reglas son parte del spec, no del criterio del día:
+
+- **Nada de "alertas de seguridad".** Una alerta desactualizada es peor que ninguna: quien la lee asume vigencia. El encabezado es "qué tener en cuenta" y el contenido es de tipo estructural (cómo funciona el efectivo, qué precauciones urbanas aplican en cualquier ciudad grande), no coyuntural.
+- **Ningún número volátil en prosa.** Sin cotizaciones, sin precios, sin tarifas. Eso lo resuelven la API de cotizaciones (sección 5) y el catálogo con `updated_at` (sección 3), que sí tienen frescura verificable. La prosa explica *el mecanismo*, no *el valor de hoy*.
+- **Fecha visible, arriba del bloque**, con el formato "Revisado el {fecha}". No al pie en gris.
+- **Nada que dependa de un trámite o de una norma que cambia sin aviso** salvo con un link a la fuente oficial.
+
+Entradas propuestas (borrador editorial, para corregir):
+
+1. **Plata: por qué hay más de un dólar.** Qué es cada cotización, cuál toca realmente un turista según pague en efectivo o con tarjeta, y por qué conviene entenderlo antes de llegar y no en la ventanilla.
+2. **Cuándo ir.** Hemisferio sur: las estaciones están invertidas respecto del hemisferio norte. Buenos Aires es húmeda y calurosa en enero; la Patagonia tiene temporada corta; el norte y las Cataratas funcionan casi todo el año. El planner del bloque 4 usa clima histórico del mes, no pronóstico (sección 4), y eso está bien dicho acá.
+3. **Moverse: las distancias son continentales.** Vuelos internos vs. micros de larga distancia — los micros son genuinamente buenos y son parte de la experiencia, pero un tramo puede ser una noche entera.
+4. **Qué tener en cuenta.** Precauciones urbanas estándar de cualquier ciudad grande; cambiar plata en lugares establecidos y no en la calle; llevar algo de efectivo aunque la tarjeta funcione.
+5. **Alcance de los cálculos.** Los presupuestos y las listas del bloque 4 están calibrados para Buenos Aires. Dicho en la página, no escondido.
+
+### 8.5 Puntajes (borrador editorial, para corregir)
+
+| Dimensión | Puntaje | Por qué |
+| --- | --- | --- |
+| Naturaleza y paisajes | 9,5 | Glaciares, selva, puna, Atlántico y Andes en un solo país. Pocos destinos ofrecen ese rango. |
+| Gastronomía | 9,0 | Carne y vino de nivel mundial a precio de comida cotidiana, más una escena de café e italiana propia. |
+| Vida urbana y cultura | 9,0 | Buenos Aires sostiene teatro, librerías y música en vivo a una escala poco común en la región. |
+| Relación precio-calidad | 8,0 | Alto para el viajero que trae divisa, con la advertencia de que se mueve con la inflación. |
+| Facilidad logística | 6,0 | Las distancias son grandes, los tramos internos caros y el efectivo sigue importando. |
+| Previsibilidad económica | 4,0 | Es el punto débil declarado, y es exactamente el problema que esta herramienta ataca. |
+
+**Dónde brilla:** el rango de paisajes en un solo viaje; comer y tomar bien sin que sea un gasto excepcional; una ciudad capital con vida cultural propia y no de vitrina.
+
+**Dónde te cuesta:** las distancias obligan a elegir (no se hace Iguazú y Ushuaia en una semana); los precios se mueven entre que planificás y que viajás; hay que entender el sistema cambiario antes de llegar.
+
+**Disclaimer obligatorio, visible junto a las barras:** "Valoración editorial, no un índice oficial. Es una opinión fundamentada, no una medición."
+
+El puntaje bajo en previsibilidad económica no es un problema de la guía: es el gancho. La sección 4 de la página existe porque ese 4,0 existe.
+
+### 8.6 Imágenes
+
+Fuera de lo que este entorno puede hacer: la red saliente del contenedor bloquea los CDN de imágenes, así que las fotos las provee el usuario (Unsplash o Pexels, licencia libre). Requisitos: `alt` descriptivo en español, atribución al autor con link aunque la licencia no la exija, y servidas por `next/image` con `width`/`height` explícitos para no romper el layout al cargar.
+
+### 8.7 Criterios de aceptación adicionales
+
+8. `/` renderiza los cuatro bloques de 8.1 en orden, y el CTA del hero ancla al bloque del planner sin recargar la página.
+9. Crear un viaje desde el bloque 4 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
+10. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
