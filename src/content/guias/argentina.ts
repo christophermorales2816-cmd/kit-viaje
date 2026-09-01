@@ -17,7 +17,8 @@ export const argentina: DestinationGuide = {
   subhead:
     "Un país que va del trópico al hielo y donde el dólar tiene más de un precio. Las dos cosas cambian lo que llevás y lo que gastás.",
 
-  hero: null,
+  // El hero es el globo; esta foto encabeza el bloque informativo (spec, 8.6).
+  image: null,
 
   highlights: [
     {

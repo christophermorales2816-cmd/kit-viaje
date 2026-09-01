@@ -5,7 +5,7 @@ import { GUIDE_FACTS_MAX_AGE_DAYS } from "@/content/guias/types";
 import { parseIsoDate, toUtcMillis } from "@/lib/packing/dates";
 
 /**
- * Criterio de aceptación 10 (spec, sección 8.7).
+ * Criterio de aceptación 11 (spec, sección 8.8).
  *
  * El contenido de la guía vive en el repo y no en la base (8.2). Estas
  * aserciones son la contraparte de esa decisión: lo que en Postgres serían
@@ -67,15 +67,15 @@ describe("guía de Argentina", () => {
     expect(argentina.dataScopeNote.trim()).not.toBe("");
   });
 
-  it("acredita la foto del hero si hay foto", () => {
-    // hero es null a propósito mientras no haya imagen con licencia (8.6).
+  it("acredita la foto del bloque informativo si hay foto", () => {
+    // image es null a propósito mientras no haya imagen con licencia (8.6).
     // El día que la haya, la atribución no es opcional.
-    if (argentina.hero === null) return;
+    if (argentina.image === null) return;
 
-    expect(argentina.hero.src.trim()).not.toBe("");
-    expect(argentina.hero.alt.trim()).not.toBe("");
-    expect(argentina.hero.credit.trim()).not.toBe("");
-    expect(argentina.hero.creditUrl).toMatch(/^https:\/\//);
+    expect(argentina.image.src.trim()).not.toBe("");
+    expect(argentina.image.alt.trim()).not.toBe("");
+    expect(argentina.image.credit.trim()).not.toBe("");
+    expect(argentina.image.creditUrl).toMatch(/^https:\/\//);
   });
 
   /**

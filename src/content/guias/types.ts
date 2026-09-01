@@ -43,11 +43,12 @@ export interface DestinationGuide {
   country: string;
   subhead: string;
   /**
-   * null hasta que haya una foto con licencia libre y atribución (spec, 8.6).
-   * El hero renderiza un fondo neutro mientras tanto: preferimos un hero sin
-   * foto a un placeholder de stock que nadie recuerde reemplazar.
+   * Foto del país, cabecera del bloque informativo — no del hero, que es el
+   * globo (spec, 8.1 y 8.6). null hasta que haya una imagen con licencia libre
+   * y atribución: el bloque abre con su título y nada más, que es preferible a
+   * un placeholder de stock que nadie recuerde reemplazar.
    */
-  hero: GuideImage | null;
+  image: GuideImage | null;
   /** Exactamente 4 (spec, 8.3). Lo verifica el test, no el tipo. */
   highlights: GuideHighlight[];
   facts: GuideFact[];
@@ -60,5 +61,5 @@ export interface DestinationGuide {
   dataScopeNote: string;
 }
 
-/** Ventana de revisión del tablero informativo (spec, 8.7, criterio 10). */
+/** Ventana de revisión del tablero informativo (spec, 8.8, criterio 11). */
 export const GUIDE_FACTS_MAX_AGE_DAYS = 180;

@@ -203,7 +203,7 @@ Así el motor de presupuesto genera una lista default al crear el trip —igual 
 
 **A. Entrada (Landing — `/`)**
 
-> **Actualizado por la sección 8.** Desde el pivote a guía de destino, `/` ya no abre con el globo: abre con la guía de Argentina, y lo que sigue es el bloque 4 de esa página ("Planificá tu viaje"). El globo baja a ese bloque, donde el marcador vuelve a significar "elegí este corredor". La mecánica descrita acá —los dos inputs, el Server Action, el redirect— no cambia; cambia dónde vive.
+> **Actualizado por la sección 8.** El globo sigue siendo la entrada y sigue arriba de todo: eso no cambia. Lo que cambia es qué pasa al tocar el marcador. Antes abría el slide-over con los dos inputs; ahora despliega la guía del destino, y los dos inputs viven en el último bloque de esa misma página ("Planificá tu viaje"). El Server Action, la generación y el `redirect()` a `/viaje/{edit_token}` no se tocan.
 
 Hero con globo 3D interactivo (librería `cobe`, ~5kB, renderizado vía WebGL sobre un `<canvas>`, sin depender de Three.js) con un marcador único en Buenos Aires — el corredor está fijo para este MVP. Sin formulario tradicional.
 
@@ -256,13 +256,13 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 6. Los tests del motor de packing y del motor de presupuesto pasan en CI.
 7. Ninguna escritura a `trips`, `trip_packing_items` o `trip_budget_items` es posible sin un `edit_token` válido — verificable intentando una mutación directa contra la API de Supabase con la anon key.
 
-Los criterios 8 a 10, propios de la guía de destino, están en la sección 8.7.
+Los criterios 8 a 11, propios de la guía de destino, están en la sección 8.8.
 
 ## 8. Guía de destino (landing)
 
-Pivote de producto, decidido después de tener el planner funcionando. La landing deja de ser el globo + datepicker y pasa a ser una **guía informativa de Argentina**; el planner no se elimina ni se mueve de ruta, se convierte en el último bloque de esa misma página.
+Pivote de producto, decidido después de tener el planner funcionando. El globo se queda donde está —es la entrada y el selector de destino—, pero lo que se despliega al tocarlo deja de ser el datepicker y pasa a ser una **guía informativa de Argentina**. El planner no se elimina ni se mueve de ruta: baja al último bloque de esa misma página, entero.
 
-**Por qué.** Una herramienta suelta se lee como un ejercicio; una guía que termina en una herramienta se lee como un producto. Además resuelve un problema real del embudo actual: quien cae en `/` sin saber nada de Argentina no tiene motivo para elegir fechas todavía. La guía le da ese motivo y lo deja parado justo arriba del planner.
+**Por qué.** Una herramienta suelta se lee como un ejercicio; una guía que termina en una herramienta se lee como un producto. Además resuelve un problema real del embudo actual: quien cae en `/` sin saber nada de Argentina no tiene motivo para elegir fechas todavía. Se le pedía el gesto final —fechas, tipo de viaje— antes de haberle dado una sola razón. La guía le da esa razón y lo deja parado justo arriba del planner.
 
 **Alcance geográfico:** país, no ciudad. El corredor de datos sigue siendo Buenos Aires (sección 3: un solo `destination`); la guía habla de Argentina. No es una inconsistencia a ocultar — es lo que el MVP puede sostener hoy, y el texto lo dice donde corresponde en vez de fingir cobertura nacional en los cálculos.
 
@@ -270,16 +270,31 @@ Pivote de producto, decidido después de tener el planner funcionando. La landin
 
 ### 8.1 Estructura de la página (`/`)
 
-Cuatro bloques, en orden:
+La promesa es "el mundo en tus manos: elegís un destino y te decimos lo que necesitas saber". El globo no es decoración del hero anterior que hay que reubicar — **es el punto de entrada y el selector de destino**, y todo lo demás cuelga de ese click.
 
-1. **Hero** — foto, nombre del país, una línea de subtítulo y **cuatro números destacados**. Sin llamadas de red: los cuatro son contenido editorial estático. Se evaluó traer uno en vivo (la brecha entre oficial y blue, con `dolarapi.ts` y `freshness.ts` que ya existen) y se descartó para el hero: agrega un failure mode y un estado de carga en lo primero que ve el usuario, a cambio de un dato que en el bloque 2 queda mejor contextualizado.
-2. **"Todo lo que hay que saber antes de reservar"** — tablero informativo, redactado a mano, con **fecha de actualización visible**. Es la sección con más riesgo del producto: información desactualizada acá es peor que no tener la sección. Ver 8.4.
-3. **Puntajes por dimensión** — barras, más "dónde brilla" y "dónde te cuesta". Valoración editorial declarada como tal, no un índice con pretensión de objetividad.
-4. **"Planificá tu viaje"** — el planner actual (sección 6A) embebido como sección: el selector de fechas + tipo de viaje y "Tus viajes recientes". El CTA de los bloques 1-3 ancla acá, no a un formulario.
+Cinco bloques, en orden:
 
-**Sin captura de email.** El patrón de referencia ("completá el formulario y recibí la plantilla gratis") rompe la decisión de "sin registro" de la sección 2, que es la que sostiene todo el modelo de seguridad de la sección 3 — pedir un mail obliga a tratarlo como dato personal, con base legal, borrado y un canal de contacto que hoy no existe. Y es innecesario: **el export CSV de la sección 6B ya es la planilla**, y es mejor que una plantilla genérica porque viene con el viaje real del usuario adentro. El CTA lleva al bloque 4; la planilla se obtiene después, con datos propios.
+1. **Hero — el globo.** Se mantiene tal cual está hoy (`cobe`, sección 6A), con el marcador de Argentina. Debajo, los **cuatro números destacados** (8.3). El click en el marcador no abre el datepicker como hasta ahora: **despliega la guía**, con scroll suave al bloque 2. Elegir destino y elegir fechas dejan de ser el mismo gesto, porque ahora hay algo que leer en el medio.
+2. **Cotizaciones en vivo** — las cuatro, con el valor de ahora y la hora de consulta. Es la única estadística verdaderamente en tiempo real del producto y es la que justifica la promesa. Ver 8.7.
+3. **"Todo lo que hay que saber antes de reservar"** — tablero informativo, redactado a mano, con **fecha de actualización visible**. Es la sección con más riesgo del producto: información desactualizada acá es peor que no tener la sección. Ver 8.4.
+4. **Puntajes por dimensión** — barras, más "dónde brilla" y "dónde te cuesta". Valoración editorial declarada como tal, no un índice con pretensión de objetividad.
+5. **"Planificá tu viaje"** — el planner actual (sección 6A) como sección: datepicker + tipo de viaje y "Tus viajes recientes". El CTA de los bloques anteriores ancla acá.
 
-**Destino del globo 3D.** El globo (`cobe`) sale del hero y baja al bloque 4, donde el marcador de Buenos Aires vuelve a tener sentido: ahí sí es "elegí este corredor". En el hero lo reemplaza una foto — un globo con un solo punto no comunica "guía de país".
+**Qué es en tiempo real y qué no.** La promesa dice "estadísticas en tiempo real" y la página tiene que ser precisa sobre a qué aplica, porque no aplica a todo:
+
+| Dato | Frescura | De dónde sale |
+| --- | --- | --- |
+| Las 4 cotizaciones | tiempo real (revalidación cada 10 min) | dolarapi (sección 5) |
+| Precios del catálogo | `updated_at` por producto, con warning a los 30 días | Postgres (sección 3) |
+| Clima del mes | promedio histórico, no pronóstico | `climate_profiles` (sección 4) |
+| Tablero informativo | revisión manual fechada | contenido en el repo (8.2) |
+| Puntajes | opinión editorial | contenido en el repo (8.2) |
+
+Ninguna de las cuatro últimas filas se presenta como "en vivo". Decir que el clima es en tiempo real cuando es un promedio histórico sería exactamente el tipo de imprecisión que este producto dice combatir.
+
+**Un solo destino, dicho de frente.** El globo insinúa "elegí cualquier país" y el MVP solo tiene Argentina. La respuesta no es esconder el globo ni fingir cobertura: el marcador de Argentina está activo y el resto del globo no tiene marcadores, con una línea al pie — "Un corredor por ahora: Argentina. El motor está hecho para sumar más." Es honesto y además cuenta bien la arquitectura, que es lo que un portfolio tiene que mostrar.
+
+**Sin captura de email.** El patrón de referencia ("completá el formulario y recibí la plantilla gratis") rompe la decisión de "sin registro" de la sección 2, que es la que sostiene todo el modelo de seguridad de la sección 3 — pedir un mail obliga a tratarlo como dato personal, con base legal, borrado y un canal de contacto que hoy no existe. Y es innecesario: **el export CSV de la sección 6B ya es la planilla**, y es mejor que una plantilla genérica porque viene con el viaje real del usuario adentro. El CTA lleva al bloque 5; la planilla se obtiene después, con datos propios.
 
 ### 8.2 Modelo de contenido: en el repo, no en Postgres
 
@@ -353,6 +368,8 @@ export interface DestinationGuide {
 
 El cuarto número es el que justifica el motor de packing: en un país con esa extensión, "qué llevo" no tiene una respuesta única.
 
+Los cuatro son contenido editorial estático, sin llamadas de red: el hero es lo primero que se pinta y no debe depender de una API de terceros. El dato en vivo tiene su propio bloque inmediatamente debajo (8.7), donde un estado de carga o un error se pueden mostrar sin arruinar la primera impresión.
+
 ### 8.4 El bloque de información: qué se dice y qué no
 
 Este es el bloque que puede envejecer mal, así que las reglas son parte del spec, no del criterio del día:
@@ -391,10 +408,24 @@ El puntaje bajo en previsibilidad económica no es un problema de la guía: es e
 
 ### 8.6 Imágenes
 
+La foto del país ya no es el hero —ese lugar es del globo (8.1)— sino la cabecera del bloque informativo, que es donde le da identidad visual a la lectura.
+
 Fuera de lo que este entorno puede hacer: la red saliente del contenedor bloquea los CDN de imágenes, así que las fotos las provee el usuario (Unsplash o Pexels, licencia libre). Requisitos: `alt` descriptivo en español, atribución al autor con link aunque la licencia no la exija, y servidas por `next/image` con `width`/`height` explícitos para no romper el layout al cargar.
 
-### 8.7 Criterios de aceptación adicionales
+### 8.7 Cotizaciones en vivo
 
-8. `/` renderiza los cuatro bloques de 8.1 en orden, y el CTA del hero ancla al bloque del planner sin recargar la página.
-9. Crear un viaje desde el bloque 4 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
-10. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
+El bloque que cumple la promesa de "en tiempo real". No hay que construir casi nada: `fetchQuotes()` (`src/lib/quotes/dolarapi.ts`) ya trae las cuatro de dolarapi con `next: { revalidate: 600 }`, y `mapDolarApiResponse` ya traduce los `casa` de la API a los ids del MVP (`bolsa` → MEP, `contadoconliqui` → CCL). Lo que falta es la presentación.
+
+- **Cuatro tarjetas**: Oficial, Blue, MEP, CCL, cada una con el valor de venta y la variación respecto de la oficial, que es la lectura que le importa a un extranjero ("cuánto más rinde tu dólar según dónde lo cambies").
+- **Hora de consulta visible.** Un número sin timestamp no es un dato en tiempo real, es un número.
+- **Streaming, no bloqueo.** El bloque va dentro de un `<Suspense>` con skeleton: el hero y el resto de la página se pintan sin esperar a dolarapi. Es Server Component, así que la key no viaja al cliente y el cacheo de 10 minutos es compartido entre visitas.
+- **Camino de error explícito.** `fetchQuotes` devuelve `{ ok: false, reason }` — el bloque muestra "No pudimos traer las cotizaciones ahora", no un cero ni una página rota. Es la misma decisión que ya tomó la sección 5, aplicada acá.
+
+**Por qué no se guardan en la base.** Tentador para tener un histórico y un gráfico, pero eso es otro producto: exige un job programado, una tabla de series temporales y una política de retención. El MVP muestra el valor de ahora, que es lo que cambia una decisión de viaje.
+
+### 8.8 Criterios de aceptación adicionales
+
+8. `/` renderiza los cinco bloques de 8.1 en orden, con el globo arriba de todo. Tocar el marcador de Argentina despliega la guía sin recargar la página, y el CTA llega al planner.
+9. Crear un viaje desde el bloque 5 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
+10. El bloque de cotizaciones muestra las cuatro con hora de consulta, y con dolarapi caído muestra el mensaje de error sin romper el resto de la página — verificable interceptando la respuesta.
+11. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
