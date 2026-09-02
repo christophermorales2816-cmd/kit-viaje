@@ -33,8 +33,11 @@ export function RecentTrips() {
 
   if (trips.length === 0) return null;
 
+  // El espaciado va adentro y no en quien lo usa: este componente devuelve
+  // null cuando no hay historial, y un contenedor con padding por fuera deja
+  // una franja vacía en la página de quien entra por primera vez.
   return (
-    <section className="w-full max-w-md">
+    <section className="mx-auto w-full max-w-5xl px-6 py-12">
       <h2 className="mb-3 text-sm font-medium text-muted-foreground">
         Tus viajes recientes
       </h2>

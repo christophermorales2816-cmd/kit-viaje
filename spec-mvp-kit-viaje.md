@@ -203,7 +203,7 @@ Así el motor de presupuesto genera una lista default al crear el trip —igual 
 
 **A. Entrada (Landing — `/`)**
 
-> **Actualizado por la sección 8.** El globo sigue siendo la entrada y sigue arriba de todo: eso no cambia. Lo que cambia es qué pasa al tocar el marcador. Antes abría el slide-over con los dos inputs; ahora despliega la guía del destino, y los dos inputs viven en el último bloque de esa misma página ("Planificá tu viaje"). El Server Action, la generación y el `redirect()` a `/viaje/{edit_token}` no se tocan.
+> **Actualizado por la sección 8.** El globo sigue siendo la entrada y sigue arriba de todo: eso no cambia. Lo que cambia es qué pasa al tocar el marcador. Antes abría el slide-over con los dos inputs; ahora navega a la guía del destino, y los dos inputs viven en una tercera página (`/guia/{slug}/planificar`). El Server Action, la generación y el `redirect()` a `/viaje/{edit_token}` no se tocan.
 
 Hero con globo 3D interactivo (librería `cobe`, ~5kB, renderizado vía WebGL sobre un `<canvas>`, sin depender de Three.js) con un marcador único en Buenos Aires — el corredor está fijo para este MVP. Sin formulario tradicional.
 
@@ -258,9 +258,9 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 
 Los criterios 8 a 11, propios de la guía de destino, están en la sección 8.8.
 
-## 8. Guía de destino (landing)
+## 8. Guía de destino
 
-Pivote de producto, decidido después de tener el planner funcionando. El globo se queda donde está —es la entrada y el selector de destino—, pero lo que se despliega al tocarlo deja de ser el datepicker y pasa a ser una **guía informativa de Argentina**. El planner no se elimina ni se mueve de ruta: baja al último bloque de esa misma página, entero.
+Pivote de producto, decidido después de tener el planner funcionando. El globo se queda donde está —es la entrada y el selector de destino—, pero lo que se abre al tocarlo deja de ser el datepicker y pasa a ser una **guía informativa de Argentina**. El planner no se elimina: pasa a ser la tercera página del flujo, entero.
 
 **Por qué.** Una herramienta suelta se lee como un ejercicio; una guía que termina en una herramienta se lee como un producto. Además resuelve un problema real del embudo actual: quien cae en `/` sin saber nada de Argentina no tiene motivo para elegir fechas todavía. Se le pedía el gesto final —fechas, tipo de viaje— antes de haberle dado una sola razón. La guía le da esa razón y lo deja parado justo arriba del planner.
 
@@ -268,17 +268,30 @@ Pivote de producto, decidido después de tener el planner funcionando. El globo 
 
 **Idioma:** español, sin cambios (sección 2).
 
-### 8.1 Estructura de la página (`/`)
+### 8.1 Estructura: tres páginas, no una
 
-La promesa es "el mundo en tus manos: elegís un destino y te decimos lo que necesitas saber". El globo no es decoración del hero anterior que hay que reubicar — **es el punto de entrada y el selector de destino**, y todo lo demás cuelga de ese click.
+La promesa es "el mundo en tus manos: elegís un destino y te decimos lo que necesitás saber". El globo es el punto de entrada y el selector de destino, y todo lo demás cuelga de ese click.
 
-Cinco bloques, en orden:
+Primero se probó todo en una sola página con cinco bloques. No estaba mal, pero invertía el orden: quien llegaba leía "empezá por Argentina" antes de haber elegido nada. Se separa en tres pasos, uno por página.
 
-1. **Hero — el globo.** Se mantiene tal cual está hoy (`cobe`, sección 6A), con el marcador de Argentina. Debajo, los **cuatro números destacados** (8.3). El click en el marcador no abre el datepicker como hasta ahora: **despliega la guía**, con scroll suave al bloque 2. Elegir destino y elegir fechas dejan de ser el mismo gesto, porque ahora hay algo que leer en el medio.
-2. **Cotizaciones en vivo** — las cuatro, con el valor de ahora y la hora de consulta. Es la única estadística verdaderamente en tiempo real del producto y es la que justifica la promesa. Ver 8.7.
-3. **"Todo lo que hay que saber antes de reservar"** — tablero informativo, redactado a mano, con **fecha de actualización visible**. Es la sección con más riesgo del producto: información desactualizada acá es peor que no tener la sección. Ver 8.4.
-4. **Puntajes por dimensión** — barras, más "dónde brilla" y "dónde te cuesta". Valoración editorial declarada como tal, no un índice con pretensión de objetividad.
-5. **"Planificá tu viaje"** — el planner actual (sección 6A) como sección: datepicker + tipo de viaje y "Tus viajes recientes". El CTA de los bloques anteriores ancla acá.
+**Página 1 — Bienvenida (`/`).** No habla del país. Banda oscura con el globo al costado, una etiqueta, el título, el resumen de qué hace el producto y dos accesos (explorar la guía, abrir el planificador). Debajo, una franja con cuatro números. El marcador del globo es un `<Link>` a la guía: navega sin JavaScript, se abre en otra pestaña y Next precarga la página al pasar el mouse. Cierra con "Tus viajes recientes", que vive acá porque el criterio de aceptación 5 dice `/`.
+
+**Página 2 — La guía del país (`/guia/{slug}`).** Adónde llega el click. El nombre del país, la línea de resumen y los **cuatro números destacados** (8.3); después las **cotizaciones en vivo** (8.7), el **tablero informativo** fechado (8.4) y los **puntajes** (8.5). Cierra invitando al planificador. Prerenderizada con `generateStaticParams`, y con `dynamicParams = false`: un slug que no existe es 404, no una guía vacía.
+
+**Página 3 — El planificador (`/guia/{slug}/planificar`).** El datepicker y el tipo de viaje. El formulario y su Server Action no cambian respecto de la sección 6A; lo único que se movió es dónde vive. Queda pendiente rediseñarlo.
+
+Cada página tiene un enlace de vuelta a la anterior. El flujo hacia adelante lo maneja el globo y los CTA; el de atrás, esos enlaces.
+
+**Los cuatro números de la bienvenida.** El patrón de referencia usa números de cobertura ("146 países"). Los nuestros no pueden serlo sin mentir, así que dicen lo que este producto sí tiene:
+
+| Valor | Etiqueta | Nota |
+| --- | --- | --- |
+| **4** | cotizaciones en vivo | Oficial, blue, MEP y CCL |
+| **0** | registros | Sin cuenta y sin mail |
+| **1** | corredor por ahora | Argentina; el motor suma más |
+| **100%** | gratis | Sin anuncios ni venta de datos |
+
+El tercero es el que incomoda, y por eso está.
 
 **Qué es en tiempo real y qué no.** La promesa dice "estadísticas en tiempo real" y la página tiene que ser precisa sobre a qué aplica, porque no aplica a todo:
 
@@ -290,11 +303,11 @@ Cinco bloques, en orden:
 | Tablero informativo | revisión manual fechada | contenido en el repo (8.2) |
 | Puntajes | opinión editorial | contenido en el repo (8.2) |
 
-Ninguna de las cuatro últimas filas se presenta como "en vivo". Decir que el clima es en tiempo real cuando es un promedio histórico sería exactamente el tipo de imprecisión que este producto dice combatir.
+Ninguna de las cuatro últimas filas se presenta como "en vivo". Decir que el clima es tiempo real cuando es un promedio histórico sería exactamente el tipo de imprecisión que este producto dice combatir.
 
 **Un solo destino, dicho de frente.** El globo insinúa "elegí cualquier país" y el MVP solo tiene Argentina. La respuesta no es esconder el globo ni fingir cobertura: el marcador de Argentina está activo y el resto del globo no tiene marcadores, con una línea al pie — "Un corredor por ahora: Argentina. El motor está hecho para sumar más." Es honesto y además cuenta bien la arquitectura, que es lo que un portfolio tiene que mostrar.
 
-**Sin captura de email.** El patrón de referencia ("completá el formulario y recibí la plantilla gratis") rompe la decisión de "sin registro" de la sección 2, que es la que sostiene todo el modelo de seguridad de la sección 3 — pedir un mail obliga a tratarlo como dato personal, con base legal, borrado y un canal de contacto que hoy no existe. Y es innecesario: **el export CSV de la sección 6B ya es la planilla**, y es mejor que una plantilla genérica porque viene con el viaje real del usuario adentro. El CTA lleva al bloque 5; la planilla se obtiene después, con datos propios.
+**Sin captura de email.** El patrón de referencia ("completá el formulario y recibí la plantilla gratis") rompe la decisión de "sin registro" de la sección 2, que es la que sostiene todo el modelo de seguridad de la sección 3 — pedir un mail obliga a tratarlo como dato personal, con base legal, borrado y un canal de contacto que hoy no existe. Y es innecesario: **el export CSV de la sección 6B ya es la planilla**, y es mejor que una plantilla genérica porque viene con el viaje real del usuario adentro.
 
 ### 8.2 Modelo de contenido: en el repo, no en Postgres
 
@@ -357,7 +370,7 @@ export interface DestinationGuide {
 }
 ```
 
-### 8.3 Los cuatro números del hero
+### 8.3 Los cuatro números de la guía
 
 | Valor | Etiqueta | Nota |
 | --- | --- | --- |
@@ -368,7 +381,7 @@ export interface DestinationGuide {
 
 El cuarto número es el que justifica el motor de packing: en un país con esa extensión, "qué llevo" no tiene una respuesta única.
 
-Los cuatro son contenido editorial estático, sin llamadas de red: el hero es lo primero que se pinta y no debe depender de una API de terceros. El dato en vivo tiene su propio bloque inmediatamente debajo (8.7), donde un estado de carga o un error se pueden mostrar sin arruinar la primera impresión.
+Los cuatro son contenido editorial estático, sin llamadas de red: encabezan la guía y no deben depender de una API de terceros. El dato en vivo tiene su propio bloque inmediatamente debajo (8.7), donde un estado de carga o un error se pueden mostrar sin arruinar la entrada.
 
 ### 8.4 El bloque de información: qué se dice y qué no
 
@@ -408,7 +421,7 @@ El puntaje bajo en previsibilidad económica no es un problema de la guía: es e
 
 ### 8.6 Imágenes
 
-La foto del país ya no es el hero —ese lugar es del globo (8.1)— sino la cabecera del bloque informativo, que es donde le da identidad visual a la lectura.
+La foto del país no va en la bienvenida —ese lugar es del globo (8.1)— sino como cabecera del bloque informativo de la página 2, que es donde le da identidad visual a la lectura. Si más adelante se quiere una foto de fondo en la bienvenida, entra detrás de la banda oscura sin rehacer el layout.
 
 Fuera de lo que este entorno puede hacer: la red saliente del contenedor bloquea los CDN de imágenes, así que las fotos las provee el usuario (Unsplash o Pexels, licencia libre). Requisitos: `alt` descriptivo en español, atribución al autor con link aunque la licencia no la exija, y servidas por `next/image` con `width`/`height` explícitos para no romper el layout al cargar.
 
@@ -425,7 +438,7 @@ El bloque que cumple la promesa de "en tiempo real". No hay que construir casi n
 
 ### 8.8 Criterios de aceptación adicionales
 
-8. `/` renderiza los cinco bloques de 8.1 en orden, con el globo arriba de todo. Tocar el marcador de Argentina despliega la guía sin recargar la página, y el CTA llega al planner.
-9. Crear un viaje desde el bloque 5 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
+8. El flujo de tres páginas funciona de punta a punta: `/` no nombra el país en su título, el marcador del globo lleva a `/guia/argentina`, y desde ahí se llega a `/guia/argentina/planificar`. Cada página tiene vuelta a la anterior, y un slug inexistente responde 404.
+9. Crear un viaje desde la página 3 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
 10. El bloque de cotizaciones muestra las cuatro con hora de consulta, y con dolarapi caído muestra el mensaje de error sin romper el resto de la página — verificable interceptando la respuesta.
 11. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
