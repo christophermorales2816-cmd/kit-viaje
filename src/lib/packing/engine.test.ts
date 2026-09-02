@@ -166,7 +166,7 @@ describe("cantidades y peso", () => {
     weightG: 800,
   });
 
-  it("escala por duración y respeta el tope", () => {
+  it("genera todo en cero, escale por duración o no", () => {
     const lista = generatePackingList({
       trip: { startDate: "2026-07-01", endDate: "2026-07-30", tripType: "urbano" },
       climateProfiles: PROFILES,
@@ -175,12 +175,16 @@ describe("cantidades y peso", () => {
     });
 
     expect(lista.durationDays).toBe(30);
+
+    // La generación decide QUÉ entra en la lista, no CUÁNTO. Ni siquiera los
+    // ítems que escalan por duración llegan con una cantidad puesta: 30 días
+    // de viaje no eligen por el usuario cuántas medias lleva.
     const porId = new Map(lista.items.map((e) => [e.item.id, e.qty]));
-    expect(porId.get("medias")).toBe(10); // 30 días, tope 10
-    expect(porId.get("campera")).toBe(1); // no escala
+    expect(porId.get("medias")).toBe(0);
+    expect(porId.get("campera")).toBe(0);
   });
 
-  it("suma el peso como weightG × qty", () => {
+  it("no le pone peso a una valija que todavía está vacía", () => {
     const lista = generatePackingList({
       trip: { startDate: "2026-07-01", endDate: "2026-07-05", tripType: "urbano" },
       climateProfiles: PROFILES,
@@ -188,8 +192,29 @@ describe("cantidades y peso", () => {
       catalog: [medias, campera],
     });
 
-    // 5 medias × 40 g + 1 campera × 800 g
-    expect(lista.totalWeightG).toBe(5 * 40 + 800);
+    expect(lista.totalWeightG).toBe(0);
+
+    // El peso sigue saliendo de weightG × qty, que es lo que se recalcula
+    // cuando el usuario elige: con qty en cero, cero.
+    for (const entrada of lista.items) {
+      expect(entrada.totalWeightG).toBe(entrada.item.weightG * entrada.qty);
+    }
+  });
+
+  it("igual sigue eligiendo qué ítems entran", () => {
+    // Que todo arranque en cero no es lo mismo que no generar nada: el filtro
+    // por clima y tipo de viaje es el trabajo real del motor.
+    const lista = generatePackingList({
+      trip: { startDate: "2026-07-01", endDate: "2026-07-05", tripType: "urbano" },
+      climateProfiles: PROFILES,
+      climateThresholds: THRESHOLDS,
+      catalog: [medias, campera],
+    });
+
+    expect(lista.items.map((e) => e.item.id).sort()).toEqual([
+      "campera",
+      "medias",
+    ]);
   });
 });
 

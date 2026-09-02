@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { GlobeHero } from "@/components/landing/globe-hero";
-import { RecentTrips } from "@/components/landing/recent-trips";
 import { Button } from "@/components/ui/button";
 import { CORREDOR_INICIAL, getGuide } from "@/content/guias";
 
@@ -46,13 +45,14 @@ export default function Home() {
 
   return (
     <main className="flex flex-1 flex-col">
-      <section className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
+      {/*
+        Un solo rectángulo oscuro a sangre, del borde superior hasta debajo de
+        los números: el hero y las estadísticas son la misma zona, no dos
+        bandas apiladas con una costura en el medio.
+      */}
+      <section className="flex flex-col gap-14 bg-slate-950 px-6 py-14 text-slate-100 md:gap-20 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-12 md:flex-row md:justify-between md:gap-16">
           <div className="flex max-w-lg flex-col items-center gap-6 text-center md:items-start md:text-left">
-            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
-              Sin registro · Cotizaciones en vivo
-            </span>
-
             <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
               El mundo en tus manos
             </h1>
@@ -111,19 +111,17 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </section>
-
-      {/*
-        Los cuatro números del reference son de cobertura ("146 países"). Los
-        nuestros no pueden serlo sin mentir, así que dicen lo que este producto
-        sí tiene: tasas en vivo, cero fricción de entrada, un corredor honesto
-        y gratis. El tercero es el que incomoda, y por eso está.
-      */}
-      <section
-        aria-label="En números"
-        className="border-y bg-muted/40 px-6 py-10"
-      >
-        <dl className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-8 text-center md:grid-cols-4">
+        {/*
+          Los cuatro números del reference son de cobertura ("146 países"). Los
+          nuestros no pueden serlo sin mentir, así que dicen lo que este
+          producto sí tiene: tasas en vivo, cero fricción de entrada, un
+          corredor honesto y gratis. El tercero es el que incomoda, y por eso
+          está.
+        */}
+        <dl
+          aria-label="En números"
+          className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-8 border-t border-white/10 pt-12 text-center md:grid-cols-4"
+        >
           {ESTADISTICAS.map((stat) => (
             <div key={stat.etiqueta} className="flex flex-col gap-1">
               <dt className="text-3xl font-semibold tracking-tight tabular-nums">
@@ -131,7 +129,7 @@ export default function Home() {
               </dt>
               <dd className="flex flex-col gap-0.5">
                 <span className="text-sm font-medium">{stat.etiqueta}</span>
-                <span className="text-muted-foreground text-xs text-pretty">
+                <span className="text-xs text-pretty text-slate-400">
                   {stat.nota}
                 </span>
               </dd>
@@ -139,14 +137,6 @@ export default function Home() {
           ))}
         </dl>
       </section>
-
-      {/*
-        "Tus viajes recientes" vive acá y no en el planificador: el criterio de
-        aceptación 5 dice "volver a / muestra el acceso rápido", y quien vuelve
-        quiere su viaje de entrada, no a dos clicks. Sin contenedor propio: se
-        trae su espaciado y no deja hueco cuando no hay historial.
-      */}
-      <RecentTrips />
     </main>
   );
 }

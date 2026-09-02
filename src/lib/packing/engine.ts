@@ -1,7 +1,6 @@
 import { durationInDays, monthsCovered } from "./dates";
 import { resolveClimateBuckets } from "./climate";
 import { byCatalogEntry } from "@/lib/catalog-order";
-import { resolveQuantity } from "@/lib/quantity";
 import type {
   ClimateBucketId,
   ClimateProfile,
@@ -67,17 +66,27 @@ export function generatePackingList(input: PackingEngineInput): PackingList {
     // Las dos dimensiones del paso 3: el clima resuelto Y el tipo de viaje.
     .filter(
       (item) =>
-        matchesClimate(item, buckets) && item.tripTypeTags.includes(trip.tripType),
+        matchesClimate(item, buckets) &&
+        item.tripTypeTags.includes(trip.tripType),
     )
     .map((item) => {
-      const qty = resolveQuantity(item, durationDays);
+      // Arranca en cero: la generación decide QUÉ entra en la lista, no
+      // CUÁNTO. Quién sabe si el usuario lleva dos pantalones o cinco es el
+      // usuario, y una lista preseleccionada lo obliga a desmarcar en vez de
+      // elegir. `resolveQuantity` sigue siendo la regla de escalado del spec
+      // (sección 4) y viaja con cada ítem, lista para ofrecerse como
+      // sugerencia — pero ya no se aplica sola.
+      const qty = 0;
       return { item, qty, totalWeightG: item.weightG * qty };
     })
     // Orden estable: la lista se renderiza agrupada por categoría, y sin un
     // criterio fijo dos corridas iguales podrían devolver órdenes distintos.
     .sort(byCatalogEntry((entry) => entry.item));
 
-  const totalWeightG = items.reduce((sum, entry) => sum + entry.totalWeightG, 0);
+  const totalWeightG = items.reduce(
+    (sum, entry) => sum + entry.totalWeightG,
+    0,
+  );
 
   return {
     items,

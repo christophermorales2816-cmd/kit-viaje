@@ -29,9 +29,7 @@ export type ValidationResult<T> =
   | { ok: false; error: string };
 
 function isTripType(value: unknown): value is TripType {
-  return (
-    typeof value === "string" && TRIP_TYPES.includes(value as TripType)
-  );
+  return typeof value === "string" && TRIP_TYPES.includes(value as TripType);
 }
 
 /**
@@ -60,8 +58,7 @@ export function isShareSlug(value: unknown): value is string {
  * esto solo evita mandarle a Postgres un string que no es un uuid — lo que
  * además devuelve un error de sintaxis, no un "no encontrado".
  */
-const UUID =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function isUuid(value: unknown): value is string {
   return typeof value === "string" && UUID.test(value);
@@ -122,10 +119,15 @@ export function parseTripInput(raw: {
  * Cantidad editada a mano en el dashboard.
  *
  * El tope superior no sale de ninguna regla de negocio: es el mismo criterio
- * que el `check (qty > 0)` de la base, más un techo para que un `99999999` en
+ * que el `check (qty >= 0)` de la base, más un techo para que un `99999999` en
  * el input no dé un total de presupuesto que ocupe media pantalla. El usuario
  * puede poner lo que quiera dentro de eso.
+ *
+ * El piso es cero y no uno: las listas se generan vacías y el usuario suma lo
+ * que necesita, así que "ninguno" es un valor legítimo y no un error. Bajar a
+ * cero es cómo se saca un ítem del viaje sin sacarlo de la lista.
  */
+export const MIN_ITEM_QTY = 0;
 export const MAX_ITEM_QTY = 999;
 
 export function parseQty(value: unknown): ValidationResult<number> {
@@ -135,10 +137,10 @@ export function parseQty(value: unknown): ValidationResult<number> {
     return { ok: false, error: "La cantidad tiene que ser un número entero." };
   }
 
-  if (parsed < 1 || parsed > MAX_ITEM_QTY) {
+  if (parsed < MIN_ITEM_QTY || parsed > MAX_ITEM_QTY) {
     return {
       ok: false,
-      error: `La cantidad tiene que estar entre 1 y ${MAX_ITEM_QTY}.`,
+      error: `La cantidad tiene que estar entre ${MIN_ITEM_QTY} y ${MAX_ITEM_QTY}.`,
     };
   }
 

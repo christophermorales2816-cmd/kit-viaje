@@ -9,6 +9,7 @@ export type { MutationResult, PackingItemPatch } from "./mutate";
 
 export {
   MAX_ITEM_QTY,
+  MIN_ITEM_QTY,
   MAX_TRIP_DAYS,
   MIN_TRIP_DAYS,
   isEditToken,

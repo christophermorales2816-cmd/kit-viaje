@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { calculateBudget, generateBudgetList } from "@/lib/budget/engine";
+import {
+  toBudgetLine,
+  calculateBudget,
+  generateBudgetList,
+} from "@/lib/budget/engine";
 import { selectQuote } from "@/lib/budget/quotes";
 import type { BudgetProduct, ExchangeQuote } from "@/lib/budget/types";
 
@@ -80,24 +84,34 @@ describe("generateBudgetList", () => {
     expect(lista).toHaveLength(CATALOGO.length);
   });
 
-  it("escala las cantidades por duración, igual que el motor de packing", () => {
+  it("genera todo en cero, igual que el motor de packing", () => {
     const porId = new Map(lista.map((linea) => [linea.product.id, linea.qty]));
-    expect(porId.get("menu")).toBe(7); // uno por día
-    expect(porId.get("tango")).toBe(1); // no escala
+    expect(porId.get("menu")).toBe(0);
+    expect(porId.get("tango")).toBe(0);
   });
 
-  it("respeta el tope", () => {
-    const corto = generateBudgetList(
+  it("no llega con un subtotal que el usuario no eligió", () => {
+    const menu = lista.find((linea) => linea.product.id === "menu");
+    expect(menu?.subtotal).toBe(0);
+  });
+
+  it("la duración deja de mover las cantidades generadas", () => {
+    // Antes, 30 días llenaban la SUBE hasta su tope de 20. Ahora la duración
+    // define qué se puede necesitar, no cuánto se compra.
+    const largo = generateBudgetList(
       { startDate: "2026-09-01", endDate: "2026-09-30" }, // 30 días
       CATALOGO,
     );
-    const sube = corto.find((linea) => linea.product.id === "sube");
-    expect(sube?.qty).toBe(20); // 30 días, tope 20
+
+    expect(largo.map((linea) => linea.qty)).toEqual(lista.map(() => 0));
   });
 
-  it("calcula el subtotal como precio × cantidad", () => {
-    const menu = lista.find((linea) => linea.product.id === "menu");
-    expect(menu?.subtotal).toBe(8500 * 7);
+  it("sí calcula el subtotal como precio × cantidad al elegir", () => {
+    // La aritmética no cambió, solo el punto de partida: es la misma cuenta
+    // que corre cuando el usuario sube la cantidad en el dashboard.
+    expect(toBudgetLine(CATALOGO[0], 7).subtotal).toBe(
+      CATALOGO[0].basePrice * 7,
+    );
   });
 
   it("ordena por categoría y después por nombre", () => {
@@ -117,35 +131,53 @@ describe("generateBudgetList", () => {
 
   it("propaga el error de un rango de fechas inválido", () => {
     expect(() =>
-      generateBudgetList({ startDate: "2026-09-10", endDate: "2026-09-01" }, CATALOGO),
+      generateBudgetList(
+        { startDate: "2026-09-10", endDate: "2026-09-01" },
+        CATALOGO,
+      ),
     ).toThrow(RangeError);
   });
 
-  /**
-   * Nota de modelado, no bug del motor: un viaje del 1 al 7 son 7 días pero 6
-   * noches. La regla del spec escala por días, así que un hotel con
-   * daysPerUnit = 1 va a dar 7. Se resuelve al cargar el catálogo, no acá.
-   */
-  it("escala el hotel por días, que no es lo mismo que noches", () => {
-    const hotel = lista.find((linea) => linea.product.id === "hotel");
-    expect(hotel?.qty).toBe(7);
+  it("igual sigue armando la lista completa del destino", () => {
+    // Que todo arranque en cero no es lo mismo que no generar nada.
+    expect(lista.map((linea) => linea.product.id).sort()).toEqual(
+      CATALOGO.map((p) => p.id).sort(),
+    );
   });
 });
 
 describe("calculateBudget", () => {
   const lista = generateBudgetList(VIAJE, CATALOGO);
 
-  it("suma el total en la moneda del destino", () => {
+  it("arranca en cero, porque todavía no se eligió nada", () => {
     const totales = calculateBudget(lista, selectQuote(QUOTES, "blue"));
-    // 8500×7 + 3200×7 + 350×7 + 65000×7 + 45000×1
-    const esperado = (8500 + 3200 + 350 + 65_000) * 7 + 45_000;
-    expect(totales.totalBase).toBe(esperado);
+
+    expect(totales.totalBase).toBe(0);
+    expect(totales.baseCurrency).toBe("ARS");
+  });
+
+  it("suma el total en la moneda del destino con cantidades elegidas", () => {
+    // El caso que importa después de que el usuario arma su viaje: la suma es
+    // la misma de siempre.
+    const elegido = [
+      toBudgetLine(CATALOGO[0], 7),
+      toBudgetLine(CATALOGO[4], 1),
+    ];
+    const totales = calculateBudget(elegido, selectQuote(QUOTES, "blue"));
+
+    expect(totales.totalBase).toBe(8500 * 7 + 45_000);
     expect(totales.baseCurrency).toBe("ARS");
   });
 
   it("convierte dividiendo por la cotización elegida", () => {
     const totales = calculateBudget(
-      [{ product: product("x", "comida", "X", 104_000), qty: 1, subtotal: 104_000 }],
+      [
+        {
+          product: product("x", "comida", "X", 104_000),
+          qty: 1,
+          subtotal: 104_000,
+        },
+      ],
       selectQuote(QUOTES, "blue"),
     );
     expect(totales.totalConverted).toBe(100); // 104000 / 1040
@@ -155,7 +187,13 @@ describe("calculateBudget", () => {
 
   it("redondea el convertido a dos decimales", () => {
     const totales = calculateBudget(
-      [{ product: product("x", "comida", "X", 100_000), qty: 1, subtotal: 100_000 }],
+      [
+        {
+          product: product("x", "comida", "X", 100_000),
+          qty: 1,
+          subtotal: 100_000,
+        },
+      ],
       selectQuote(QUOTES, "blue"),
     );
     expect(totales.totalConverted).toBe(96.15); // 100000/1040 = 96.1538...
@@ -163,7 +201,11 @@ describe("calculateBudget", () => {
 
   it("cambiar de cotización cambia el total y no toca el de pesos", () => {
     const linea = [
-      { product: product("x", "comida", "X", 100_000), qty: 1, subtotal: 100_000 },
+      {
+        product: product("x", "comida", "X", 100_000),
+        qty: 1,
+        subtotal: 100_000,
+      },
     ];
     const resultados = (["oficial", "blue", "mep", "ccl"] as const).map((id) =>
       calculateBudget(linea, selectQuote(QUOTES, id)),
@@ -179,7 +221,11 @@ describe("calculateBudget", () => {
 
   it("el oficial da más dólares que el blue, con la brecha del spec", () => {
     const linea = [
-      { product: product("x", "comida", "X", 100_000), qty: 1, subtotal: 100_000 },
+      {
+        product: product("x", "comida", "X", 100_000),
+        qty: 1,
+        subtotal: 100_000,
+      },
     ];
     const oficial = calculateBudget(linea, selectQuote(QUOTES, "oficial"));
     const blue = calculateBudget(linea, selectQuote(QUOTES, "blue"));
@@ -203,14 +249,22 @@ describe("calculateBudget", () => {
 
   it("rechaza mezclar monedas en vez de sumar peras con manzanas", () => {
     const mezcla = [
-      { product: product("ars", "comida", "En pesos", 8500), qty: 1, subtotal: 8500 },
       {
-        product: product("usd", "comida", "En dólares", 20, { currency: "USD" }),
+        product: product("ars", "comida", "En pesos", 8500),
+        qty: 1,
+        subtotal: 8500,
+      },
+      {
+        product: product("usd", "comida", "En dólares", 20, {
+          currency: "USD",
+        }),
         qty: 1,
         subtotal: 20,
       },
     ];
-    expect(() => calculateBudget(mezcla, selectQuote(QUOTES, "blue"))).toThrow(/USD/);
+    expect(() => calculateBudget(mezcla, selectQuote(QUOTES, "blue"))).toThrow(
+      /USD/,
+    );
   });
 
   it("no muta las líneas que recibe", () => {
