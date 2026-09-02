@@ -1,112 +1,152 @@
-import { Suspense } from "react";
+import Link from "next/link";
 
-import { FactsBoard } from "@/components/guia/facts-board";
-import { GuideHighlights } from "@/components/guia/guide-highlights";
-import { LiveQuotes, LiveQuotesSkeleton } from "@/components/guia/live-quotes";
-import { ScoreBars } from "@/components/guia/score-bars";
 import { GlobeHero } from "@/components/landing/globe-hero";
-import { NewTripForm } from "@/components/landing/new-trip-form";
 import { RecentTrips } from "@/components/landing/recent-trips";
-import { argentina } from "@/content/guias/argentina";
+import { Button } from "@/components/ui/button";
+import { CORREDOR_INICIAL, getGuide } from "@/content/guias";
 
 /**
- * Landing (spec, sección 8.1).
+ * Página 1 — bienvenida (spec, sección 8.1).
  *
- * Cinco bloques: el globo, las cotizaciones en vivo, el tablero informativo,
- * los puntajes y el planner. El globo sigue siendo la entrada y el selector de
- * destino; lo que cambió es qué despliega el marcador.
+ * No habla del país. Esa es toda la idea: primero el mundo y el gesto de
+ * elegir, después el destino. Quien llega acá todavía no pidió información de
+ * Argentina; pedirle que lea sobre un país antes de haberlo elegido invierte
+ * el orden natural.
  *
- * Server Component: todo el contenido de la guía es estático (vive en el repo,
- * spec 8.2) y las cotizaciones las trae un componente asíncrono aparte, dentro
- * de un <Suspense>, para que el hero no espere a dolarapi.
+ * Sin foto de fondo todavía (spec, 8.6): la banda oscura no es un placeholder
+ * a la espera de una imagen, es el mismo fondo para el que cobe ilumina el
+ * globo. Cuando haya foto con licencia, entra detrás sin rehacer el layout.
  */
+
+const guia = getGuide(CORREDOR_INICIAL);
+
+const ESTADISTICAS = [
+  {
+    valor: "4",
+    etiqueta: "cotizaciones en vivo",
+    nota: "Oficial, blue, MEP y CCL",
+  },
+  { valor: "0", etiqueta: "registros", nota: "Sin cuenta y sin mail" },
+  {
+    valor: "1",
+    etiqueta: "corredor por ahora",
+    nota: "Argentina; el motor suma más",
+  },
+  { valor: "100%", etiqueta: "gratis", nota: "Sin anuncios ni venta de datos" },
+];
+
 export default function Home() {
+  // El corredor inicial sale del índice de guías, así que si alguien renombra
+  // el slug esto falla al construir y no en la cara del visitante.
+  if (!guia) {
+    throw new Error(
+      `El corredor inicial "${CORREDOR_INICIAL}" no tiene guía en src/content/guias.`,
+    );
+  }
+
   return (
-    <main className="flex flex-1 flex-col items-center gap-16 px-6 py-12 md:gap-24 md:py-20">
-      <section className="flex w-full max-w-5xl flex-col items-center gap-10">
-        <div className="flex w-full flex-col items-center gap-10 md:flex-row md:justify-between md:gap-16">
-          <div className="flex max-w-md flex-col gap-5 text-center md:text-left">
+    <main className="flex flex-1 flex-col">
+      <section className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
+        <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-12 md:flex-row md:justify-between md:gap-16">
+          <div className="flex max-w-lg flex-col items-center gap-6 text-center md:items-start md:text-left">
+            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300">
+              Sin registro · Cotizaciones en vivo
+            </span>
+
             <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
-              El mundo en tus manos: empezá por {argentina.country}
+              El mundo en tus manos
             </h1>
 
-            <p className="text-muted-foreground text-lg text-pretty">
-              {argentina.subhead}
+            <p className="text-lg text-pretty text-slate-300">
+              Elegí un destino en el globo y te decimos qué llevar y cuánto vas
+              a gastar.
             </p>
 
-            <p className="text-muted-foreground text-sm">
-              Tocá el marcador y te contamos lo que hay que saber antes de
-              reservar. Al final armás tu equipaje y tu presupuesto.
+            <p className="text-sm text-pretty text-slate-400">
+              Guías de país con lo que hay que saber antes de reservar, y dos
+              motores que arman tu equipaje según el clima de tus fechas y tu
+              presupuesto en la cotización que elijas. Te llevás la planilla en
+              CSV.
             </p>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              {/*
+                Sobre la banda oscura el primario por defecto es casi
+                invisible: `bg-primary` es oscuro en el tema claro. Se invierte
+                a blanco sobre slate en vez de usar el naranja del marcador —
+                ese naranja significa "acá hay un destino" en el globo, y
+                gastarlo en un botón le saca ese significado.
+              */}
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-slate-950 hover:bg-slate-200"
+              >
+                <Link href={`/guia/${guia.slug}`}>Explorar {guia.country}</Link>
+              </Button>
+
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white/20 bg-transparent text-slate-100 hover:bg-white/10 hover:text-slate-100"
+              >
+                <Link href={`/guia/${guia.slug}/planificar`}>
+                  Abrir el planificador
+                </Link>
+              </Button>
+            </div>
           </div>
 
-          {/*
-            El panel oscuro no es decoración suelta: cobe dibuja el globo con
-            iluminación para fondo oscuro, y sobre el fondo claro de la app el
-            borde de la esfera se pierde.
-          */}
-          <div className="w-full max-w-[460px] rounded-2xl bg-slate-950 p-6 md:p-8">
-            <GlobeHero />
+          <div className="flex w-full max-w-[460px] flex-col gap-2">
+            <GlobeHero href={`/guia/${guia.slug}`} label={guia.country} />
 
             {/*
               Dicho de frente (spec, 8.1): el globo insinúa "elegí cualquier
               país" y el MVP tiene uno. Esconderlo sería peor que decirlo.
             */}
-            <p className="mt-2 text-center text-sm text-slate-400 text-balance">
-              Un corredor por ahora: Argentina. El motor está hecho para sumar
-              más.
+            <p className="text-center text-sm text-balance text-slate-400">
+              Un corredor por ahora: {guia.country}. El motor está hecho para
+              sumar más.
             </p>
           </div>
         </div>
-
-        <GuideHighlights highlights={argentina.highlights} />
       </section>
 
-      <Suspense fallback={<LiveQuotesSkeleton />}>
-        <LiveQuotes />
-      </Suspense>
-
-      <FactsBoard
-        facts={argentina.facts}
-        updatedAt={argentina.factsUpdatedAt}
-      />
-
-      <ScoreBars
-        scores={argentina.scores}
-        shines={argentina.shines}
-        costs={argentina.costs}
-      />
-
+      {/*
+        Los cuatro números del reference son de cobertura ("146 países"). Los
+        nuestros no pueden serlo sin mentir, así que dicen lo que este producto
+        sí tiene: tasas en vivo, cero fricción de entrada, un corredor honesto
+        y gratis. El tercero es el que incomoda, y por eso está.
+      */}
       <section
-        id="planificar"
-        aria-labelledby="planificar-titulo"
-        className="flex w-full max-w-5xl scroll-mt-8 flex-col gap-8"
+        aria-label="En números"
+        className="border-y bg-muted/40 px-6 py-10"
       >
-        <header className="flex flex-col gap-2">
-          <h2
-            id="planificar-titulo"
-            className="text-3xl font-semibold tracking-tight text-balance"
-          >
-            Planificá tu viaje
-          </h2>
-
-          <p className="text-muted-foreground text-sm text-pretty">
-            Elegí las fechas y el tipo de viaje: armamos la lista de equipaje
-            según el clima de esos meses y el presupuesto en la cotización que
-            quieras. Sin registro, y te llevás la planilla en CSV.
-          </p>
-
-          <p className="text-muted-foreground text-xs text-pretty">
-            {argentina.dataScopeNote}
-          </p>
-        </header>
-
-        <div className="max-w-md">
-          <NewTripForm />
-        </div>
-
-        <RecentTrips />
+        <dl className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-8 text-center md:grid-cols-4">
+          {ESTADISTICAS.map((stat) => (
+            <div key={stat.etiqueta} className="flex flex-col gap-1">
+              <dt className="text-3xl font-semibold tracking-tight tabular-nums">
+                {stat.valor}
+              </dt>
+              <dd className="flex flex-col gap-0.5">
+                <span className="text-sm font-medium">{stat.etiqueta}</span>
+                <span className="text-muted-foreground text-xs text-pretty">
+                  {stat.nota}
+                </span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </section>
+
+      {/*
+        "Tus viajes recientes" vive acá y no en el planificador: el criterio de
+        aceptación 5 dice "volver a / muestra el acceso rápido", y quien vuelve
+        quiere su viaje de entrada, no a dos clicks. Sin contenedor propio: se
+        trae su espaciado y no deja hueco cuando no hay historial.
+      */}
+      <RecentTrips />
     </main>
   );
 }

@@ -23,6 +23,9 @@ const formatoPesos = new Intl.NumberFormat("es-AR", {
   maximumFractionDigits: 0,
 });
 
+// signDisplay "exceptZero" no imprime signo para el cero, y eso incluye al
+// cero negativo: una brecha de -0,065% (el MEP contra la oficial) sale "0%",
+// no "-0%". Verificado en Chromium, no asumido.
 const formatoBrecha = new Intl.NumberFormat("es-AR", {
   maximumFractionDigits: 0,
   signDisplay: "exceptZero",
