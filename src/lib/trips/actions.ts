@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createTrip } from "./create";
+import { messageForTripWriteFailure } from "./errors";
 import {
   setBudgetItemQty,
   setPackingItem,
@@ -55,10 +56,7 @@ export async function createTripAction(
   } catch (error) {
     console.error("createTripAction", error);
 
-    return {
-      error:
-        "No pudimos crear el viaje. Probá de nuevo en un momento.",
-    };
+    return { error: messageForTripWriteFailure(error) };
   }
 
   redirect(`/viaje/${editToken}`);

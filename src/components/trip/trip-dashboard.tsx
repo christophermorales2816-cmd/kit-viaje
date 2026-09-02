@@ -16,11 +16,7 @@ import {
   type QuoteId,
 } from "@/lib/budget";
 import { budgetCsv, csvFilename, packingCsv } from "@/lib/export/csv";
-import {
-  formatDateRange,
-  formatDuration,
-  formatTripType,
-} from "@/lib/format";
+import { formatDateRange, formatDuration, formatTripType } from "@/lib/format";
 import { durationInDays } from "@/lib/packing";
 import {
   setBudgetQtyAction,
@@ -32,7 +28,6 @@ import type { TripPackingEntry, TripView } from "@/lib/trips/types";
 import { BudgetList } from "./budget-list";
 import { ExportButtons } from "./export-buttons";
 import { PackingList } from "./packing-list";
-import { RememberTrip } from "./remember-trip";
 import { ShareControls } from "./share-controls";
 
 /**
@@ -149,7 +144,9 @@ export function TripDashboard({
       // muestra en el tab del presupuesto en vez de tirar abajo la página
       // entera: la lista de equipaje no tiene nada que ver.
       totalsError =
-        cause instanceof Error ? cause.message : "No se pudo calcular el total.";
+        cause instanceof Error
+          ? cause.message
+          : "No se pudo calcular el total.";
     }
   }
 
@@ -178,14 +175,6 @@ export function TripDashboard({
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-8 md:px-6">
-      {editToken ? (
-        <RememberTrip
-          id={trip.id}
-          destinationName={destination.name}
-          editToken={editToken}
-        />
-      ) : null}
-
       <header className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
