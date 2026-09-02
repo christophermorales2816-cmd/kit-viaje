@@ -225,7 +225,11 @@ Dos tabs sobre la misma página — Equipaje y Presupuesto — reforzando "igual
 
 **C. Recuperación sin login**
 
-`useEffect` en el dashboard guarda en `localStorage` un array `[{ id, destination_name, edit_token }]` — no solo el último trip. En la landing, si hay historial, se muestra "Tus viajes recientes" antes de ofrecer empezar uno nuevo. Es conveniencia de cliente, no autenticación: si cambia de navegador o dispositivo, el link guardado (bookmark, o compartido a sí mismo) es la única vía real de volver — vale un mensaje visible en el dashboard: "Guardá este link, es la única forma de volver".
+**Decisión revisada: no hay historial en el navegador.** La versión anterior de esta sección guardaba los viajes en `localStorage` y los ofrecía como "Tus viajes recientes". Se sacó entero, junto con el módulo de storage y el efecto que escribía.
+
+El motivo es que era una media promesa. Funcionaba en un solo navegador y en un solo dispositivo, así que a veces el viaje estaba y a veces no, sin que el usuario pudiera saber por qué. Una recuperación que falla de forma impredecible es peor que no ofrecer ninguna, porque enseña a no guardar el link.
+
+**El link es la única vía de volver, y la página lo dice.** El dashboard muestra un aviso destacado junto a los botones de compartir: "Guardá este link. Es la única forma de volver a tu viaje: no hay cuenta ni mail para recuperarlo." Ese texto ya existía; sacar el historial lo vuelve literalmente cierto en vez de casi cierto.
 
 **D. Modo solo lectura (`/viaje/ver/{share_slug}`)**
 
@@ -254,7 +258,7 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 2. El presupuesto se recalcula en tiempo real al cambiar entre las 4 cotizaciones.
 3. El link `share_slug` abre una vista funcional en modo solo lectura, verificable desde otro navegador.
 4. Exportar a PDF y CSV funciona para ambas listas.
-5. Volver al planificador (`/guia/{slug}/planificar`) en el mismo navegador después de crear un trip muestra el acceso rápido en "Tus viajes recientes". Vivía en `/`, pero con el flujo de tres páginas la bienvenida quedó como una sola banda de presentación (8.1) y el historial pertenece al lugar donde se decide un viaje.
+5. El dashboard privado muestra, junto a los controles de compartir, el aviso de que el link es la única forma de volver al viaje. Reemplaza al criterio anterior, que pedía un historial de viajes recientes en el navegador: esa función se eliminó (sección 6C).
 6. Los tests del motor de packing y del motor de presupuesto pasan en CI.
 7. Ninguna escritura a `trips`, `trip_packing_items` o `trip_budget_items` es posible sin un `edit_token` válido — verificable intentando una mutación directa contra la API de Supabase con la anon key.
 
@@ -280,9 +284,7 @@ Primero se probó todo en una sola página con cinco bloques. No estaba mal, per
 
 **Página 2 — La guía del país (`/guia/{slug}`).** Adónde llega el click. El nombre del país, la línea de resumen y los **cuatro números destacados** (8.3); después las **cotizaciones en vivo** (8.7), el **tablero informativo** fechado (8.4) y los **puntajes** (8.5). Cierra invitando al planificador. Prerenderizada con `generateStaticParams`, y con `dynamicParams = false`: un slug que no existe es 404, no una guía vacía.
 
-**Página 3 — El planificador (`/guia/{slug}/planificar`).** El datepicker, el tipo de viaje y **"Tus viajes recientes"**. El formulario y su Server Action no cambian respecto de la sección 6A; lo único que se movió es dónde vive. Queda pendiente rediseñarlo.
-
-El historial vive acá y no en la bienvenida: la página 1 quedó como una sola banda de presentación, y una lista guardada en `localStorage` no pertenece a esa banda. Acá está donde se decide un viaje, que es el momento en que a alguien le sirve retomar uno anterior.
+**Página 3 — El planificador (`/guia/{slug}/planificar`).** El datepicker y el tipo de viaje. El formulario y su Server Action no cambian respecto de la sección 6A; lo único que se movió es dónde vive. Queda pendiente rediseñarlo.
 
 Cada página tiene un enlace de vuelta a la anterior. El flujo hacia adelante lo maneja el globo y los CTA; el de atrás, esos enlaces.
 

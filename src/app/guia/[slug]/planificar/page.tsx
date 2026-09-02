@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { NewTripForm } from "@/components/landing/new-trip-form";
-import { RecentTrips } from "@/components/landing/recent-trips";
 import { allGuides, getGuide } from "@/content/guias";
 
 /**
@@ -11,11 +10,6 @@ import { allGuides, getGuide } from "@/content/guias";
  *
  * El formulario es el mismo de siempre y el Server Action tampoco cambia: lo
  * único que se movió es dónde vive. Queda pendiente rediseñarlo.
- *
- * "Tus viajes recientes" vive acá y ya no en la bienvenida: la página 1 quedó
- * como una sola banda oscura de presentación, y una lista de viajes guardados
- * en localStorage no pertenece a esa banda. Acá está donde se decide un viaje,
- * que es el momento en que a alguien le sirve retomar uno anterior.
  */
 
 export function generateStaticParams() {
@@ -75,8 +69,6 @@ export default async function PlannerPage({
       <div className="max-w-md">
         <NewTripForm />
       </div>
-
-      <RecentTrips />
     </main>
   );
 }

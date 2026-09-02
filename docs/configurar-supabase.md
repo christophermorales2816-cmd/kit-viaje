@@ -13,21 +13,21 @@ Toma unos 15 minutos.
 
 En [supabase.com/dashboard](https://supabase.com/dashboard) → **New project**.
 
-| Campo | Qué poner |
-|---|---|
-| Name | `kit-viaje` |
+| Campo             | Qué poner                                                                                                        |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Name              | `kit-viaje`                                                                                                      |
 | Database Password | Generala y **guardala en tu gestor de contraseñas** — la vas a necesitar en el paso 3 y no se puede volver a ver |
-| Region | La más cercana a tus usuarios. Para el corredor del MVP, `South America (São Paulo)` |
+| Region            | La más cercana a tus usuarios. Para el corredor del MVP, `South America (São Paulo)`                             |
 
 ## 2. Copiar las tres claves
 
 **Project Settings → API**:
 
-| En el dashboard | Variable de entorno |
-|---|---|
-| Project URL | `NEXT_PUBLIC_SUPABASE_URL` |
-| `anon` `public` (en proyectos nuevos: *Publishable key*) | `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
-| `service_role` `secret` (en proyectos nuevos: *Secret key*) | `SUPABASE_SERVICE_ROLE_KEY` |
+| En el dashboard                                             | Variable de entorno             |
+| ----------------------------------------------------------- | ------------------------------- |
+| Project URL                                                 | `NEXT_PUBLIC_SUPABASE_URL`      |
+| `anon` `public` (en proyectos nuevos: _Publishable key_)    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` |
+| `service_role` `secret` (en proyectos nuevos: _Secret key_) | `SUPABASE_SERVICE_ROLE_KEY`     |
 
 Las dos primeras son públicas por diseño: viajan al browser, y todo el modelo de
 seguridad asume eso. La tercera **no**, y por eso no lleva el prefijo
@@ -137,6 +137,62 @@ select t.id, t.start_date, t.end_date, t.trip_type,
 Un viaje recién creado tiene filas en las dos listas.
 
 ---
+
+## Migraciones nuevas: esto NO es automático
+
+**El error más caro de este proyecto hasta ahora fue creer que sí lo era.**
+
+CI aplica todas las migraciones en cada PR, pero contra un Postgres descartable
+que se crea y se tira en cada corrida. Sirve para saber que el SQL es válido y
+que corre en orden. **No toca tu base.** Vercel tampoco: deploya código, no
+esquema.
+
+O sea: podés tener el checkmark verde en el PR, el deploy en producción, y la
+base sin la migración. Cuando pasa, la app escribe algo que la base rechaza y
+el usuario ve un error que parece un problema de red.
+
+Cada vez que un PR agrega un archivo a `supabase/migrations/`, hay que
+aplicarlo a mano. Dos formas:
+
+**La rápida — SQL Editor.** Abrí el proyecto en Supabase → SQL Editor → New
+query, pegá el contenido del archivo nuevo y ejecutá. Bien para una migración
+suelta.
+
+**La prolija — CLI.** Desde la raíz del repo, con el proyecto ya enlazado:
+
+```bash
+supabase db push
+```
+
+Aplica solo las que faltan y lleva la cuenta de cuáles ya corrieron. Es la que
+conviene cuando se acumula más de una.
+
+### Cómo saber si estás al día
+
+Contá los archivos del repo y compará contra lo que hay aplicado:
+
+```bash
+ls supabase/migrations/*.sql | wc -l
+```
+
+Y en el SQL Editor:
+
+```sql
+select count(*) from supabase_migrations.schema_migrations;
+```
+
+Si el segundo número es menor, faltan migraciones. (La tabla existe solo si
+alguna vez usaste `supabase db push`; si venís aplicando todo a mano por el
+SQL Editor, no vas a tenerla, y la única forma de saberlo es revisar el
+esquema.)
+
+### Señal de que te falta una
+
+Un error de escritura que menciona `violates check constraint`,
+`column ... does not exist` o `relation ... does not exist` es casi siempre
+esto. La app los distingue: cuando el fallo es de esquema, el mensaje dice
+"la base de datos está desactualizada" en vez de ofrecer reintentar, porque
+reintentar no arregla nada.
 
 ## Si algo falla
 

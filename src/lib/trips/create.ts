@@ -11,6 +11,7 @@ import {
   getProducts,
 } from "@/lib/supabase/reference";
 
+import { TripWriteError } from "./errors";
 import type { TripRecord } from "./types";
 import type { TripInput } from "./validate";
 
@@ -94,8 +95,9 @@ export async function createTrip(input: TripInput): Promise<TripRecord> {
     .single();
 
   if (error || !data) {
-    throw new Error(
+    throw new TripWriteError(
       `No se pudo crear el viaje: ${error?.message ?? "la base no devolvió la fila."}`,
+      error?.code ?? null,
     );
   }
 
@@ -155,8 +157,11 @@ async function insertGeneratedItems(
   const failed = results.find((result) => result.error);
 
   if (failed?.error) {
-    throw new Error(
+    // El código del error viaja: es lo que distingue "la base está caída" de
+    // "la base no tiene la migración que este código necesita".
+    throw new TripWriteError(
       `No se pudieron guardar las listas generadas: ${failed.error.message}`,
+      failed.error.code ?? null,
     );
   }
 }
