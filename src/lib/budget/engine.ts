@@ -1,6 +1,5 @@
 import { byCatalogEntry } from "@/lib/catalog-order";
 import { durationInDays } from "@/lib/packing/dates";
-import { resolveQuantity } from "@/lib/quantity";
 
 import { fromCents, roundToCents, toCents } from "./money";
 import { conversionRate } from "./quotes";
@@ -47,11 +46,21 @@ export function generateBudgetList(
   trip: BudgetTrip,
   products: BudgetProduct[],
 ): BudgetLineItem[] {
-  const durationDays = durationInDays(trip.startDate, trip.endDate);
+  // Se llama por lo que valida, no por lo que devuelve: un rango de fechas al
+  // revés tiene que fallar acá y no llegar como un presupuesto vacío que
+  // parece válido. Desde que las cantidades arrancan en cero, la duración ya
+  // no entra en la cuenta — pero sigue siendo la puerta de entrada.
+  durationInDays(trip.startDate, trip.endDate);
 
-  return products
-    .map((product) => toBudgetLine(product, resolveQuantity(product, durationDays)))
-    .sort(byCatalogEntry((line) => line.product));
+  return (
+    products
+      // Cantidad cero por el mismo motivo que el equipaje: el presupuesto se
+      // construye sumando lo que el viaje realmente incluye, no restando lo
+      // que no. Un total inflado de arranque es peor que un total en cero,
+      // porque se parece a una respuesta.
+      .map((product) => toBudgetLine(product, 0))
+      .sort(byCatalogEntry((line) => line.product))
+  );
 }
 
 /**

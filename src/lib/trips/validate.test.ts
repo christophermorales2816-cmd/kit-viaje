@@ -88,8 +88,13 @@ describe("parseQty", () => {
     expect(parseQty("3")).toEqual({ ok: true, value: 3 });
   });
 
-  it("rechaza el cero y los negativos, igual que el check de la base", () => {
-    expect(parseQty(0).ok).toBe(false);
+  it("acepta el cero: es cómo se saca un ítem sin sacarlo de la lista", () => {
+    // Las listas se generan vacías y el usuario suma lo que necesita, así que
+    // "ninguno" es una elección válida. La base acompaña con check (qty >= 0).
+    expect(parseQty(0).ok).toBe(true);
+  });
+
+  it("rechaza los negativos, igual que el check de la base", () => {
     expect(parseQty(-1).ok).toBe(false);
   });
 

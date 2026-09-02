@@ -124,6 +124,8 @@ create table trip_budget_items (
 
 ## 4. Motor de packing
 
+> **Actualizado: las listas se generan en cero.** El motor decide **qué** entra en la lista, no **cuánto**. Cada ítem generado llega con cantidad 0 y el usuario suma lo que se acopla a su viaje. La regla de escalado por duración que se describe más abajo sigue viva y testeada en `src/lib/quantity.ts`, y viaja con cada ítem del catálogo, pero ya no se aplica sola: una lista preseleccionada obliga a desmarcar en vez de elegir. Vale igual para el motor de presupuesto (sección 5). La base acompaña con `check (qty >= 0)` en las dos tablas de sesión y default 0, así que "ninguno" es un estado representable y no hay que borrar la fila para expresarlo.
+
 Motor de reglas determinístico (sin LLM) — predecible, sin costo de inferencia por visita, sin riesgo de alucinar ítems. Un LLM, si se agrega, queda para una capa posterior de refinamiento conversacional sobre la lista ya generada, no para la generación en sí.
 
 **Tipos de viaje (enum cerrado para MVP):** `playa`, `urbano`, `aventura`, `negocios`
@@ -248,11 +250,11 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 **CI/Deploy:** Vercel conectado al repo de GitHub — cada push a `main` deploya a producción, cada PR genera un preview deploy. Sin pipeline custom para el MVP.
 
 **Criterios de aceptación (Definition of Done):**
-1. Un usuario sin cuenta puede definir fechas + tipo de viaje y llegar a una lista de equipaje y un presupuesto generados automáticamente.
+1. Un usuario sin cuenta puede definir fechas + tipo de viaje y llegar a una lista de equipaje y un presupuesto generados automáticamente, **con todas las cantidades en cero**, listos para que elija lo que necesita.
 2. El presupuesto se recalcula en tiempo real al cambiar entre las 4 cotizaciones.
 3. El link `share_slug` abre una vista funcional en modo solo lectura, verificable desde otro navegador.
 4. Exportar a PDF y CSV funciona para ambas listas.
-5. Volver a `/` en el mismo navegador después de crear un trip muestra el acceso rápido en "Tus viajes recientes".
+5. Volver al planificador (`/guia/{slug}/planificar`) en el mismo navegador después de crear un trip muestra el acceso rápido en "Tus viajes recientes". Vivía en `/`, pero con el flujo de tres páginas la bienvenida quedó como una sola banda de presentación (8.1) y el historial pertenece al lugar donde se decide un viaje.
 6. Los tests del motor de packing y del motor de presupuesto pasan en CI.
 7. Ninguna escritura a `trips`, `trip_packing_items` o `trip_budget_items` es posible sin un `edit_token` válido — verificable intentando una mutación directa contra la API de Supabase con la anon key.
 
@@ -274,11 +276,13 @@ La promesa es "el mundo en tus manos: elegís un destino y te decimos lo que nec
 
 Primero se probó todo en una sola página con cinco bloques. No estaba mal, pero invertía el orden: quien llegaba leía "empezá por Argentina" antes de haber elegido nada. Se separa en tres pasos, uno por página.
 
-**Página 1 — Bienvenida (`/`).** No habla del país. Banda oscura con el globo al costado, una etiqueta, el título, el resumen de qué hace el producto y dos accesos (explorar la guía, abrir el planificador). Debajo, una franja con cuatro números. El marcador del globo es un `<Link>` a la guía: navega sin JavaScript, se abre en otra pestaña y Next precarga la página al pasar el mouse. Cierra con "Tus viajes recientes", que vive acá porque el criterio de aceptación 5 dice `/`.
+**Página 1 — Bienvenida (`/`).** No habla del país. **Un solo rectángulo oscuro a sangre**, del borde superior hasta debajo de los números: el título, el resumen de qué hace el producto, dos accesos (explorar la guía, abrir el planificador), el globo al costado y los cuatro números adentro de la misma banda. El hero y las estadísticas son la misma zona, no dos bandas apiladas con una costura en el medio. El marcador del globo es un `<Link>` a la guía: navega sin JavaScript, se abre en otra pestaña y Next precarga la página al pasar el mouse.
 
 **Página 2 — La guía del país (`/guia/{slug}`).** Adónde llega el click. El nombre del país, la línea de resumen y los **cuatro números destacados** (8.3); después las **cotizaciones en vivo** (8.7), el **tablero informativo** fechado (8.4) y los **puntajes** (8.5). Cierra invitando al planificador. Prerenderizada con `generateStaticParams`, y con `dynamicParams = false`: un slug que no existe es 404, no una guía vacía.
 
-**Página 3 — El planificador (`/guia/{slug}/planificar`).** El datepicker y el tipo de viaje. El formulario y su Server Action no cambian respecto de la sección 6A; lo único que se movió es dónde vive. Queda pendiente rediseñarlo.
+**Página 3 — El planificador (`/guia/{slug}/planificar`).** El datepicker, el tipo de viaje y **"Tus viajes recientes"**. El formulario y su Server Action no cambian respecto de la sección 6A; lo único que se movió es dónde vive. Queda pendiente rediseñarlo.
+
+El historial vive acá y no en la bienvenida: la página 1 quedó como una sola banda de presentación, y una lista guardada en `localStorage` no pertenece a esa banda. Acá está donde se decide un viaje, que es el momento en que a alguien le sirve retomar uno anterior.
 
 Cada página tiene un enlace de vuelta a la anterior. El flujo hacia adelante lo maneja el globo y los CTA; el de atrás, esos enlaces.
 

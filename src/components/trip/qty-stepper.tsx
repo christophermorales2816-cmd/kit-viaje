@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { MAX_ITEM_QTY } from "@/lib/trips/validate";
+import { MAX_ITEM_QTY, MIN_ITEM_QTY } from "@/lib/trips/validate";
 
 /**
  * Cantidad editable de un ítem.
@@ -42,7 +42,7 @@ export function QtyStepper({
     // por un tipeo. La cota real la ponen la Server Action y la base.
     if (
       Number.isInteger(parsed) &&
-      parsed >= 1 &&
+      parsed >= MIN_ITEM_QTY &&
       parsed <= MAX_ITEM_QTY &&
       parsed !== value
     ) {
@@ -53,7 +53,10 @@ export function QtyStepper({
   }
 
   function ajustar(delta: number) {
-    const siguiente = Math.min(Math.max(value + delta, 1), MAX_ITEM_QTY);
+    const siguiente = Math.min(
+      Math.max(value + delta, MIN_ITEM_QTY),
+      MAX_ITEM_QTY,
+    );
 
     if (siguiente !== value) onCommit(siguiente);
   }
@@ -63,7 +66,7 @@ export function QtyStepper({
       <button
         type="button"
         onClick={() => ajustar(-1)}
-        disabled={disabled || value <= 1}
+        disabled={disabled || value <= MIN_ITEM_QTY}
         aria-label={`Restar uno a ${label}`}
         className="flex size-8 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
       >
