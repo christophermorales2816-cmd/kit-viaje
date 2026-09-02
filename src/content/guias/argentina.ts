@@ -137,4 +137,108 @@ export const argentina: DestinationGuide = {
 
   dataScopeNote:
     "Las listas y los presupuestos del planificador están calibrados para Buenos Aires. La guía habla del país; los cálculos, de la ciudad.",
+
+  /*
+    Nueve destinos, agrupados en cuatro regiones. El criterio no fue "los más
+    lindos" sino los que anclan un itinerario: si alguien arma dos semanas de
+    viaje, sale de esta lista. Por eso están las distancias incómodas —Ushuaia
+    e Iguazú en puntas opuestas— y no una lista de veinte lugares que nadie
+    combina.
+
+    Las coordenadas son del centro de cada localidad, no del atractivo: el pin
+    de El Calafate marca el pueblo donde se duerme, no el glaciar.
+  */
+  places: [
+    {
+      id: "buenos-aires",
+      name: "Buenos Aires",
+      region: "Buenos Aires",
+      tag: "Capital y cultura",
+      blurb:
+        "Librerías abiertas hasta tarde, teatro independiente, parrillas de barrio y café de especialidad. Es la puerta de entrada de casi todos los viajes, y la única ciudad del país que se sostiene sola una semana entera.",
+      coords: [-34.6037, -58.3816],
+      featured: true,
+      image: null,
+    },
+    {
+      id: "el-calafate",
+      name: "El Calafate",
+      region: "Patagonia",
+      tag: "Glaciares",
+      blurb:
+        "La base para el Perito Moreno, uno de los pocos glaciares del mundo que todavía avanza y se puede ver desde pasarelas sin equipo técnico. Temporada de noviembre a marzo.",
+      coords: [-50.3379, -72.2648],
+      image: null,
+    },
+    {
+      id: "el-chalten",
+      name: "El Chaltén",
+      region: "Patagonia",
+      tag: "Trekking",
+      blurb:
+        "Un pueblo hecho para caminar: los senderos al Fitz Roy y la Laguna de los Tres salen del centro, sin traslados ni guía obligatoria. Tres horas en auto desde El Calafate.",
+      coords: [-49.3315, -72.8863],
+      image: null,
+    },
+    {
+      id: "bariloche",
+      name: "Bariloche",
+      region: "Patagonia",
+      tag: "Lagos y montaña",
+      blurb:
+        "Lagos, bosque andino y cerros a la vez, con la infraestructura turística más armada de la Patagonia. Funciona en verano para caminar y en invierno para esquiar.",
+      coords: [-41.1335, -71.3103],
+      image: null,
+    },
+    {
+      id: "puerto-madryn",
+      name: "Puerto Madryn",
+      region: "Patagonia",
+      tag: "Fauna marina",
+      blurb:
+        "La entrada a Península Valdés: ballenas francas entre junio y diciembre, pingüinos, elefantes y lobos marinos. Es fauna en su ambiente, no un parque.",
+      coords: [-42.7692, -65.0385],
+      image: null,
+    },
+    {
+      id: "ushuaia",
+      name: "Ushuaia",
+      region: "Patagonia",
+      tag: "Fin del mundo",
+      blurb:
+        "La ciudad más austral del país, entre el canal Beagle y los Andes. Es el punto más caro y más lejano de cualquier itinerario: conviene decidirlo temprano, no agregarlo al final.",
+      coords: [-54.8019, -68.303],
+      image: null,
+    },
+    {
+      id: "iguazu",
+      name: "Cataratas del Iguazú",
+      region: "Norte y Litoral",
+      tag: "Selva y saltos",
+      blurb:
+        "Doscientas setenta y cinco caídas en plena selva subtropical, con pasarelas de los dos lados de la frontera. Anda todo el año, con calor y humedad altos en verano.",
+      coords: [-25.6953, -54.4367],
+      image: null,
+    },
+    {
+      id: "salta",
+      name: "Salta y las quebradas",
+      region: "Norte y Litoral",
+      tag: "Quebradas y puna",
+      blurb:
+        "Cerros de colores, pueblos coloniales y la ruta a las Salinas Grandes por la Quebrada de Humahuaca. La altura se siente: conviene aclimatarse antes de subir a la puna.",
+      coords: [-24.7859, -65.4117],
+      image: null,
+    },
+    {
+      id: "mendoza",
+      name: "Mendoza",
+      region: "Cuyo",
+      tag: "Vino y cordillera",
+      blurb:
+        "Bodegas al pie de los Andes, con el Aconcagua a una excursión de distancia. El otoño trae la vendimia, que es cuando la ciudad se pone interesante de verdad.",
+      coords: [-32.8895, -68.8458],
+      image: null,
+    },
+  ],
 };

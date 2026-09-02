@@ -262,7 +262,7 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 6. Los tests del motor de packing y del motor de presupuesto pasan en CI.
 7. Ninguna escritura a `trips`, `trip_packing_items` o `trip_budget_items` es posible sin un `edit_token` válido — verificable intentando una mutación directa contra la API de Supabase con la anon key.
 
-Los criterios 8 a 11, propios de la guía de destino, están en la sección 8.8.
+Los criterios 8 a 12, propios de la guía de destino, están en la sección 8.9.
 
 ## 8. Guía de destino
 
@@ -282,7 +282,7 @@ Primero se probó todo en una sola página con cinco bloques. No estaba mal, per
 
 **Página 1 — Bienvenida (`/`).** No habla del país. **Un solo rectángulo oscuro a sangre**, del borde superior hasta debajo de los números: el título, el resumen de qué hace el producto, dos accesos (explorar la guía, abrir el planificador), el globo al costado y los cuatro números adentro de la misma banda. El hero y las estadísticas son la misma zona, no dos bandas apiladas con una costura en el medio. El marcador del globo es un `<Link>` a la guía: navega sin JavaScript, se abre en otra pestaña y Next precarga la página al pasar el mouse.
 
-**Página 2 — La guía del país (`/guia/{slug}`).** Adónde llega el click. El nombre del país, la línea de resumen y los **cuatro números destacados** (8.3); después las **cotizaciones en vivo** (8.7), el **tablero informativo** fechado (8.4) y los **puntajes** (8.5). Cierra invitando al planificador. Prerenderizada con `generateStaticParams`, y con `dynamicParams = false`: un slug que no existe es 404, no una guía vacía.
+**Página 2 — La guía del país (`/guia/{slug}`).** Adónde llega el click. El nombre del país, la línea de resumen y los **cuatro números destacados** (8.3); después las **cotizaciones en vivo** (8.7), el **tablero informativo** fechado (8.4), los **puntajes** (8.5), el **mosaico de destinos** y el **mapa** (8.8). Cierra invitando al planificador. Prerenderizada con `generateStaticParams`, y con `dynamicParams = false`: un slug que no existe es 404, no una guía vacía.
 
 **Página 3 — El planificador (`/guia/{slug}/planificar`).** El datepicker y el tipo de viaje. El formulario y su Server Action no cambian respecto de la sección 6A; lo único que se movió es dónde vive. Queda pendiente rediseñarlo.
 
@@ -442,9 +442,32 @@ El bloque que cumple la promesa de "en tiempo real". No hay que construir casi n
 
 **Por qué no se guardan en la base.** Tentador para tener un histórico y un gráfico, pero eso es otro producto: exige un job programado, una tabla de series temporales y una política de retención. El MVP muestra el valor de ahora, que es lo que cambia una decisión de viaje.
 
-### 8.8 Criterios de aceptación adicionales
+### 8.8 Destinos: el mosaico y el mapa
+
+Dos bloques que salen de **una sola lista** (`places` en el contenido de la guía). Que compartan la fuente no es economía de código: es lo que evita que el mapa marque un lugar que el mosaico no menciona.
+
+Cada destino tiene nombre, región, una etiqueta corta, un párrafo, coordenadas y una foto opcional. Las coordenadas son del centro de la localidad, no del atractivo — el pin de El Calafate marca el pueblo donde se duerme, no el glaciar.
+
+**El criterio para elegirlos no fue "los más lindos" sino los que anclan un itinerario.** Si alguien arma dos semanas, sale de esa lista. Por eso están las distancias incómodas —Ushuaia e Iguazú en puntas opuestas— y no veinte lugares que nadie combina en un viaje.
+
+**Mosaico ("Adónde ir").** Tarjetas con filtro por región. El filtro es estado de cliente: no toca la URL ni pide datos. Las regiones se derivan del contenido, así que sumar un destino de una región nueva hace aparecer el filtro solo. Una tarjeta puede marcarse `featured` y ocupa dos columnas.
+
+**Mapa ("El país de un vistazo").** Leaflet con tiles de CARTO sobre OpenStreetMap, en dos columnas: el mapa a la izquierda y la lista por región a la derecha. **No** a todo el ancho como el patrón de referencia: aquel país es ancho y Argentina es alta y angosta —unos 30 grados de latitud contra unos 14 de longitud efectiva a esta altura del planeta—, así que un mapa apaisado deja el país en una franja fina con vacío a los costados.
+
+Tres decisiones técnicas que no son de estilo:
+
+- **Leaflet se importa adentro del efecto.** Lee `window` al evaluarse, y un componente de cliente igual se renderiza en el servidor: importarlo arriba rompe el prerender con `window is not defined` y tira el build. La alternativa habitual, `next/dynamic` con `ssr: false`, obliga a un componente extra porque en un Server Component esa opción no está permitida.
+- **Marcador propio con `divIcon`.** El ícono por defecto de Leaflet son PNG que la librería busca por una ruta relativa a su CSS, y con el bundler esa ruta no resuelve. Un SVG inline no depende de ninguna ruta.
+- **El encuadre sale de `fitBounds` sobre los destinos**, no de un centro y un zoom escritos a mano: sumar un destino en otra punta del país reencuadra el mapa solo en vez de dejarlo afuera.
+
+**Ni las tarjetas ni los pines son enlaces.** En el patrón de referencia cada uno abre la guía de ese destino; acá esas páginas no existen — hay una guía por país. Un enlace que no lleva a ningún lado es peor que ninguno, porque enseña que los clicks de esta página no hacen nada. El pin abre un popup con el mismo texto de la tarjeta. Cuando existan guías por destino, tarjetas y pines se vuelven enlaces sin tocar el resto.
+
+**Sin fotos todavía** (8.6): las tarjetas usan un tinte por región. Cuando haya imágenes con licencia entran de fondo con un degradado encima, sin rehacer el layout.
+
+### 8.9 Criterios de aceptación adicionales
 
 8. El flujo de tres páginas funciona de punta a punta: `/` no nombra el país en su título, el marcador del globo lleva a `/guia/argentina`, y desde ahí se llega a `/guia/argentina/planificar`. Cada página tiene vuelta a la anterior, y un slug inexistente responde 404.
 9. Crear un viaje desde la página 3 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
 10. El bloque de cotizaciones muestra las cuatro con hora de consulta, y con dolarapi caído muestra el mensaje de error sin romper el resto de la página — verificable interceptando la respuesta.
-11. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
+11. El mosaico filtra por región sin recargar la página, y el mapa dibuja un pin por destino que abre su popup al tocarlo. Mosaico y mapa muestran exactamente los mismos destinos, porque salen de la misma lista.
+12. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
