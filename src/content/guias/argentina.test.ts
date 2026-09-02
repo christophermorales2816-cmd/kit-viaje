@@ -5,7 +5,7 @@ import { GUIDE_FACTS_MAX_AGE_DAYS } from "@/content/guias/types";
 import { parseIsoDate, toUtcMillis } from "@/lib/packing/dates";
 
 /**
- * Criterio de aceptación 11 (spec, sección 8.8).
+ * Criterio de aceptación 12 (spec, sección 8.9).
  *
  * El contenido de la guía vive en el repo y no en la base (8.2). Estas
  * aserciones son la contraparte de esa decisión: lo que en Postgres serían
@@ -76,6 +76,44 @@ describe("guía de Argentina", () => {
     expect(argentina.image.alt.trim()).not.toBe("");
     expect(argentina.image.credit.trim()).not.toBe("");
     expect(argentina.image.creditUrl).toMatch(/^https:\/\//);
+  });
+
+  it("no repite destinos ni marca más de uno como destacado", () => {
+    const ids = argentina.places.map((place) => place.id);
+    expect(new Set(ids).size).toBe(ids.length);
+
+    // Dos tarjetas grandes rompen el mosaico: la grilla reserva 2x2 para una.
+    expect(argentina.places.filter((place) => place.featured)).toHaveLength(1);
+  });
+
+  it("pone cada destino en coordenadas que existen y caen en Argentina", () => {
+    expect(argentina.places.length).toBeGreaterThan(0);
+
+    for (const place of argentina.places) {
+      const [lat, lon] = place.coords;
+
+      // Rango del planeta, primero: un signo cambiado se ve acá.
+      expect(lat).toBeGreaterThanOrEqual(-90);
+      expect(lat).toBeLessThanOrEqual(90);
+      expect(lon).toBeGreaterThanOrEqual(-180);
+      expect(lon).toBeLessThanOrEqual(180);
+
+      // Y después la caja del país, con margen. Sin esto, tipear -34 como 34
+      // pasa el rango del planeta y planta el pin en China.
+      expect(lat).toBeGreaterThan(-56);
+      expect(lat).toBeLessThan(-21);
+      expect(lon).toBeGreaterThan(-74);
+      expect(lon).toBeLessThan(-53);
+    }
+  });
+
+  it("no deja ningún texto de destino vacío", () => {
+    for (const place of argentina.places) {
+      expect(place.name.trim()).not.toBe("");
+      expect(place.region.trim()).not.toBe("");
+      expect(place.tag.trim()).not.toBe("");
+      expect(place.blurb.trim()).not.toBe("");
+    }
   });
 
   /**

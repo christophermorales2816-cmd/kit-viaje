@@ -38,6 +38,29 @@ export interface GuideImage {
   creditUrl: string;
 }
 
+/**
+ * Un destino dentro del país (spec, sección 8.8).
+ *
+ * Alimenta dos bloques a la vez: el mosaico "Adónde ir" y el mapa. Que salgan
+ * de la misma lista no es una economía de código, es lo que evita que el mapa
+ * marque un lugar que el mosaico no menciona.
+ */
+export interface GuidePlace {
+  id: string;
+  name: string;
+  /** Agrupa el filtro del mosaico. Ej: "Patagonia". */
+  region: string;
+  /** Etiqueta corta de la tarjeta. Ej: "Glaciares". */
+  tag: string;
+  blurb: string;
+  /** [latitud, longitud] en grados decimales. */
+  coords: [number, number];
+  /** Tarjeta grande en el mosaico. Como mucho una por guía. */
+  featured?: boolean;
+  /** null hasta que haya foto con licencia y atribución (spec, 8.6). */
+  image: GuideImage | null;
+}
+
 export interface DestinationGuide {
   slug: string;
   country: string;
@@ -59,7 +82,9 @@ export interface DestinationGuide {
   costs: string[];
   /** Alcance real de los cálculos del planner, dicho en la página. */
   dataScopeNote: string;
+  /** Destinos del país: alimentan el mosaico y el mapa (8.8). */
+  places: GuidePlace[];
 }
 
-/** Ventana de revisión del tablero informativo (spec, 8.8, criterio 11). */
+/** Ventana de revisión del tablero informativo (spec, 8.9, criterio 12). */
 export const GUIDE_FACTS_MAX_AGE_DAYS = 180;

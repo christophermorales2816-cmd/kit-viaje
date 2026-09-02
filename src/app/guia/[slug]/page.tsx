@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react";
 import { FactsBoard } from "@/components/guia/facts-board";
 import { GuideHighlights } from "@/components/guia/guide-highlights";
 import { LiveQuotes, LiveQuotesSkeleton } from "@/components/guia/live-quotes";
+import { PlacesGrid } from "@/components/guia/places-grid";
+import { PlacesMap } from "@/components/guia/places-map";
 import { ScoreBars } from "@/components/guia/score-bars";
 import { Button } from "@/components/ui/button";
 import { allGuides, getGuide } from "@/content/guias";
@@ -85,6 +87,10 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
       <FactsBoard facts={guia.facts} updatedAt={guia.factsUpdatedAt} />
 
       <ScoreBars scores={guia.scores} shines={guia.shines} costs={guia.costs} />
+
+      <PlacesGrid places={guia.places} />
+
+      <PlacesMap places={guia.places} />
 
       <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-balance">
