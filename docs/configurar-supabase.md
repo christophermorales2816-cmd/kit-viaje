@@ -138,21 +138,49 @@ Un viaje recién creado tiene filas en las dos listas.
 
 ---
 
-## Migraciones nuevas: esto NO es automático
+## Migraciones nuevas: quién las aplica
 
-**El error más caro de este proyecto hasta ahora fue creer que sí lo era.**
+**El error más caro de este proyecto hasta ahora fue suponer que se aplicaban solas.**
 
-CI aplica todas las migraciones en cada PR, pero contra un Postgres descartable
-que se crea y se tira en cada corrida. Sirve para saber que el SQL es válido y
-que corre en orden. **No toca tu base.** Vercel tampoco: deploya código, no
-esquema.
+El job de CI aplica todas las migraciones en cada PR, pero contra un Postgres
+descartable que se crea y se tira en cada corrida. Sirve para saber que el SQL
+es válido y que corre en orden. **No toca tu base.** Vercel tampoco: deploya
+código, no esquema.
 
-O sea: podés tener el checkmark verde en el PR, el deploy en producción, y la
-base sin la migración. Cuando pasa, la app escribe algo que la base rechaza y
-el usuario ve un error que parece un problema de red.
+O sea: se puede tener el checkmark verde en el PR, el deploy en producción, y
+la base sin la migración. Cuando pasa, la app escribe algo que la base rechaza
+y el usuario ve un error que parece un problema de red. Pasó dos veces acá.
 
-Cada vez que un PR agrega un archivo a `supabase/migrations/`, hay que
-aplicarlo a mano. Dos formas:
+Por eso hay un tercer workflow, aparte de CI, dedicado solo a esto.
+
+### Lo automático: el workflow de Migraciones
+
+`.github/workflows/migraciones.yml` aplica las migraciones a producción cuando
+entran a `main`. Es la forma de que esto deje de depender de que alguien se
+acuerde.
+
+Necesita tres secrets, cargados una sola vez en **Settings → Secrets and
+variables → Actions**:
+
+| Secret                  | De dónde sale                         |
+| ----------------------- | ------------------------------------- |
+| `SUPABASE_ACCESS_TOKEN` | supabase.com/dashboard/account/tokens |
+| `SUPABASE_PROJECT_REF`  | el subdominio de la URL de tu API     |
+| `SUPABASE_DB_PASSWORD`  | Settings → Database                   |
+
+Se cargan en la interfaz de GitHub, **nunca en el repo ni pegadas en un chat**.
+Si falta alguna, el workflow falla en el primer paso y avisa cuál, en vez de
+dejar la base a medias.
+
+Con eso puesto, el workflow corre solo cuando un PR toca
+`supabase/migrations/`, y también a mano desde la pestaña Actions
+(`workflow_dispatch`) — que es lo que sirve cuando la base ya quedó atrás y
+hay que alcanzarla sin esperar a la próxima migración.
+
+### A mano, si preferís no darle las llaves a CI
+
+Cada vez que un PR agrega un archivo a `supabase/migrations/`, aplicalo vos.
+Dos formas:
 
 **La rápida — SQL Editor.** Abrí el proyecto en Supabase → SQL Editor → New
 query, pegá el contenido del archivo nuevo y ejecutá. Bien para una migración
