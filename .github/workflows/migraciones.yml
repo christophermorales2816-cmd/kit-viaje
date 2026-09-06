@@ -1,0 +1,102 @@
+# Aplica las migraciones a la base de producción cuando entran a main.
+#
+# POR QUÉ EXISTE ESTE WORKFLOW
+#
+# El CI aplica las migraciones a un Postgres descartable y Vercel deploya
+# código, no esquema. Con esos dos solos se puede tener el PR en verde, el
+# deploy en producción y la base sin la migración — y la app escribiendo algo
+# que la base rechaza. Pasó dos veces en este proyecto, las dos con el mismo
+# síntoma: un error que parecía de red y en realidad era una migración sin
+# aplicar.
+#
+# Este workflow cierra ese hueco: mergear a main aplica el esquema.
+#
+# CONFIGURACIÓN (una vez)
+#
+# En GitHub → Settings → Secrets and variables → Actions, agregar:
+#
+#   SUPABASE_ACCESS_TOKEN  Token personal, en supabase.com/dashboard/account/tokens
+#   SUPABASE_PROJECT_REF   El ref del proyecto: el subdominio de la URL de la API
+#   SUPABASE_DB_PASSWORD   La contraseña de la base, de Settings → Database
+#
+# Las tres se cargan en la interfaz de GitHub, nunca en el repo ni en un chat.
+# Si falta alguna, el workflow avisa y no intenta nada a medias.
+
+name: Migraciones
+
+on:
+  push:
+    branches: [main]
+    paths:
+      # Solo cuando cambia el esquema: un PR de UI no tiene por qué tocar la
+      # base de producción.
+      - "supabase/migrations/**"
+      - ".github/workflows/migraciones.yml"
+  # Y a mano, para el caso de hoy: la base quedó atrás y hay que alcanzarla
+  # sin esperar a la próxima migración.
+  workflow_dispatch:
+
+# Nunca dos corridas a la vez contra la misma base, y sin cancelar la que ya
+# empezó: interrumpir un `db push` a la mitad es peor que esperar.
+concurrency:
+  group: migraciones-produccion
+  cancel-in-progress: false
+
+jobs:
+  push:
+    name: Aplicar a producción
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verificar que estén los tres secrets
+        env:
+          TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          faltan=""
+          [ -n "$TOKEN" ]    || faltan="$faltan SUPABASE_ACCESS_TOKEN"
+          [ -n "$REF" ]      || faltan="$faltan SUPABASE_PROJECT_REF"
+          [ -n "$PASSWORD" ] || faltan="$faltan SUPABASE_DB_PASSWORD"
+
+          if [ -n "$faltan" ]; then
+            echo "Faltan estos secrets:$faltan"
+            echo "Se cargan en Settings → Secrets and variables → Actions."
+            echo "Sin ellos no se puede aplicar nada, así que esto falla acá"
+            echo "en vez de dejar la base a medias."
+            exit 1
+          fi
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Enlazar el proyecto
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase link --project-ref "${{ secrets.SUPABASE_PROJECT_REF }}"
+
+      # Primero se muestra qué va a correr. Si algo sale mal, el log dice
+      # exactamente qué migración estaba aplicando.
+      - name: Ver qué falta aplicar
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase migration list --linked
+
+      - name: Aplicar
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase db push --linked
+
+      # Deja constancia de cómo quedó: sin esto, saber si la base está al día
+      # obliga a entrar al dashboard.
+      - name: Confirmar que quedó al día
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase migration list --linked
