@@ -292,7 +292,7 @@ Pivote de producto, decidido después de tener el planner funcionando. El globo 
 
 **Idioma:** español, sin cambios (sección 2).
 
-### 8.1 Estructura: tres páginas, no una
+### 8.1 Estructura: cuatro páginas, no una
 
 La promesa es "el mundo en tus manos: elegís un destino y te decimos lo que necesitás saber". El globo es el punto de entrada y el selector de destino, y todo lo demás cuelga de ese click.
 
@@ -484,8 +484,81 @@ Tres decisiones técnicas que no son de estilo:
 
 ### 8.9 Criterios de aceptación adicionales
 
-8. El flujo de tres páginas funciona de punta a punta: `/` no nombra el país en su título, el marcador del globo lleva a `/guia/argentina`, y desde ahí se llega a `/guia/argentina/planificar`. Cada página tiene vuelta a la anterior, y un slug inexistente responde 404.
+8. El flujo de cuatro páginas funciona de punta a punta: `/` no nombra el país en su título, el marcador del globo lleva a `/guia/argentina`, y desde ahí se llega a `/guia/argentina/planificar`. Cada página tiene vuelta a la anterior, y un slug inexistente responde 404.
 9. Crear un viaje desde la página 3 sigue llevando a `/viaje/{edit_token}` — el pivote no toca el flujo de las secciones 6B a 6D.
 10. El bloque de cotizaciones muestra las cuatro con hora de consulta, y con dolarapi caído muestra el mensaje de error sin romper el resto de la página — verificable interceptando la respuesta.
 11. El mosaico filtra por región sin recargar la página, y el mapa dibuja un pin por destino que abre su popup al tocarlo. Mosaico y mapa muestran exactamente los mismos destinos, porque salen de la misma lista.
 12. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
+
+---
+
+## 9. Página de preparación — "Condiciones actuales"
+
+Va entre la guía y el planificador: `/guia/{slug}/preparar`. La guía dice **a
+qué país vas**; ésta dice **cuándo conviene ir y qué clima te toca cada mes**.
+Recién después se eligen fechas.
+
+Bloques, en orden: respuesta corta, cuatro datos de resumen, lo que cambia la
+valija, la tira de doce meses, los dos gráficos, una tarjeta por mes,
+electricidad, y el CTA al planificador.
+
+### 9.1 La temporada sale de los extremos, no del promedio
+
+La primera versión promediaba `temp_min` y `temp_max` de cada mes y miraba
+dónde caía ese número. Con eso **los doce meses de Buenos Aires salían
+"ideal"**: el promedio de un enero de 30 °C de día y 20 de noche es 25, que es
+templado y agradable. El promedio esconde justo lo que hace difícil un mes.
+Enero no es incómodo en promedio: es incómodo a las tres de la tarde.
+
+Un mes es **exigente** si CUALQUIERA se cumple: máxima ≥ 28 °C, mínima ≤ 8 °C,
+o probabilidad de lluvia ≥ 70 %. Es **ideal** si se cumplen TODOS: máxima
+≤ 26 °C, mínima ≥ 10 °C, lluvia < 50 %. El resto es **aceptable**, que es
+también lo que devuelve un mes sin datos de temperatura — es la única de las
+tres que no promete nada.
+
+Los umbrales viven en el código y no en la base: no son parámetros del destino,
+son la definición editorial de qué llamamos un mes incómodo. Cambiarlos cambia
+el mensaje de la página, y eso debe ser un diff visible en un PR.
+
+### 9.2 Cada mes abarca varios buckets
+
+Las doce tarjetas salían **idénticas** mientras cada mes se mapeaba a un único
+bucket por su temperatura media: los doce caían en `templado`. Se corrigió
+llamando a `resolveClimateBuckets` **por mes**, que ya devuelve todos los
+buckets que toca el rango. Enero es `templado + calido`; julio, `frio +
+templado`.
+
+Para el consejo y los chips hace falta uno solo, y gana el que **obliga a
+empacar algo distinto**: `calido` > `frio` > `templado`. "Templado" nunca
+obliga a nada.
+
+### 9.3 Los chips se ordenan por especificidad
+
+También salían idénticos. Los ítems genéricos —remera, cepillo de dientes—
+llevan las tres etiquetas de clima y ganaban siempre por orden de catálogo.
+`suggestItemsForBuckets` ordena por **cantidad de `climateTags`, de menor a
+mayor**: un short que solo sirve con calor dice algo de enero; un cepillo de
+dientes no dice nada de ningún mes. El desempate es el orden del catálogo, que
+ya está curado.
+
+Esto es una vista editorial, no el motor de packing: acá no hay cantidades ni
+días. El motor real corre en el planificador, con las fechas del viaje.
+
+### 9.4 Dinámica con ISR, no prerenderizada
+
+La guía es estática porque su contenido vive en el repo. Ésta lee cuatro tablas
+de Supabase. Con `generateStaticParams`, un hipo de Supabase durante el build no
+rompe una request: rompe el deploy entero. Con `revalidate = 3600` rompe un
+render, y el siguiente lo reintenta.
+
+La lluvia se dibuja en **porcentaje, no en milímetros**: `climate_profiles` solo
+tiene `precip_probability`. Dibujar "mm" sería inventar una unidad que no está
+en la base.
+
+### 9.5 Lo que esta página todavía no tiene
+
+Queda para una segunda parte, y está listado acá para que no se olvide: lista de
+ropa con cantidades, documentos y dinero, checklist de equipaje de mano,
+electrónica, higiene, salud, gear, organización de la valija, código de
+vestimenta, estrategia de lavado, errores comunes al empacar, viajar con chicos,
+la tabla de "estos 7 ítems no los lleves", y FAQ.

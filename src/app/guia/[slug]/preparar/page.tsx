@@ -1,0 +1,185 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArrowLeft, Plug } from "lucide-react";
+
+import { ClimateBars } from "@/components/preparar/climate-bars";
+import { MonthCards } from "@/components/preparar/month-cards";
+import { MonthStrip } from "@/components/preparar/month-strip";
+import { Button } from "@/components/ui/button";
+import { getGuide } from "@/content/guias";
+import { resolveClimateYear, summarizeYear } from "@/lib/prepare/climate-year";
+import {
+  getClimateProfiles,
+  getClimateThresholds,
+  getDestination,
+  getPackingCatalog,
+} from "@/lib/supabase/reference";
+
+/**
+ * Página 3 — "Condiciones actuales" (spec, sección 9).
+ *
+ * Va entre la guía y el planificador. La guía dice a qué país vas; esta dice
+ * cuándo conviene ir y qué clima te toca cada mes. Recién después se eligen
+ * fechas.
+ *
+ * DINÁMICA CON ISR, no prerenderizada (9.4). La guía sí es estática porque su
+ * contenido vive en el repo; esta lee cuatro tablas de Supabase. Con
+ * generateStaticParams, un hipo de Supabase durante el build no rompe una
+ * request: rompe el deploy entero. Con revalidate, rompe un render y el
+ * siguiente lo reintenta.
+ */
+export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/guia/[slug]/preparar">) {
+  const { slug } = await params;
+  const guia = getGuide(slug);
+
+  if (!guia) return {};
+
+  return {
+    title: `${guia.country}: condiciones actuales — Kit de viaje`,
+    description: guia.preparation.quickAnswer,
+  };
+}
+
+export default async function PrepararPage({
+  params,
+}: PageProps<"/guia/[slug]/preparar">) {
+  const { slug } = await params;
+  const guia = getGuide(slug);
+
+  if (!guia) notFound();
+
+  const destino = await getDestination(guia.slug);
+
+  // En paralelo: son cuatro lecturas independientes y encadenarlas suma cuatro
+  // round-trips a un render que igual va a cachearse una hora.
+  const [perfiles, umbrales, catalogo] = await Promise.all([
+    getClimateProfiles(destino.id),
+    getClimateThresholds(),
+    getPackingCatalog(),
+  ]);
+
+  const meses = resolveClimateYear(perfiles, umbrales);
+  const resumen = summarizeYear(meses);
+
+  return (
+    <main className="flex flex-1 flex-col items-center gap-14 px-6 py-12 md:gap-20 md:py-16">
+      <header className="flex w-full max-w-5xl flex-col gap-8">
+        <Link
+          href={`/guia/${guia.slug}`}
+          className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 text-sm transition-colors"
+        >
+          <ArrowLeft className="size-4" />
+          Volver a la guía de {guia.country}
+        </Link>
+
+        <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
+          {guia.country}: condiciones actuales
+        </h1>
+
+        <p className="bg-muted/40 rounded-2xl border p-6 text-lg text-pretty">
+          {guia.preparation.quickAnswer}
+        </p>
+
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-border md:grid-cols-4">
+          <Dato
+            termino="Rango del año"
+            valor={
+              resumen.tempMin === null || resumen.tempMax === null
+                ? "s/d"
+                : `${Math.round(resumen.tempMin)}° a ${Math.round(resumen.tempMax)}°`
+            }
+          />
+          <Dato
+            termino="Mejor mes"
+            valor={resumen.bestMonth?.longName ?? "s/d"}
+          />
+          <Dato termino="Meses ideales" valor={String(resumen.idealCount)} />
+          <Dato termino="Enchufe" valor={guia.preparation.plug.types} />
+        </dl>
+      </header>
+
+      <section
+        aria-labelledby="claves"
+        className="flex w-full max-w-5xl flex-col gap-4"
+      >
+        <h2 id="claves" className="text-2xl font-semibold tracking-tight">
+          Lo que cambia cómo armás la valija
+        </h2>
+
+        <ul className="flex flex-col gap-3">
+          {guia.preparation.keyPoints.map((punto, i) => (
+            <li
+              key={i}
+              className="text-muted-foreground border-l-2 pl-4 text-pretty"
+            >
+              {punto}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <MonthStrip months={meses} />
+
+      <ClimateBars months={meses} />
+
+      <MonthCards
+        months={meses}
+        catalog={catalogo}
+        adviceByBucket={guia.preparation.adviceByBucket}
+      />
+
+      <section
+        aria-labelledby="enchufe"
+        className="flex w-full max-w-5xl flex-col gap-3"
+      >
+        <h2
+          id="enchufe"
+          className="flex items-center gap-2 text-2xl font-semibold tracking-tight"
+        >
+          <Plug className="size-5" aria-hidden />
+          Electricidad
+        </h2>
+
+        <p className="text-muted-foreground text-pretty">
+          {guia.preparation.plug.types} · {guia.preparation.plug.voltage}.{" "}
+          {guia.preparation.plug.note}
+        </p>
+      </section>
+
+      <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
+        <h2 className="text-2xl font-semibold tracking-tight text-balance">
+          Creá tu lista para {guia.country}
+        </h2>
+
+        <p className="text-muted-foreground max-w-xl text-sm text-pretty">
+          Ya sabés qué mes te conviene. Poné las fechas y el tipo de viaje, y
+          armamos la lista de equipaje y el presupuesto sobre el clima de esos
+          días concretos.
+        </p>
+
+        <Button asChild size="lg">
+          <Link href={`/guia/${guia.slug}/planificar`}>
+            Iniciar generador de lista
+          </Link>
+        </Button>
+
+        <p className="text-muted-foreground text-xs text-pretty">
+          {guia.dataScopeNote}
+        </p>
+      </section>
+    </main>
+  );
+}
+
+function Dato({ termino, valor }: { termino: string; valor: string }) {
+  return (
+    <div className="bg-background flex flex-col gap-1 p-5">
+      <dt className="text-muted-foreground text-xs">{termino}</dt>
+      <dd className="text-lg font-medium">{valor}</dd>
+    </div>
+  );
+}

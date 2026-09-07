@@ -98,13 +98,12 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
         </h2>
 
         <p className="text-muted-foreground max-w-xl text-sm text-pretty">
-          Con las fechas y el tipo de viaje alcanza: la lista de equipaje sale
-          del clima de esos meses y el presupuesto se convierte a la cotización
-          que elijas.
+          Antes del calendario, lo práctico: cuándo conviene ir, qué clima te
+          toca cada mes y qué llevar. Después elegís las fechas.
         </p>
 
         <Button asChild size="lg">
-          <Link href={`/guia/${guia.slug}/planificar`}>Planificá tu viaje</Link>
+          <Link href={`/guia/${guia.slug}/preparar`}>Preparar el viaje</Link>
         </Button>
 
         <p className="text-muted-foreground text-xs text-pretty">

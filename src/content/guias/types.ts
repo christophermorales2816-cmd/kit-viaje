@@ -61,6 +61,26 @@ export interface GuidePlace {
   image: GuideImage | null;
 }
 
+/**
+ * Contenido de la página "Condiciones actuales" (spec, sección 9).
+ *
+ * Es lo editorial de esa página; los números salen de climate_profiles. La
+ * separación importa: el clima cambia con la base, el consejo cambia con un PR.
+ */
+export interface GuidePreparation {
+  /** La respuesta corta, arriba de todo, antes de cualquier gráfico. */
+  quickAnswer: string;
+  /** Tres o cuatro cosas que cambian cómo se arma la valija. */
+  keyPoints: string[];
+  /**
+   * Consejo por bucket de clima, indexado por el id de climate_thresholds.
+   * Es Record<string, string> y no una unión cerrada por lo mismo que
+   * ClimateBucketId es string: los buckets se agregan desde Studio.
+   */
+  adviceByBucket: Record<string, string>;
+  plug: { types: string; voltage: string; note: string };
+}
+
 export interface DestinationGuide {
   slug: string;
   country: string;
@@ -84,6 +104,8 @@ export interface DestinationGuide {
   dataScopeNote: string;
   /** Destinos del país: alimentan el mosaico y el mapa (8.8). */
   places: GuidePlace[];
+  /** Contenido de la página "Condiciones actuales" (9). */
+  preparation: GuidePreparation;
 }
 
 /** Ventana de revisión del tablero informativo (spec, 8.9, criterio 12). */
