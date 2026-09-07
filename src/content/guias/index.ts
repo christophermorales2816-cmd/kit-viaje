@@ -3,12 +3,17 @@ import type { DestinationGuide } from "./types";
 
 export type {
   DestinationGuide,
+  GuideAvoidRow,
+  GuideChecklistSection,
   GuideFact,
+  GuideFaq,
   GuideHighlight,
   GuideImage,
+  GuideNotice,
   GuidePlace,
   GuidePreparation,
   GuideScore,
+  GuideTip,
 } from "./types";
 export { GUIDE_FACTS_MAX_AGE_DAYS } from "./types";
 

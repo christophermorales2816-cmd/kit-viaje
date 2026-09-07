@@ -262,5 +262,208 @@ export const argentina: DestinationGuide = {
       voltage: "220 V, 50 Hz",
       note: "Los enchufes tipo I son de tres patas planas en ángulo. Si venís de Norteamérica necesitás adaptador y, según el aparato, conversor de voltaje.",
     },
+    tips: {
+      dos: [
+        {
+          title: "Enrollá la ropa en vez de doblarla",
+          body: "Ocupa menos y llega con menos marcas de plegado. Funciona mejor con remeras y ropa liviana que con un saco, que conviene poner arriba y plano.",
+        },
+        {
+          title: "Usá bolsas u organizadores por categoría",
+          body: "Una para ropa limpia, una para usada, una para lo que necesitás a mano. Buscar algo deja de significar deshacer la valija entera.",
+        },
+        {
+          title: "Sacale una foto a tus documentos",
+          body: "Pasaporte, seguro y pasajes, guardados en el teléfono y en algún lado que no dependa del teléfono. Si se pierde el original, esa foto es la diferencia entre un trámite y un problema.",
+        },
+        {
+          title: "Descargá los mapas antes de salir",
+          body: "El subte de Buenos Aires no tiene señal en los andenes y la conexión en la Patagonia es despareja. Un mapa offline resuelve las dos cosas.",
+        },
+        {
+          title: "Empacá la noche anterior, no la mañana de salida",
+          body: "Te da tiempo de revisar la lista con la cabeza fría. Casi todo lo que se olvida se olvida apurado.",
+        },
+        {
+          title: "Pesá la valija antes de ir al aeropuerto",
+          body: "El exceso de equipaje se cobra en el mostrador y sale bastante más que en el momento de comprar el pasaje. Una pesa de mano cuesta poco y se paga sola.",
+        },
+      ],
+      donts: [
+        {
+          title: "No empaques todo en un solo compartimento",
+          body: "Encontrar cualquier cosa te obliga a sacar todo lo demás, y volver a acomodarlo cada vez desgasta la ropa y la paciencia.",
+        },
+        {
+          title: "No lleves demasiados pares de zapatos",
+          body: "Es lo que más volumen ocupa por unidad. Con un par cómodo para caminar y uno que sirva para salir alcanza para casi cualquier viaje.",
+        },
+        {
+          title: "No des por hecho que no vas a necesitar abrigo",
+          body: "La amplitud térmica de Buenos Aires es real todo el año: una tarde de 26 °C puede terminar en una noche de 14. Una campera liviana entra en cualquier valija.",
+        },
+        {
+          title: "No lleves los productos de higiene en envases grandes",
+          body: "Pasalos a envases de viaje o compralos allá. Es peso y volumen que se puede evitar entero, y encima es lo que más riesgo tiene de abrirse.",
+        },
+        {
+          title: "No empaques ropa que no vas a usar",
+          body: "El atuendo para la ocasión que quizá no pase es el clásico que vuelve sin estrenar. Empacá para el viaje que vas a hacer, no para el que imaginás.",
+        },
+        {
+          title: "No dejes lo esencial en la bodega",
+          body: "Medicación, documentos, cargador y una muda van en el bolso de mano. Si la valija se demora, el viaje sigue igual.",
+        },
+      ],
+    },
+    checklists: [
+      {
+        id: "electronica",
+        title: "Electrónica y carga",
+        notice: {
+          tone: "warn",
+          title: "El enchufe no es el mismo",
+          body: "El tipo I argentino es de tres patas planas en ángulo, y no acepta enchufes norteamericanos ni europeos sin adaptador. Consíguelo antes de viajar: en el aeropuerto siempre sale más caro.",
+        },
+        summary: "Lo que conviene llevar cargado y con qué enchufarlo",
+        items: [
+          "Adaptador de enchufe tipo C o tipo I",
+          "Cargador del teléfono y cable de repuesto",
+          "Batería portátil, en el bolso de mano — las aerolíneas no las aceptan despachadas",
+          "Auriculares",
+          "Zapatilla o regleta chica: convierte un adaptador en cuatro tomas",
+        ],
+      },
+      {
+        id: "aseo",
+        title: "Artículos de aseo",
+        notice: {
+          tone: "info",
+          title: "Casi todo se consigue allá",
+          body: "Farmacias y supermercados tienen la góndola completa y a precio local. Llevá lo justo para los primeros días y comprá el resto al llegar.",
+        },
+        summary: "Lo mínimo, en envases de viaje",
+        items: [
+          "Cepillo y pasta de dientes",
+          "Desodorante",
+          "Shampoo y jabón en envase chico, o en barra para evitar líquidos",
+          "Protector solar: el sol del verano y el de altura pegan fuerte",
+          "Toalla de microfibra, solo si vas a alojamientos que no la incluyen",
+        ],
+      },
+      {
+        id: "salud",
+        title: "Salud y medicamentos",
+        notice: {
+          tone: "warn",
+          title: "Llevá tu medicación en su envase original",
+          body: "Con la receta, y en el bolso de mano. Un remedio que tomás todos los días no es algo que quieras estar buscando en una farmacia desconocida.",
+        },
+        summary: "Botiquín básico y qué conviene consultar antes",
+        items: [
+          "Medicación habitual, con receta y en envase original",
+          "Analgésico y antiácido",
+          "Repelente, sobre todo en el Litoral y las Cataratas",
+          "Curitas y antiséptico",
+          "Seguro de viaje con cobertura médica: la atención de urgencia en hospital público es gratuita, pero la privada no",
+        ],
+      },
+      {
+        id: "chicos",
+        title: "Viajar con chicos",
+        notice: null,
+        summary: "Lo que cambia cuando no viajás solo",
+        items: [
+          "Documentación de cada menor; si viaja con un solo progenitor, averiguá qué autorización piden",
+          "Ropa de abrigo aunque el pronóstico diga calor: las noches bajan",
+          "Entretenimiento offline para los tramos largos — el país es grande y los trayectos también",
+          "Snacks y botella reutilizable",
+          "Protector solar y gorro: los horarios argentinos son tardíos y se termina al sol más de lo previsto",
+        ],
+      },
+    ],
+    avoid: [
+      {
+        leave: "Demasiadas remeras de algodón",
+        why: "El algodón retiene la humedad y tarda mucho en secarse, que es justo lo que no querés en el verano húmedo del Litoral.",
+        instead:
+          "Menos remeras, de secado rápido, lavadas en el lavatorio cuando haga falta.",
+      },
+      {
+        leave: "Vaqueros pesados",
+        why: "Pesan, ocupan y tardan una eternidad en secar si se mojan.",
+        instead: "Un pantalón liviano de viaje, y a lo sumo un jean.",
+      },
+      {
+        leave: "La toalla grande de casa",
+        why: "Es de lo más voluminoso que podés meter, y la mayoría de los alojamientos ya te dan una.",
+        instead: "Una toalla de microfibra, si acaso.",
+      },
+      {
+        leave: "Zapatos de vestir",
+        why: "El estilo porteño es más informal de lo que suele imaginarse desde afuera.",
+        instead:
+          "Un par cómodo para caminar y uno que sirva para salir de noche.",
+      },
+      {
+        leave: "Demasiada ropa formal",
+        why: "Salvo un evento puntual, casi ningún lugar de Buenos Aires exige saco y corbata.",
+        instead: "Un conjunto prolijo alcanza para cualquier salida.",
+      },
+      {
+        leave: "La notebook, si no vas a trabajar",
+        why: "Es peso, es volumen y es lo que más cuidado te obliga a tener encima.",
+        instead:
+          "El teléfono, que resuelve mapas, fotos, traducción y reservas.",
+      },
+      {
+        leave: "Varias botellas de agua",
+        why: "El agua de red es potable en las grandes ciudades y se rellena en cualquier lado.",
+        instead:
+          "Una botella reutilizable, vacía al pasar el control del aeropuerto.",
+      },
+    ],
+    faq: [
+      {
+        question: "¿Necesito adaptador de enchufe?",
+        answer:
+          "Sí, salvo que vengas de un país con enchufe tipo C o I. La tensión es 220 V a 50 Hz: revisá que tus cargadores digan 100-240 V, porque si no también necesitás conversor.",
+      },
+      {
+        question: "¿De qué tamaño conviene la valija?",
+        answer:
+          "Para una o dos semanas, un carry-on grande o una valija mediana alcanza. Si sumás Patagonia el abrigo pide más lugar, pero sigue siendo cuestión de elegir mejor, no de llevar más.",
+      },
+      {
+        question: "¿Es fácil encontrar lavanderías?",
+        answer:
+          "Sí. En Buenos Aires hay lavaderos por kilo en casi todos los barrios y suelen entregar el mismo día. Eso cambia el cálculo: con ropa para una semana se cubre un viaje de tres.",
+      },
+      {
+        question: "¿Cuántos cambios de ropa llevo?",
+        answer:
+          "Como referencia, para lo que dure el viaje hasta un máximo de una semana, y a partir de ahí lavás. Es más barato lavar que pagar exceso de equipaje.",
+      },
+      {
+        question: "¿Qué va en el equipaje de mano?",
+        answer:
+          "Medicación, documentos, dinero, electrónica, batería portátil y una muda completa. Todo lo que haría el viaje imposible si la valija se demora un día.",
+      },
+      {
+        question: "¿Puedo pagar con tarjeta o necesito efectivo?",
+        answer:
+          "En las ciudades se paga con tarjeta casi en todos lados, pero conviene tener efectivo para ferias, taxis y pueblos chicos. Revisá el bloque de cotizaciones de la guía antes de decidir cómo cambiar.",
+      },
+      {
+        question: "¿El agua de la canilla es potable?",
+        answer:
+          "En Buenos Aires y las grandes ciudades, sí. En zonas rurales y de montaña conviene preguntar en el alojamiento antes de llenar la botella.",
+      },
+      {
+        question: "¿Qué tan informal es la vestimenta?",
+        answer:
+          "Bastante. Salvo un evento puntual o un restaurante muy específico, en ningún lado te van a pedir saco. Prolijo y cómodo cubre todo.",
+      },
+    ],
   },
 };

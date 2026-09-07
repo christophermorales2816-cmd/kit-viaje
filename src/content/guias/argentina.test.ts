@@ -117,6 +117,124 @@ describe("guía de Argentina", () => {
   });
 
   /**
+   * Contenido de la página de preparación (spec, sección 9.6).
+   *
+   * Las tres columnas de la tabla y las dos partes de un consejo son
+   * obligatorias por la misma razón: decirle a alguien que deje algo sin
+   * decirle con qué reemplazarlo, o titular un consejo sin explicarlo, es un
+   * consejo a medias. El tipo no puede exigir que un string no esté vacío;
+   * esto sí.
+   */
+  describe("página de preparación", () => {
+    const prep = argentina.preparation;
+
+    it("da consejos en las dos columnas, con título y cuerpo", () => {
+      expect(prep.tips.dos.length).toBeGreaterThan(0);
+      expect(prep.tips.donts.length).toBeGreaterThan(0);
+
+      for (const tip of [...prep.tips.dos, ...prep.tips.donts]) {
+        expect(tip.title.trim()).not.toBe("");
+        expect(tip.body.trim()).not.toBe("");
+      }
+    });
+
+    it("no repite el título de un consejo, que es la key de la lista", () => {
+      const titulos = [...prep.tips.dos, ...prep.tips.donts].map(
+        (t) => t.title,
+      );
+      expect(new Set(titulos).size).toBe(titulos.length);
+    });
+
+    it("da un consejo por cada bucket de clima del seed", () => {
+      // Sin esto, un mes cuyo bucket principal no tenga entrada acá sale con la
+      // tarjeta muda y nadie se entera hasta verla.
+      for (const bucket of ["frio", "templado", "calido"]) {
+        expect(prep.adviceByBucket[bucket]?.trim()).not.toBe("");
+      }
+    });
+
+    it("no deja ninguna sección de checklist vacía ni con id repetido", () => {
+      expect(prep.checklists.length).toBeGreaterThan(0);
+
+      const ids = prep.checklists.map((s) => s.id);
+      expect(new Set(ids).size).toBe(ids.length);
+
+      for (const seccion of prep.checklists) {
+        expect(seccion.title.trim()).not.toBe("");
+        expect(seccion.summary.trim()).not.toBe("");
+        expect(seccion.items.length).toBeGreaterThan(0);
+
+        for (const item of seccion.items) {
+          expect(item.trim()).not.toBe("");
+        }
+      }
+    });
+
+    it("no deja un aviso a medias cuando hay aviso", () => {
+      for (const seccion of prep.checklists) {
+        if (seccion.notice === null) continue;
+
+        expect(seccion.notice.title.trim()).not.toBe("");
+        expect(seccion.notice.body.trim()).not.toBe("");
+      }
+    });
+
+    it("reserva el tono de advertencia para unas pocas secciones", () => {
+      // Si todo grita, nada grita. No es una regla de estilo: es la única
+      // manera de que el rojo signifique algo.
+      const warns = prep.checklists.filter((s) => s.notice?.tone === "warn");
+      expect(warns.length).toBeLessThanOrEqual(
+        Math.ceil(prep.checklists.length / 2),
+      );
+    });
+
+    it("nunca dice qué dejar sin decir con qué reemplazarlo", () => {
+      expect(prep.avoid.length).toBeGreaterThan(0);
+
+      for (const fila of prep.avoid) {
+        expect(fila.leave.trim()).not.toBe("");
+        expect(fila.why.trim()).not.toBe("");
+        expect(fila.instead.trim()).not.toBe("");
+      }
+    });
+
+    it("no repite filas de la tabla, que se indexan por lo que se deja", () => {
+      const claves = prep.avoid.map((fila) => fila.leave);
+      expect(new Set(claves).size).toBe(claves.length);
+    });
+
+    it("responde cada pregunta frecuente y no repite ninguna", () => {
+      expect(prep.faq.length).toBeGreaterThan(0);
+
+      for (const entrada of prep.faq) {
+        expect(entrada.question.trim()).not.toBe("");
+        expect(entrada.answer.trim()).not.toBe("");
+        // Una pregunta que no termina en signo de cierre casi siempre es una
+        // frase que se coló en el campo equivocado.
+        expect(entrada.question.endsWith("?")).toBe(true);
+      }
+
+      const preguntas = prep.faq.map((e) => e.question);
+      expect(new Set(preguntas).size).toBe(preguntas.length);
+    });
+
+    it("no deja vacíos los datos del enchufe, que salen en el resumen", () => {
+      expect(prep.plug.types.trim()).not.toBe("");
+      expect(prep.plug.voltage.trim()).not.toBe("");
+      expect(prep.plug.note.trim()).not.toBe("");
+    });
+
+    it("abre con una respuesta corta y con puntos clave", () => {
+      expect(prep.quickAnswer.trim()).not.toBe("");
+      expect(prep.keyPoints.length).toBeGreaterThan(0);
+
+      for (const punto of prep.keyPoints) {
+        expect(punto.trim()).not.toBe("");
+      }
+    });
+  });
+
+  /**
    * Este test falla con el paso del tiempo, y eso es la feature: es el único
    * mecanismo que obliga a releer el tablero informativo. Si algún día molesta,
    * la respuesta es revisar el contenido y mover la fecha — no subir el umbral.
