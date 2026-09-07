@@ -241,4 +241,26 @@ export const argentina: DestinationGuide = {
       image: null,
     },
   ],
+  preparation: {
+    quickAnswer:
+      "Buenos Aires no tiene un mes imposible, pero sí cuatro incómodos: enero y febrero pasan de 30 °C con humedad alta, y julio y diciembre tienen sus propios extremos. Si podés elegir, apuntá a abril, mayo, septiembre, octubre o noviembre: días templados, noches que no obligan a abrigo pesado y menos lluvia.",
+    keyPoints: [
+      "Las estaciones están invertidas respecto del hemisferio norte: enero es pleno verano y julio es invierno.",
+      "La amplitud térmica es real todo el año. Una tarde de 26 °C puede terminar en una noche de 14: una campera liviana entra en cualquier valija.",
+      "El país es largo. Estos números son de Buenos Aires; Ushuaia y Salta juegan otro partido y hay que sumarles su propia ropa.",
+      "La lluvia se reparte a lo largo del año en vez de concentrarse en una estación: no hay un mes que se pueda descartar por lluvioso, ni uno que garantice seco.",
+    ],
+    adviceByBucket: {
+      calido:
+        "Ropa liviana y transpirable, y algo de manga larga para el aire acondicionado y para el sol de la siesta. La humedad hace que se sienta más caluroso de lo que marca el termómetro.",
+      templado:
+        "El mes más fácil de empacar: capas livianas y una campera fina para la noche. Con esto alcanza salvo que sumes Patagonia.",
+      frio: "Capas de verdad: térmica, abrigo y algo que corte el viento. No es nieve, pero la humedad hace que el frío se sienta más de lo que dice el número.",
+    },
+    plug: {
+      types: "Tipo C y tipo I",
+      voltage: "220 V, 50 Hz",
+      note: "Los enchufes tipo I son de tres patas planas en ángulo. Si venís de Norteamérica necesitás adaptador y, según el aparato, conversor de voltaje.",
+    },
+  },
 };
