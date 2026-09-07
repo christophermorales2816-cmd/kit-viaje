@@ -1,16 +1,14 @@
 import "server-only";
 
-import { toBudgetLine } from "@/lib/budget";
-import { byCatalogEntry } from "@/lib/catalog-order";
+import { generateBudgetList, toBudgetLine } from "@/lib/budget";
+import { generatePackingList } from "@/lib/packing";
 import { adminClient } from "@/lib/supabase/admin";
 import {
-  PACKING_CATALOG_COLUMNS,
-  PRODUCT_COLUMNS,
+  getClimateProfiles,
+  getClimateThresholds,
   getDestinationById,
-  toBudgetProduct,
-  toPackingCatalogItem,
-  type PackingCatalogRow,
-  type ProductRow,
+  getPackingCatalog,
+  getProducts,
 } from "@/lib/supabase/reference";
 
 import { TRIP_COLUMNS, toTripRecord } from "./create";
@@ -28,37 +26,49 @@ import { isEditToken, isShareSlug } from "./validate";
  *
  * Devuelve null en vez de tirar cuando el token no existe: una URL vieja o mal
  * copiada es un caso normal, y la página redirige a la landing (spec, 6B).
+ *
+ * LA LISTA SE GENERA ACÁ Y LO GUARDADO SE SUPERPONE
+ *
+ * `createTrip` no escribe ítems: una fila existe solo si el usuario eligió una
+ * cantidad. Así que la lista completa sale de los motores en cada lectura —son
+ * deterministas, mismas entradas misma salida— y encima se aplican las filas
+ * que sí existen.
+ *
+ * La ventaja no es solo no guardar cincuenta ceros por viaje: como nunca se
+ * escribe un cero, el `check (qty > 0)` de las tablas de sesión no se puede
+ * disparar, y la app funciona igual contra una base sin la migración que lo
+ * afloja.
  */
 
-/**
- * PostgREST devuelve un objeto para una relación many-to-one, pero algunas
- * combinaciones de versión la serializan como array de un elemento. Las dos
- * formas son válidas y ninguna es un error que valga la pena propagar.
- */
-function embedded<T>(value: unknown, what: string): T {
-  const row = Array.isArray(value) ? value[0] : value;
-
-  if (!row || typeof row !== "object") {
-    throw new Error(
-      `La fila de ${what} vino sin su dato de catálogo. ¿Cambió la FK?`,
-    );
-  }
-
-  return row as T;
-}
-
-async function loadView(trip: TripRecord, editToken: string | null): Promise<TripView> {
+async function loadView(
+  trip: TripRecord,
+  editToken: string | null,
+): Promise<TripView> {
   const admin = adminClient();
 
-  const [destination, packingResult, budgetResult] = await Promise.all([
+  // Todo en paralelo: nada de esto depende del resultado de lo otro, y en
+  // serie serían seis viajes encadenados antes de pintar el dashboard.
+  const [
+    destination,
+    climateProfiles,
+    climateThresholds,
+    catalog,
+    products,
+    packingResult,
+    budgetResult,
+  ] = await Promise.all([
     getDestinationById(trip.destinationId),
+    getClimateProfiles(trip.destinationId),
+    getClimateThresholds(),
+    getPackingCatalog(),
+    getProducts(trip.destinationId),
     admin
       .from("trip_packing_items")
-      .select(`qty, checked, packing_catalog(${PACKING_CATALOG_COLUMNS})`)
+      .select("item_id, qty, checked")
       .eq("trip_id", trip.id),
     admin
       .from("trip_budget_items")
-      .select(`qty, products(${PRODUCT_COLUMNS})`)
+      .select("product_id, qty")
       .eq("trip_id", trip.id),
   ]);
 
@@ -74,32 +84,40 @@ async function loadView(trip: TripRecord, editToken: string | null): Promise<Tri
     );
   }
 
-  const packing: TripPackingEntry[] = (packingResult.data ?? [])
-    .map((row) => {
-      const item = toPackingCatalogItem(
-        embedded<PackingCatalogRow>(row.packing_catalog, "equipaje"),
-      );
+  // Lo elegido, indexado para superponerlo sobre la lista generada.
+  const elegidoPacking = new Map(
+    (packingResult.data ?? []).map((row) => [
+      row.item_id,
+      { qty: row.qty, checked: row.checked },
+    ]),
+  );
 
-      return {
-        item,
-        qty: row.qty,
-        checked: row.checked,
-        totalWeightG: item.weightG * row.qty,
-      };
-    })
-    // El mismo orden que usó el motor al generar la lista: sin esto la
-    // ordenaría PostgREST por su índice y el dashboard cambiaría de orden
-    // después del primer guardado.
-    .sort(byCatalogEntry((entry) => entry.item));
+  const elegidoBudget = new Map(
+    (budgetResult.data ?? []).map((row) => [row.product_id, row.qty]),
+  );
 
-  const budget = (budgetResult.data ?? [])
-    .map((row) =>
-      toBudgetLine(
-        toBudgetProduct(embedded<ProductRow>(row.products, "presupuesto")),
-        row.qty,
-      ),
-    )
-    .sort(byCatalogEntry((line) => line.product));
+  // Los motores ya devuelven todo ordenado por categoría y nombre, así que no
+  // hace falta reordenar después de superponer.
+  const packing: TripPackingEntry[] = generatePackingList({
+    trip,
+    climateProfiles,
+    climateThresholds,
+    catalog,
+  }).items.map((entry) => {
+    const elegido = elegidoPacking.get(entry.item.id);
+    const qty = elegido?.qty ?? 0;
+
+    return {
+      item: entry.item,
+      qty,
+      checked: elegido?.checked ?? false,
+      totalWeightG: entry.item.weightG * qty,
+    };
+  });
+
+  const budget = generateBudgetList(trip, products).map((line) =>
+    toBudgetLine(line.product, elegidoBudget.get(line.product.id) ?? 0),
+  );
 
   return {
     // Campo por campo y no un spread con rest: si mañana `trips` suma una
