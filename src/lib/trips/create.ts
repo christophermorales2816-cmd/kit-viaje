@@ -76,9 +76,12 @@ export async function createTrip(input: TripInput): Promise<TripRecord> {
     .single();
 
   if (error || !data) {
+    // El detalle de Postgres viaja hasta la UI: sin él, diagnosticar esto
+    // obliga a entrar a los logs del servidor.
     throw new TripWriteError(
       `No se pudo crear el viaje: ${error?.message ?? "la base no devolvió la fila."}`,
       error?.code ?? null,
+      error?.message ?? null,
     );
   }
 
