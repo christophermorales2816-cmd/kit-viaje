@@ -2,6 +2,7 @@ import "server-only";
 
 import { adminClient } from "@/lib/supabase/admin";
 
+import { resolveItemWrite } from "./item-write";
 import { resolveTripIdByEditToken } from "./read";
 import { isUuid } from "./validate";
 
@@ -17,12 +18,23 @@ import { isUuid } from "./validate";
  * El `isReadOnly` de la vista compartida no participa de esto (spec, 6D): es
  * presentacional. Un visitante con el share_slug no tiene edit_token, así que
  * aunque fuerce el prop desde devtools no hay mutación que pueda ejecutar.
+ *
+ * CANTIDAD CERO ES AUSENCIA DE FILA
+ *
+ * El viaje se crea sin ítems (`create.ts`) y la lista se genera al leer
+ * (`read.ts`). Acá se cierra ese modelo: subir una cantidad inserta la fila,
+ * bajarla a cero la borra. Nunca se guarda un cero.
+ *
+ * No es una economía de filas: es lo que hace que la app no dependa de que la
+ * base tenga el `check (qty >= 0)`. Con el check viejo, `qty > 0`, guardar un
+ * cero fallaba; borrar la fila funciona con los dos.
+ *
+ * El upsert está acotado por la clave primaria (trip_id, item_id) y el itemId
+ * se valida como uuid, así que sigue sin poder escribir en otro viaje.
  */
 
 /** Lo que pasó, en un formato que la UI pueda mostrar y usar para revertir. */
-export type MutationResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type MutationResult = { ok: true } | { ok: false; error: string };
 
 const SIN_PERMISO =
   "No se pudo guardar: este viaje no existe o el link no habilita edición.";
@@ -32,12 +44,27 @@ export interface PackingItemPatch {
   checked?: boolean;
 }
 
+/** Estado guardado de un ítem, o su ausencia. */
+async function leerPackingItem(
+  tripId: string,
+  itemId: string,
+): Promise<{ qty: number; checked: boolean } | null> {
+  const { data } = await adminClient()
+    .from("trip_packing_items")
+    .select("qty, checked")
+    .eq("trip_id", tripId)
+    .eq("item_id", itemId)
+    .maybeSingle();
+
+  return data ?? null;
+}
+
 /**
  * Actualiza cantidad y/o tildado de un ítem de equipaje.
  *
- * Es un update y no un upsert a propósito: el ítem tiene que estar en la lista
- * generada del viaje. Agregar ítems fuera de lo generado no es parte del MVP, y
- * un upsert lo habilitaría sin querer desde cualquier id de catálogo.
+ * Tildar sube la cantidad a uno si estaba en cero: marcar algo que llevás en
+ * cantidad ninguna no significa nada, y además la fila necesita una cantidad
+ * para existir.
  */
 export async function setPackingItem(
   editToken: string,
@@ -58,28 +85,39 @@ export async function setPackingItem(
     return { ok: false, error: SIN_PERMISO };
   }
 
-  const { error, count } = await adminClient()
+  const write = resolveItemWrite(await leerPackingItem(tripId, itemId), patch);
+
+  // Bajar a cero saca el ítem del viaje: se borra la fila en vez de guardar un
+  // cero, y con ella se va el tildado, que es lo correcto — no se tilda algo
+  // que no se lleva.
+  if (write.action === "delete") {
+    const { error } = await adminClient()
+      .from("trip_packing_items")
+      .delete()
+      .eq("trip_id", tripId)
+      .eq("item_id", itemId);
+
+    return error
+      ? { ok: false, error: `No se pudo guardar: ${error.message}` }
+      : { ok: true };
+  }
+
+  const { error } = await adminClient()
     .from("trip_packing_items")
-    .update(
+    // El upsert está acotado por la PK: no puede crear una fila en otro viaje
+    // porque el trip_id sale del token, no del cliente.
+    .upsert(
       {
-        ...(patch.qty !== undefined ? { qty: patch.qty } : {}),
-        ...(patch.checked !== undefined ? { checked: patch.checked } : {}),
+        trip_id: tripId,
+        item_id: itemId,
+        qty: write.qty,
+        checked: write.checked,
       },
-      { count: "exact" },
-    )
-    // El filtro por trip_id es la mitad que importa: sin él, el token de un
-    // viaje serviría para editar el ítem de cualquier otro.
-    .eq("trip_id", tripId)
-    .eq("item_id", itemId);
+      { onConflict: "trip_id,item_id" },
+    );
 
   if (error) {
     return { ok: false, error: `No se pudo guardar: ${error.message}` };
-  }
-
-  // Un update que no tocó ninguna fila no es un éxito silencioso: significa que
-  // el ítem no está en este viaje, y la UI tiene que revertir lo que mostró.
-  if (count === 0) {
-    return { ok: false, error: "Ese ítem no está en la lista del viaje." };
   }
 
   return { ok: true };
@@ -100,18 +138,28 @@ export async function setBudgetItemQty(
     return { ok: false, error: SIN_PERMISO };
   }
 
-  const { error, count } = await adminClient()
+  // Cero saca el gasto del presupuesto: fila borrada, no fila en cero.
+  if (qty === 0) {
+    const { error } = await adminClient()
+      .from("trip_budget_items")
+      .delete()
+      .eq("trip_id", tripId)
+      .eq("product_id", productId);
+
+    return error
+      ? { ok: false, error: `No se pudo guardar: ${error.message}` }
+      : { ok: true };
+  }
+
+  const { error } = await adminClient()
     .from("trip_budget_items")
-    .update({ qty }, { count: "exact" })
-    .eq("trip_id", tripId)
-    .eq("product_id", productId);
+    .upsert(
+      { trip_id: tripId, product_id: productId, qty },
+      { onConflict: "trip_id,product_id" },
+    );
 
   if (error) {
     return { ok: false, error: `No se pudo guardar: ${error.message}` };
-  }
-
-  if (count === 0) {
-    return { ok: false, error: "Ese gasto no está en el presupuesto del viaje." };
   }
 
   return { ok: true };

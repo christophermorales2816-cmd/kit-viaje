@@ -122,9 +122,27 @@ create table trip_budget_items (
 
 **No modelado como tabla (se resuelve en runtime):** cotizaciones de cambio. Se consultan contra la API externa según `base_currency` del destino, no se persisten como parte del schema relacional.
 
+### 3.1 Filas ralas: el cero es ausencia de fila
+
+Las tablas de sesión guardan **solo lo que el usuario eligió**. Un viaje recién creado no tiene ninguna fila en `trip_packing_items` ni en `trip_budget_items`.
+
+- **Crear** (`create.ts`) inserta la fila de `trips` y nada más.
+- **Leer** (`read.ts`) corre los dos motores —que son deterministas— y superpone encima las filas que existan. Sin fila, cantidad 0.
+- **Escribir** (`mutate.ts`) hace upsert al subir una cantidad y **borra la fila** al bajarla a cero.
+
+La primera razón es de modelado: la versión anterior escribía unas cincuenta filas por viaje, todas diciendo "ninguno". Eso no son datos, es el estado inicial escrito a mano.
+
+La segunda es la que importó de verdad. Guardar ceros exigía que la base tuviera `check (qty >= 0)`, y mientras esa migración no estuviera aplicada **la creación de viajes fallaba entera**. Con filas ralas nunca se escribe un cero, así que el check original —`qty > 0`— no se puede disparar y la app funciona con o sin esa migración. Verificado contra un Postgres sin migrar: viaje creado, cantidades arriba, tildado, y bajada a cero, sin un solo error.
+
+La regla de decisión vive aparte, en `src/lib/trips/item-write.ts`, para poder probarla sin base. Su invariante: **nunca devuelve un upsert con cantidad cero**.
+
+**Tildar sube la cantidad a uno** si estaba en cero. Marcar algo que se lleva en cantidad ninguna no significa nada, y además la fila necesita una cantidad válida para existir.
+
 ## 4. Motor de packing
 
-> **Actualizado: las listas se generan en cero.** El motor decide **qué** entra en la lista, no **cuánto**. Cada ítem generado llega con cantidad 0 y el usuario suma lo que se acopla a su viaje. La regla de escalado por duración que se describe más abajo sigue viva y testeada en `src/lib/quantity.ts`, y viaja con cada ítem del catálogo, pero ya no se aplica sola: una lista preseleccionada obliga a desmarcar en vez de elegir. Vale igual para el motor de presupuesto (sección 5). La base acompaña con `check (qty >= 0)` en las dos tablas de sesión y default 0, así que "ninguno" es un estado representable y no hay que borrar la fila para expresarlo.
+> **Actualizado: las listas se generan en cero, y el cero no se guarda.** El motor decide **qué** entra en la lista, no **cuánto**. Cada ítem llega con cantidad 0 y el usuario suma lo que se acopla a su viaje. La regla de escalado por duración que se describe más abajo sigue viva y testeada en `src/lib/quantity.ts`, y viaja con cada ítem del catálogo, pero ya no se aplica sola: una lista preseleccionada obliga a desmarcar en vez de elegir. Vale igual para el motor de presupuesto (sección 5).
+>
+> **Una fila existe solo si el usuario eligió algo** (ver 3.1). Crear un viaje no escribe ningún ítem; la lista se genera al leer y las filas guardadas se superponen encima.
 
 Motor de reglas determinístico (sin LLM) — predecible, sin costo de inferencia por visita, sin riesgo de alucinar ítems. Un LLM, si se agrega, queda para una capa posterior de refinamiento conversacional sobre la lista ya generada, no para la generación en sí.
 
@@ -254,7 +272,7 @@ Mismo componente del dashboard con prop `isReadOnly={true}`: checkboxes y cantid
 **CI/Deploy:** Vercel conectado al repo de GitHub — cada push a `main` deploya a producción, cada PR genera un preview deploy. Sin pipeline custom para el MVP.
 
 **Criterios de aceptación (Definition of Done):**
-1. Un usuario sin cuenta puede definir fechas + tipo de viaje y llegar a una lista de equipaje y un presupuesto generados automáticamente, **con todas las cantidades en cero**, listos para que elija lo que necesita.
+1. Un usuario sin cuenta puede definir fechas + tipo de viaje y llegar a una lista de equipaje y un presupuesto generados automáticamente, **con todas las cantidades en cero**, listos para que elija lo que necesita. La creación no depende de ninguna migración pendiente (3.1).
 2. El presupuesto se recalcula en tiempo real al cambiar entre las 4 cotizaciones.
 3. El link `share_slug` abre una vista funcional en modo solo lectura, verificable desde otro navegador.
 4. Exportar a PDF y CSV funciona para ambas listas.

@@ -1,15 +1,7 @@
 import "server-only";
 
-import { generateBudgetList } from "@/lib/budget";
-import { generatePackingList } from "@/lib/packing";
 import { adminClient } from "@/lib/supabase/admin";
-import {
-  getClimateProfiles,
-  getClimateThresholds,
-  getDestination,
-  getPackingCatalog,
-  getProducts,
-} from "@/lib/supabase/reference";
+import { getDestination } from "@/lib/supabase/reference";
 
 import { TripWriteError } from "./errors";
 import type { TripRecord } from "./types";
@@ -18,12 +10,23 @@ import type { TripInput } from "./validate";
 /**
  * Creación de un viaje (spec, sección 6A, paso 2).
  *
- * "Un Server Action inserta el trip, ejecuta el motor de packing y el de
- * presupuesto, y hace redirect() a /viaje/{edit_token}".
+ * Crea la fila de `trips` y nada más.
  *
- * Acá está el trabajo; la Server Action que lo llama solo valida la entrada y
- * redirige. Separado así, esto se puede llamar desde un script o un test de
- * integración sin arrastrar el contexto de request de Next.
+ * NO GUARDA ÍTEMS, Y ESO ES EL DISEÑO
+ *
+ * Antes insertaba las dos listas completas —unas cincuenta filas por viaje—
+ * todas con cantidad cero. Cincuenta filas que dicen "ninguno" no son datos:
+ * son el estado inicial escrito a mano. Y además obligaban a que la base
+ * aceptara `qty = 0`, que es exactamente el check que rompía la creación
+ * cuando la migración no estaba aplicada.
+ *
+ * Ahora una fila existe solo si el usuario eligió algo. La lista se genera al
+ * leer el viaje (`read.ts`) y las filas guardadas se superponen encima. Nunca
+ * se escribe un cero, así que el `check (qty > 0)` viejo no se puede disparar
+ * y el viaje se crea igual contra una base sin migrar.
+ *
+ * Como no hay segundo insert, tampoco hace falta el borrado compensatorio que
+ * limpiaba un viaje a medias.
  */
 
 const TRIP_COLUMNS =
@@ -59,29 +62,7 @@ export type { TripRow };
 export async function createTrip(input: TripInput): Promise<TripRecord> {
   const destination = await getDestination();
 
-  // Las cuatro lecturas son independientes entre sí y ninguna depende del
-  // resultado de otra: en serie serían cuatro round-trips encadenados a
-  // Supabase antes de poder mostrarle nada al usuario.
-  const [climateProfiles, climateThresholds, catalog, products] =
-    await Promise.all([
-      getClimateProfiles(destination.id),
-      getClimateThresholds(),
-      getPackingCatalog(),
-      getProducts(destination.id),
-    ]);
-
-  const packingList = generatePackingList({
-    trip: input,
-    climateProfiles,
-    climateThresholds,
-    catalog,
-  });
-
-  const budgetList = generateBudgetList(input, products);
-
-  const admin = adminClient();
-
-  const { data, error } = await admin
+  const { data, error } = await adminClient()
     .from("trips")
     .insert({
       destination_id: destination.id,
@@ -101,67 +82,5 @@ export async function createTrip(input: TripInput): Promise<TripRecord> {
     );
   }
 
-  const trip = toTripRecord(data);
-
-  try {
-    await insertGeneratedItems(trip.id, packingList.items, budgetList);
-  } catch (cause) {
-    // Un viaje sin ítems no es un viaje a medias: es un dashboard vacío al que
-    // el usuario llega por redirect y del que no puede salir, porque la
-    // generación corre una sola vez al crear. Se borra y se falla — el cascade
-    // de las FK se lleva lo que haya alcanzado a entrar.
-    await admin.from("trips").delete().eq("id", trip.id);
-    throw cause;
-  }
-
-  return trip;
-}
-
-async function insertGeneratedItems(
-  tripId: string,
-  packingItems: { item: { id: string }; qty: number }[],
-  budgetItems: { product: { id: string }; qty: number }[],
-): Promise<void> {
-  const admin = adminClient();
-
-  // Una lista vacía es posible y no es un error: un tipo de viaje sin ítems
-  // para el clima resuelto genera cero filas. Insertar [] en PostgREST es una
-  // request al pedo, no un no-op.
-  const inserts = [];
-
-  if (packingItems.length > 0) {
-    inserts.push(
-      admin.from("trip_packing_items").insert(
-        packingItems.map((entry) => ({
-          trip_id: tripId,
-          item_id: entry.item.id,
-          qty: entry.qty,
-        })),
-      ),
-    );
-  }
-
-  if (budgetItems.length > 0) {
-    inserts.push(
-      admin.from("trip_budget_items").insert(
-        budgetItems.map((line) => ({
-          trip_id: tripId,
-          product_id: line.product.id,
-          qty: line.qty,
-        })),
-      ),
-    );
-  }
-
-  const results = await Promise.all(inserts);
-  const failed = results.find((result) => result.error);
-
-  if (failed?.error) {
-    // El código del error viaja: es lo que distingue "la base está caída" de
-    // "la base no tiene la migración que este código necesita".
-    throw new TripWriteError(
-      `No se pudieron guardar las listas generadas: ${failed.error.message}`,
-      failed.error.code ?? null,
-    );
-  }
+  return toTripRecord(data);
 }
