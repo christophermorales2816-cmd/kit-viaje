@@ -12,7 +12,7 @@ de dependencias.
 
 ## Estado
 
-**MVP completo contra el spec.** Las cinco secciones implementadas y los siete
+**MVP completo contra el spec.** Las siete secciones implementadas y los siete
 criterios de aceptación de la sección 7 cumplidos.
 
 | Sección | Qué es | Estado |
@@ -22,18 +22,43 @@ criterios de aceptación de la sección 7 cumplidos.
 | 5 | Motor de presupuesto | ✅ |
 | 6 | Flujo de usuario y persistencia | ✅ |
 | 7 | Stack, testing, deploy | ✅ |
+| 8 | Guía de destino | ✅ |
+| 9 | Página de preparación | ✅ |
+
+### El flujo
+
+Cuatro páginas, en este orden. Cada una responde una pregunta y recién después
+pide la siguiente decisión.
+
+| # | Ruta | Qué responde | Cómo se renderiza |
+|---|---|---|---|
+| 1 | `/` | *¿Adónde?* — el globo, sin hablar del país | Estática |
+| 2 | `/guia/[slug]` | *¿Qué me espera?* — números, cotizaciones en vivo, tablero, puntajes, destinos y mapa | Estática + `<Suspense>` para las cotizaciones |
+| 3 | `/guia/[slug]/preparar` | *¿Cuándo conviene ir y qué llevo?* — el año climático, mes a mes, y la checklist | Dinámica con ISR (1 h) |
+| 4 | `/guia/[slug]/planificar` | *¿Qué necesito para MIS fechas?* — el generador | Estática, el cálculo va en la Server Action |
+
+La página 3 es dinámica y no prerenderizada a propósito: lee cuatro tablas de
+Supabase, y con `generateStaticParams` un hipo de la base durante el build no
+rompería una request, rompería el deploy entero.
 
 ### Criterios de aceptación
 
 | # | Criterio | Cómo se verifica |
 |---|---|---|
-| 1 | Crear un viaje sin cuenta y llegar a las dos listas | Manual, y el flujo entero está en `src/lib/trips/` |
+| 1 | Crear un viaje sin cuenta y llegar a las dos listas, **con todo en cero** | `src/lib/trips/item-write.test.ts` y el flujo en `src/lib/trips/` |
 | 2 | El presupuesto se recalcula con las 4 cotizaciones | `src/lib/quotes/map.test.ts` |
 | 3 | El `share_slug` abre en solo lectura | Ruta `/viaje/ver/[shareSlug]` con `isReadOnly` |
 | 4 | Exportar a PDF y CSV | `src/lib/export/csv.test.ts` y CSS de impresión |
-| 5 | Viajes recientes al volver a `/` | `src/lib/trips/storage.test.ts` |
+| 5 | El dashboard privado avisa que el link es la única forma de volver | `src/components/trip/share-controls.tsx` |
 | 6 | Los tests de los motores pasan en CI | Job `web` del [workflow](./.github/workflows/ci.yml) |
 | 7 | Ninguna escritura sin `edit_token` válido | Job `database`: 21 aserciones en `supabase/tests/rls_smoke.sql` |
+
+El criterio 5 reemplaza al original, que pedía un historial de "viajes
+recientes" en `localStorage`. Esa función se eliminó entera —módulo, efecto y
+UI— porque un historial en el navegador promete una permanencia que no puede
+cumplir: se pierde al cambiar de dispositivo o limpiar el sitio, y quien confió
+en él perdió el viaje. El aviso al lado del link dice la verdad en su lugar
+(spec, 6C).
 
 Fuera del MVP y sin planificar: cuentas, más corredores, i18n, monetización y
 tracking de gastos reales. La sección 2 del spec explica el porqué de cada uno.
@@ -45,8 +70,12 @@ tracking de gastos reales. La sección 2 del spec explica el porqué de cada uno
 - **Tailwind CSS v4** + **Shadcn UI** (estilo `new-york`, base `neutral`)
 - **Supabase** (Postgres) — lecturas con RLS de solo lectura pública,
   escrituras exclusivamente vía Server Actions que validan `edit_token`
-- **cobe** para el globo interactivo de la landing
-- **Vitest** para los tests de los motores
+- **cobe** para el globo interactivo de la landing y **Leaflet** para el mapa
+  de destinos — los dos se cargan solo en el cliente, y Leaflet además dentro
+  del efecto: lee `window` al evaluarse y rompe el prerender si se importa arriba
+- **react-day-picker** para el calendario y **date-fns** para las fechas
+- **Vercel Web Analytics**, sin cookies
+- **Vitest** para los tests de los motores y unos pocos de componentes
 
 ## Base de datos
 
@@ -62,6 +91,9 @@ nueva.
 | `20260826120200_rls_policies.sql` | RLS de los dos grupos de tablas |
 | `20260826120300_seed_climate_thresholds.sql` | Buckets de clima iniciales |
 | `20260826140000_precip_probability_scale.sql` | `precip_probability` acotada a 0-100 |
+| `20260827100000_seed_reference_data.sql` | Destino, clima, catálogo y precios de Buenos Aires |
+| `20260831040000_ezeiza_por_tramo.sql` | El traslado del aeropuerto se cobra por tramo, no por día |
+| `20260902060000_qty_desde_cero.sql` | `qty >= 0` y default 0 en las tablas de sesión |
 
 Aplicarlas:
 
@@ -140,6 +172,26 @@ Dos detalles que no son obvios:
   acumula error; con ARS de cinco cifras no cambia lo que se muestra, pero la
   cuenta que sale mal cuesta lo mismo que la que sale bien.
 
+## Cuando algo falla
+
+Cuatro rutas leen Supabase en cada request. Sin red de contención, cualquier
+hipo de la base cae en la pantalla por defecto de Next —"Application error: a
+server-side exception has occurred"—, en inglés y sin salida. Hay tres
+archivos para eso:
+
+| Archivo | Cuándo aparece |
+|---|---|
+| `src/app/not-found.tsx` | Un slug que no existe. Lo llaman las tres rutas de guía |
+| `src/app/error.tsx` | Falla el render de una ruta: Supabase caído, una lectura que revienta |
+| `src/app/global-error.tsx` | Falla el layout raíz. Reemplaza el `<html>` entero, así que no puede usar nada del layout — de ahí los estilos inline |
+
+**No se muestra `error.message`.** En producción Next ya lo reemplaza por uno
+genérico, pero en desarrollo llega entero, y los errores de escritura de viajes
+incluyen a propósito el SQLSTATE y el texto de Postgres: eso es para los logs
+del servidor, no para la pantalla de alguien que solo quiere armar una valija.
+Lo que sí se muestra es el `digest`, que es con lo que se encuentra el error
+real en los logs y no dice nada de la base.
+
 ## CI
 
 Cada push y cada pull request corren [dos jobs](./.github/workflows/ci.yml):
@@ -153,6 +205,14 @@ checkout limpio por archivos que todavía no existen.
 corre el smoke test de RLS. Cubre el criterio de aceptación 7 del spec:
 ninguna escritura a las tablas de sesión es posible sin un `edit_token`
 válido, verificado en cada PR y no una sola vez a mano.
+
+Un tercer workflow, [`migraciones.yml`](./.github/workflows/migraciones.yml),
+corre `supabase db push` cuando un merge a `main` toca
+`supabase/migrations/`, y también a mano desde la pestaña Actions. Existe
+porque una migración que vive en el repo pero no está aplicada es
+indistinguible de un bug: la app pide una columna que no existe y el error
+aparece en la cara del usuario, no en CI. Necesita tres secrets cargados en
+GitHub y los verifica antes de intentar nada.
 
 ## Desarrollo
 
@@ -181,11 +241,25 @@ supabase/
     └── rls_smoke.sql    # verificación de RLS y constraints
 src/
 ├── app/                 # rutas del App Router
-│   ├── layout.tsx
-│   ├── page.tsx         # landing (placeholder por ahora)
-│   └── globals.css      # Tailwind v4 + tokens de tema de Shadcn
+│   ├── layout.tsx       # pie con el aviso de analytics y el sello de build
+│   ├── error.tsx        # red de contención de las rutas
+│   ├── global-error.tsx # último recurso: falla el layout raíz
+│   ├── not-found.tsx    # 404 propio
+│   ├── page.tsx         # 1 · landing: el globo
+│   ├── guia/[slug]/
+│   │   ├── page.tsx     # 2 · guía del país
+│   │   ├── preparar/    # 3 · condiciones actuales
+│   │   └── planificar/  # 4 · el generador
+│   └── viaje/
+│       ├── [editToken]/     # dashboard privado
+│       └── ver/[shareSlug]/ # vista compartida, solo lectura
 ├── components/
+│   ├── landing/         # globo y formulario de viaje nuevo
+│   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
+│   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
+│   ├── trip/            # listas, totales, controles de compartir
 │   └── ui/              # componentes de Shadcn
+├── content/guias/       # contenido editorial de las guías (sección 8.2)
 └── lib/
     ├── packing/         # motor de packing (sección 4)
     │   ├── dates.ts     # meses cubiertos y duración, todo en UTC
@@ -196,7 +270,13 @@ src/
     │   ├── money.ts     # aritmética en centavos enteros
     │   ├── freshness.ts # antigüedad de los precios
     │   └── engine.ts    # generateBudgetList() / calculateBudget()
+    ├── prepare/         # el año climático de la página 3 (sección 9)
+    ├── quotes/          # dolarapi: fetch, mapeo y spread
+    ├── trips/           # Server Actions, validación y lectura de viajes
+    ├── supabase/        # clientes y lectura de datos de referencia
+    ├── export/          # CSV
     ├── quantity.ts      # escalado por duración, usado por los dos motores
+    ├── version.ts       # el commit que está corriendo
     └── utils.ts         # cn()
 ```
 

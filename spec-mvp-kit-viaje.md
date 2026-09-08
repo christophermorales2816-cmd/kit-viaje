@@ -490,6 +490,22 @@ Tres decisiones técnicas que no son de estilo:
 11. El mosaico filtra por región sin recargar la página, y el mapa dibuja un pin por destino que abre su popup al tocarlo. Mosaico y mapa muestran exactamente los mismos destinos, porque salen de la misma lista.
 12. Un test valida el contenido de la guía contra su interfaz: exactamente cuatro `highlights`, cada `score` entre 0 y 10, y `factsUpdatedAt` ni en el futuro ni con más de 180 días de antigüedad. El último caso es deliberado: el test falla solo cuando el contenido envejece, y esa falla en CI es el recordatorio de revisarlo. Es la contraparte de haber puesto el contenido en git (8.2).
 
+### 7.1 Qué se ve cuando algo falla
+
+Cuatro rutas leen Supabase en cada request. La pantalla por defecto de Next
+—"Application error: a server-side exception has occurred"— está en inglés, no
+ofrece salida y no distingue "la base se cayó" de "escribiste mal la URL". Tres
+archivos cubren los tres casos: `not-found.tsx` para un slug inexistente,
+`error.tsx` para una ruta que revienta, y `global-error.tsx` para el layout
+raíz, que reemplaza el `<html>` entero y por eso no puede importar nada del
+layout.
+
+Ninguno muestra `error.message`. En producción Next ya lo reemplaza, pero en
+desarrollo llega entero, y los errores de escritura incluyen a propósito el
+SQLSTATE y el texto de Postgres (6.1): eso es para los logs, no para la
+pantalla. Sí se muestra el `digest`, que sirve para encontrar el error en los
+logs y no revela nada del esquema.
+
 ---
 
 ## 9. Página de preparación — "Condiciones actuales"
