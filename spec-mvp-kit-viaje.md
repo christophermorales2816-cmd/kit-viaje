@@ -548,7 +548,7 @@ Para el consejo y los chips hace falta uno solo, y gana el que **obliga a
 empacar algo distinto**: `calido` > `frio` > `templado`. "Templado" nunca
 obliga a nada.
 
-### 9.3 Los chips se ordenan por especificidad
+### 9.3 Los chips se ordenan por bucket principal y después por especificidad
 
 También salían idénticos. Los ítems genéricos —remera, cepillo de dientes—
 llevan las tres etiquetas de clima y ganaban siempre por orden de catálogo.
@@ -557,8 +557,29 @@ mayor**: un short que solo sirve con calor dice algo de enero; un cepillo de
 dientes no dice nada de ningún mes. El desempate es el orden del catálogo, que
 ya está curado.
 
+Con eso solo no alcanzaba. Un mes abarca varios buckets, y el enero porteño
+—20 a 30 °C, templado de noche y cálido de tarde— sugería **"buzo o polar" y
+"pantalón largo"**: el buzo está etiquetado `[frio, templado]` y matchea por la
+mínima. Peor todavía, el traje de baño quedaba afuera de enero y aparecía en
+mayo. La primera clave del orden es entonces **si el ítem matchea el bucket
+principal del mes**; recién después la especificidad y el orden de catálogo.
+
 Esto es una vista editorial, no el motor de packing: acá no hay cantidades ni
-días. El motor real corre en el planificador, con las fechas del viaje.
+días. El motor real corre en el planificador, con las fechas del viaje, y esa
+diferencia justifica el orden: el planificador lista todo lo que puede llegar a
+hacer falta y deja bajar a cero lo que no; acá hay cuatro lugares y hay que
+gastarlos en lo que caracteriza al mes.
+
+**Lo que no se toca son las etiquetas del catálogo.** Que el traje de baño sea
+`[templado, calido]` y por eso aparezca en un mayo de 11 a 19 °C es discutible,
+pero esas etiquetas también las usa el motor de packing: cambiarlas cambia la
+lista que se genera para un viaje real. Es una decisión de producto, no un
+arreglo de presentación.
+
+**Consecuencia honesta:** con tres buckets hay como mucho tres juegos de chips
+distintos, y el año de Buenos Aires usa los tres. Las doce tarjetas siguen
+siendo distintas por temperatura y por consejo, pero los chips se repiten en
+tres grupos. Inventar variedad ahí sería inventar información.
 
 ### 9.4 Dinámica con ISR, no prerenderizada
 
