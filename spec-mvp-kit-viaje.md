@@ -557,8 +557,49 @@ en la base.
 
 ### 9.5 Lo que esta página todavía no tiene
 
-Queda para una segunda parte, y está listado acá para que no se olvide: lista de
-ropa con cantidades, documentos y dinero, checklist de equipaje de mano,
-electrónica, higiene, salud, gear, organización de la valija, código de
-vestimenta, estrategia de lavado, errores comunes al empacar, viajar con chicos,
-la tabla de "estos 7 ítems no los lleves", y FAQ.
+La parte 2 (9.6) cubrió consejos de empaque, electrónica, higiene, salud, viajar
+con chicos, la tabla de "no lo lleves" y las FAQ. Sigue pendiente: la lista de
+ropa **con cantidades** —que es en rigor trabajo del planificador, no de esta
+página—, documentos y dinero, y organización de la valija.
+
+### 9.6 Parte 2: la checklist editorial
+
+Cuatro bloques más, después de las tarjetas por mes: consejos en dos columnas
+(sí / no), las secciones plegables de checklist, la tabla de "lo que ocupa lugar
+y no vale la pena", y las preguntas frecuentes.
+
+**Todo es contenido, no lógica.** Vive en `preparation` junto al resto de la
+guía, por lo mismo que el tablero informativo (8.2): un texto que cambia sin que
+nadie lo note es peor que un texto viejo. Los tests de `argentina.test.ts` son
+la contraparte — lo que en Postgres serían check constraints.
+
+**`<details>` y no un acordeón de React.** Se pliega sin una línea de
+JavaScript, llega con teclado y lector de pantalla ya resueltos, y deja que la
+página siga siendo un Server Component entero. El único costo es animar la
+flecha con CSS en vez de con estado, que es exactamente lo que hay que pagar
+por esto.
+
+**La tabla es una `<table>` de verdad**, con `scope="col"` y `scope="row"`. Son
+tres columnas que se leen de a filas: un lector de pantalla necesita saber que
+el porqué pertenece a lo que se deja. En móvil scrollea horizontal dentro de su
+contenedor; apilar cada fila rompería la comparación que la hace útil.
+
+**Las tres columnas de esa tabla son obligatorias.** Decirle a alguien que deje
+algo sin decirle con qué reemplazarlo es un consejo a medias, y el tipo no puede
+exigir que un string no esté vacío — el test sí.
+
+**El color nunca es el único canal.** La columna "Sí" y la columna "No" llevan
+su ícono y su palabra además del verde y el rojo. El tono `warn` de los avisos
+se reserva para lo que tiene consecuencias reales —agua no potable, un enchufe
+que no entra—, y un test acota cuántas secciones pueden usarlo: si todo grita,
+nada grita.
+
+**Los números de las FAQ salen de un contador CSS**, no escritos en el texto:
+agregar una pregunta en el medio no obliga a renumerar nada a mano.
+
+**Sobre las cifras.** La referencia de la que salió el diseño trae datos muy
+precisos ("el algodón absorbe 7 veces su peso", "los jeans tardan 18 horas en
+secar"). Acá no se reprodujeron: no hay forma de verificarlos y un número falso
+con dos decimales hace más daño que una frase honesta sin número. El contenido
+dice *que* el algodón retiene humedad y tarda en secar, que es lo verdadero y lo
+único que cambia una decisión de equipaje.

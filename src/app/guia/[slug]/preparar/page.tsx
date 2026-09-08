@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Plug } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
+import { AvoidTable } from "@/components/preparar/avoid-table";
+import { ChecklistSections } from "@/components/preparar/checklist-sections";
 import { ClimateBars } from "@/components/preparar/climate-bars";
+import { FaqList } from "@/components/preparar/faq-list";
 import { MonthCards } from "@/components/preparar/month-cards";
 import { MonthStrip } from "@/components/preparar/month-strip";
+import { PackingTips } from "@/components/preparar/packing-tips";
 import { Button } from "@/components/ui/button";
 import { getGuide } from "@/content/guias";
 import { resolveClimateYear, summarizeYear } from "@/lib/prepare/climate-year";
@@ -132,23 +136,17 @@ export default async function PrepararPage({
         adviceByBucket={guia.preparation.adviceByBucket}
       />
 
-      <section
-        aria-labelledby="enchufe"
-        className="flex w-full max-w-5xl flex-col gap-3"
-      >
-        <h2
-          id="enchufe"
-          className="flex items-center gap-2 text-2xl font-semibold tracking-tight"
-        >
-          <Plug className="size-5" aria-hidden />
-          Electricidad
-        </h2>
+      <PackingTips
+        dos={guia.preparation.tips.dos}
+        donts={guia.preparation.tips.donts}
+        country={guia.country}
+      />
 
-        <p className="text-muted-foreground text-pretty">
-          {guia.preparation.plug.types} · {guia.preparation.plug.voltage}.{" "}
-          {guia.preparation.plug.note}
-        </p>
-      </section>
+      <ChecklistSections sections={guia.preparation.checklists} />
+
+      <AvoidTable rows={guia.preparation.avoid} country={guia.country} />
+
+      <FaqList faq={guia.preparation.faq} country={guia.country} />
 
       <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-balance">

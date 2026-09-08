@@ -61,6 +61,60 @@ export interface GuidePlace {
   image: GuideImage | null;
 }
 
+/** Un consejo de empaque: qué hacer, y por qué. */
+export interface GuideTip {
+  title: string;
+  body: string;
+}
+
+/**
+ * Un aviso destacado arriba de una sección de checklist.
+ *
+ * `tone` es "warn" solo cuando ignorarlo tiene consecuencias reales —agua no
+ * potable, un enchufe que no entra—, no para dar énfasis. Si todo grita, nada
+ * grita.
+ */
+export interface GuideNotice {
+  tone: "info" | "warn";
+  title: string;
+  body: string;
+}
+
+/**
+ * Una sección plegable de la checklist (electrónica, aseo, salud, chicos).
+ *
+ * Va en <details>, que es plegable sin una línea de JavaScript. Con eso la
+ * página sigue siendo un Server Component entero, el buscador indexa el
+ * contenido plegado y Ctrl+F lo encuentra en los navegadores que ya abren
+ * <details> al buscar.
+ */
+export interface GuideChecklistSection {
+  id: string;
+  title: string;
+  /** `null` cuando la sección no necesita advertencia. */
+  notice: GuideNotice | null;
+  /** Etiqueta del resumen plegado. */
+  summary: string;
+  items: string[];
+}
+
+/**
+ * Una fila de "no lo lleves" (spec, sección 9.6).
+ *
+ * Las tres columnas son obligatorias a propósito: decirle a alguien que deje
+ * algo sin decirle con qué reemplazarlo es un consejo a medias.
+ */
+export interface GuideAvoidRow {
+  leave: string;
+  why: string;
+  instead: string;
+}
+
+export interface GuideFaq {
+  question: string;
+  answer: string;
+}
+
 /**
  * Contenido de la página "Condiciones actuales" (spec, sección 9).
  *
@@ -79,6 +133,13 @@ export interface GuidePreparation {
    */
   adviceByBucket: Record<string, string>;
   plug: { types: string; voltage: string; note: string };
+  /** Consejos de empaque, en dos columnas: qué sí y qué no (9.6). */
+  tips: { dos: GuideTip[]; donts: GuideTip[] };
+  /** Secciones plegables de la checklist (9.6). */
+  checklists: GuideChecklistSection[];
+  /** Lo que ocupa lugar y no vale la pena (9.6). */
+  avoid: GuideAvoidRow[];
+  faq: GuideFaq[];
 }
 
 export interface DestinationGuide {
