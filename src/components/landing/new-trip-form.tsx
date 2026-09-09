@@ -48,7 +48,7 @@ function diasEntre(range: DateRange): number | null {
   return Math.round((hasta.getTime() - desde.getTime()) / dia) + 1;
 }
 
-export function NewTripForm() {
+export function NewTripForm({ corridor }: { corridor: string }) {
   const [state, formAction, isPending] = useActionState(createTripAction, null);
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [tripType, setTripType] = useState<TripType | null>(null);
@@ -74,6 +74,12 @@ export function NewTripForm() {
         value={range?.to ? toIsoDate(range.to) : ""}
       />
       <input type="hidden" name="tripType" value={tripType ?? ""} />
+
+      {/*
+        A qué país es el viaje. Va en el formulario y no se deduce del servidor
+        porque la Server Action no ve la URL desde la que la llamaron.
+      */}
+      <input type="hidden" name="corridor" value={corridor} />
 
       <fieldset className="flex flex-col gap-3">
         <legend className="flex items-center gap-2 text-sm font-medium">
@@ -158,8 +164,8 @@ export function NewTripForm() {
       </Button>
 
       <p className="text-xs text-muted-foreground">
-        Sin cuenta y sin mail. Te vamos a dar un link: ese link es la única forma
-        de volver a tu viaje.
+        Sin cuenta y sin mail. Te vamos a dar un link: ese link es la única
+        forma de volver a tu viaje.
       </p>
     </form>
   );

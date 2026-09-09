@@ -13,9 +13,37 @@ const VALIDO = {
   startDate: "2026-09-01",
   endDate: "2026-09-07",
   tripType: "urbano",
+  corridor: "argentina",
 };
 
 describe("parseTripInput", () => {
+  /**
+   * El corredor es el dato que faltaba: sin él, el planificador de Brasil
+   * creaba viajes a Buenos Aires, con precios en pesos y clima argentino. Un
+   * viaje al país equivocado no falla en ningún lado — sale mal y listo.
+   */
+  it("conserva el corredor que se le pasa", () => {
+    const result = parseTripInput({ ...VALIDO, corridor: "brasil" });
+
+    expect(result).toEqual({
+      ok: true,
+      value: { ...VALIDO, corridor: "brasil" },
+    });
+  });
+
+  it("rechaza un corredor que no existe en vez de caer a uno por defecto", () => {
+    for (const corridor of ["uruguay", "", "  ", null, undefined, 42]) {
+      expect(parseTripInput({ ...VALIDO, corridor }).ok).toBe(false);
+    }
+  });
+
+  it("explica qué hacer cuando el destino no se reconoce", () => {
+    const result = parseTripInput({ ...VALIDO, corridor: "narnia" });
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.error).toMatch(/destino/i);
+  });
+
   it("acepta un viaje válido sin tocar los valores", () => {
     expect(parseTripInput(VALIDO)).toEqual({ ok: true, value: VALIDO });
   });

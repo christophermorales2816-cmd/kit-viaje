@@ -60,7 +60,10 @@ export { TRIP_COLUMNS };
 export type { TripRow };
 
 export async function createTrip(input: TripInput): Promise<TripRecord> {
-  const destination = await getDestination();
+  // El corredor sale del viaje, no del default. Con un solo país daba igual;
+  // con dos, `getDestination()` sin argumento manda todos los viajes a Buenos
+  // Aires — incluidos los que se arman desde la guía de Brasil.
+  const destination = await getDestination(input.corridor);
 
   const { data, error } = await adminClient()
     .from("trips")

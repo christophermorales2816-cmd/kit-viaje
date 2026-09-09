@@ -42,6 +42,7 @@ export async function createTripAction(
     startDate: formData.get("startDate"),
     endDate: formData.get("endDate"),
     tripType: formData.get("tripType"),
+    corridor: formData.get("corridor"),
   });
 
   if (!parsed.ok) {

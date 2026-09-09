@@ -67,7 +67,7 @@ export default async function PlannerPage({
       </header>
 
       <div className="max-w-md">
-        <NewTripForm />
+        <NewTripForm corridor={guia.slug} />
       </div>
     </main>
   );

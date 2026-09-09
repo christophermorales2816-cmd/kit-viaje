@@ -1,3 +1,4 @@
+import { allGuides } from "@/content/guias";
 import { TRIP_TYPES, durationInDays, type TripType } from "@/lib/packing";
 
 /**
@@ -22,6 +23,15 @@ export interface TripInput {
   /** yyyy-mm-dd, inclusive. */
   endDate: string;
   tripType: TripType;
+  /**
+   * A qué país es el viaje.
+   *
+   * Llega desde el formulario, o sea desde el cliente, y por eso se valida
+   * contra las guías existentes en vez de confiarse. Antes no viajaba: el
+   * planificador de Brasil creaba viajes a Buenos Aires, con precios en pesos y
+   * clima argentino.
+   */
+  corridor: string;
 }
 
 export type ValidationResult<T> =
@@ -30,6 +40,15 @@ export type ValidationResult<T> =
 
 function isTripType(value: unknown): value is TripType {
   return typeof value === "string" && TRIP_TYPES.includes(value as TripType);
+}
+
+/**
+ * Los corredores que existen salen del índice de guías, que es el mismo que
+ * genera las rutas. Así no hay una segunda lista que mantener sincronizada: si
+ * la guía existe, el corredor es válido, y si no, la ruta ya devolvió 404.
+ */
+function corredoresValidos(): string[] {
+  return allGuides().map((guia) => guia.slug);
 }
 
 /**
@@ -75,11 +94,21 @@ export function parseTripInput(raw: {
   startDate: unknown;
   endDate: unknown;
   tripType: unknown;
+  corridor: unknown;
 }): ValidationResult<TripInput> {
-  const { startDate, endDate, tripType } = raw;
+  const { startDate, endDate, tripType, corridor } = raw;
 
   if (typeof startDate !== "string" || typeof endDate !== "string") {
     return { ok: false, error: "Elegí las fechas de ida y de vuelta." };
+  }
+
+  if (typeof corridor !== "string" || !corredoresValidos().includes(corridor)) {
+    // No se cae a un default. Un viaje al país equivocado no falla: sale con
+    // el clima y los precios de otro lado, y nadie se entera hasta llegar.
+    return {
+      ok: false,
+      error: "No reconocemos ese destino. Volvé a la guía y probá de nuevo.",
+    };
   }
 
   if (!isTripType(tripType)) {
@@ -112,7 +141,7 @@ export function parseTripInput(raw: {
     };
   }
 
-  return { ok: true, value: { startDate, endDate, tripType } };
+  return { ok: true, value: { startDate, endDate, tripType, corridor } };
 }
 
 /**

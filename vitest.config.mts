@@ -2,7 +2,20 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   // Resolución nativa de los paths de tsconfig (alias "@/*").
-  resolve: { tsconfigPaths: true },
+  //
+  // `server-only` se reemplaza por un módulo vacío: tira apenas se importa
+  // fuera de un Server Component, que es lo correcto en producción —hace
+  // fallar el build si la service role key entra en un bundle de cliente— pero
+  // en Vitest no hay bundle de cliente y sin esto no se puede testear ni una
+  // línea de create.ts, read.ts o mutate.ts. La guarda real la sigue aplicando
+  // el bundler de Next en cada build.
+  resolve: {
+    tsconfigPaths: true,
+    alias: {
+      "server-only": new URL("./src/test/server-only.ts", import.meta.url)
+        .pathname,
+    },
+  },
   test: {
     // El foco de testing sigue siendo la lógica pura de los motores de packing
     // y presupuesto (spec, sección 7). Los pocos tests de componentes que hay
