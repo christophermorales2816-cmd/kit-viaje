@@ -1,4 +1,6 @@
-import { QUOTE_IDS, type ExchangeQuote } from "@/lib/budget";
+import type { ExchangeQuote } from "@/lib/budget";
+
+import type { QuoteCorridor } from "./corridors";
 
 /**
  * Brecha de cada cotización contra la oficial (spec, sección 8.7).
@@ -22,18 +24,33 @@ export interface QuoteSpread {
   premiumPercent: number | null;
 }
 
-const ORDEN = new Map(QUOTE_IDS.map((id, i) => [id, i]));
+/**
+ * El orden y la referencia salen del corredor, no de constantes.
+ *
+ * `referenceQuoteId` puede ser `null`, y eso no es un caso raro: es Brasil,
+ * que tiene una sola cotización. Sin una segunda contra la cual comparar, la
+ * brecha no existe, y devolver 0 sería afirmar que no hay brecha en vez de
+ * decir que no hay dato.
+ */
+export function resolveQuoteSpreads(
+  quotes: ExchangeQuote[],
+  corridor: QuoteCorridor,
+): QuoteSpread[] {
+  const orden = new Map(corridor.quoteIds.map((id, i) => [id, i]));
+  const referenceId = corridor.referenceQuoteId;
 
-export function resolveQuoteSpreads(quotes: ExchangeQuote[]): QuoteSpread[] {
-  const oficial = quotes.find((quote) => quote.id === "oficial");
-  const base = oficial && oficial.sell > 0 ? oficial.sell : null;
+  const referencia =
+    referenceId === null
+      ? undefined
+      : quotes.find((quote) => quote.id === referenceId);
+  const base = referencia && referencia.sell > 0 ? referencia.sell : null;
 
   return [...quotes]
-    .sort((a, b) => (ORDEN.get(a.id) ?? 0) - (ORDEN.get(b.id) ?? 0))
+    .sort((a, b) => (orden.get(a.id) ?? 0) - (orden.get(b.id) ?? 0))
     .map((quote) => ({
       quote,
       premiumPercent:
-        base === null || quote.id === "oficial"
+        base === null || quote.id === referenceId
           ? null
           : (quote.sell / base - 1) * 100,
     }));

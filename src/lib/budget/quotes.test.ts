@@ -45,11 +45,16 @@ describe("selectQuote", () => {
 
 describe("hasAllQuotes", () => {
   it("reconoce las 4 que el spec trae siempre", () => {
-    expect(hasAllQuotes(QUOTES)).toBe(true);
+    expect(hasAllQuotes(QUOTES, ["oficial", "blue", "mep", "ccl"])).toBe(true);
   });
 
   it("detecta que falta alguna", () => {
-    expect(hasAllQuotes(QUOTES.filter((q) => q.id !== "ccl"))).toBe(false);
+    expect(
+      hasAllQuotes(
+        QUOTES.filter((q) => q.id !== "ccl"),
+        ["oficial", "blue", "mep", "ccl"],
+      ),
+    ).toBe(false);
   });
 });
 
@@ -61,6 +66,8 @@ describe("conversionRate", () => {
   it("rechaza una cotización sin valor usable", () => {
     expect(() => conversionRate(quote("blue", 0, 1060))).toThrow(RangeError);
     expect(() => conversionRate(quote("blue", -5, 1060))).toThrow(RangeError);
-    expect(() => conversionRate(quote("blue", Number.NaN, 1060))).toThrow(RangeError);
+    expect(() => conversionRate(quote("blue", Number.NaN, 1060))).toThrow(
+      RangeError,
+    );
   });
 });

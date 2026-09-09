@@ -6,7 +6,6 @@ import { Eye, Luggage, TriangleAlert, Wallet } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  DEFAULT_QUOTE_ID,
   calculateBudget,
   toBudgetLine,
   type BudgetLineItem,
@@ -16,6 +15,7 @@ import {
   type QuoteId,
 } from "@/lib/budget";
 import { budgetCsv, csvFilename, packingCsv } from "@/lib/export/csv";
+import { getQuoteCorridor } from "@/lib/quotes/corridors";
 import { formatDateRange, formatDuration, formatTripType } from "@/lib/format";
 import { durationInDays } from "@/lib/packing";
 import {
@@ -94,13 +94,23 @@ function aplicarBudget(
   );
 }
 
-function elegirCotizacionInicial(quotes: ExchangeQuote[]): QuoteId | null {
-  if (quotes.some((quote) => quote.id === DEFAULT_QUOTE_ID)) {
-    return DEFAULT_QUOTE_ID;
+/**
+ * El default sale del corredor: blue en Argentina, comercial en Brasil. Antes
+ * era una constante, y con dos países una constante ya no puede estar bien
+ * para los dos.
+ */
+function elegirCotizacionInicial(
+  quotes: ExchangeQuote[],
+  corridor: string,
+): QuoteId | null {
+  const preferida = getQuoteCorridor(corridor)?.defaultQuoteId;
+
+  if (preferida !== undefined && quotes.some((q) => q.id === preferida)) {
+    return preferida;
   }
 
-  // El spec elige blue como default visible. Si justo esa no vino, mostrar la
-  // primera disponible es mejor que dejar el Select vacío.
+  // Si justo esa no vino, mostrar la primera disponible es mejor que dejar el
+  // Select vacío.
   return quotes[0]?.id ?? null;
 }
 
@@ -121,7 +131,7 @@ export function TripDashboard({
   const [packing, patchPacking] = useOptimistic(view.packing, aplicarPacking);
   const [budget, patchBudget] = useOptimistic(view.budget, aplicarBudget);
   const [quoteId, setQuoteId] = useState<QuoteId | null>(() =>
-    elegirCotizacionInicial(quotes),
+    elegirCotizacionInicial(quotes, view.destination.corridor),
   );
   const [error, setError] = useState<string | null>(null);
   const [, startTransition] = useTransition();

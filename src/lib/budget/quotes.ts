@@ -1,4 +1,3 @@
-import { QUOTE_IDS } from "./types";
 import type { ExchangeQuote, QuoteId } from "./types";
 
 /**
@@ -21,10 +20,18 @@ export function selectQuote(
   return quote;
 }
 
-/** true si están las 4 cotizaciones que el spec pide traer siempre. */
-export function hasAllQuotes(quotes: ExchangeQuote[]): boolean {
+/**
+ * true si están todas las cotizaciones que el corredor espera.
+ *
+ * Los ids esperados entran como parámetro y no salen de una constante: son los
+ * del corredor, y con dos países ya no hay un único conjunto correcto.
+ */
+export function hasAllQuotes(
+  quotes: ExchangeQuote[],
+  expectedIds: readonly QuoteId[],
+): boolean {
   const ids = new Set(quotes.map((quote) => quote.id));
-  return QUOTE_IDS.every((id) => ids.has(id));
+  return expectedIds.every((id) => ids.has(id));
 }
 
 /**

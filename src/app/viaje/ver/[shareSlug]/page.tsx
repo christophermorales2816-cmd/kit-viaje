@@ -30,9 +30,7 @@ export default async function SharedTripPage({
 
   if (!view) redirect("/");
 
-  const quotes = await fetchQuotes({
-    baseCurrency: view.destination.baseCurrency,
-  });
+  const quotes = await fetchQuotes(view.destination.corridor);
 
   return (
     <TripDashboard
