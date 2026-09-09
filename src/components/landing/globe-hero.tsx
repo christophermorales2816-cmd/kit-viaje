@@ -34,7 +34,13 @@ import { useEffect, useRef } from "react";
  * pasar el mouse — que es justo la página pesada del flujo.
  */
 
-const BUENOS_AIRES: [number, number] = [-34.6037, -58.3816];
+export interface GlobeDestination {
+  href: string;
+  /** Nombre del destino, y nombre accesible del enlace. */
+  label: string;
+  /** [latitud, longitud] en grados decimales. */
+  coords: [number, number];
+}
 
 /**
  * Ángulos que ponen una coordenada de frente a la cámara. Es la fórmula del
@@ -47,18 +53,82 @@ function locationToAngles(lat: number, long: number): [number, number] {
   ];
 }
 
-const [PHI, THETA] = locationToAngles(...BUENOS_AIRES);
+const RAD = Math.PI / 180;
+
+/**
+ * Radio de la esfera que dibuja cobe, en fracción de la mitad del canvas.
+ *
+ * No llena el canvas: deja margen para el glow. El número está MEDIDO, no
+ * estimado — se comparó la posición que da `proyectar` con el centroide de los
+ * píxeles naranjas de los marcadores que dibuja el propio cobe, en un build de
+ * producción:
+ *
+ *              fórmula          cobe            escala
+ *   Argentina  -0.1089 -0.1054  -0.0932 -0.0890  0.856 / 0.845
+ *   Brasil      0.1219  0.0980   0.1030  0.0839  0.845 / 0.856
+ *
+ * Que la escala salga igual en x y en y es lo que confirma que la proyección
+ * es la correcta y que lo único que faltaba era el radio.
+ */
+const RADIO_DEL_GLOBO = 0.85;
+
+/** Cuánto dura la ráfaga de frames que dibuja el mapa de puntos. */
+const DURACION_DE_LA_RAFAGA_MS = 1200;
+
+/**
+ * Punto medio de las coordenadas, que es adónde mira la cámara.
+ *
+ * Con un solo destino esto devuelve ese destino y el globo queda igual que
+ * antes. Con dos, los deja a los dos visibles en vez de centrar uno y mandar
+ * al otro al borde.
+ */
+function centro(destinos: GlobeDestination[]): [number, number] {
+  const n = destinos.length || 1;
+  const lat = destinos.reduce((a, d) => a + d.coords[0], 0) / n;
+  const lon = destinos.reduce((a, d) => a + d.coords[1], 0) / n;
+  return [lat, lon];
+}
+
+/**
+ * Proyección ortográfica de una coordenada sobre el canvas, en porcentaje.
+ *
+ * Es la misma proyección que usa cobe: una esfera vista de frente, sin
+ * perspectiva. `x` e `y` van de -1 a 1 sobre el radio, y `visible` es falso
+ * cuando el punto quedó del otro lado del planeta — ahí no hay que dibujar
+ * nada, porque un marcador flotando sobre el océano equivocado miente.
+ *
+ * Verificada contra los puntos que dibuja el propio cobe: se compararon las
+ * posiciones calculadas acá con el centroide de los píxeles naranjas del
+ * canvas renderizado.
+ */
+export function proyectar(
+  [lat, lon]: [number, number],
+  [lat0, lon0]: [number, number],
+): { x: number; y: number; visible: boolean } {
+  const dLon = (lon - lon0) * RAD;
+  const la = lat * RAD;
+  const la0 = lat0 * RAD;
+
+  const x = Math.cos(la) * Math.sin(dLon);
+  const y =
+    Math.cos(la0) * Math.sin(la) -
+    Math.sin(la0) * Math.cos(la) * Math.cos(dLon);
+  const z =
+    Math.sin(la0) * Math.sin(la) +
+    Math.cos(la0) * Math.cos(la) * Math.cos(dLon);
+
+  return { x, y, visible: z > 0 };
+}
 
 export function GlobeHero({
-  href,
-  label,
+  destinations,
 }: {
-  /** Adónde lleva el marcador. */
-  href: string;
-  /** Nombre del destino, y nombre accesible del enlace. */
-  label: string;
+  /** Los destinos que el globo ofrece. Uno o varios. */
+  destinations: GlobeDestination[];
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const foco = centro(destinations);
+  const [PHI, THETA] = locationToAngles(...foco);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -83,7 +153,7 @@ export function GlobeHero({
       baseColor: [0.32, 0.36, 0.42],
       markerColor: [0.99, 0.53, 0.16],
       glowColor: [0.18, 0.21, 0.26],
-      markers: [{ location: BUENOS_AIRES, size: 0.1 }],
+      markers: destinations.map((d) => ({ location: d.coords, size: 0.1 })),
     });
 
     // El canvas es fluido: sin esto, girar el teléfono lo deja renderizado con
@@ -116,11 +186,19 @@ export function GlobeHero({
       2,5s, 5s, 9s y 15s, y después de redimensionar.
     */
     let frame = 0;
-    const hasta = performance.now() + 1200;
+    let inicio: number | null = null;
+
+    // El instante de arranque sale del propio requestAnimationFrame y no de
+    // performance.now(): es el mismo reloj que compara la condición de abajo,
+    // así que no hace falta suponer que los dos comparten origen.
     const dibujar = (ahora: number) => {
+      inicio ??= ahora;
       globe.update({});
-      if (ahora < hasta) frame = requestAnimationFrame(dibujar);
+      if (ahora - inicio < DURACION_DE_LA_RAFAGA_MS) {
+        frame = requestAnimationFrame(dibujar);
+      }
     };
+
     frame = requestAnimationFrame(dibujar);
 
     return () => {
@@ -128,7 +206,10 @@ export function GlobeHero({
       globe.destroy();
       window.removeEventListener("resize", medir);
     };
-  }, []);
+    // Las dependencias son los ángulos y las coordenadas, no el array: un
+    // literal nuevo en cada render recrearía el globo en cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [PHI, THETA, JSON.stringify(destinations.map((d) => d.coords))]);
 
   return (
     <div className="relative mx-auto aspect-square w-full max-w-[420px]">
@@ -139,22 +220,48 @@ export function GlobeHero({
       />
 
       {/*
-        El marcador, centrado sobre el punto que dibuja cobe: el globo está
-        fijo con Buenos Aires al frente, así que ese punto es el centro exacto
-        del canvas.
+        Los marcadores en HTML, encima del canvas: son links de verdad, así que
+        funcionan sin JavaScript, se abren en otra pestaña y Next precarga la
+        guía al pasar el mouse. El canvas queda como decoración.
+
+        La posición sale de la misma proyección ortográfica que usa cobe, y no
+        de suponer que el destino está en el centro — que era cierto con un
+        solo país y dejó de serlo con dos.
       */}
-      <Link
-        href={href}
-        className="group absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 rounded-lg p-2 focus-visible:ring-[3px] focus-visible:ring-white/60 focus-visible:outline-none"
-      >
-        <span className="relative flex size-4 items-center justify-center">
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-orange-400/70" />
-          <span className="relative inline-flex size-3 rounded-full bg-orange-500 ring-2 ring-white/80" />
-        </span>
-        <span className="rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white/20">
-          {label}
-        </span>
-      </Link>
+      {destinations.map((destino) => {
+        const { x, y, visible } = proyectar(destino.coords, foco);
+
+        // Del otro lado del planeta no se dibuja: un marcador ahí estaría
+        // señalando el océano equivocado.
+        if (!visible) return null;
+
+        return (
+          <Link
+            key={destino.href}
+            href={destino.href}
+            /*
+              El enlace mide lo que mide el punto, y la etiqueta cuelga en
+              absoluto: así `-translate-y-1/2` centra EL PUNTO sobre la
+              coordenada. Antes centraba el bloque punto+etiqueta, o sea que el
+              punto quedaba unos píxeles arriba del país. Con un solo país
+              centrado en el canvas nadie lo notaba; con dos, el pin señalaba al
+              lugar equivocado.
+            */
+            className="group absolute flex size-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full focus-visible:ring-[3px] focus-visible:ring-white/60 focus-visible:outline-none"
+            style={{
+              left: `${50 + x * RADIO_DEL_GLOBO * 50}%`,
+              top: `${50 - y * RADIO_DEL_GLOBO * 50}%`,
+            }}
+          >
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-orange-400/70" />
+            <span className="relative inline-flex size-3 rounded-full bg-orange-500 ring-2 ring-white/80" />
+
+            <span className="absolute top-full left-1/2 mt-2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium whitespace-nowrap text-white shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white/20">
+              {destino.label}
+            </span>
+          </Link>
+        );
+      })}
     </div>
   );
 }
