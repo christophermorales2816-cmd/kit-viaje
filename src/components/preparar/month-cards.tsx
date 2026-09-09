@@ -6,9 +6,10 @@ import { suggestItemsForBuckets } from "@/lib/prepare/suggest-items";
  * Una tarjeta por mes: qué clima toca y qué define empacar (spec, sección 9).
  *
  * Los chips salen del catálogo real, filtrados por los buckets DE ESE MES y
- * ordenados por especificidad. Las dos cosas hicieron falta: sin buckets por
- * mes las doce tarjetas mostraban lo mismo, y sin el orden por especificidad
- * también, porque los ítems genéricos llevan las tres etiquetas.
+ * ordenados primero por el bucket que define el mes. Las tres cosas hicieron
+ * falta: sin buckets por mes las doce tarjetas mostraban lo mismo; sin el orden
+ * por especificidad también, porque los ítems genéricos llevan las tres
+ * etiquetas; y sin priorizar el bucket principal, enero sugería un polar.
  */
 
 const CHIPS_POR_MES = 4;
@@ -46,6 +47,7 @@ export function MonthCards({
           const sugeridos = suggestItemsForBuckets(
             catalog,
             mes.buckets,
+            mes.primaryBucket,
             CHIPS_POR_MES,
           );
           const consejo = mes.primaryBucket
