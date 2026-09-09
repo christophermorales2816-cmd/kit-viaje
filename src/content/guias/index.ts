@@ -1,4 +1,5 @@
 import { argentina } from "./argentina";
+import { brasil } from "./brasil";
 import type { DestinationGuide } from "./types";
 
 export type {
@@ -18,14 +19,14 @@ export type {
 export { GUIDE_FACTS_MAX_AGE_DAYS } from "./types";
 
 /**
- * Índice de guías por slug (spec, sección 8.2).
+ * Índice de guías por slug (spec, secciones 8.2 y 10).
  *
  * Con las rutas por destino (`/guia/{slug}`) el contenido deja de ser un
  * singleton importado a mano: la página necesita resolver el slug de la URL.
- * Hoy hay una sola entrada, pero la forma ya es la definitiva — sumar un
- * corredor es agregar un archivo y una línea acá.
+ * La forma se diseñó para esto y se cumplió: sumar Brasil fue agregar un
+ * archivo y una línea acá.
  */
-const GUIAS: DestinationGuide[] = [argentina];
+const GUIAS: DestinationGuide[] = [argentina, brasil];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
 
@@ -41,4 +42,4 @@ export function getGuide(slug: string): DestinationGuide | undefined {
   return POR_SLUG.get(slug);
 }
 
-export { argentina };
+export { argentina, brasil };

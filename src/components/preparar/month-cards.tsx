@@ -14,6 +14,23 @@ import { suggestItemsForBuckets } from "@/lib/prepare/suggest-items";
 
 const CHIPS_POR_MES = 4;
 
+/**
+ * ¿Los doce meses piden lo mismo?
+ *
+ * En Río la respuesta es sí, y no es un error de datos: en el mes más fresco
+ * del año la máxima sigue arriba de los 25 grados, así que los doce meses caen
+ * en el mismo clima y las doce tarjetas muestran los mismos chips.
+ *
+ * El título "Qué llevar según el mes" promete una variación que en ese caso no
+ * existe. En vez de fabricarla —que sería inventar información— la sección lo
+ * dice, y remite a lo que sí cambia: el calor y la lluvia, que están más
+ * arriba.
+ */
+function mismoClimaTodoElAño(months: MonthClimate[]): boolean {
+  const buckets = new Set(months.map((mes) => mes.primaryBucket));
+  return buckets.size === 1 && !buckets.has(null);
+}
+
 function temperatura(mes: MonthClimate): string {
   if (mes.tempMin === null && mes.tempMax === null) return "Sin datos de clima";
   if (mes.tempMin === null) return `Hasta ${Math.round(mes.tempMax!)} °C`;
@@ -41,6 +58,14 @@ export function MonthCards({
       >
         Qué llevar según el mes
       </h2>
+
+      {mismoClimaTodoElAño(months) ? (
+        <p className="text-muted-foreground text-pretty">
+          Acá se empaca parecido los doce meses: todos caen en el mismo clima,
+          así que la ropa no cambia. Lo que cambia es cuánto calor y cuánta
+          lluvia te toca, y eso está en los gráficos de arriba.
+        </p>
+      ) : null}
 
       <div className="grid gap-px overflow-hidden rounded-xl bg-border md:grid-cols-2 lg:grid-cols-3">
         {months.map((mes) => {

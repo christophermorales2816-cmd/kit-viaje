@@ -3,9 +3,12 @@ import { describe, expect, it } from "vitest";
 
 import { argentina } from "@/content/guias/argentina";
 
+import type { MonthClimate } from "@/lib/prepare/climate-year";
+
 import { AvoidTable } from "./avoid-table";
 import { ChecklistSections } from "./checklist-sections";
 import { FaqList } from "./faq-list";
+import { MonthCards } from "./month-cards";
 import { PackingTips } from "./packing-tips";
 
 /**
@@ -89,5 +92,67 @@ describe("secciones de preparación", () => {
     for (const entrada of prep.faq) {
       expect(html).toContain(entrada.answer);
     }
+  });
+});
+
+describe("tarjetas por mes", () => {
+  function mes(month: number, primaryBucket: string | null): MonthClimate {
+    return {
+      month,
+      shortName: "Ene",
+      longName: "Enero",
+      tempMin: 20,
+      tempMax: 30,
+      precipProbability: 30,
+      season: "media",
+      buckets: primaryBucket ? [primaryBucket] : [],
+      primaryBucket,
+    };
+  }
+
+  const AVISO = "se empaca parecido los doce meses";
+
+  it("avisa cuando los doce meses piden lo mismo", () => {
+    // Es el caso de Río: la máxima del mes más fresco sigue arriba de 25, así
+    // que las doce tarjetas salen iguales. Decirlo es mejor que dejar que el
+    // título prometa una variación que no existe.
+    const html = renderToStaticMarkup(
+      <MonthCards
+        months={Array.from({ length: 12 }, (_, i) => mes(i + 1, "calido"))}
+        catalog={[]}
+        adviceByBucket={{ calido: "Ropa liviana." }}
+      />,
+    );
+
+    expect(html).toContain(AVISO);
+  });
+
+  it("no avisa cuando los meses sí difieren", () => {
+    const html = renderToStaticMarkup(
+      <MonthCards
+        months={Array.from({ length: 12 }, (_, i) =>
+          mes(i + 1, i < 6 ? "calido" : "frio"),
+        )}
+        catalog={[]}
+        adviceByBucket={{ calido: "Ropa liviana.", frio: "Abrigo." }}
+      />,
+    );
+
+    expect(html).not.toContain(AVISO);
+  });
+
+  it("no avisa cuando no hay datos de clima en ningún mes", () => {
+    // Doce meses sin bucket también son "todos iguales", pero ahí el problema
+    // es que falta el dato, no que el clima sea parejo. Decir que se empaca
+    // igual todo el año sería una afirmación sin respaldo.
+    const html = renderToStaticMarkup(
+      <MonthCards
+        months={Array.from({ length: 12 }, (_, i) => mes(i + 1, null))}
+        catalog={[]}
+        adviceByBucket={{}}
+      />,
+    );
+
+    expect(html).not.toContain(AVISO);
   });
 });

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { GlobeHero } from "@/components/landing/globe-hero";
 import { Button } from "@/components/ui/button";
-import { CORREDOR_INICIAL, getGuide } from "@/content/guias";
+import { allGuides } from "@/content/guias";
 
 /**
  * Página 1 — bienvenida (spec, sección 8.1).
@@ -17,30 +17,43 @@ import { CORREDOR_INICIAL, getGuide } from "@/content/guias";
  * globo. Cuando haya foto con licencia, entra detrás sin rehacer el layout.
  */
 
-const guia = getGuide(CORREDOR_INICIAL);
+const GUIAS = allGuides();
+
+/**
+ * El marcador de cada país sale de su destino destacado, que es la ciudad para
+ * la que están calibrados los cálculos. No hace falta un campo nuevo: el test
+ * de contenido ya garantiza que hay exactamente uno por guía.
+ */
+const DESTINOS = GUIAS.map((guia) => {
+  const base = guia.places.find((place) => place.featured) ?? guia.places[0];
+
+  return {
+    href: `/guia/${guia.slug}`,
+    label: guia.country,
+    coords: base.coords,
+  };
+});
 
 const ESTADISTICAS = [
   {
-    valor: "4",
-    etiqueta: "cotizaciones en vivo",
-    nota: "Oficial, blue, MEP y CCL",
+    valor: "2",
+    etiqueta: "países",
+    nota: GUIAS.map((guia) => guia.country).join(" y "),
   },
   { valor: "0", etiqueta: "registros", nota: "Sin cuenta y sin mail" },
   {
-    valor: "1",
-    etiqueta: "corredor por ahora",
-    nota: "Argentina; el motor suma más",
+    valor: "5",
+    etiqueta: "cotizaciones en vivo",
+    nota: "Cuatro en Argentina, una en Brasil",
   },
   { valor: "100%", etiqueta: "gratis", nota: "Sin anuncios ni venta de datos" },
 ];
 
 export default function Home() {
-  // El corredor inicial sale del índice de guías, así que si alguien renombra
-  // el slug esto falla al construir y no en la cara del visitante.
-  if (!guia) {
-    throw new Error(
-      `El corredor inicial "${CORREDOR_INICIAL}" no tiene guía en src/content/guias.`,
-    );
+  // Sin guías no hay adónde ir, y es mejor que falle al construir que en la
+  // cara del visitante.
+  if (GUIAS.length === 0) {
+    throw new Error("No hay ninguna guía en src/content/guias.");
   }
 
   return (
@@ -77,37 +90,38 @@ export default function Home() {
                 ese naranja significa "acá hay un destino" en el globo, y
                 gastarlo en un botón le saca ese significado.
               */}
-              <Button
-                asChild
-                size="lg"
-                className="bg-white text-slate-950 hover:bg-slate-200"
-              >
-                <Link href={`/guia/${guia.slug}`}>Explorar {guia.country}</Link>
-              </Button>
-
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white/20 bg-transparent text-slate-100 hover:bg-white/10 hover:text-slate-100"
-              >
-                <Link href={`/guia/${guia.slug}/planificar`}>
-                  Abrir el planificador
-                </Link>
-              </Button>
+              {GUIAS.map((guia, i) => (
+                <Button
+                  key={guia.slug}
+                  asChild
+                  size="lg"
+                  variant={i === 0 ? "default" : "outline"}
+                  className={
+                    i === 0
+                      ? "bg-white text-slate-950 hover:bg-slate-200"
+                      : "border-white/20 bg-transparent text-slate-100 hover:bg-white/10 hover:text-slate-100"
+                  }
+                >
+                  <Link href={`/guia/${guia.slug}`}>
+                    Explorar {guia.country}
+                  </Link>
+                </Button>
+              ))}
             </div>
           </div>
 
           <div className="flex w-full max-w-[460px] flex-col gap-2">
-            <GlobeHero href={`/guia/${guia.slug}`} label={guia.country} />
+            <GlobeHero destinations={DESTINOS} />
 
             {/*
               Dicho de frente (spec, 8.1): el globo insinúa "elegí cualquier
-              país" y el MVP tiene uno. Esconderlo sería peor que decirlo.
+              país" y todavía hay dos. Esconderlo sería peor que decirlo.
             */}
             <p className="text-center text-sm text-balance text-slate-400">
-              Un corredor por ahora: {guia.country}. El motor está hecho para
-              sumar más.
+              {GUIAS.length === 1
+                ? `Un corredor por ahora: ${GUIAS[0].country}.`
+                : `${GUIAS.map((g) => g.country).join(" y ")}, por ahora.`}{" "}
+              El motor está hecho para sumar más.
             </p>
           </div>
         </div>

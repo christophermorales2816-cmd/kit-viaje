@@ -690,3 +690,48 @@ lista de equipaje, que no depende de ninguna cotización, no se entera.
 
 Queda pendiente confirmarlo en el primer deploy y, si difiere, corregir
 `fields` en `corridors.ts`.
+
+### 10.4 Río de Janeiro: los doce meses piden lo mismo
+
+Contra los buckets sembrados, **los doce meses de Río caen en templado+cálido**.
+Ninguno toca `frio`. Eso no es un error de carga: en el mes más fresco del año
+la máxima sigue arriba de los 25 grados.
+
+La consecuencia es que las doce tarjetas de "Qué llevar según el mes" muestran
+los mismos chips y el mismo consejo. El título promete una variación que en Río
+no existe, así que la sección lo dice cuando detecta que todos los meses
+comparten el bucket principal, y remite a lo que sí cambia: el calor y la
+lluvia, que están en la tira de temporadas y en los gráficos.
+
+Fabricar variedad ahí habría sido inventar información, que es exactamente lo
+que 9.3 evitó al ordenar los chips por especificidad.
+
+Lo que sí distingue los meses funciona bien: enero a abril salen **exigentes**
+por calor, junio a septiembre salen **ideales**, y el mejor mes es julio. Esa es
+la temporada que casi nadie de afuera imagina y la que efectivamente conviene.
+
+### 10.5 Dos marcadores en el globo
+
+Con un solo país el globo se centraba en él y el marcador iba al centro exacto
+del canvas, sin cuentas. Con dos hay que proyectar de verdad: proyección
+ortográfica, la misma que usa cobe, con el foco en el punto medio de los
+destinos y los puntos del otro lado del planeta escondidos.
+
+El radio de la esfera está **medido, no estimado**. Se comparó la posición que
+da la fórmula con el centroide de los píxeles naranjas de los marcadores que
+dibuja el propio cobe, en un build de producción:
+
+|  | fórmula | cobe | escala |
+|---|---|---|---|
+| Argentina | −0,1089 −0,1054 | −0,0932 −0,0890 | 0,856 / 0,845 |
+| Brasil | 0,1219 0,0980 | 0,1030 0,0839 | 0,845 / 0,856 |
+
+Que la escala salga igual en x y en y es lo que confirma que la proyección es
+correcta y que lo único que faltaba era el radio: 0,85 de la mitad del canvas,
+porque cobe deja margen para el glow. Con eso aplicado, la diferencia entre el
+marcador HTML y el punto de cobe queda por debajo del píxel.
+
+Se corrigió además un desalineamiento que venía del MVP: el enlace centraba el
+bloque punto+etiqueta sobre la coordenada, así que el punto quedaba unos píxeles
+arriba del país. Con un solo país centrado no se notaba; con dos, el pin
+señalaba al lugar equivocado.
