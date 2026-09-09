@@ -18,10 +18,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  */
 
 const getDestination = vi.fn();
+const getDestinationById = vi.fn();
 const single = vi.fn();
 
 vi.mock("@/lib/supabase/reference", () => ({
   getDestination: (corridor?: string) => getDestination(corridor),
+  getDestinationById: (id: string) => getDestinationById(id),
 }));
 
 vi.mock("@/lib/supabase/admin", () => ({
@@ -34,11 +36,15 @@ vi.mock("@/lib/supabase/admin", () => ({
 
 const { createTrip } = await import("./create");
 
+const RIO = "22222222-2222-4222-8222-222222222222";
+const USHUAIA = "33333333-3333-4333-8333-333333333333";
+
 const VIAJE = {
   startDate: "2026-07-10",
   endDate: "2026-07-17",
   tripType: "playa" as const,
   corridor: "brasil",
+  destinationId: null,
 };
 
 const FILA = {
@@ -53,12 +59,21 @@ const FILA = {
 
 beforeEach(() => {
   getDestination.mockReset();
+  getDestinationById.mockReset();
   single.mockReset();
-  getDestination.mockResolvedValue({
-    id: "22222222-2222-4222-8222-222222222222",
-    name: "Río de Janeiro",
-    corridor: "brasil",
-    baseCurrency: "BRL",
+  getDestination.mockImplementation((corridor: string) => ({
+    id: corridor === "brasil" ? RIO : "44444444-4444-4444-8444-444444444444",
+    name: corridor === "brasil" ? "Río de Janeiro" : "Buenos Aires",
+    corridor,
+    baseCurrency: corridor === "brasil" ? "BRL" : "ARS",
+    isBase: true,
+  }));
+  getDestinationById.mockResolvedValue({
+    id: USHUAIA,
+    name: "Ushuaia",
+    corridor: "argentina",
+    baseCurrency: "ARS",
+    isBase: false,
   });
   single.mockResolvedValue({ data: FILA, error: null });
 });
@@ -98,5 +113,48 @@ describe("createTrip", () => {
     });
 
     await expect(createTrip(VIAJE)).rejects.toThrow(/violates foreign key/);
+  });
+});
+
+/**
+ * La ciudad elegida es la que decide el clima.
+ *
+ * Sin esto el planificador calculaba todo con la ciudad base del corredor: la
+ * guía ofrecía Ushuaia y la lista salía con la de Buenos Aires, o sea sin
+ * campera de abrigo y con ojotas.
+ */
+describe("createTrip con una ciudad elegida", () => {
+  it("usa la ciudad, no la base del corredor", async () => {
+    await createTrip({
+      ...VIAJE,
+      corridor: "argentina",
+      destinationId: USHUAIA,
+    });
+
+    expect(getDestinationById).toHaveBeenCalledWith(USHUAIA);
+    expect(getDestination).not.toHaveBeenCalled();
+  });
+
+  it("cae a la ciudad base solo cuando no se eligió ninguna", async () => {
+    await createTrip(VIAJE);
+
+    expect(getDestination).toHaveBeenCalledWith("brasil");
+    expect(getDestinationById).not.toHaveBeenCalled();
+  });
+
+  it("rechaza una ciudad que no es del país del viaje", async () => {
+    // Solo llega con el formulario manipulado, pero el resultado sería un
+    // viaje a Ushuaia presentado como si fuera a Brasil.
+    await expect(
+      createTrip({ ...VIAJE, corridor: "brasil", destinationId: USHUAIA }),
+    ).rejects.toThrow(/no pertenece a brasil/i);
+  });
+
+  it("no escribe la fila cuando la ciudad es de otro país", async () => {
+    await expect(
+      createTrip({ ...VIAJE, corridor: "brasil", destinationId: USHUAIA }),
+    ).rejects.toThrow();
+
+    expect(single).not.toHaveBeenCalled();
   });
 });

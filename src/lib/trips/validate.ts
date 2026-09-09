@@ -32,6 +32,15 @@ export interface TripInput {
    * clima argentino.
    */
   corridor: string;
+  /**
+   * La ciudad a la que se viaja. `null` = la ciudad base del corredor.
+   *
+   * Es opcional a propósito y NO es el bug del corredor con otra cara: acá el
+   * país ya está decidido y validado, así que caer a la ciudad base deja el
+   * viaje en el país correcto. Que falte solo puede pasar con un formulario
+   * viejo en caché; el selector siempre manda una.
+   */
+  destinationId: string | null;
 }
 
 export type ValidationResult<T> =
@@ -95,8 +104,9 @@ export function parseTripInput(raw: {
   endDate: unknown;
   tripType: unknown;
   corridor: unknown;
+  destinationId?: unknown;
 }): ValidationResult<TripInput> {
-  const { startDate, endDate, tripType, corridor } = raw;
+  const { startDate, endDate, tripType, corridor, destinationId } = raw;
 
   if (typeof startDate !== "string" || typeof endDate !== "string") {
     return { ok: false, error: "Elegí las fechas de ida y de vuelta." };
@@ -141,7 +151,27 @@ export function parseTripInput(raw: {
     };
   }
 
-  return { ok: true, value: { startDate, endDate, tripType, corridor } };
+  // Un id con forma inválida se rechaza en vez de ignorarse: ignorarlo mandaría
+  // el viaje a la ciudad base sin que nadie lo pida, que es la clase de
+  // silencio que ya costó un bug.
+  const ciudad =
+    destinationId === undefined ||
+    destinationId === null ||
+    destinationId === ""
+      ? null
+      : destinationId;
+
+  if (ciudad !== null && !isUuid(ciudad)) {
+    return {
+      ok: false,
+      error: "No reconocemos esa ciudad. Volvé a elegirla y probá de nuevo.",
+    };
+  }
+
+  return {
+    ok: true,
+    value: { startDate, endDate, tripType, corridor, destinationId: ciudad },
+  };
 }
 
 /**

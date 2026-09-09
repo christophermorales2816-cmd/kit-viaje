@@ -768,3 +768,71 @@ verifica **el argumento** con el que se llama a `getDestination`, que es lo úni
 que distingue el bug. Para eso `server-only` se reemplaza por un módulo vacío en
 Vitest: la guarda real la sigue aplicando el bundler de Next en cada build, que
 es donde importa.
+
+---
+
+## 11. El viaje se planifica para una ciudad, no para un país
+
+La guía de Argentina ofrece Ushuaia y la de Brasil ofrece Manaos, pero el
+planificador calculaba todo con la ciudad base del corredor. Alguien que iba a
+Ushuaia en julio recibía la lista de Buenos Aires.
+
+Los dos motores ya estaban listos: `climate_profiles` y `products` son por
+`destination_id` desde la primera migración, y `packing_catalog` es global.
+Faltaban las ciudades, y que el viaje supiera cuál.
+
+### 11.1 Una ciudad base explícita por corredor
+
+`getDestination(corredor)` hacía `.limit(1)` **sin order by**. Con una sola
+ciudad por corredor funcionaba por accidente; con varias, Postgres puede
+devolver cualquiera y hasta una distinta entre dos requests, así que la página
+de preparación habría empezado a mostrar el clima de una ciudad al azar.
+
+Ahora hay una columna `is_base` con un índice único parcial por corredor: es la
+clase de invariante que un check no puede expresar y una convención no puede
+sostener.
+
+### 11.2 El bucket 'templado' era demasiado ancho
+
+Elegir la ciudad arregló la mitad del problema. La otra mitad apareció al mirar
+la lista de Río en enero: **traía buzo polar y botas de trekking** con 30 grados.
+
+La causa es que `templado` iba de 10 a 25 °C, o sea que una noche de 23 en Río
+caía en el mismo cajón que una de 12 en Bariloche, y esos ítems están
+etiquetados `[frio, templado]`.
+
+La solución **no toca una línea de código**, y eso es exactamente lo que el
+diseño prometía: los buckets viven en `climate_thresholds` "para ser
+parametrizables sin tocar código" (sección 4). Esta migración cobra esa promesa.
+
+| bucket | hasta | qué pide |
+|---|---|---|
+| `frio` | 10 °C | abrigo de verdad |
+| `fresco` | 18 °C | capas: buzo, pantalón largo, botas |
+| `templado` | 25 °C | manga corta cómoda |
+| `calido` | — | ropa de calor |
+
+Verificado contra el catálogo y las ciudades sembradas:
+
+| ciudad y mes | rango | resultado |
+|---|---|---|
+| Ushuaia, julio | −1,3 / 3,9 | abrigo, cero playa |
+| Ushuaia, enero | 5,9 / 14,5 | sigue sin ojotas ni protector |
+| Río, enero | 23,3 / 30,2 | cero abrigo |
+| Manaos, todo el año | ~23 / ~31 | nunca abrigo |
+| Salta, julio | 4,6 / 21,9 | campera **y** remera |
+
+Salta con las dos cosas no es un error: amanece helando y a la tarde hay 22
+grados. Recortar una de las dos puntas sería perder información real.
+
+### 11.3 Precios por ciudad, con un factor y no con ciento sesenta números
+
+Cada ciudad nueva necesita dieciocho precios. Tipearlos a mano son ciento
+sesenta números inventados de a uno; un factor por ciudad es **una** estimación
+explícita en vez de dieciocho implícitas, y se corrige en un solo lugar.
+
+La simplificación que asume: que todo cuesta proporcionalmente lo mismo. Es
+falso en el detalle —el alojamiento en Ushuaia se dispara más que un boleto de
+colectivo— y está bien para lo que la app promete, que es un orden de magnitud
+con la fecha de carga a la vista. Cuando haya precios relevados por ciudad,
+reemplazan estas filas por id.
