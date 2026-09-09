@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { mapDolarApiResponse } from "@/lib/quotes/map";
+import { ARGENTINA_QUOTES, BRASIL_QUOTES } from "@/lib/quotes/corridors";
+import { mapQuotesResponse } from "@/lib/quotes/map";
 
 /**
  * Payload con la forma real de https://dolarapi.com/v1/dolares: las 4 casas que
@@ -66,9 +67,9 @@ const PAYLOAD = [
   },
 ];
 
-describe("mapDolarApiResponse", () => {
+describe("mapQuotesResponse", () => {
   it("devuelve las 4 cotizaciones del spec y descarta el resto", () => {
-    const quotes = mapDolarApiResponse(PAYLOAD);
+    const quotes = mapQuotesResponse(PAYLOAD, ARGENTINA_QUOTES);
 
     expect(quotes.map((quote) => quote.id)).toEqual([
       "oficial",
@@ -79,7 +80,7 @@ describe("mapDolarApiResponse", () => {
   });
 
   it("traduce los nombres de mercado a las siglas del spec", () => {
-    const quotes = mapDolarApiResponse(PAYLOAD);
+    const quotes = mapQuotesResponse(PAYLOAD, ARGENTINA_QUOTES);
 
     // bolsa → mep y contadoconliqui → ccl es la parte que no se adivina
     // leyendo la respuesta.
@@ -88,13 +89,15 @@ describe("mapDolarApiResponse", () => {
   });
 
   it("etiqueta para el Select en vez de usar el nombre de la API", () => {
-    const ccl = mapDolarApiResponse(PAYLOAD).find((quote) => quote.id === "ccl");
+    const ccl = mapQuotesResponse(PAYLOAD, ARGENTINA_QUOTES).find(
+      (quote) => quote.id === "ccl",
+    );
 
     expect(ccl?.label).toBe("CCL");
   });
 
   it("mapea compra y venta sin invertirlas", () => {
-    const blue = mapDolarApiResponse(PAYLOAD).find(
+    const blue = mapQuotesResponse(PAYLOAD, ARGENTINA_QUOTES).find(
       (quote) => quote.id === "blue",
     );
 
@@ -103,19 +106,23 @@ describe("mapDolarApiResponse", () => {
 
   it("usa el orden de QUOTE_IDS, no el de la respuesta", () => {
     // En PAYLOAD, blue viene antes que oficial.
-    expect(mapDolarApiResponse(PAYLOAD)[0]?.id).toBe("oficial");
+    expect(mapQuotesResponse(PAYLOAD, ARGENTINA_QUOTES)[0]?.id).toBe("oficial");
   });
 
-  it("marca ARS como moneda base y respeta la del destino si se pasa otra", () => {
-    expect(mapDolarApiResponse(PAYLOAD)[0]?.baseCurrency).toBe("ARS");
-    expect(
-      mapDolarApiResponse(PAYLOAD, { baseCurrency: "UYU" })[0]?.baseCurrency,
-    ).toBe("UYU");
+  it("toma la moneda base del corredor y no de una constante", () => {
+    // Antes la moneda base era un parámetro con default "ARS". Ahora la
+    // declara el corredor, que es el único que sabe cuál corresponde.
+    expect(mapQuotesResponse(PAYLOAD, ARGENTINA_QUOTES)[0]?.baseCurrency).toBe(
+      "ARS",
+    );
+    expect(ARGENTINA_QUOTES.baseCurrency).toBe("ARS");
+    expect(BRASIL_QUOTES.baseCurrency).toBe("BRL");
   });
 
   it("acepta que falte alguna de las 4 sin inventarla", () => {
-    const quotes = mapDolarApiResponse(
+    const quotes = mapQuotesResponse(
       PAYLOAD.filter((row) => row.casa !== "bolsa"),
+      ARGENTINA_QUOTES,
     );
 
     expect(quotes.map((quote) => quote.id)).toEqual(["oficial", "blue", "ccl"]);
@@ -123,27 +130,34 @@ describe("mapDolarApiResponse", () => {
 
   it("devuelve vacío si no hay ninguna casa reconocida", () => {
     expect(
-      mapDolarApiResponse(PAYLOAD.filter((row) => row.casa === "cripto")),
+      mapQuotesResponse(
+        PAYLOAD.filter((row) => row.casa === "cripto"),
+        ARGENTINA_QUOTES,
+      ),
     ).toEqual([]);
   });
 
   it("rechaza un payload que no es un array", () => {
-    expect(() => mapDolarApiResponse({ error: "rate limit" })).toThrow(TypeError);
+    expect(() => mapQuotesResponse("no soy json", ARGENTINA_QUOTES)).toThrow(
+      TypeError,
+    );
   });
 
   it("rechaza una cotización sin valor usable en vez de convertir con basura", () => {
     const roto = [{ ...PAYLOAD[1], compra: 0 }];
 
-    expect(() => mapDolarApiResponse(roto)).toThrow(RangeError);
+    expect(() => mapQuotesResponse(roto, ARGENTINA_QUOTES)).toThrow(RangeError);
   });
 
   it("rechaza una fecha de actualización inválida", () => {
     const roto = [{ ...PAYLOAD[1], fechaActualizacion: "ayer" }];
 
-    expect(() => mapDolarApiResponse(roto)).toThrow(RangeError);
+    expect(() => mapQuotesResponse(roto, ARGENTINA_QUOTES)).toThrow(RangeError);
   });
 
   it("ignora filas que no son objetos", () => {
-    expect(mapDolarApiResponse([null, "blue", 42, PAYLOAD[1]])).toHaveLength(1);
+    expect(
+      mapQuotesResponse([null, "blue", 42, PAYLOAD[1]], ARGENTINA_QUOTES),
+    ).toHaveLength(1);
   });
 });

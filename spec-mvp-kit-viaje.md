@@ -640,3 +640,53 @@ secar"). Acá no se reprodujeron: no hay forma de verificarlos y un número fals
 con dos decimales hace más daño que una frase honesta sin número. El contenido
 dice *que* el algodón retiene humedad y tarda en secar, que es lo verdadero y lo
 único que cambia una decisión de equipaje.
+
+---
+
+## 10. Segundo corredor: Brasil
+
+### 10.1 Las cotizaciones dejan de ser cuatro
+
+Hasta el MVP, `QUOTE_IDS` era una unión cerrada con las cuatro cotizaciones
+argentinas, escrita adentro del motor de presupuesto. Con un solo corredor
+alcanzaba. Con dos deja de alcanzar: **Brasil tiene un único tipo de cambio**, y
+"blue" o "MEP" no significan nada ahí.
+
+La salida es la que ya se había tomado para los buckets de clima:
+`ClimateBucketId` es `string` y no una unión cerrada, justamente para no
+necesitar un deploy por cada bucket nuevo. Ahora `QuoteId` es igual, y el
+conjunto válido lo declara el corredor en `src/lib/quotes/corridors.ts`.
+
+Se parametrizan tres cosas que antes eran constantes: la cotización por defecto
+(blue en Argentina, comercial en Brasil), el conjunto que se espera completo, y
+**contra cuál se mide la brecha**. Ese último es un campo y no la constante
+"oficial" porque en Brasil vale `null`: con una sola cotización no hay contra
+qué comparar, y devolver 0 afirmaría que no hay brecha en lugar de decir que no
+hay dato.
+
+### 10.2 Los nombres de los campos también son dato
+
+Cada fuente publica el mismo contenido en otro dialecto: `venta` acá, `venda`
+allá; `fechaActualizacion` acá, `fechaAtualizacao` allá. El corredor declara
+**cómo se llaman los campos de su fuente**, y un único mapper genérico sirve
+para los dos.
+
+No es adorno. Escribir un mapper por fuente duplicaría toda la validación, que
+es la parte que importa: rechazar una fecha inválida, rechazar un valor de
+compra que no sirve para dividir, ignorar una moneda que el corredor no pidió.
+Y tiene una segunda ventaja: corregir un campo mal adivinado es editar tres
+strings de un archivo de configuración, no escribir código.
+
+### 10.3 Una fuente que no se pudo verificar
+
+El entorno donde se escribió esto no tiene salida a internet, así que **el
+endpoint brasileño está escrito contra su forma documentada y no se pudo probar
+contra la API real**.
+
+Eso es aceptable únicamente porque `fetchQuotes` ya devolvía un resultado
+explícito en vez de tirar (sección 5): si el dialecto no coincide, la vista dice
+"no pudimos traer la cotización" y el resto de la página sigue funcionando. La
+lista de equipaje, que no depende de ninguna cotización, no se entera.
+
+Queda pendiente confirmarlo en el primer deploy y, si difiere, corregir
+`fields` en `corridors.ts`.

@@ -81,7 +81,7 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
       </header>
 
       <Suspense fallback={<LiveQuotesSkeleton />}>
-        <LiveQuotes />
+        <LiveQuotes corridor={guia.slug} />
       </Suspense>
 
       <FactsBoard facts={guia.facts} updatedAt={guia.factsUpdatedAt} />

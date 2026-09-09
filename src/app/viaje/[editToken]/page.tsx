@@ -33,9 +33,7 @@ export default async function TripPage({
   // En paralelo con nada más: las cotizaciones son lo único que falta y su
   // fallo no puede dejar sin lista de equipaje al usuario, por eso fetchQuotes
   // devuelve un resultado en vez de tirar.
-  const quotes = await fetchQuotes({
-    baseCurrency: view.destination.baseCurrency,
-  });
+  const quotes = await fetchQuotes(view.destination.corridor);
 
   return (
     <TripDashboard

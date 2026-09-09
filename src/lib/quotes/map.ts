@@ -1,49 +1,31 @@
-import { QUOTE_IDS, type ExchangeQuote, type QuoteId } from "@/lib/budget";
+import type { ExchangeQuote } from "@/lib/budget";
+
+import type { QuoteCorridor } from "./corridors";
 
 /**
- * Traducción de la respuesta de dolarapi.com al dominio (spec, sección 5).
+ * Traducción de la respuesta de la fuente al dominio (spec, secciones 5 y 10).
  *
  * Es una función pura y separada del fetch a propósito: el I/O queda fuera del
  * foco de testing (spec, sección 7), pero decidir que `bolsa` es MEP y que el
  * dato viene mal formado sí es lógica, y se testea con un payload fijo.
+ *
+ * Un solo mapper para todos los corredores. Los nombres de los campos y la
+ * traducción de claves a ids salen del corredor (`corridors.ts`), no de
+ * constantes acá: dos fuentes publican el mismo contenido en otro dialecto
+ * —`venta` acá, `venda` allá— y escribir un mapper por fuente duplicaría toda
+ * la validación, que es la parte que importa.
  */
-
-/** La API devuelve más casas de las que el MVP usa; el resto se descarta. */
-const CASA_TO_QUOTE_ID: Record<string, QuoteId> = {
-  oficial: "oficial",
-  blue: "blue",
-  // dolarapi las nombra por el mercado, el spec por la sigla.
-  bolsa: "mep",
-  contadoconliqui: "ccl",
-};
-
-/** Etiquetas del Select. El `nombre` de la API es largo y no coincide con el spec. */
-const QUOTE_LABELS: Record<QuoteId, string> = {
-  oficial: "Oficial",
-  blue: "Blue",
-  mep: "MEP",
-  ccl: "CCL",
-};
-
-export interface MapQuotesOptions {
-  /**
-   * Moneda que se convierte: la `base_currency` del destino. Default ARS, que
-   * es la del único corredor del MVP — dolarapi publica exclusivamente pesos
-   * argentinos, así que no hay otro valor posible mientras la fuente sea esta.
-   */
-  baseCurrency?: string;
-}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-function positiveNumber(value: unknown, campo: string, casa: string): number {
+function positiveNumber(value: unknown, campo: string, clave: string): number {
   const parsed = typeof value === "string" ? Number(value) : value;
 
   if (typeof parsed !== "number" || !Number.isFinite(parsed) || parsed <= 0) {
     throw new RangeError(
-      `La cotización "${casa}" trae ${campo} inválido: ${JSON.stringify(value)}.`,
+      `La cotización "${clave}" trae ${campo} inválido: ${JSON.stringify(value)}.`,
     );
   }
 
@@ -51,64 +33,82 @@ function positiveNumber(value: unknown, campo: string, casa: string): number {
 }
 
 /**
- * Devuelve las cotizaciones reconocidas, en el orden de QUOTE_IDS.
+ * Devuelve las cotizaciones reconocidas, en el orden de `quoteIds`.
  *
- * El orden es fijo y no el de la respuesta: el Select se arma con esta lista y
- * no debería reordenarse porque la API cambió de opinión.
+ * El orden es el del corredor y no el de la respuesta: el Select se arma con
+ * esta lista y no debería reordenarse porque la API cambió de opinión.
  *
- * Tira si el payload no es un array o si una de las 4 cotizaciones que sí
- * interesan viene con valores que no se pueden usar. Callar eso mostraría un
- * presupuesto convertido con una tasa inventada.
+ * Tira si el payload no es un array o si una cotización que sí interesa viene
+ * con valores que no se pueden usar. Callar eso mostraría un presupuesto
+ * convertido con una tasa inventada.
  */
-export function mapDolarApiResponse(
+export function mapQuotesResponse(
   payload: unknown,
-  options: MapQuotesOptions = {},
+  corridor: QuoteCorridor,
 ): ExchangeQuote[] {
-  const { baseCurrency = "ARS" } = options;
+  const { source } = corridor;
 
-  if (!Array.isArray(payload)) {
+  if (source === null) {
+    throw new Error(
+      `El corredor "${corridor.corridor}" no tiene fuente de cotizaciones.`,
+    );
+  }
+
+  // Una fuente puede publicar un objeto suelto cuando hay una sola cotización,
+  // en vez de un array de uno. Envolverlo es más barato que pedirle a cada
+  // corredor que declare la forma del sobre.
+  const filas = Array.isArray(payload)
+    ? payload
+    : isRecord(payload)
+      ? [payload]
+      : null;
+
+  if (filas === null) {
     throw new TypeError(
       `Se esperaba un array de cotizaciones y llegó ${typeof payload}.`,
     );
   }
 
-  const porId = new Map<QuoteId, ExchangeQuote>();
+  const { fields } = source;
+  const porId = new Map<string, ExchangeQuote>();
 
-  for (const row of payload) {
+  for (const row of filas) {
     if (!isRecord(row)) continue;
 
-    const casa = typeof row.casa === "string" ? row.casa : null;
-    if (casa === null) continue;
+    const clave = row[fields.key];
+    if (typeof clave !== "string") continue;
 
-    const id = CASA_TO_QUOTE_ID[casa];
-    // mayorista, cripto y tarjeta no son parte del MVP.
+    const id = source.keyToQuoteId[clave];
+    // Lo que la fuente publica de más y el producto no usa.
     if (id === undefined) continue;
 
-    // Si la fuente empezara a publicar otra moneda bajo la misma casa, sumarla
-    // como si fuera dólar daría un total mal sin fallar en ningún lado.
-    const quoteCurrency = typeof row.moneda === "string" ? row.moneda : "USD";
+    // Si la fuente empezara a publicar otra moneda bajo la misma clave, sumarla
+    // como si fuera la esperada daría un total mal sin fallar en ningún lado.
+    const monedaCruda =
+      fields.currency === undefined ? undefined : row[fields.currency];
+    const quoteCurrency =
+      typeof monedaCruda === "string" ? monedaCruda : corridor.quoteCurrency;
 
-    const updatedAt =
-      typeof row.fechaActualizacion === "string" ? row.fechaActualizacion : null;
+    const updatedAt = row[fields.updatedAt];
 
-    if (updatedAt === null || Number.isNaN(Date.parse(updatedAt))) {
+    if (typeof updatedAt !== "string" || Number.isNaN(Date.parse(updatedAt))) {
       throw new RangeError(
-        `La cotización "${casa}" trae fechaActualizacion inválida: ${JSON.stringify(row.fechaActualizacion)}.`,
+        `La cotización "${clave}" trae ${fields.updatedAt} inválido: ${JSON.stringify(updatedAt)}.`,
       );
     }
 
     porId.set(id, {
       id,
-      label: QUOTE_LABELS[id],
-      baseCurrency,
+      label: corridor.labels[id] ?? id,
+      baseCurrency: corridor.baseCurrency,
       quoteCurrency,
-      buy: positiveNumber(row.compra, "compra", casa),
-      sell: positiveNumber(row.venta, "venta", casa),
+      buy: positiveNumber(row[fields.buy], fields.buy, clave),
+      sell: positiveNumber(row[fields.sell], fields.sell, clave),
       updatedAt,
     });
   }
 
-  return QUOTE_IDS.map((id) => porId.get(id)).filter(
-    (quote): quote is ExchangeQuote => quote !== undefined,
-  );
+  return corridor.quoteIds
+    .map((id) => porId.get(id))
+    .filter((quote): quote is ExchangeQuote => quote !== undefined);
 }

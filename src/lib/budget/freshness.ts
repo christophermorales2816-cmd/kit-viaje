@@ -36,7 +36,8 @@ export function resolvePriceFreshness(
   products: BudgetProduct[],
   options: FreshnessOptions = {},
 ): PriceFreshness {
-  const { now = new Date(), staleAfterDays = DEFAULT_STALE_AFTER_DAYS } = options;
+  const { now = new Date(), staleAfterDays = DEFAULT_STALE_AFTER_DAYS } =
+    options;
 
   const timestamps = products.map((product) => {
     const parsed = Date.parse(product.updatedAt);
@@ -59,7 +60,10 @@ export function resolvePriceFreshness(
 
   const oldest = Math.min(...timestamps);
   // Días completos: un precio de hace 29 h es "hace 1 día", no "hace 2".
-  const ageDays = Math.max(0, Math.floor((now.getTime() - oldest) / MS_PER_DAY));
+  const ageDays = Math.max(
+    0,
+    Math.floor((now.getTime() - oldest) / MS_PER_DAY),
+  );
 
   return {
     oldestUpdatedAt: new Date(oldest).toISOString(),

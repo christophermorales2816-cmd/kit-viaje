@@ -1,3 +1,4 @@
+import { ARGENTINA_QUOTES } from "@/lib/quotes/corridors";
 import { describe, expect, it } from "vitest";
 
 import type { ExchangeQuote, QuoteId } from "@/lib/budget";
@@ -21,11 +22,10 @@ function quote(
 
 describe("resolveQuoteSpreads", () => {
   it("mide cada cotización contra la venta de la oficial", () => {
-    const spreads = resolveQuoteSpreads([
-      quote("oficial", 1000),
-      quote("blue", 1250),
-      quote("mep", 1100),
-    ]);
+    const spreads = resolveQuoteSpreads(
+      [quote("oficial", 1000), quote("blue", 1250), quote("mep", 1100)],
+      ARGENTINA_QUOTES,
+    );
 
     const porId = new Map(spreads.map((s) => [s.quote.id, s.premiumPercent]));
 
@@ -34,23 +34,29 @@ describe("resolveQuoteSpreads", () => {
   });
 
   it("no le pone brecha a la oficial contra sí misma", () => {
-    const [oficial] = resolveQuoteSpreads([quote("oficial", 1000)]);
+    const [oficial] = resolveQuoteSpreads(
+      [quote("oficial", 1000)],
+      ARGENTINA_QUOTES,
+    );
 
     expect(oficial.premiumPercent).toBeNull();
   });
 
   it("devuelve null y no 0 cuando no hay oficial", () => {
-    const spreads = resolveQuoteSpreads([quote("blue", 1250)]);
+    const spreads = resolveQuoteSpreads(
+      [quote("blue", 1250)],
+      ARGENTINA_QUOTES,
+    );
 
     // 0 se leería como "no hay brecha", que es una afirmación. Acá no hay dato.
     expect(spreads[0].premiumPercent).toBeNull();
   });
 
   it("no divide por una oficial en cero", () => {
-    const spreads = resolveQuoteSpreads([
-      quote("oficial", 0),
-      quote("blue", 1250),
-    ]);
+    const spreads = resolveQuoteSpreads(
+      [quote("oficial", 0), quote("blue", 1250)],
+      ARGENTINA_QUOTES,
+    );
 
     for (const spread of spreads) {
       expect(spread.premiumPercent).toBeNull();
@@ -58,12 +64,15 @@ describe("resolveQuoteSpreads", () => {
   });
 
   it("ordena como el spec: oficial, blue, MEP, CCL", () => {
-    const spreads = resolveQuoteSpreads([
-      quote("ccl", 1300),
-      quote("blue", 1250),
-      quote("oficial", 1000),
-      quote("mep", 1100),
-    ]);
+    const spreads = resolveQuoteSpreads(
+      [
+        quote("ccl", 1300),
+        quote("blue", 1250),
+        quote("oficial", 1000),
+        quote("mep", 1100),
+      ],
+      ARGENTINA_QUOTES,
+    );
 
     expect(spreads.map((s) => s.quote.id)).toEqual([
       "oficial",
@@ -76,7 +85,7 @@ describe("resolveQuoteSpreads", () => {
   it("no muta el arreglo recibido", () => {
     const entrada = [quote("ccl", 1300), quote("oficial", 1000)];
 
-    resolveQuoteSpreads(entrada);
+    resolveQuoteSpreads(entrada, ARGENTINA_QUOTES);
 
     expect(entrada.map((q) => q.id)).toEqual(["ccl", "oficial"]);
   });

@@ -72,8 +72,8 @@ function Marco({ children }: { children: React.ReactNode }) {
   );
 }
 
-export async function LiveQuotes() {
-  const resultado = await fetchQuotes();
+export async function LiveQuotes({ corridor }: { corridor: string }) {
+  const resultado = await fetchQuotes(corridor);
 
   if (!resultado.ok) {
     // Se dice que falló, no se muestra un cero ni se rompe la página. Es la
@@ -88,7 +88,7 @@ export async function LiveQuotes() {
     );
   }
 
-  const spreads = resolveQuoteSpreads(resultado.quotes);
+  const spreads = resolveQuoteSpreads(resultado.quotes, resultado.corridor);
   const ultima = latestQuoteUpdate(resultado.quotes);
 
   return (

@@ -8,13 +8,18 @@ import type { QuantityRule } from "@/lib/quantity";
  * se testea con valores fijos y no depende de una API externa.
  */
 
-/** Las 4 cotizaciones que el spec trae en un solo request. */
-export const QUOTE_IDS = ["oficial", "blue", "mep", "ccl"] as const;
-
-export type QuoteId = (typeof QUOTE_IDS)[number];
-
-/** El spec elige blue como default visible; el resto queda a un click. */
-export const DEFAULT_QUOTE_ID: QuoteId = "blue";
+/**
+ * Identificador de cotización.
+ *
+ * Es `string` y no una unión cerrada, por lo mismo que `ClimateBucketId`: el
+ * conjunto válido depende del corredor y no del código. Argentina tiene cuatro
+ * —oficial, blue, MEP, CCL—; Brasil tiene una sola, y "blue" no significa nada
+ * ahí. Clavar las cuatro acá haría que sumar un país necesite tocar el motor de
+ * presupuesto, que es justamente la parte que no debería enterarse.
+ *
+ * Quién tiene cuáles vive en `src/lib/quotes/corridors.ts`.
+ */
+export type QuoteId = string;
 
 export interface ExchangeQuote {
   id: QuoteId;
