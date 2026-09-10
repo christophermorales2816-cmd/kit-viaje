@@ -21,8 +21,14 @@ begin;
 -- Fixtures
 -- ---------------------------------------------------------------------------
 
-insert into destinations (id, name, corridor, base_currency)
-values ('11111111-1111-1111-1111-111111111111', 'Buenos Aires', 'argentina', 'ARS');
+-- Corredor propio, no 'argentina': el seed ya siembra Buenos Aires como ciudad
+-- base de ese corredor, y desde que hay un índice único parcial de una base por
+-- corredor y otro de (corredor, slug), un fixture que se llame igual choca con
+-- los datos reales. Un corredor de prueba deja este archivo independiente del
+-- seed, que es lo que un smoke test de RLS debería ser: prueba permisos, no
+-- contenido.
+insert into destinations (id, name, corridor, base_currency, is_base, slug)
+values ('11111111-1111-1111-1111-111111111111', 'Ciudad de prueba', 'corredor-de-prueba', 'ARS', true, 'ciudad-de-prueba');
 
 insert into packing_catalog (id, category, name, weight_g, climate_tags, trip_type_tags)
 values ('22222222-2222-2222-2222-222222222222', 'ropa', 'Campera', 800,
@@ -356,6 +362,66 @@ begin
          ('11111111-1111-1111-1111-111111111111', 10, 8, 15,  60),
          ('11111111-1111-1111-1111-111111111111', 11, 8, 15, 100);
   raise notice 'OK  se aceptan 0, 60 y 100';
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- destinations: una sola ciudad base por corredor, y slugs únicos
+-- ---------------------------------------------------------------------------
+--
+-- Son los dos invariantes que sostienen la elección de ciudad. Sin el primero,
+-- getDestination() devuelve una ciudad al azar cuando el corredor tiene varias;
+-- sin el segundo, dos ciudades del mismo país se pelean la misma URL.
+--
+-- Van acá y no en un test de TypeScript porque los hace cumplir Postgres, y lo
+-- que Postgres promete se verifica contra Postgres.
+
+do $$
+begin
+  begin
+    insert into destinations (id, name, corridor, base_currency, is_base, slug)
+    values ('11111111-1111-1111-1111-11111111aaaa', 'Otra base', 'corredor-de-prueba', 'ARS', true, 'otra-base');
+    raise exception 'FALLA  se aceptó una segunda ciudad base en el mismo corredor';
+  exception when unique_violation then
+    raise notice 'OK  se rechaza una segunda ciudad base en el mismo corredor';
+  end;
+end $$;
+
+do $$
+begin
+  insert into destinations (id, name, corridor, base_currency, is_base, slug)
+  values ('11111111-1111-1111-1111-11111111bbbb', 'Secundaria', 'corredor-de-prueba', 'ARS', false, 'secundaria');
+  raise notice 'OK  se acepta una segunda ciudad no base en el mismo corredor';
+end $$;
+
+do $$
+begin
+  begin
+    insert into destinations (id, name, corridor, base_currency, is_base, slug)
+    values ('11111111-1111-1111-1111-11111111cccc', 'Repetida', 'corredor-de-prueba', 'ARS', false, 'secundaria');
+    raise exception 'FALLA  se aceptó un slug repetido dentro del mismo corredor';
+  exception when unique_violation then
+    raise notice 'OK  se rechaza un slug repetido dentro del corredor';
+  end;
+end $$;
+
+do $$
+begin
+  -- El mismo slug en OTRO corredor sí vale: dos países pueden tener una ciudad
+  -- con el mismo nombre y no hay razón para que la primera se lo quede.
+  insert into destinations (id, name, corridor, base_currency, is_base, slug)
+  values ('11111111-1111-1111-1111-11111111dddd', 'Secundaria', 'otro-corredor', 'ARS', true, 'secundaria');
+  raise notice 'OK  el mismo slug vale en otro corredor';
+end $$;
+
+do $$
+begin
+  begin
+    insert into destinations (id, name, corridor, base_currency, is_base, slug)
+    values ('11111111-1111-1111-1111-11111111eeee', 'Mal formada', 'otro-corredor', 'ARS', false, 'Con Mayúsculas Y Espacios');
+    raise exception 'FALLA  se aceptó un slug que no sirve para una URL';
+  exception when check_violation then
+    raise notice 'OK  se rechaza un slug que no sirve para una URL';
+  end;
 end $$;
 
 rollback;
