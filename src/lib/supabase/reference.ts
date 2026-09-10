@@ -31,6 +31,53 @@ export interface Destination {
   corridor: string;
   /** ISO 4217. Define contra qué cotizaciones se convierte el presupuesto. */
   baseCurrency: string;
+  /** La ciudad que representa al corredor cuando el usuario no eligió otra. */
+  isBase: boolean;
+  /** Identificador legible para la URL. Único dentro del corredor. */
+  slug: string;
+}
+
+const DESTINATION_COLUMNS = "id, name, corridor, base_currency, is_base, slug";
+
+interface DestinationRow {
+  id: string;
+  name: string;
+  corridor: string;
+  base_currency: string;
+  is_base: boolean;
+  slug: string;
+}
+
+function toDestination(row: DestinationRow): Destination {
+  return {
+    id: row.id,
+    name: row.name,
+    corridor: row.corridor,
+    baseCurrency: row.base_currency,
+    isBase: row.is_base,
+    slug: row.slug,
+  };
+}
+
+/**
+ * Elige una ciudad del corredor por su slug, con la base como respaldo.
+ *
+ * Un slug desconocido NO es 404: la página sigue siendo la del país y mostrar
+ * su ciudad base es más útil que un error. Lo que sí devuelve es cuál quedó,
+ * para que la UI marque la que está mirando y no mienta.
+ */
+export function pickDestination(
+  destinations: Destination[],
+  slug: string | undefined,
+): Destination | undefined {
+  const pedida =
+    slug === undefined
+      ? undefined
+      : destinations.find((destino) => destino.slug === slug);
+
+  return (
+    pedida ?? destinations.find((destino) => destino.isBase) ?? destinations[0]
+  );
 }
 
 function fail(what: string, error: PostgrestError): never {
@@ -55,7 +102,10 @@ function numeric(value: number | string | null): number | null {
   return parsed;
 }
 
-function requiredNumeric(value: number | string | null, column: string): number {
+function requiredNumeric(
+  value: number | string | null,
+  column: string,
+): number {
   const parsed = numeric(value);
 
   if (parsed === null) {
@@ -69,14 +119,23 @@ function requiredNumeric(value: number | string | null, column: string): number 
 // destinations
 // ---------------------------------------------------------------------------
 
+/**
+ * La ciudad base de un corredor.
+ *
+ * Filtra por `is_base` y no por `limit(1)`. La versión anterior tomaba la
+ * primera fila SIN order by: con una sola ciudad por corredor funcionaba por
+ * accidente, y con varias Postgres puede devolver cualquiera —incluso una
+ * distinta entre dos requests—, así que la página de preparación habría
+ * empezado a mostrar el clima de una ciudad al azar.
+ */
 export async function getDestination(
   corridor: string = DEFAULT_CORRIDOR,
 ): Promise<Destination> {
   const { data, error } = await referenceClient()
     .from("destinations")
-    .select("id, name, corridor, base_currency")
+    .select(DESTINATION_COLUMNS)
     .eq("corridor", corridor)
-    .limit(1)
+    .eq("is_base", true)
     .maybeSingle();
 
   if (error) fail("el destino", error);
@@ -90,12 +149,28 @@ export async function getDestination(
     );
   }
 
-  return {
-    id: data.id,
-    name: data.name,
-    corridor: data.corridor,
-    baseCurrency: data.base_currency,
-  };
+  return toDestination(data);
+}
+
+/**
+ * Todas las ciudades de un corredor, con la base primero.
+ *
+ * Alimenta el selector del planificador. El orden es estable y significativo:
+ * la base arriba porque es la opción por defecto, el resto alfabético.
+ */
+export async function getDestinationsByCorridor(
+  corridor: string,
+): Promise<Destination[]> {
+  const { data, error } = await referenceClient()
+    .from("destinations")
+    .select(DESTINATION_COLUMNS)
+    .eq("corridor", corridor)
+    .order("is_base", { ascending: false })
+    .order("name");
+
+  if (error) fail("los destinos del corredor", error);
+
+  return (data ?? []).map(toDestination);
 }
 
 /**
@@ -107,7 +182,7 @@ export async function getDestination(
 export async function getDestinationById(id: string): Promise<Destination> {
   const { data, error } = await referenceClient()
     .from("destinations")
-    .select("id, name, corridor, base_currency")
+    .select(DESTINATION_COLUMNS)
     .eq("id", id)
     .maybeSingle();
 
@@ -117,12 +192,7 @@ export async function getDestinationById(id: string): Promise<Destination> {
     throw new Error(`No existe el destino "${id}".`);
   }
 
-  return {
-    id: data.id,
-    name: data.name,
-    corridor: data.corridor,
-    baseCurrency: data.base_currency,
-  };
+  return toDestination(data);
 }
 
 // ---------------------------------------------------------------------------

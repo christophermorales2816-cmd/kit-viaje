@@ -136,7 +136,7 @@ export const argentina: DestinationGuide = {
   ],
 
   dataScopeNote:
-    "Las listas y los presupuestos del planificador están calibrados para Buenos Aires. La guía habla del país; los cálculos, de la ciudad.",
+    "Elegís la ciudad en el planificador y los cálculos se hacen con su clima: Ushuaia en julio y Buenos Aires en enero dan listas opuestas. Los precios son órdenes de magnitud, no cotizaciones.",
 
   /*
     Nueve destinos, agrupados en cuatro regiones. El criterio no fue "los más
@@ -253,6 +253,8 @@ export const argentina: DestinationGuide = {
     adviceByBucket: {
       calido:
         "Ropa liviana y transpirable, y algo de manga larga para el aire acondicionado y para el sol de la siesta. La humedad hace que se sienta más caluroso de lo que marca el termómetro.",
+      fresco:
+        "Capas, no abrigo pesado: un buzo o polar, pantalón largo y algo que corte el viento. Es el rango donde más se agradece poder sacarse una prenda al mediodía.",
       templado:
         "El mes más fácil de empacar: capas livianas y una campera fina para la noche. Con esto alcanza salvo que sumes Patagonia.",
       frio: "Capas de verdad: térmica, abrigo y algo que corte el viento. No es nieve, pero la humedad hace que el frío se sienta más de lo que dice el número.",

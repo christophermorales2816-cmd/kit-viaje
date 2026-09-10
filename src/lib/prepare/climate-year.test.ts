@@ -164,3 +164,35 @@ describe("summarizeYear", () => {
     expect(resumen.bestMonth).toBeNull();
   });
 });
+
+describe("distinguir 'no sabemos' de 'ninguno califica'", () => {
+  /**
+   * Ushuaia tiene los doce meses cargados y ninguno ideal: la mínima nunca
+   * llega a 10 °C. Mostrar eso como "sin datos" afirma que falta información
+   * que sí está, que es exactamente el tipo de mentira que esta página evita.
+   */
+  it("marca que hay datos aunque ningún mes sea ideal", () => {
+    const resumen = summarizeYear(
+      resolveClimateYear(
+        [perfil(1, 5.9, 14.5, 48), perfil(7, -1.3, 3.9, 52)],
+        UMBRALES,
+      ),
+    );
+
+    expect(resumen.idealCount).toBe(0);
+    expect(resumen.bestMonth).toBeNull();
+    expect(resumen.hasData).toBe(true);
+  });
+
+  it("marca que no hay datos cuando de verdad no los hay", () => {
+    expect(summarizeYear(resolveClimateYear([], UMBRALES)).hasData).toBe(false);
+  });
+
+  it("un solo extremo cargado ya cuenta como dato", () => {
+    const resumen = summarizeYear(
+      resolveClimateYear([perfil(1, null, 30, 20)], UMBRALES),
+    );
+
+    expect(resumen.hasData).toBe(true);
+  });
+});
