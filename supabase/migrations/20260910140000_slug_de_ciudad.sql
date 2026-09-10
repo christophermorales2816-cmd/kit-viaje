@@ -32,9 +32,17 @@ where slug is null;
 alter table destinations
   alter column slug set not null;
 
-alter table destinations
-  add constraint destinations_slug_formato
-  check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$');
+-- `add constraint` no tiene `if not exists`, así que repetir esta migración a
+-- mano —cosa que pasa cuando hay que poner una base al día sin el CLI— falla
+-- acá con un error que parece grave y no lo es. El guard la hace repetible.
+do $$
+begin
+  alter table destinations
+    add constraint destinations_slug_formato
+    check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$');
+exception when duplicate_object then
+  null;
+end $$;
 
 create unique index if not exists destinations_slug_por_corredor
   on destinations (corridor, slug);
