@@ -56,17 +56,23 @@ export interface DestinationOption {
 export function NewTripForm({
   corridor,
   destinations,
+  initialDestinationId,
 }: {
   corridor: string;
   /** Ciudades del corredor, con la base primero. */
   destinations: DestinationOption[];
+  /** La que llega elegida desde la página anterior. */
+  initialDestinationId?: string;
 }) {
   const [state, formAction, isPending] = useActionState(createTripAction, null);
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [tripType, setTripType] = useState<TripType | null>(null);
-  // Arranca en la ciudad base: es la que la guía viene describiendo, así que
-  // llegar acá y encontrar otra seleccionada sería un salto raro.
-  const [destinationId, setDestinationId] = useState(destinations[0]?.id ?? "");
+  // Arranca en la que venía elegida, o en la base. Si alguien acaba de leer el
+  // año de Ushuaia, encontrarse Buenos Aires seleccionado sería perderle el
+  // hilo a su propia decisión.
+  const [destinationId, setDestinationId] = useState(
+    initialDestinationId ?? destinations[0]?.id ?? "",
+  );
 
   const dias = range ? diasEntre(range) : null;
   const completo = Boolean(range?.from && range.to && tripType);

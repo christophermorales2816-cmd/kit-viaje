@@ -836,3 +836,39 @@ falso en el detalle —el alojamiento en Ushuaia se dispara más que un boleto d
 colectivo— y está bien para lo que la app promete, que es un orden de magnitud
 con la fecha de carga a la vista. Cuando haya precios relevados por ciudad,
 reemplazan estas filas por id.
+
+### 11.4 "Condiciones actuales" también es por ciudad
+
+Con el selector en el planificador quedó un salto raro: se leía "el mejor mes es
+mayo" pensando en Ushuaia, y era Buenos Aires. La página pasa a ser por ciudad,
+con la ciudad en la URL: `/guia/argentina/preparar?ciudad=ushuaia`.
+
+**En la URL y no en estado de cliente**, porque la elección tiene que poder
+compartirse. Un `<select>` con estado convertiría un link en algo que no se
+puede mandar por WhatsApp. Por eso las ciudades son enlaces, y por eso hay una
+columna `slug`: un uuid en la URL no dice nada y además expone un id interno.
+
+Un slug desconocido **no es 404**: la página sigue siendo la del país y muestra
+su ciudad base, que es más útil que un error por una letra mal tipeada. Lo que
+sí hace es marcar cuál está mirando, para no mentir sobre de qué habla.
+
+La ciudad viaja al planificador en el enlace final, así que quien acaba de leer
+el año de Ushuaia no tiene que volver a elegirla.
+
+**Efecto colateral buscado:** las doce tarjetas de Brasil eran idénticas porque
+Río pide lo mismo todo el año. Por ciudad, São Paulo y Florianópolis sí varían.
+Río sigue siendo uniforme, que es la verdad sobre Río.
+
+### 11.5 "Ninguno" no es "s/d"
+
+Ushuaia y Manaos tienen los doce meses cargados y **ningún mes ideal**: en
+Ushuaia la mínima nunca llega a 10 °C, en Manaos la máxima nunca baja de 30. El
+resumen mostraba "s/d" en el mejor mes, o sea afirmaba que falta información que
+sí está.
+
+`summarizeYear` devuelve ahora `hasData`, que separa las dos cosas. Con datos y
+sin mes ideal dice "Ninguno ideal"; sin datos dice "s/d".
+
+**No se elige un "mejor entre los no ideales".** Cualquier ranking de eso sería
+inventado, y la tira de temporadas y los gráficos están justo abajo para que el
+lector decida con los números a la vista.

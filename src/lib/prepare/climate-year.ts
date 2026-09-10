@@ -190,6 +190,15 @@ export interface YearSummary {
   /** El mes ideal con menos lluvia. `null` si no hay ningún mes ideal. */
   bestMonth: MonthClimate | null;
   idealCount: number;
+  /**
+   * Si el año tiene datos de temperatura en algún mes.
+   *
+   * Separa dos cosas que `bestMonth: null` mezclaba y que significan lo
+   * opuesto: "no sabemos" y "ningún mes califica". Ushuaia tiene los doce meses
+   * cargados y ninguno ideal —la mínima nunca llega a 10 °C—, y mostrar eso
+   * como "sin datos" es afirmar que falta información que sí está.
+   */
+  hasData: boolean;
 }
 
 export function summarizeYear(months: MonthClimate[]): YearSummary {
@@ -218,5 +227,6 @@ export function summarizeYear(months: MonthClimate[]): YearSummary {
     tempMax: maximas.length === 0 ? null : Math.max(...maximas),
     bestMonth,
     idealCount: ideales.length,
+    hasData: minimas.length > 0 || maximas.length > 0,
   };
 }

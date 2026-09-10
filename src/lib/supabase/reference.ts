@@ -33,9 +33,11 @@ export interface Destination {
   baseCurrency: string;
   /** La ciudad que representa al corredor cuando el usuario no eligió otra. */
   isBase: boolean;
+  /** Identificador legible para la URL. Único dentro del corredor. */
+  slug: string;
 }
 
-const DESTINATION_COLUMNS = "id, name, corridor, base_currency, is_base";
+const DESTINATION_COLUMNS = "id, name, corridor, base_currency, is_base, slug";
 
 interface DestinationRow {
   id: string;
@@ -43,6 +45,7 @@ interface DestinationRow {
   corridor: string;
   base_currency: string;
   is_base: boolean;
+  slug: string;
 }
 
 function toDestination(row: DestinationRow): Destination {
@@ -52,7 +55,29 @@ function toDestination(row: DestinationRow): Destination {
     corridor: row.corridor,
     baseCurrency: row.base_currency,
     isBase: row.is_base,
+    slug: row.slug,
   };
+}
+
+/**
+ * Elige una ciudad del corredor por su slug, con la base como respaldo.
+ *
+ * Un slug desconocido NO es 404: la página sigue siendo la del país y mostrar
+ * su ciudad base es más útil que un error. Lo que sí devuelve es cuál quedó,
+ * para que la UI marque la que está mirando y no mienta.
+ */
+export function pickDestination(
+  destinations: Destination[],
+  slug: string | undefined,
+): Destination | undefined {
+  const pedida =
+    slug === undefined
+      ? undefined
+      : destinations.find((destino) => destino.slug === slug);
+
+  return (
+    pedida ?? destinations.find((destino) => destino.isBase) ?? destinations[0]
+  );
 }
 
 function fail(what: string, error: PostgrestError): never {
