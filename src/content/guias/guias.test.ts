@@ -179,7 +179,7 @@ describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
       it("da un consejo por cada bucket de clima del seed", () => {
         // Sin esto, un mes cuyo bucket principal no tenga entrada acá sale con la
         // tarjeta muda y nadie se entera hasta verla.
-        for (const bucket of ["frio", "templado", "calido"]) {
+        for (const bucket of ["frio", "fresco", "templado", "calido"]) {
           expect(prep.adviceByBucket[bucket]?.trim()).not.toBe("");
         }
       });

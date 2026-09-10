@@ -14,6 +14,7 @@ const VALIDO = {
   endDate: "2026-09-07",
   tripType: "urbano",
   corridor: "argentina",
+  destinationId: null,
 };
 
 describe("parseTripInput", () => {

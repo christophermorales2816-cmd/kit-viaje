@@ -3,20 +3,20 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { NewTripForm } from "@/components/landing/new-trip-form";
-import { allGuides, getGuide } from "@/content/guias";
+import { getGuide } from "@/content/guias";
+import { getDestinationsByCorridor } from "@/lib/supabase/reference";
 
 /**
- * Página 3 — el planificador (spec, sección 8.1).
+ * Página 4 — el planificador (spec, secciones 8.1 y 11).
  *
- * El formulario es el mismo de siempre y el Server Action tampoco cambia: lo
- * único que se movió es dónde vive. Queda pendiente rediseñarlo.
+ * Deja de ser estática: ahora lee las ciudades del corredor para armar el
+ * selector. Dinámica con ISR y no prerenderizada, por lo mismo que la página de
+ * preparación (9.4): con generateStaticParams, un hipo de Supabase durante el
+ * build no rompe una request, rompe el deploy entero.
+ *
+ * Un slug inexistente sigue siendo 404: lo decide getGuide, no dynamicParams.
  */
-
-export function generateStaticParams() {
-  return allGuides().map((guia) => ({ slug: guia.slug }));
-}
-
-export const dynamicParams = false;
+export const revalidate = 3600;
 
 export async function generateMetadata({
   params,
@@ -39,6 +39,8 @@ export default async function PlannerPage({
   const guia = getGuide(slug);
 
   if (!guia) notFound();
+
+  const destinos = await getDestinationsByCorridor(guia.slug);
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-12">
@@ -67,7 +69,10 @@ export default async function PlannerPage({
       </header>
 
       <div className="max-w-md">
-        <NewTripForm corridor={guia.slug} />
+        <NewTripForm
+          corridor={guia.slug}
+          destinations={destinos.map(({ id, name }) => ({ id, name }))}
+        />
       </div>
     </main>
   );

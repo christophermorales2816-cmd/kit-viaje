@@ -48,10 +48,25 @@ function diasEntre(range: DateRange): number | null {
   return Math.round((hasta.getTime() - desde.getTime()) / dia) + 1;
 }
 
-export function NewTripForm({ corridor }: { corridor: string }) {
+export interface DestinationOption {
+  id: string;
+  name: string;
+}
+
+export function NewTripForm({
+  corridor,
+  destinations,
+}: {
+  corridor: string;
+  /** Ciudades del corredor, con la base primero. */
+  destinations: DestinationOption[];
+}) {
   const [state, formAction, isPending] = useActionState(createTripAction, null);
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [tripType, setTripType] = useState<TripType | null>(null);
+  // Arranca en la ciudad base: es la que la guía viene describiendo, así que
+  // llegar acá y encontrar otra seleccionada sería un salto raro.
+  const [destinationId, setDestinationId] = useState(destinations[0]?.id ?? "");
 
   const dias = range ? diasEntre(range) : null;
   const completo = Boolean(range?.from && range.to && tripType);
@@ -80,6 +95,50 @@ export function NewTripForm({ corridor }: { corridor: string }) {
         porque la Server Action no ve la URL desde la que la llamaron.
       */}
       <input type="hidden" name="corridor" value={corridor} />
+      <input type="hidden" name="destinationId" value={destinationId} />
+
+      {/*
+        La ciudad, y no solo el país (spec, sección 11).
+
+        Es lo que decide el clima con el que se arma la lista. Sin esto, alguien
+        que iba a Ushuaia en julio recibía la lista de Buenos Aires: sin campera
+        de abrigo, con ojotas y protector solar.
+
+        Botones y no un <select>: son pocas opciones, se ven todas de una y es
+        el mismo control que ya usa el tipo de viaje justo abajo.
+      */}
+      {destinations.length > 1 ? (
+        <fieldset className="flex flex-col gap-3">
+          <legend className="text-sm font-medium">¿A qué ciudad vas?</legend>
+
+          <p className="text-muted-foreground text-sm text-pretty">
+            El clima de la ciudad es lo que define la lista de equipaje.
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {destinations.map((destino) => {
+              const elegida = destino.id === destinationId;
+
+              return (
+                <button
+                  key={destino.id}
+                  type="button"
+                  aria-pressed={elegida}
+                  onClick={() => setDestinationId(destino.id)}
+                  className={cn(
+                    "rounded-full border px-4 py-2 text-sm transition-colors",
+                    elegida
+                      ? "border-foreground bg-foreground text-background"
+                      : "hover:bg-muted",
+                  )}
+                >
+                  {destino.name}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      ) : null}
 
       <fieldset className="flex flex-col gap-3">
         <legend className="flex items-center gap-2 text-sm font-medium">

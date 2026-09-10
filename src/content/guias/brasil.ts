@@ -153,7 +153,7 @@ export const brasil: DestinationGuide = {
   ],
 
   dataScopeNote:
-    "Las listas y los presupuestos del planificador están calibrados para Río de Janeiro. La guía habla del país; los cálculos, de la ciudad.",
+    "Elegís la ciudad en el planificador y los cálculos se hacen con su clima: Manaos no pide lo mismo que Florianópolis. Los precios son órdenes de magnitud, no cotizaciones.",
 
   places: [
     {
@@ -261,6 +261,8 @@ export const brasil: DestinationGuide = {
     adviceByBucket: {
       calido:
         "Ropa liviana y que seque rápido, y algo de manga larga para el aire acondicionado y para el sol del mediodía. La humedad hace que se sienta bastante más caluroso de lo que marca el termómetro.",
+      fresco:
+        "Un buzo o polar y pantalón largo. En Río casi no aparece, pero sí en el sur del país y en las noches de invierno de São Paulo.",
       templado:
         "Lo mismo de siempre más una campera fina para la noche y para el aire acondicionado. En Río esto no es abrigo, es una capa.",
       frio: "No aplica en Río, pero sí si sumás el sur del país en invierno: ahí una campera de verdad deja de ser opcional.",

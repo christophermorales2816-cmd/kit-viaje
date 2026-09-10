@@ -1,7 +1,7 @@
 import "server-only";
 
 import { adminClient } from "@/lib/supabase/admin";
-import { getDestination } from "@/lib/supabase/reference";
+import { getDestination, getDestinationById } from "@/lib/supabase/reference";
 
 import { TripWriteError } from "./errors";
 import type { TripRecord } from "./types";
@@ -60,10 +60,26 @@ export { TRIP_COLUMNS };
 export type { TripRow };
 
 export async function createTrip(input: TripInput): Promise<TripRecord> {
-  // El corredor sale del viaje, no del default. Con un solo país daba igual;
-  // con dos, `getDestination()` sin argumento manda todos los viajes a Buenos
-  // Aires — incluidos los que se arman desde la guía de Brasil.
-  const destination = await getDestination(input.corridor);
+  // La ciudad sale del viaje, no del corredor: el equipaje de Ushuaia en julio
+  // no se parece en nada al de Buenos Aires, y calcular los dos con la misma
+  // fila de clima hacía que la lista saliera mal sin fallar en ningún lado.
+  //
+  // Sin ciudad elegida cae a la base del corredor, que sigue siendo el país
+  // correcto. El corredor, en cambio, nunca cae a un default.
+  const destination =
+    input.destinationId === null
+      ? await getDestination(input.corridor)
+      : await getDestinationById(input.destinationId);
+
+  // Un id de otro país solo llega con el formulario manipulado, pero el
+  // resultado sería un viaje a Ushuaia presentado como si fuera a Brasil.
+  if (destination.corridor !== input.corridor) {
+    throw new TripWriteError(
+      `La ciudad elegida no pertenece a ${input.corridor}.`,
+      null,
+      null,
+    );
+  }
 
   const { data, error } = await adminClient()
     .from("trips")

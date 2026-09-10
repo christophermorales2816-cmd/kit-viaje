@@ -110,8 +110,11 @@ export function resolveSeason(
  * (enero en Buenos Aires es templado de noche y cálido de tarde). El consejo
  * de la tarjeta tiene que hablar del que obliga a empacar algo distinto, y
  * "templado" nunca obliga a nada.
+ *
+ * 'fresco' entra entre 'frio' y 'templado': pide capas, que es más que nada
+ * pero menos que abrigo de verdad.
  */
-const EXIGENCIA = ["calido", "frio", "templado"] as const;
+const EXIGENCIA = ["calido", "frio", "fresco", "templado"] as const;
 
 function mostDemandingBucket(
   buckets: ClimateBucketId[],
