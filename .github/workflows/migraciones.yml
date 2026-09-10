@@ -70,9 +70,47 @@ jobs:
 
           if [ -n "$faltan" ]; then
             echo "Faltan estos secrets:$faltan"
-            echo "Se cargan en Settings → Secrets and variables → Actions."
+            echo
+            echo "Van como TRES secrets separados, cada uno con ese nombre"
+            echo "exacto, en Settings -> Secrets and variables -> Actions,"
+            echo "pestaña Secrets, botón 'New repository secret'."
+            echo
+            echo "No es un solo secret que contenga los tres nombres adentro:"
+            echo "el workflow busca cada nombre por separado."
+            echo
             echo "Sin ellos no se puede aplicar nada, así que esto falla acá"
             echo "en vez de dejar la base a medias."
+            exit 1
+          fi
+
+          # Chequeo de FORMA, no de validez. No prueba que las credenciales
+          # sirvan —eso lo dirá el link— pero caza el error más común de
+          # configuración: pegar en el valor la DESCRIPCIÓN de dónde sacarlo en
+          # vez del valor. Sin esto, ese error aparece recién en `supabase link`
+          # como un mensaje de red que no se parece en nada a su causa.
+          malos=""
+
+          case "$REF" in
+            *[!a-z0-9]*|"") malos="$malos SUPABASE_PROJECT_REF" ;;
+          esac
+
+          case "$TOKEN" in
+            sbp_*) ;;
+            *) malos="$malos SUPABASE_ACCESS_TOKEN" ;;
+          esac
+
+          if [ -n "$malos" ]; then
+            echo "Estos secrets están cargados pero no tienen la forma esperada:$malos"
+            echo
+            echo "SUPABASE_PROJECT_REF es solo el ref del proyecto: una tirada"
+            echo "de letras minúsculas y números, sin https, sin puntos y sin"
+            echo "'.supabase.co'. Está en la URL del dashboard, después de"
+            echo "/project/, y es el subdominio de tu URL de API."
+            echo
+            echo "SUPABASE_ACCESS_TOKEN empieza con sbp_ y se genera en"
+            echo "supabase.com/dashboard/account/tokens."
+            echo
+            echo "No se imprime ningún valor acá a propósito."
             exit 1
           fi
 
