@@ -1,6 +1,7 @@
 # Kit de viaje
 
 [![CI](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml)
+[![Migraciones](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml)
 
 Aplicación web sin registro que resuelve dos cosas para viajar a destinos con
 alta volatilidad económica y multiplicidad cambiaria: **qué empacar** y
@@ -205,6 +206,31 @@ checkout limpio por archivos que todavía no existen.
 corre el smoke test de RLS. Cubre el criterio de aceptación 7 del spec:
 ninguna escritura a las tablas de sesión es posible sin un `edit_token`
 válido, verificado en cada PR y no una sola vez a mano.
+
+**Los dos badges de arriba son dos preguntas distintas.** El de CI dice si el
+código está sano; el de Migraciones, si la base de producción está al día. Se
+puede tener el primero en verde y el segundo en rojo durante semanas, y ahí la
+app queda pidiéndole a Postgres columnas que no existen. Pasó: el workflow de
+migraciones falló sus cuatro primeras corridas seguidas —le faltaban los tres
+secrets— y nadie lo miró, porque el badge del README solo mostraba CI.
+
+### Si el badge de Migraciones está en rojo
+
+Casi siempre es lo mismo: faltan los tres secrets. El paso de verificación
+imprime cuáles, así que el log del run lo dice sin que haya que adivinar.
+
+Se cargan en Settings → Secrets and variables → Actions, en la pestaña
+**Secrets** y como **Repository secrets**. Los tres errores habituales son
+cargarlas en la pestaña "Variables" de al lado, cargarlas como *Environment
+secrets* de un environment que el workflow no declara, o un typo en el nombre.
+
+Mientras tanto la base se puede poner al día desde una terminal, sin GitHub de
+por medio:
+
+```bash
+npx supabase link --project-ref <ref>
+npx supabase db push
+```
 
 Un tercer workflow, [`migraciones.yml`](./.github/workflows/migraciones.yml),
 corre `supabase db push` cuando un merge a `main` toca
