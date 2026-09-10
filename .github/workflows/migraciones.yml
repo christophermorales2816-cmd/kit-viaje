@@ -21,6 +21,13 @@
 #
 # Las tres se cargan en la interfaz de GitHub, nunca en el repo ni en un chat.
 # Si falta alguna, el workflow avisa y no intenta nada a medias.
+#
+# OJO CON DÓNDE SE CARGAN. Tienen que ser *Repository secrets*, en la pestaña
+# "Secrets" de esa pantalla. Los tres errores que hacen que el workflow las siga
+# viendo vacías son siempre los mismos: cargarlas en la pestaña "Variables" de
+# al lado, cargarlas como *Environment secrets* de un environment que este
+# workflow no declara, o un typo en el nombre. El paso de verificación imprime
+# cuáles faltan, así que el log dice exactamente cuál de las tres es.
 
 name: Migraciones
 
@@ -48,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Verificar que estén los tres secrets
         env:
@@ -63,9 +70,47 @@ jobs:
 
           if [ -n "$faltan" ]; then
             echo "Faltan estos secrets:$faltan"
-            echo "Se cargan en Settings → Secrets and variables → Actions."
+            echo
+            echo "Van como TRES secrets separados, cada uno con ese nombre"
+            echo "exacto, en Settings -> Secrets and variables -> Actions,"
+            echo "pestaña Secrets, botón 'New repository secret'."
+            echo
+            echo "No es un solo secret que contenga los tres nombres adentro:"
+            echo "el workflow busca cada nombre por separado."
+            echo
             echo "Sin ellos no se puede aplicar nada, así que esto falla acá"
             echo "en vez de dejar la base a medias."
+            exit 1
+          fi
+
+          # Chequeo de FORMA, no de validez. No prueba que las credenciales
+          # sirvan —eso lo dirá el link— pero caza el error más común de
+          # configuración: pegar en el valor la DESCRIPCIÓN de dónde sacarlo en
+          # vez del valor. Sin esto, ese error aparece recién en `supabase link`
+          # como un mensaje de red que no se parece en nada a su causa.
+          malos=""
+
+          case "$REF" in
+            *[!a-z0-9]*|"") malos="$malos SUPABASE_PROJECT_REF" ;;
+          esac
+
+          case "$TOKEN" in
+            sbp_*) ;;
+            *) malos="$malos SUPABASE_ACCESS_TOKEN" ;;
+          esac
+
+          if [ -n "$malos" ]; then
+            echo "Estos secrets están cargados pero no tienen la forma esperada:$malos"
+            echo
+            echo "SUPABASE_PROJECT_REF es solo el ref del proyecto: una tirada"
+            echo "de letras minúsculas y números, sin https, sin puntos y sin"
+            echo "'.supabase.co'. Está en la URL del dashboard, después de"
+            echo "/project/, y es el subdominio de tu URL de API."
+            echo
+            echo "SUPABASE_ACCESS_TOKEN empieza con sbp_ y se genera en"
+            echo "supabase.com/dashboard/account/tokens."
+            echo
+            echo "No se imprime ningún valor acá a propósito."
             exit 1
           fi
 
