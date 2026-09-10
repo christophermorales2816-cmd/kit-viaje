@@ -1,6 +1,7 @@
 # Kit de viaje
 
 [![CI](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml)
+[![Migraciones](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml)
 
 Aplicación web sin registro que resuelve dos cosas para viajar a destinos con
 alta volatilidad económica y multiplicidad cambiaria: **qué empacar** y
@@ -205,6 +206,13 @@ checkout limpio por archivos que todavía no existen.
 corre el smoke test de RLS. Cubre el criterio de aceptación 7 del spec:
 ninguna escritura a las tablas de sesión es posible sin un `edit_token`
 válido, verificado en cada PR y no una sola vez a mano.
+
+**Los dos badges de arriba son dos preguntas distintas.** El de CI dice si el
+código está sano; el de Migraciones, si la base de producción está al día. Se
+puede tener el primero en verde y el segundo en rojo durante semanas, y ahí la
+app queda pidiéndole a Postgres columnas que no existen. Pasó: el workflow de
+migraciones falló sus tres primeras corridas seguidas —le faltaban los secrets—
+y nadie lo miró porque el badge del README solo mostraba CI.
 
 Un tercer workflow, [`migraciones.yml`](./.github/workflows/migraciones.yml),
 corre `supabase db push` cuando un merge a `main` toca
