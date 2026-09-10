@@ -735,3 +735,36 @@ Se corrigió además un desalineamiento que venía del MVP: el enlace centraba e
 bloque punto+etiqueta sobre la coordenada, así que el punto quedaba unos píxeles
 arriba del país. Con un solo país centrado no se notaba; con dos, el pin
 señalaba al lugar equivocado.
+
+### 10.6 El viaje tiene que saber a qué país es
+
+Sumar Brasil destapó un bug silencioso que el MVP no podía tener: `createTrip`
+llamaba a `getDestination()` **sin argumento**, o sea que caía siempre al
+corredor por defecto. Con un solo país daba exactamente igual. Con dos, armar un
+viaje desde la guía de Brasil creaba **un viaje a Buenos Aires**: precios en
+pesos, clima argentino y las cuatro cotizaciones argentinas, para alguien que va
+a Río.
+
+Reproducido de punta a punta contra un Postgres real antes de tocar nada: el
+viaje creado desde `/guia/brasil/planificar` quedaba con `destination_id` de
+Buenos Aires.
+
+Lo que lo hace peligroso es que **no falla**. No hay excepción, ni fila
+inválida, ni una línea en los logs. La lista sale, el presupuesto suma, y todo
+está mal. Un bug que rompe se arregla; uno que miente se descubre viajando.
+
+El corredor ahora viaja desde la URL hasta la base: la ruta se lo pasa al
+formulario, el formulario lo manda en un campo oculto —la Server Action no ve la
+URL desde la que la llamaron—, `parseTripInput` lo valida **contra el índice de
+guías**, y `createTrip` se lo pasa a `getDestination`.
+
+La validación no cae a un default. Un corredor desconocido devuelve un error
+legible, porque lo contrario es justamente el bug de arriba con otra cara.
+
+**Sobre el test:** la línea culpable no tenía cobertura, y una mutación lo
+confirmó —revertir el arreglo pasaba los 308 tests—. `create.ts` es I/O puro y
+no había nada que extraerle sin inventar una capa, así que se mockea el I/O y se
+verifica **el argumento** con el que se llama a `getDestination`, que es lo único
+que distingue el bug. Para eso `server-only` se reemplaza por un módulo vacío en
+Vitest: la guarda real la sigue aplicando el bundler de Next en cada build, que
+es donde importa.
