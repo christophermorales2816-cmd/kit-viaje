@@ -21,6 +21,13 @@
 #
 # Las tres se cargan en la interfaz de GitHub, nunca en el repo ni en un chat.
 # Si falta alguna, el workflow avisa y no intenta nada a medias.
+#
+# OJO CON DÓNDE SE CARGAN. Tienen que ser *Repository secrets*, en la pestaña
+# "Secrets" de esa pantalla. Los tres errores que hacen que el workflow las siga
+# viendo vacías son siempre los mismos: cargarlas en la pestaña "Variables" de
+# al lado, cargarlas como *Environment secrets* de un environment que este
+# workflow no declara, o un typo en el nombre. El paso de verificación imprime
+# cuáles faltan, así que el log dice exactamente cuál de las tres es.
 
 name: Migraciones
 
@@ -48,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Verificar que estén los tres secrets
         env:

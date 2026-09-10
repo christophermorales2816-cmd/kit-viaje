@@ -16,9 +16,9 @@ jobs:
     name: Lint, tipos, tests y build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -68,7 +68,7 @@ jobs:
       PGDATABASE: postgres
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Preparar los roles de Supabase
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/setup-roles.sql
