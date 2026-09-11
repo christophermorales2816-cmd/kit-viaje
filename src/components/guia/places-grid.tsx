@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import type { GuidePlace } from "@/content/guias";
@@ -33,7 +34,14 @@ const TINTE_POR_DEFECTO = "from-slate-800 to-slate-950";
 
 const TODAS = "Todas";
 
-export function PlacesGrid({ places }: { places: GuidePlace[] }) {
+export function PlacesGrid({
+  places,
+  guideSlug,
+}: {
+  places: GuidePlace[];
+  /** Corredor al que pertenecen, para armar el enlace al planificador. */
+  guideSlug: string;
+}) {
   // El orden de las regiones sale del contenido, no de una lista aparte: si
   // alguien suma un destino de una región nueva, el filtro aparece solo.
   const regiones = useMemo(
@@ -123,6 +131,22 @@ export function PlacesGrid({ places }: { places: GuidePlace[] }) {
               <p className="text-sm text-pretty text-slate-300">
                 {place.blurb}
               </p>
+
+              {/*
+                El mosaico dejaba de ser un catálogo y no llevaba a ningún lado:
+                se leía sobre Ushuaia y había que volver a buscarla en el
+                selector del planificador. El id del destino ES su slug, así que
+                el enlace lleva directo a armar el viaje para esa ciudad.
+
+                Un enlace de verdad y no un onClick: se abre en otra pestaña, se
+                copia, y funciona sin JavaScript.
+              */}
+              <Link
+                href={`/guia/${guideSlug}/preparar?ciudad=${place.id}`}
+                className="mt-1 w-fit rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:outline-none"
+              >
+                Planificar {place.name}
+              </Link>
             </article>
           </li>
         ))}

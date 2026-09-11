@@ -88,7 +88,7 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
 
       <ScoreBars scores={guia.scores} shines={guia.shines} costs={guia.costs} />
 
-      <PlacesGrid places={guia.places} />
+      <PlacesGrid places={guia.places} guideSlug={guia.slug} />
 
       <PlacesMap places={guia.places} />
 

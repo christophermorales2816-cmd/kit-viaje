@@ -157,7 +157,7 @@ export const brasil: DestinationGuide = {
 
   places: [
     {
-      id: "rio",
+      id: "rio-de-janeiro",
       name: "Río de Janeiro",
       region: "Sudeste",
       tag: "Playa y morros",
@@ -188,7 +188,7 @@ export const brasil: DestinationGuide = {
       image: null,
     },
     {
-      id: "recife-olinda",
+      id: "recife",
       name: "Recife y Olinda",
       region: "Nordeste",
       tag: "Arrecifes y carnaval",
@@ -198,7 +198,7 @@ export const brasil: DestinationGuide = {
       image: null,
     },
     {
-      id: "noronha",
+      id: "fernando-de-noronha",
       name: "Fernando de Noronha",
       region: "Nordeste",
       tag: "Archipiélago protegido",
@@ -208,7 +208,7 @@ export const brasil: DestinationGuide = {
       image: null,
     },
     {
-      id: "iguacu",
+      id: "foz-do-iguacu",
       name: "Foz do Iguaçu",
       region: "Sur",
       tag: "Cataratas",
@@ -228,7 +228,7 @@ export const brasil: DestinationGuide = {
       image: null,
     },
     {
-      id: "manaus",
+      id: "manaos",
       name: "Manaos y el Amazonas",
       region: "Norte",
       tag: "Selva y río",

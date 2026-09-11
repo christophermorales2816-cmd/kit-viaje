@@ -916,3 +916,31 @@ hace cierta, así que el huso y su nombre pasan a ser parte del corredor.
 
 Ninguno de los cuatro rompía nada ni fallaba un test. Aparecieron mirando la
 página renderizada con la moneda nueva.
+
+### 11.6 Los dieciocho destinos son planificables
+
+El mosaico de cada guía ofrece nueve lugares y la base tenía seis y cinco. Un
+lector veía Fernando de Noronha o El Chaltén, hacía click en armar el viaje y
+recibía la lista de la ciudad base. No fallaba: salía mal, que es el modo de
+error que este proyecto viene persiguiendo desde la sección 11.
+
+Se suman las siete que faltaban —El Calafate, El Chaltén y Puerto Madryn;
+Recife, Fernando de Noronha, Foz do Iguaçu y el Pantanal— con sus doce meses de
+clima y sus dieciocho precios, y los dos países quedan simétricos: nueve
+ciudades, 108 filas de clima y 162 precios cada uno.
+
+**El id del destino en el contenido ES su slug en la base.** Había cuatro que no
+coincidían (`rio` contra `rio-de-janeiro`, `manaus` contra `manaos`, y los dos
+Iguazú). Una sola forma de nombrar cada ciudad es lo que permite que el mosaico
+enlace directo sin una tabla de traducción.
+
+**El mosaico ahora lleva a algún lado.** Cada tarjeta tiene un enlace a las
+condiciones de esa ciudad; antes era un catálogo que obligaba a volver a buscar
+el destino en el selector del planificador.
+
+**El invariante se testea leyendo los dos archivos.** Que una guía prometa un
+destino que la base no tiene cruza contenido y migraciones, así que el test lee
+el SQL y compara. No es elegante leer SQL desde un test de TypeScript, pero es
+la única forma de que la promesa y el dato no se separen sin que nadie se
+entere. El test incluye una guarda contra sí mismo: si el regex dejara de
+encontrar filas, pasaría vacío y no probaría nada.
