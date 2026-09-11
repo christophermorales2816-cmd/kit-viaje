@@ -52,6 +52,15 @@ export interface QuoteCorridor {
    */
   referenceQuoteId: string | null;
   labels: Record<string, string>;
+  /**
+   * Huso con el que se muestra la hora de la cotización, y cómo nombrarlo.
+   *
+   * El sello decía "hora de Buenos Aires" en las dos guías. Para Brasil la hora
+   * coincide —los dos husos son UTC−3 y ninguno de los dos países usa horario
+   * de verano— pero la etiqueta afirmaba una ciudad que no era la del destino.
+   * Que coincida hoy no la hace cierta.
+   */
+  clock: { timeZone: string; label: string };
   source: QuoteSource | null;
 }
 
@@ -67,6 +76,10 @@ const ARGENTINA: QuoteCorridor = {
     blue: "Blue",
     mep: "MEP",
     ccl: "CCL",
+  },
+  clock: {
+    timeZone: "America/Argentina/Buenos_Aires",
+    label: "hora de Buenos Aires",
   },
   source: {
     name: "dolarapi",
@@ -93,12 +106,17 @@ const ARGENTINA: QuoteCorridor = {
  * lo que hay. Inventar una segunda para que la pantalla se vea igual sería
  * mostrar un número que no existe.
  *
- * ADVERTENCIA: el `source` de este corredor está escrito contra la forma
- * documentada del endpoint, pero no se pudo verificar contra la API real —
- * el entorno donde se escribió no tiene salida a internet. Si los nombres de
- * los campos no coinciden, `fetchQuotes` devuelve `ok: false` y la página
- * dice que no pudo traer la cotización: no rompe nada. Corregirlo es editar
- * `fields` acá arriba.
+ * VERIFICADO contra la respuesta real del endpoint. Devuelve un objeto suelto,
+ * no un array:
+ *
+ *   {"moeda":"USD","nome":"Dólar","compra":5.1106,"venda":5.1114,
+ *    "fechoAnterior":5.0852,"dataAtualizacao":"2023-10-01T21:59:59.000Z"}
+ *
+ * De los cuatro campos que había que adivinar, tres estaban bien y uno no:
+ * la fecha es `dataAtualizacao`, no `fechaAtualizacao`. El error fue mezclar
+ * el "fecha" del español con el portugués, que dice "data". Es exactamente el
+ * tipo de detalle por el que los nombres de campo son configuración y no
+ * código: corregirlo fue una palabra.
  */
 const BRASIL: QuoteCorridor = {
   corridor: "brasil",
@@ -110,6 +128,7 @@ const BRASIL: QuoteCorridor = {
   labels: {
     comercial: "Comercial",
   },
+  clock: { timeZone: "America/Sao_Paulo", label: "hora de Brasilia" },
   source: {
     name: "dolarapi Brasil",
     url: "https://br.dolarapi.com/v1/cotacoes/usd",
@@ -117,7 +136,7 @@ const BRASIL: QuoteCorridor = {
       key: "moeda",
       buy: "compra",
       sell: "venda",
-      updatedAt: "fechaAtualizacao",
+      updatedAt: "dataAtualizacao",
       currency: "moeda",
     },
     keyToQuoteId: { USD: "comercial" },

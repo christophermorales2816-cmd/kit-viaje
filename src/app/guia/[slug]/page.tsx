@@ -80,7 +80,7 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
         <GuideHighlights highlights={guia.highlights} />
       </header>
 
-      <Suspense fallback={<LiveQuotesSkeleton />}>
+      <Suspense fallback={<LiveQuotesSkeleton corridor={guia.slug} />}>
         <LiveQuotes corridor={guia.slug} />
       </Suspense>
 

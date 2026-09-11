@@ -37,6 +37,26 @@ describe("registro de corredores", () => {
     }
   });
 
+  it("dice con qué huso y con qué nombre muestra la hora", () => {
+    // El sello decía "hora de Buenos Aires" en las dos guías. En Brasil la hora
+    // coincide —los dos husos son UTC−3 y ninguno usa horario de verano— pero
+    // la etiqueta nombraba una ciudad que no era la del destino.
+    for (const corredor of allQuoteCorridors()) {
+      expect(corredor.clock.label.trim()).not.toBe("");
+      // Que el huso exista de verdad: un IANA inventado tira acá y no en la
+      // página de alguien.
+      expect(() =>
+        new Intl.DateTimeFormat("es-AR", {
+          timeZone: corredor.clock.timeZone,
+        }).format(new Date()),
+      ).not.toThrow();
+    }
+
+    expect(BRASIL_QUOTES.clock.timeZone).not.toBe(
+      ARGENTINA_QUOTES.clock.timeZone,
+    );
+  });
+
   it("etiqueta todas sus cotizaciones", () => {
     for (const corredor of allQuoteCorridors()) {
       for (const id of corredor.quoteIds) {
@@ -63,24 +83,61 @@ describe("registro de corredores", () => {
 });
 
 describe("mapper con el dialecto de Brasil", () => {
-  // Nombres de campo distintos a los de Argentina: es exactamente lo que la
-  // configuración por corredor tiene que absorber sin un mapper nuevo.
+  /**
+   * COPIADO TAL CUAL DE LA RESPUESTA REAL del endpoint. No es un fixture
+   * inventado, y esa es toda la diferencia: la primera versión de esta
+   * configuración adivinó los cuatro nombres de campo y falló uno —puso
+   * `fechaAtualizacao`, mezclando el "fecha" del español con el portugués, que
+   * dice "data"—. Un fixture inventado habría confirmado la adivinanza en vez
+   * de contradecirla.
+   *
+   * Si el día de mañana la fuente cambia de dialecto, este objeto deja de
+   * parecerse a lo que llega y el test lo dice antes que un usuario.
+   */
   const FILA = {
     moeda: "USD",
-    compra: 5.38,
-    venda: 5.39,
-    fechaAtualizacao: "2026-09-09T12:00:00.000Z",
+    nome: "Dólar",
+    compra: 5.1106,
+    venda: 5.1114,
+    fechoAnterior: 5.0852,
+    dataAtualizacao: "2023-10-01T21:59:59.000Z",
   };
 
-  it("lee una fila con otros nombres de campo", () => {
+  it("lee la respuesta real con otros nombres de campo", () => {
     const [quote] = mapQuotesResponse([FILA], BRASIL_QUOTES);
 
     expect(quote.id).toBe("comercial");
     expect(quote.label).toBe("Comercial");
     expect(quote.baseCurrency).toBe("BRL");
     expect(quote.quoteCurrency).toBe("USD");
-    expect(quote.buy).toBe(5.38);
-    expect(quote.sell).toBe(5.39);
+    expect(quote.buy).toBe(5.1106);
+    expect(quote.sell).toBe(5.1114);
+    expect(quote.updatedAt).toBe("2023-10-01T21:59:59.000Z");
+  });
+
+  it("no confunde la compra con la venta", () => {
+    // En Brasil las dos están a milésimas de distancia, así que invertirlas no
+    // se nota mirando el total: 5,1106 y 5,1114 dan casi lo mismo. Con el blue
+    // argentino el error saltaría a la vista; acá no, y por eso se afirma.
+    const [quote] = mapQuotesResponse([FILA], BRASIL_QUOTES);
+
+    expect(quote.buy).toBeLessThan(quote.sell);
+  });
+
+  it("ignora los campos que la fuente publica de más", () => {
+    // `nome` y `fechoAnterior` vienen en la respuesta y no se usan. Que estén
+    // no tiene que cambiar nada.
+    const [quote] = mapQuotesResponse([FILA], BRASIL_QUOTES);
+
+    expect(Object.keys(quote).sort()).toEqual([
+      "baseCurrency",
+      "buy",
+      "id",
+      "label",
+      "quoteCurrency",
+      "sell",
+      "updatedAt",
+    ]);
   });
 
   it("acepta un objeto suelto y no solo un array", () => {
@@ -90,7 +147,7 @@ describe("mapper con el dialecto de Brasil", () => {
 
   it("rechaza una fila sin fecha válida en vez de inventarla", () => {
     expect(() =>
-      mapQuotesResponse([{ ...FILA, fechaAtualizacao: "ayer" }], BRASIL_QUOTES),
+      mapQuotesResponse([{ ...FILA, dataAtualizacao: "ayer" }], BRASIL_QUOTES),
     ).toThrow(RangeError);
   });
 
@@ -113,9 +170,9 @@ describe("brecha en un corredor de una sola cotización", () => {
       [
         {
           moeda: "USD",
-          compra: 5.38,
-          venda: 5.39,
-          fechaAtualizacao: "2026-09-09T12:00:00.000Z",
+          compra: 5.1106,
+          venda: 5.1114,
+          dataAtualizacao: "2023-10-01T21:59:59.000Z",
         },
       ],
       BRASIL_QUOTES,

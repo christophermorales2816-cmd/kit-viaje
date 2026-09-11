@@ -872,3 +872,47 @@ sin mes ideal dice "Ninguno ideal"; sin datos dice "s/d".
 **No se elige un "mejor entre los no ideales".** Cualquier ranking de eso sería
 inventado, y la tira de temporadas y los gráficos están justo abajo para que el
 lector decida con los números a la vista.
+
+### 10.7 La fuente brasileña, ya verificada
+
+La respuesta real de `br.dolarapi.com/v1/cotacoes/usd` es un objeto suelto:
+
+```json
+{"moeda":"USD","nome":"Dólar","compra":5.1106,"venda":5.1114,
+ "fechoAnterior":5.0852,"dataAtualizacao":"2023-10-01T21:59:59.000Z"}
+```
+
+De los cuatro nombres de campo que hubo que adivinar, **tres estaban bien y uno
+no**: la fecha es `dataAtualizacao`, no `fechaAtualizacao`. El error fue mezclar
+el "fecha" del español con el portugués, que dice "data". Corregirlo fue una
+palabra, que es exactamente lo que 10.2 prometía al hacer de los nombres de
+campo configuración en vez de código.
+
+El payload real pasa a ser el fixture de los tests. No es un detalle: un fixture
+inventado habría confirmado la adivinanza en vez de contradecirla.
+
+### 10.8 Lo que la segunda moneda destapó en la UI
+
+Tres textos y un formato estaban escritos para un solo país:
+
+**"Las cuatro cotizaciones, ahora"**, escrito a mano, en una guía que tiene una.
+Contradecía además el número del hero, que dice "1 cotización, no cuatro" dos
+pantallas más arriba. El plural también cambia la bajada: "el mismo gasto cambia
+de tamaño según cuál mires" no significa nada cuando no hay entre cuáles elegir.
+
+**El valor, formateado siempre en pesos argentinos y sin decimales.** Con
+Argentina se veía bien —`$ 1.220`—; con Brasil destruía el dato: 5,1114 salía
+como **`$ 5`**, con el símbolo equivocado y sin la parte que importa. En una
+moneda cuyo valor entero es 5, redondear al entero no es redondear, es borrar.
+`formatMoney` ya resolvía esto y ya estaba testeada: el formateador local era
+una copia peor.
+
+**"vs. oficial"** en la brecha, que solo es cierto en Argentina.
+
+**"hora de Buenos Aires"** en el sello. Para Brasil la hora coincide —los dos
+husos son UTC−3 y ninguno de los dos países usa horario de verano— pero la
+etiqueta afirmaba una ciudad que no era la del destino. Que coincida hoy no la
+hace cierta, así que el huso y su nombre pasan a ser parte del corredor.
+
+Ninguno de los cuatro rompía nada ni fallaba un test. Aparecieron mirando la
+página renderizada con la moneda nueva.
