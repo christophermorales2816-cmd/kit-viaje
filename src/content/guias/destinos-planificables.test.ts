@@ -16,6 +16,28 @@ import { allGuides } from "@/content/guias";
  * dato no se separen sin que nadie se entere, que es exactamente lo que pasó.
  */
 
+/** Los corredores que aparecen en algún insert a `destinations`. */
+function corredoresSembrados(): Set<string> {
+  const dir = "supabase/migrations";
+  const corredores = new Set<string>();
+
+  for (const archivo of readdirSync(dir)) {
+    if (!archivo.endsWith(".sql")) continue;
+
+    const sql = readFileSync(`${dir}/${archivo}`, "utf8");
+
+    // La columna corridor va siempre seguida de base_currency, que es lo que la
+    // distingue de cualquier otro texto entre comillas de la migración.
+    for (const [, corredor] of sql.matchAll(
+      /'([a-z-]+)',\s*'[A-Z]{3}'/g,
+    )) {
+      corredores.add(corredor);
+    }
+  }
+
+  return corredores;
+}
+
 /** Todos los slugs que las migraciones insertan en `destinations`. */
 function slugsDeLasMigraciones(): Set<string> {
   const dir = "supabase/migrations";
@@ -79,4 +101,34 @@ describe("cada destino de una guía existe en la base", () => {
       }
     }
   });
+});
+
+/**
+ * Publicar una guía sin su migración deja dos páginas sin nada que mostrar.
+ *
+ * `/guia/<país>/preparar` y `/guia/<país>/planificar` resuelven todo a partir
+ * de las ciudades del corredor. Sin una sola fila en `destinations`, las dos
+ * quedan en el modo degradado que ahora avisa que faltan datos — correcto como
+ * red de seguridad, pero no es lo que queremos publicar.
+ *
+ * ESTO NO PRUEBA QUE LA MIGRACIÓN HAYA CORRIDO EN PRODUCCIÓN. Un test del repo
+ * no puede saberlo, y justamente esa fue la falla que llevó a Bolivia a un 404:
+ * la guía deployada y la migración sin aplicar porque el workflow venía
+ * fallando. Lo que sí caza es el caso que está bajo nuestro control: publicar
+ * contenido y olvidar el SQL.
+ */
+describe("cada guía publicada tiene su corredor en las migraciones", () => {
+  const corredores = corredoresSembrados();
+
+  it("las migraciones siembran corredores", () => {
+    // La misma guarda contra un test que se miente solo: si el regex dejara de
+    // encontrar filas, todo lo de abajo pasaría vacío.
+    expect(corredores.size).toBeGreaterThanOrEqual(3);
+  });
+
+  for (const guia of allGuides()) {
+    it(`${guia.country} tiene su corredor sembrado`, () => {
+      expect(corredores).toContain(guia.slug);
+    });
+  }
 });
