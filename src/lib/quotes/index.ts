@@ -5,6 +5,7 @@ export {
   allQuoteCorridors,
   getQuoteCorridor,
   ARGENTINA_QUOTES,
+  BOLIVIA_QUOTES,
   BRASIL_QUOTES,
 } from "./corridors";
 export type {

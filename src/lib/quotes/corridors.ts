@@ -143,7 +143,36 @@ const BRASIL: QuoteCorridor = {
   },
 };
 
-const CORREDORES = [ARGENTINA, BRASIL];
+/**
+ * Bolivia vuelve a la tesis de Argentina: hay más de un tipo de cambio para la
+ * misma moneda, y cuál conseguís cambia el tamaño del gasto.
+ *
+ * SIN FUENTE TODAVÍA. `source: null` no es un olvido: es el estado real. No se
+ * verificó ningún endpoint que publique las dos cotizaciones bolivianas, y la
+ * lección de la fuente brasileña —tres de cuatro nombres de campo bien, uno
+ * mal— es que adivinar una API sale caro. Declarar el corredor sin fuente es
+ * honesto y no rompe nada: la guía dice que todavía no hay cotización en vivo,
+ * y el resto de la página funciona igual.
+ *
+ * Cuando haya un endpoint verificado, esto es completar `source` con sus
+ * nombres de campo. No hace falta tocar código.
+ */
+const BOLIVIA: QuoteCorridor = {
+  corridor: "bolivia",
+  baseCurrency: "BOB",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "paralelo"],
+  defaultQuoteId: "paralelo",
+  referenceQuoteId: "oficial",
+  labels: {
+    oficial: "Oficial",
+    paralelo: "Paralelo",
+  },
+  clock: { timeZone: "America/La_Paz", label: "hora de La Paz" },
+  source: null,
+};
+
+const CORREDORES = [ARGENTINA, BRASIL, BOLIVIA];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));
 
@@ -156,4 +185,8 @@ export function allQuoteCorridors(): QuoteCorridor[] {
   return [...CORREDORES];
 }
 
-export { ARGENTINA as ARGENTINA_QUOTES, BRASIL as BRASIL_QUOTES };
+export {
+  ARGENTINA as ARGENTINA_QUOTES,
+  BOLIVIA as BOLIVIA_QUOTES,
+  BRASIL as BRASIL_QUOTES,
+};

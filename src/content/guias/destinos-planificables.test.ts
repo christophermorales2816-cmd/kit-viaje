@@ -29,7 +29,7 @@ function slugsDeLasMigraciones(): Set<string> {
     // Las filas de destinations terminan en el slug entre comillas simples,
     // que es la última columna del insert.
     for (const [, slug] of sql.matchAll(
-      /'(?:argentina|brasil)',\s*'[A-Z]{3}',\s*(?:true|false),\s*'([a-z0-9-]+)'/g,
+      /'[a-z-]+',\s*'[A-Z]{3}',\s*(?:true|false),\s*'([a-z0-9-]+)'/g,
     )) {
       slugs.add(slug);
     }
@@ -52,7 +52,7 @@ describe("cada destino de una guía existe en la base", () => {
   it("las migraciones siembran destinos con slug", () => {
     // Si el regex dejara de encontrar filas, el test de abajo pasaría vacío y
     // no probaría nada. Esta es la guarda contra un test que se miente solo.
-    expect(slugs.size).toBeGreaterThanOrEqual(18);
+    expect(slugs.size).toBeGreaterThanOrEqual(27);
   });
 
   for (const guia of allGuides()) {
