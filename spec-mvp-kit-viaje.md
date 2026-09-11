@@ -944,3 +944,60 @@ el SQL y compara. No es elegante leer SQL desde un test de TypeScript, pero es
 la única forma de que la promesa y el dato no se separen sin que nadie se
 entere. El test incluye una guarda contra sí mismo: si el regex dejara de
 encontrar filas, pasaría vacío y no probaría nada.
+
+## 12. Tercer corredor: Bolivia
+
+Bolivia entra sin tocar ninguna abstracción: una guía nueva en
+`src/content/guias/bolivia.ts`, un corredor en el registro de cotizaciones y una
+migración de datos. Que sumar un país sea eso —y no un refactor— es el resultado
+de las secciones 10 y 11, que fue cuando el código dejó de asumir que existía un
+solo destino.
+
+Nueve ciudades con La Paz de base, 108 filas de clima y 162 precios en
+bolivianos, igual que los otros dos. Los tres países quedan simétricos.
+
+### 12.1 Acá la valija no la decide la estación, la decide la altura
+
+En Argentina el eje es el invierno contra el verano; en Brasil, cuánto calor y
+cuánta lluvia. En Bolivia ninguno de los dos sirve: **La Paz tiene casi la misma
+temperatura los doce meses del año** —unos 14 de máxima, cerca de cero de
+mínima— así que se empaca igual en enero que en julio. Lo que cambia entre un
+mes y otro es la lluvia.
+
+Lo que sí cambia, y muchísimo, es a qué altura se duerme. Contra los umbrales
+sembrados:
+
+| Ciudad | Altura | Mes | Rango | Buckets |
+|---|---|---|---|---|
+| Salar de Uyuni | 3.660 m | julio | −8,5 / 16,0 | frio + fresco |
+| Potosí | 4.000 m | junio | −4,8 / 14,6 | frio + fresco |
+| La Paz | 3.600 m | cualquiera | ~0 / ~14 | frio + fresco |
+| Rurrenabaque | 200 m | enero | 22,4 / 31,0 | templado + cálido |
+
+Un viaje de dos semanas por Bolivia puede pedir campera de abrigo **y** ojotas, y
+eso no es un error de carga. La página renderizada lo confirma: Uyuni sale con
+campera y sin nada de playa, Rurrenabaque con ojotas y remera y sin abrigo. Es
+exactamente el motor de la sección 11 aplicado a un país donde el eje es
+vertical en vez de estacional.
+
+### 12.2 Un corredor sin fuente de cotizaciones, a propósito
+
+Bolivia declara sus dos cotizaciones —oficial y paralelo, con el paralelo por
+defecto y la brecha contra el oficial— pero **`source: null`**. No es un
+descuido: adivinar el dialecto de una API es lo que costó el `fechaAtualizacao`
+de Brasil, que era `dataAtualizacao`. El corredor queda declarado y la fuente se
+conecta cuando se pueda verificar contra una respuesta real.
+
+`fetchQuotes` ya devolvía un resultado explícito para ese caso, pero la vista
+decía _"no pudimos traer las cotizaciones ahora"_, que es una afirmación falsa:
+invita a recargar esperando un número que no va a aparecer. Ahora distingue los
+dos casos y dice que todavía no hay fuente para esa moneda. El resto de la guía
+—que es casi toda— sigue funcionando.
+
+### 12.3 El test de destinos planificables dejó de nombrar países
+
+El regex que lee las migraciones tenía `(?:argentina|brasil)` escrito a mano, así
+que un corredor nuevo pasaba el test sin que sus filas se contaran. Pasa a
+aceptar cualquier corredor y la guarda contra sí mismo sube de 18 a 27 slugs.
+Un test que hay que editar para cada país es un test que tarde o temprano se
+queda atrás del código que vigila.

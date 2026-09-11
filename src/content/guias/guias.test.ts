@@ -34,6 +34,7 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     // mar adentro, bastante más al este que el continente. La primera versión de
     // esta caja lo dejaba afuera y el test lo cazó.
     brasil: { lat: [-34, 6], lon: [-74, -28] },
+    bolivia: { lat: [-23, -9], lon: [-70, -57] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

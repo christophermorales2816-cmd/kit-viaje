@@ -148,11 +148,20 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
     //
     // El título sale igual del corredor: que la fuente esté caída no cambia
     // cuántas cotizaciones tiene el país.
+    const config = getQuoteCorridor(corridor);
+
+    // Un corredor sin fuente declarada no es una caída: todavía no conectamos
+    // ninguna API para ese país. Decir "no pudimos traerlas ahora" invitaría a
+    // recargar la página esperando un número que no va a aparecer.
+    const mensaje =
+      config !== undefined && config.source === null
+        ? `Todavía no tenemos una fuente de cotizaciones en vivo para ${config.baseCurrency}. El resto de la guía sigue disponible más abajo.`
+        : `No pudimos traer las cotizaciones ahora. ${resultado.reason} El resto de la guía sigue disponible más abajo.`;
+
     return (
-      <Marco cuantas={getQuoteCorridor(corridor)?.quoteIds.length ?? null}>
+      <Marco cuantas={config?.quoteIds.length ?? null}>
         <p className="text-muted-foreground rounded-xl border border-dashed p-6 text-sm">
-          No pudimos traer las cotizaciones ahora. {resultado.reason} El resto
-          de la guía sigue disponible más abajo.
+          {mensaje}
         </p>
       </Marco>
     );
