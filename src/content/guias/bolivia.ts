@@ -247,6 +247,66 @@ export const bolivia: DestinationGuide = {
       coords: [-14.4419, -67.5281],
       image: null,
     },
+    {
+      id: "oruro",
+      name: "Oruro",
+      region: "Altiplano",
+      tag: "Carnaval y viento",
+      blurb:
+        "A 3.735 metros, la ciudad minera donde cada febrero se baila el Carnaval que la UNESCO declaró patrimonio. El resto del año es altiplano puro: seco, ventoso y frío de noche.",
+      coords: [-17.9833, -67.15],
+      image: null,
+    },
+    {
+      id: "coroico",
+      name: "Coroico",
+      region: "Yungas",
+      tag: "Bajar al calor",
+      blurb:
+        "Tres horas de bajada desde La Paz y estás a 1.750 metros, entre cafetales y niebla subtropical. Es el contraste más rápido del país: salís con campera y llegás en remera.",
+      coords: [-16.19, -67.73],
+      image: null,
+    },
+    {
+      id: "sorata",
+      name: "Sorata",
+      region: "Yungas",
+      tag: "Al pie del Illampu",
+      blurb:
+        "Un pueblo de valle a 2.680 metros con el nevado Illampu encima, base clásica de trekking hacia la Cordillera Real. Templado de día y fresco apenas se esconde el sol.",
+      coords: [-15.7728, -68.65],
+      image: null,
+    },
+    {
+      id: "torotoro",
+      name: "Torotoro",
+      region: "Valles",
+      tag: "Huellas de dinosaurio",
+      blurb:
+        "Un parque nacional de cañones, cavernas y huellas de dinosaurio a 2.600 metros. Se llega desde Cochabamba y casi todo se camina bajo sol directo.",
+      coords: [-18.1333, -65.7667],
+      image: null,
+    },
+    {
+      id: "tupiza",
+      name: "Tupiza",
+      region: "Valles",
+      tag: "Quebradas rojas",
+      blurb:
+        "Quebradas coloradas y cardones en el extremo sur, a 2.950 metros. Es la entrada alternativa al Salar y el lugar donde se acabó la historia de Butch Cassidy.",
+      coords: [-21.4433, -65.7192],
+      image: null,
+    },
+    {
+      id: "concepcion",
+      name: "Concepción",
+      region: "Oriente",
+      tag: "Misiones jesuíticas",
+      blurb:
+        "El corazón de la Chiquitania, con iglesias de madera restauradas que también son patrimonio de la UNESCO. Tierra baja, calor húmedo y un circuito que se hace por ruta desde Santa Cruz.",
+      coords: [-16.1333, -62.0333],
+      image: null,
+    },
   ],
 
   preparation: {

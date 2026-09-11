@@ -115,6 +115,9 @@ export default async function PrepararPage({
           guideSlug={guia.slug}
           destinations={destinos}
           current={destino}
+          regionBySlug={Object.fromEntries(
+            guia.places.map((place) => [place.id, place.region]),
+          )}
         />
 
         <p className="bg-muted/40 rounded-2xl border p-6 text-lg text-pretty">

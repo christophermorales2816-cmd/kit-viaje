@@ -1001,3 +1001,43 @@ que un corredor nuevo pasaba el test sin que sus filas se contaran. Pasa a
 aceptar cualquier corredor y la guarda contra sí mismo sube de 18 a 27 slugs.
 Un test que hay que editar para cada país es un test que tarde o temprano se
 queda atrás del código que vigila.
+
+### 12.4 Quince ciudades, y el selector agrupado por región
+
+Los nueve destinos originales cubrían altiplano, valles, oriente y Amazonía,
+pero se salteaban los **Yungas**, que es justamente donde el país hace su truco:
+de La Paz a Coroico hay tres horas de bajada y 1.850 metros de diferencia. La
+guía afirmaba que acá manda la altura y no tenía cómo demostrarlo.
+
+Se suman seis —Oruro, Coroico, Sorata, Torotoro, Tupiza y Concepción— con sus
+doce meses de clima y sus dieciocho precios cada una. Bolivia queda con quince
+ciudades y cinco regiones. Que tenga más que Argentina y Brasil no rompe nada:
+la simetría que importa no es el número de ciudades sino que **todo destino que
+una guía muestra se pueda planificar**, y eso lo vigila un test.
+
+La demostración, en la página renderizada:
+
+| Ciudad | Altura | Rango del año | Qué manda a la valija |
+|---|---|---|---|
+| Potosí | 4.000 m | −5° a 18° | campera de abrigo, cero playa |
+| Coroico | 1.750 m | 11° a 26° | ojotas y remera, sin abrigo |
+
+Dos ciudades del mismo país, a medio día de viaje, con listas opuestas.
+
+**El selector de ciudad pasa a agruparse por región.** Con seis ciudades una
+tira de chips se leía de un vistazo; con quince era un bloque de texto en el que
+no se encontraba nada. Y en Bolivia la región no es decoración: si alguien duda
+entre Coroico y Potosí, saber que una es Yungas y la otra Altiplano le dice más
+que los dos nombres juntos.
+
+El agrupado tiene dos decisiones que el test fija:
+
+**No se impone un orden de regiones.** Las ciudades llegan con la base primero y
+después alfabéticas, así que las regiones salen en el orden de su primera
+ciudad. Cualquier ranking de regiones sería inventado, y la región de la ciudad
+base tiene que quedar arriba porque es la que la página muestra por defecto.
+
+**Una ciudad que el contenido todavía no nombró no se esconde**: cae en un grupo
+sin título al final. Descartarla sería el error de la sección 11 al revés — un
+destino planificable que desaparece del selector porque falta una línea de
+contenido editorial.
