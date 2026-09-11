@@ -3,6 +3,11 @@
 [![CI](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml)
 [![Migraciones](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml)
 
+> **¿Sumar un país?** El procedimiento completo está en
+> [`docs/agregar-un-pais.md`](docs/agregar-un-pais.md): qué cuatro archivos se
+> tocan, qué verificar y en qué orden, y los dos errores que ya nos costaron un
+> país en producción.
+
 Aplicación web sin registro que resuelve dos cosas para viajar a destinos con
 alta volatilidad económica y multiplicidad cambiaria: **qué empacar** y
 **cuánto vas a gastar**. MVP acotado a un corredor: Buenos Aires, Argentina.

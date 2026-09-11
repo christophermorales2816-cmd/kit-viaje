@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 import { NewTripForm } from "@/components/landing/new-trip-form";
 import { getGuide } from "@/content/guias";
 import {
@@ -80,13 +82,38 @@ export default async function PlannerPage({
         </p>
       </header>
 
-      <div className="max-w-md">
-        <NewTripForm
-          corridor={guia.slug}
-          destinations={destinos.map(({ id, name }) => ({ id, name }))}
-          initialDestinationId={inicial?.id}
-        />
-      </div>
+      {/*
+        Un formulario sin ciudades no puede crear nada: se manda a la base, la
+        base rechaza y el lector se come un error después de cargar fechas. Si
+        el país no tiene destinos cargados se dice antes, no después.
+      */}
+      {destinos.length === 0 ? (
+        <div className="max-w-xl rounded-xl border border-dashed p-6">
+          <p className="font-medium">
+            Todavía no podemos armar listas para {guia.country}.
+          </p>
+
+          <p className="text-muted-foreground mt-2 text-sm text-pretty">
+            Falta cargar las ciudades de este país en nuestra base. Es un
+            problema nuestro, no del link. Mientras tanto, la guía tiene los
+            consejos de equipaje y las preguntas frecuentes.
+          </p>
+
+          <Button asChild className="mt-4" variant="outline">
+            <Link href={`/guia/${guia.slug}/preparar`}>
+              Ver los consejos de {guia.country}
+            </Link>
+          </Button>
+        </div>
+      ) : (
+        <div className="max-w-md">
+          <NewTripForm
+            corridor={guia.slug}
+            destinations={destinos.map(({ id, name }) => ({ id, name }))}
+            initialDestinationId={inicial?.id}
+          />
+        </div>
+      )}
     </main>
   );
 }

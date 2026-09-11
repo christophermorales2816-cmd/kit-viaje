@@ -81,17 +81,28 @@ export default async function PrepararPage({
     typeof ciudad === "string" ? ciudad : undefined,
   );
 
-  // Sin ciudades no hay clima que mostrar, y es un problema de datos, no de la
-  // URL que pidió el usuario.
-  if (!destino) notFound();
+  // SIN CIUDADES NO SE DEVUELVE 404. El país existe y su guía está publicada:
+  // lo que falta son filas en la base, que es un problema nuestro, no un link
+  // mal escrito. Un 404 le dice al lector "esto no existe" y esconde la causa;
+  // pasó exactamente eso con Bolivia, con la guía en producción y la migración
+  // sin aplicar, y el 404 mandaba a una página que además decía que el único
+  // corredor era Argentina.
+  //
+  // Es la misma decisión que la sección 5 tomó para las cotizaciones: se dice
+  // que falta el dato y se muestra todo lo demás. Y acá "todo lo demás" es casi
+  // toda la página, porque los consejos, las checklists, la tabla de qué evitar
+  // y las preguntas frecuentes son del país y no dependen de la base.
+  const hayCiudad = destino !== undefined;
 
-  // En paralelo: son cuatro lecturas independientes y encadenarlas suma cuatro
-  // round-trips a un render que igual va a cachearse una hora.
-  const [perfiles, umbrales, catalogo] = await Promise.all([
-    getClimateProfiles(destino.id),
-    getClimateThresholds(),
-    getPackingCatalog(),
-  ]);
+  // En paralelo: son lecturas independientes y encadenarlas suma round-trips a
+  // un render que igual va a cachearse una hora.
+  const [perfiles, umbrales, catalogo] = hayCiudad
+    ? await Promise.all([
+        getClimateProfiles(destino.id),
+        getClimateThresholds(),
+        getPackingCatalog(),
+      ])
+    : [[], [], []];
 
   const meses = resolveClimateYear(perfiles, umbrales);
   const resumen = summarizeYear(meses);
@@ -108,32 +119,35 @@ export default async function PrepararPage({
         </Link>
 
         <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
-          {destino.name}: condiciones actuales
+          {destino?.name ?? guia.country}: condiciones actuales
         </h1>
 
-        <CitySwitcher
-          guideSlug={guia.slug}
-          destinations={destinos}
-          current={destino}
-          regionBySlug={Object.fromEntries(
-            guia.places.map((place) => [place.id, place.region]),
-          )}
-        />
+        {destino !== undefined && (
+          <CitySwitcher
+            guideSlug={guia.slug}
+            destinations={destinos}
+            current={destino}
+            regionBySlug={Object.fromEntries(
+              guia.places.map((place) => [place.id, place.region]),
+            )}
+          />
+        )}
 
         <p className="bg-muted/40 rounded-2xl border p-6 text-lg text-pretty">
           {guia.preparation.quickAnswer}
         </p>
 
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-border md:grid-cols-4">
-          <Dato
-            termino="Rango del año"
-            valor={
-              resumen.tempMin === null || resumen.tempMax === null
-                ? "s/d"
-                : `${Math.round(resumen.tempMin)}° a ${Math.round(resumen.tempMax)}°`
-            }
-          />
-          {/*
+        {hayCiudad ? (
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-border md:grid-cols-4">
+            <Dato
+              termino="Rango del año"
+              valor={
+                resumen.tempMin === null || resumen.tempMax === null
+                  ? "s/d"
+                  : `${Math.round(resumen.tempMin)}° a ${Math.round(resumen.tempMax)}°`
+              }
+            />
+            {/*
             "Ninguno" y "s/d" no son lo mismo, y confundirlos es afirmar que
             falta un dato que sí está: Ushuaia tiene los doce meses cargados y
             ninguno califica como ideal, porque la mínima nunca llega a 10 °C.
@@ -142,16 +156,19 @@ export default async function PrepararPage({
             eso sería inventado. La tira de temporadas y los gráficos están
             justo abajo para que el lector decida con los números a la vista.
           */}
-          <Dato
-            termino="Mejor mes"
-            valor={
-              resumen.bestMonth?.longName ??
-              (resumen.hasData ? "Ninguno ideal" : "s/d")
-            }
-          />
-          <Dato termino="Meses ideales" valor={String(resumen.idealCount)} />
-          <Dato termino="Enchufe" valor={guia.preparation.plug.types} />
-        </dl>
+            <Dato
+              termino="Mejor mes"
+              valor={
+                resumen.bestMonth?.longName ??
+                (resumen.hasData ? "Ninguno ideal" : "s/d")
+              }
+            />
+            <Dato termino="Meses ideales" valor={String(resumen.idealCount)} />
+            <Dato termino="Enchufe" valor={guia.preparation.plug.types} />
+          </dl>
+        ) : (
+          <DatosQueFaltan pais={guia.country} />
+        )}
       </header>
 
       <section
@@ -174,15 +191,19 @@ export default async function PrepararPage({
         </ul>
       </section>
 
-      <MonthStrip months={meses} />
+      {hayCiudad && (
+        <>
+          <MonthStrip months={meses} />
 
-      <ClimateBars months={meses} />
+          <ClimateBars months={meses} />
 
-      <MonthCards
-        months={meses}
-        catalog={catalogo}
-        adviceByBucket={guia.preparation.adviceByBucket}
-      />
+          <MonthCards
+            months={meses}
+            catalog={catalogo}
+            adviceByBucket={guia.preparation.adviceByBucket}
+          />
+        </>
+      )}
 
       <PackingTips
         dos={guia.preparation.tips.dos}
@@ -196,31 +217,33 @@ export default async function PrepararPage({
 
       <FaqList faq={guia.preparation.faq} country={guia.country} />
 
-      <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
-        <h2 className="text-2xl font-semibold tracking-tight text-balance">
-          Creá tu lista para {destino.name}
-        </h2>
+      {destino !== undefined && (
+        <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
+          <h2 className="text-2xl font-semibold tracking-tight text-balance">
+            Creá tu lista para {destino.name}
+          </h2>
 
-        <p className="text-muted-foreground max-w-xl text-sm text-pretty">
-          Ya sabés qué mes te conviene. Poné las fechas y el tipo de viaje, y
-          armamos la lista de equipaje y el presupuesto sobre el clima de{" "}
-          {destino.name} en esos días concretos.
-        </p>
+          <p className="text-muted-foreground max-w-xl text-sm text-pretty">
+            Ya sabés qué mes te conviene. Poné las fechas y el tipo de viaje, y
+            armamos la lista de equipaje y el presupuesto sobre el clima de{" "}
+            {destino.name} en esos días concretos.
+          </p>
 
-        {/*
+          {/*
           La ciudad viaja al planificador en la URL: quien acaba de leer el año
           de Ushuaia no tiene por qué volver a elegirla en la pantalla siguiente.
         */}
-        <Button asChild size="lg">
-          <Link href={`/guia/${guia.slug}/planificar?ciudad=${destino.slug}`}>
-            Iniciar generador de lista
-          </Link>
-        </Button>
+          <Button asChild size="lg">
+            <Link href={`/guia/${guia.slug}/planificar?ciudad=${destino.slug}`}>
+              Iniciar generador de lista
+            </Link>
+          </Button>
 
-        <p className="text-muted-foreground text-xs text-pretty">
-          {guia.dataScopeNote}
-        </p>
-      </section>
+          <p className="text-muted-foreground text-xs text-pretty">
+            {guia.dataScopeNote}
+          </p>
+        </section>
+      )}
     </main>
   );
 }
@@ -230,6 +253,31 @@ function Dato({ termino, valor }: { termino: string; valor: string }) {
     <div className="bg-background flex flex-col gap-1 p-5">
       <dt className="text-muted-foreground text-xs">{termino}</dt>
       <dd className="text-lg font-medium">{valor}</dd>
+    </div>
+  );
+}
+
+/**
+ * Lo que se muestra cuando el país está publicado pero su clima no está en la
+ * base todavía.
+ *
+ * Dice qué falta y de quién es el problema. No ofrece "reintentá" ni "volvé más
+ * tarde": no hay nada que el lector pueda hacer, y fingir que sí lo hay le hace
+ * perder el tiempo.
+ */
+function DatosQueFaltan({ pais }: { pais: string }) {
+  return (
+    <div className="rounded-xl border border-dashed p-6">
+      <p className="font-medium">
+        Todavía no cargamos el clima de {pais} en nuestra base.
+      </p>
+
+      <p className="text-muted-foreground mt-2 text-sm text-pretty">
+        Los consejos, las checklists y las preguntas de acá abajo son del país y
+        siguen valiendo. Lo que falta es el detalle mes a mes y el generador de
+        listas, que se calculan con datos de cada ciudad. Es un problema nuestro
+        y lo estamos resolviendo.
+      </p>
     </div>
   );
 }
