@@ -211,7 +211,7 @@ export const argentina: DestinationGuide = {
       image: null,
     },
     {
-      id: "iguazu",
+      id: "puerto-iguazu",
       name: "Cataratas del Iguazú",
       region: "Norte y Litoral",
       tag: "Selva y saltos",
