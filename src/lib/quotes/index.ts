@@ -3,12 +3,15 @@ export type { QuotesResult } from "./fetch";
 
 export {
   allQuoteCorridors,
+  conversionStatus,
   getQuoteCorridor,
+  isDollarized,
   ARGENTINA_QUOTES,
   BOLIVIA_QUOTES,
   BRASIL_QUOTES,
 } from "./corridors";
 export type {
+  ConversionStatus,
   QuoteCorridor,
   QuoteSource,
   QuoteSourceFields,

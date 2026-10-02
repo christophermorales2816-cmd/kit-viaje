@@ -16,6 +16,7 @@ import type {
   PriceFreshness,
   QuoteId,
 } from "@/lib/budget";
+import type { ConversionStatus } from "@/lib/quotes";
 import {
   formatAge,
   formatCategory,
@@ -49,6 +50,57 @@ function agruparPorCategoria(
   return [...grupos];
 }
 
+/**
+ * Lo que se dice sobre la conversión a dólares, según el caso.
+ *
+ * Decía siempre "no pudimos traer las cotizaciones — el total en pesos es
+ * correcto". Era falso dos veces fuera de Argentina: la moneda no eran pesos, y
+ * en Bolivia no había fallado nada, simplemente no hay fuente todavía. En un
+ * país dolarizado habría sido falso tres veces: ahí no hay nada que convertir.
+ */
+function AvisoDeConversion({
+  conversion,
+  quotesError,
+  baseCurrency,
+}: {
+  conversion: ConversionStatus;
+  quotesError: string | null;
+  baseCurrency: string;
+}) {
+  if (conversion === "dolarizado") {
+    return (
+      <p className="text-sm text-muted-foreground">
+        En este destino se paga en dólares: el total ya está en la moneda que
+        vas a usar y no hay cotización que elegir.
+      </p>
+    );
+  }
+
+  if (conversion === "sin-fuente") {
+    return (
+      <p className="flex items-start gap-2 text-sm text-muted-foreground">
+        <TriangleAlert className="mt-0.5 size-4 shrink-0" />
+        Todavía no tenemos cotización en vivo para {baseCurrency}. El total en
+        moneda local es correcto; la conversión a dólares no está disponible.
+      </p>
+    );
+  }
+
+  if (quotesError === null) return null;
+
+  return (
+    <p className="flex items-start gap-2 text-sm text-muted-foreground">
+      <TriangleAlert className="mt-0.5 size-4 shrink-0" />
+      {/*
+        El total en moneda local se muestra igual: la conversión es lo único
+        que depende de la API externa.
+      */}
+      No pudimos traer las cotizaciones ahora ({quotesError}). El total en
+      moneda local es correcto; la conversión a dólares no está disponible.
+    </p>
+  );
+}
+
 export function BudgetList({
   items,
   quotes,
@@ -57,6 +109,7 @@ export function BudgetList({
   totals,
   totalsError,
   quotesError,
+  conversion,
   freshness,
   baseCurrency,
   isReadOnly,
@@ -70,6 +123,8 @@ export function BudgetList({
   totalsError: string | null;
   /** Por qué no hay cotizaciones, si no las hay. */
   quotesError: string | null;
+  /** Qué se puede decir sobre la conversión de este destino. */
+  conversion: ConversionStatus;
   freshness: PriceFreshness;
   baseCurrency: string;
   isReadOnly: boolean;
@@ -139,17 +194,11 @@ export function BudgetList({
           </p>
         ) : null}
 
-        {quotesError ? (
-          <p className="flex items-start gap-2 text-sm text-muted-foreground">
-            <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-            {/*
-              El total en pesos se muestra igual: la conversión es lo único que
-              depende de la API externa.
-            */}
-            No pudimos traer las cotizaciones ({quotesError}) — el total en
-            pesos es correcto, la conversión a dólares no está disponible.
-          </p>
-        ) : null}
+        <AvisoDeConversion
+          conversion={conversion}
+          quotesError={quotesError}
+          baseCurrency={baseCurrency}
+        />
 
         {totalsError ? (
           <p className="flex items-start gap-2 text-sm text-destructive">

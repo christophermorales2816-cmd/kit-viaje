@@ -15,7 +15,7 @@ import {
   type QuoteId,
 } from "@/lib/budget";
 import { budgetCsv, csvFilename, packingCsv } from "@/lib/export/csv";
-import { getQuoteCorridor } from "@/lib/quotes/corridors";
+import { conversionStatus, getQuoteCorridor } from "@/lib/quotes/corridors";
 import { formatDateRange, formatDuration, formatTripType } from "@/lib/format";
 import { durationInDays } from "@/lib/packing";
 import {
@@ -97,7 +97,8 @@ function aplicarBudget(
 /**
  * El default sale del corredor: blue en Argentina, comercial en Brasil. Antes
  * era una constante, y con dos países una constante ya no puede estar bien
- * para los dos.
+ * para los dos. En un país dolarizado no hay default ni cotizaciones, y el
+ * resultado es `null`: no hay Select que mostrar.
  */
 function elegirCotizacionInicial(
   quotes: ExchangeQuote[],
@@ -105,7 +106,11 @@ function elegirCotizacionInicial(
 ): QuoteId | null {
   const preferida = getQuoteCorridor(corridor)?.defaultQuoteId;
 
-  if (preferida !== undefined && quotes.some((q) => q.id === preferida)) {
+  if (
+    preferida !== undefined &&
+    preferida !== null &&
+    quotes.some((q) => q.id === preferida)
+  ) {
     return preferida;
   }
 
@@ -272,6 +277,7 @@ export function TripDashboard({
             totals={totals}
             totalsError={totalsError}
             quotesError={quotesError}
+            conversion={conversionStatus(destination.corridor)}
             freshness={freshness}
             baseCurrency={destination.baseCurrency}
             isReadOnly={isReadOnly}

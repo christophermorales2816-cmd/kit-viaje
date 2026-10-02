@@ -132,6 +132,19 @@ describe("fetchQuotes", () => {
     expect(resultado.reason).toContain("ninguna");
   });
 
+  it("en un país dolarizado no consulta nada y no lo cuenta como falla", async () => {
+    // Ecuador cobra en dólares: no hay fuente a la que llamar. Devolver
+    // `ok: false` haría que la página dijera "no pudimos traer las
+    // cotizaciones", que es afirmar una caída que no existió.
+    const llamada = vi.fn();
+    vi.stubGlobal("fetch", llamada);
+
+    const resultado = await fetchQuotes("ecuador");
+
+    expect(resultado).toMatchObject({ ok: true, quotes: [] });
+    expect(llamada).not.toHaveBeenCalled();
+  });
+
   it("no inventa un corredor que no existe", async () => {
     responde(BRASIL);
 

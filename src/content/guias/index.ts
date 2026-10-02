@@ -15,6 +15,7 @@ export type {
   GuidePlace,
   GuidePreparation,
   GuideScore,
+  GuideSubregion,
   GuideTip,
 } from "./types";
 export { GUIDE_FACTS_MAX_AGE_DAYS } from "./types";

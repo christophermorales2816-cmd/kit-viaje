@@ -17,6 +17,7 @@ import type { DestinationGuide } from "./types";
 export const bolivia: DestinationGuide = {
   slug: "bolivia",
   country: "Bolivia",
+  subregion: "Sudamérica",
   subhead:
     "El país más alto de América y uno de los más baratos. Acá lo que define la valija no es el calor ni el frío, sino a cuántos metros vas a dormir.",
 

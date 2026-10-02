@@ -142,9 +142,20 @@ export interface GuidePreparation {
   faq: GuideFaq[];
 }
 
+/**
+ * Las tres zonas en que se agrupa la lista de países de la portada.
+ *
+ * Una unión cerrada y no un string: con diecinueve países, un "Centro América"
+ * tipeado distinto abriría un cuarto grupo con un solo país adentro, y eso no
+ * lo caza nadie hasta verlo.
+ */
+export type GuideSubregion = "Sudamérica" | "México y Centroamérica" | "Caribe";
+
 export interface DestinationGuide {
   slug: string;
   country: string;
+  /** Zona de la lista de la portada. */
+  subregion: GuideSubregion;
   subhead: string;
   /**
    * Foto del país, cabecera del bloque informativo — no del hero, que es el

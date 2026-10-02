@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 
+import { allGuides } from "@/content/guias";
+
 import {
   allQuoteCorridors,
   ARGENTINA_QUOTES,
   BRASIL_QUOTES,
+  conversionStatus,
   getQuoteCorridor,
+  isDollarized,
 } from "./corridors";
 import { mapQuotesResponse } from "./map";
 import { resolveQuoteSpreads } from "./spread";
@@ -21,7 +25,7 @@ describe("registro de corredores", () => {
   it("resuelve por nombre y devuelve undefined para uno que no existe", () => {
     expect(getQuoteCorridor("argentina")).toBe(ARGENTINA_QUOTES);
     expect(getQuoteCorridor("brasil")).toBe(BRASIL_QUOTES);
-    expect(getQuoteCorridor("uruguay")).toBeUndefined();
+    expect(getQuoteCorridor("atlantida")).toBeUndefined();
   });
 
   it("no repite nombres de corredor", () => {
@@ -32,8 +36,40 @@ describe("registro de corredores", () => {
   it("declara un default que existe entre sus propias cotizaciones", () => {
     // Un default que no está en quoteIds deja el Select sin selección inicial.
     for (const corredor of allQuoteCorridors()) {
-      expect(corredor.quoteIds).toContain(corredor.defaultQuoteId);
+      if (isDollarized(corredor)) continue;
+
       expect(corredor.quoteIds.length).toBeGreaterThan(0);
+      expect(corredor.quoteIds).toContain(corredor.defaultQuoteId);
+    }
+  });
+
+  it("no le inventa cotizaciones a un país dolarizado", () => {
+    // Ecuador, El Salvador y Panamá cobran en dólares. Cualquier cotización
+    // que se declarara acá sería un número que no existe.
+    const dolarizados = allQuoteCorridors().filter(isDollarized);
+
+    expect(dolarizados.map((c) => c.corridor).sort()).toEqual([
+      "ecuador",
+      "el-salvador",
+      "panama",
+    ]);
+
+    for (const corredor of dolarizados) {
+      expect(corredor.baseCurrency).toBe("USD");
+      expect(corredor.quoteIds).toEqual([]);
+      expect(corredor.defaultQuoteId).toBeNull();
+      expect(corredor.referenceQuoteId).toBeNull();
+      expect(corredor.source).toBeNull();
+    }
+  });
+
+  it("no confunde una moneda propia con el dólar", () => {
+    // El caso inverso: un país con moneda propia que por un typo quedara con
+    // base USD se mostraría como dolarizado y perdería la conversión entera.
+    for (const corredor of allQuoteCorridors()) {
+      if (isDollarized(corredor)) continue;
+      expect(corredor.baseCurrency).toMatch(/^[A-Z]{3}$/);
+      expect(corredor.baseCurrency).not.toBe("USD");
     }
   });
 
@@ -79,6 +115,37 @@ describe("registro de corredores", () => {
         expect(corredor.quoteIds).toContain(id);
       }
     }
+  });
+});
+
+describe("corredores y guías van de a pares", () => {
+  /**
+   * Una guía sin corredor muestra "no hay corredor de cotizaciones" en su
+   * bloque en vivo, y un corredor sin guía es configuración muerta. Con
+   * diecinueve países, olvidar uno de los dos lados es fácil y no se ve hasta
+   * abrir la página.
+   */
+  it("cada guía tiene su corredor", () => {
+    for (const guia of allGuides()) {
+      expect(getQuoteCorridor(guia.slug), guia.slug).toBeDefined();
+    }
+  });
+});
+
+describe("conversionStatus", () => {
+  it("distingue los cuatro casos que la página tiene que decir distinto", () => {
+    expect(conversionStatus("argentina")).toBe("en-vivo");
+    expect(conversionStatus("bolivia")).toBe("sin-fuente");
+    expect(conversionStatus("ecuador")).toBe("dolarizado");
+    expect(conversionStatus("atlantida")).toBe("sin-corredor");
+  });
+
+  it("no le asigna fuente a un dolarizado aunque no tenga", () => {
+    // El orden importa: un dolarizado también tiene `source: null`, y si el
+    // chequeo de fuente fuera primero la página diría "todavía no hay
+    // cotización en vivo" en un país donde no hay nada que cotizar.
+    expect(conversionStatus("panama")).toBe("dolarizado");
+    expect(conversionStatus("el-salvador")).toBe("dolarizado");
   });
 });
 
