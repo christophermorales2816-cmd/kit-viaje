@@ -42,9 +42,14 @@ export interface QuoteCorridor {
   baseCurrency: string;
   /** Moneda del resultado. ISO 4217. */
   quoteCurrency: string;
-  /** Ids en orden de presentación. El Select se arma con esto. */
+  /**
+   * Ids en orden de presentación. El Select se arma con esto.
+   *
+   * Vacío en un país dolarizado: no hay nada que cotizar (ver `isDollarized`).
+   */
   quoteIds: readonly string[];
-  defaultQuoteId: string;
+  /** `null` solo cuando no hay cotizaciones entre las que elegir. */
+  defaultQuoteId: string | null;
   /**
    * Contra qué cotización se mide la brecha. `null` cuando el corredor tiene
    * una sola y la brecha no significa nada — que es el caso de Brasil, y la
@@ -172,7 +177,162 @@ const BOLIVIA: QuoteCorridor = {
   source: null,
 };
 
-const CORREDORES = [ARGENTINA, BRASIL, BOLIVIA];
+/**
+ * Un país dolarizado: la moneda local ES la moneda del resultado.
+ *
+ * Ecuador, El Salvador y Panamá cobran en dólares estadounidenses. No hay tipo
+ * de cambio que traer ni brecha que medir, y eso tampoco es una versión pobre
+ * de Argentina: es la otra punta del mismo eje. Para quien llega con dólares es
+ * el caso más simple del continente, y la página tiene que decirlo así en vez
+ * de mostrar "no pudimos traer las cotizaciones" por un número que no existe.
+ *
+ * Se define por las monedas y no con un flag aparte, para que no puedan
+ * contradecirse: un corredor que dijera "dolarizado" con base en otra moneda
+ * sería un estado que no debería poder escribirse.
+ */
+export function isDollarized(corridor: QuoteCorridor): boolean {
+  return corridor.baseCurrency === corridor.quoteCurrency;
+}
+
+/**
+ * Un tipo de cambio único, todavía sin fuente verificada.
+ *
+ * Es el caso de la mayoría del continente: una moneda que flota y una sola
+ * cotización que importa. Ninguna de estas fuentes se pudo verificar contra una
+ * respuesta real —la red de la sesión en que se cargaron bloqueaba dolarapi—, y
+ * la regla después del `fechaAtualizacao` de Brasil es no adivinar: el
+ * corredor queda declarado con `source: null` y la página dice que todavía no
+ * hay cotización en vivo. Conectar una fuente es completar `source`.
+ */
+function unaCotizacion(
+  corridor: string,
+  baseCurrency: string,
+  clock: QuoteCorridor["clock"],
+): QuoteCorridor {
+  return {
+    corridor,
+    baseCurrency,
+    quoteCurrency: "USD",
+    quoteIds: ["oficial"],
+    defaultQuoteId: "oficial",
+    referenceQuoteId: null,
+    labels: { oficial: "Oficial" },
+    clock,
+    source: null,
+  };
+}
+
+/** Un país dolarizado: no hay nada que cotizar (ver `isDollarized`). */
+function dolarizado(
+  corridor: string,
+  clock: QuoteCorridor["clock"],
+): QuoteCorridor {
+  return {
+    corridor,
+    baseCurrency: "USD",
+    quoteCurrency: "USD",
+    quoteIds: [],
+    defaultQuoteId: null,
+    referenceQuoteId: null,
+    labels: {},
+    clock,
+    source: null,
+  };
+}
+
+/**
+ * Venezuela y Cuba vuelven a la tesis de Argentina, más lejos todavía: la
+ * cotización oficial y la que consigue un viajero en la calle pueden estar a
+ * varias veces de distancia, y elegir mal cambia el tamaño del viaje entero.
+ * Sin fuente verificada, por la misma regla que el resto.
+ */
+const VENEZUELA: QuoteCorridor = {
+  corridor: "venezuela",
+  baseCurrency: "VES",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "paralelo"],
+  defaultQuoteId: "paralelo",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial (BCV)", paralelo: "Paralelo" },
+  clock: { timeZone: "America/Caracas", label: "hora de Caracas" },
+  source: null,
+};
+
+const CUBA: QuoteCorridor = {
+  corridor: "cuba",
+  baseCurrency: "CUP",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "informal"],
+  defaultQuoteId: "informal",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", informal: "Informal" },
+  clock: { timeZone: "America/Havana", label: "hora de La Habana" },
+  source: null,
+};
+
+const CORREDORES = [
+  ARGENTINA,
+  BRASIL,
+  BOLIVIA,
+  unaCotizacion("chile", "CLP", {
+    timeZone: "America/Santiago",
+    label: "hora de Santiago",
+  }),
+  unaCotizacion("uruguay", "UYU", {
+    timeZone: "America/Montevideo",
+    label: "hora de Montevideo",
+  }),
+  unaCotizacion("paraguay", "PYG", {
+    timeZone: "America/Asuncion",
+    label: "hora de Asunción",
+  }),
+  unaCotizacion("peru", "PEN", {
+    timeZone: "America/Lima",
+    label: "hora de Lima",
+  }),
+  dolarizado("ecuador", {
+    timeZone: "America/Guayaquil",
+    label: "hora de Quito",
+  }),
+  unaCotizacion("colombia", "COP", {
+    timeZone: "America/Bogota",
+    label: "hora de Bogotá",
+  }),
+  VENEZUELA,
+  unaCotizacion("mexico", "MXN", {
+    timeZone: "America/Mexico_City",
+    label: "hora de Ciudad de México",
+  }),
+  unaCotizacion("guatemala", "GTQ", {
+    timeZone: "America/Guatemala",
+    label: "hora de Guatemala",
+  }),
+  unaCotizacion("honduras", "HNL", {
+    timeZone: "America/Tegucigalpa",
+    label: "hora de Tegucigalpa",
+  }),
+  dolarizado("el-salvador", {
+    timeZone: "America/El_Salvador",
+    label: "hora de San Salvador",
+  }),
+  unaCotizacion("nicaragua", "NIO", {
+    timeZone: "America/Managua",
+    label: "hora de Managua",
+  }),
+  unaCotizacion("costa-rica", "CRC", {
+    timeZone: "America/Costa_Rica",
+    label: "hora de San José",
+  }),
+  dolarizado("panama", {
+    timeZone: "America/Panama",
+    label: "hora de Panamá",
+  }),
+  CUBA,
+  unaCotizacion("republica-dominicana", "DOP", {
+    timeZone: "America/Santo_Domingo",
+    label: "hora de Santo Domingo",
+  }),
+];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));
 
@@ -183,6 +343,57 @@ export function getQuoteCorridor(corridor: string): QuoteCorridor | undefined {
 
 export function allQuoteCorridors(): QuoteCorridor[] {
   return [...CORREDORES];
+}
+
+/**
+ * Qué puede decir la página sobre la conversión de un corredor.
+ *
+ *   en-vivo       hay fuente verificada: se traen las cotizaciones
+ *   sin-fuente    hay cotizaciones pero ninguna API verificada todavía
+ *   dolarizado    no hay nada que convertir
+ *   sin-corredor  el slug no tiene corredor registrado (error de datos)
+ *
+ * Existe porque tres pantallas tenían que distinguir estos casos y cada una lo
+ * hacía a su manera, o no lo hacía: el presupuesto de un viaje a Bolivia decía
+ * "no pudimos traer las cotizaciones", que es afirmar una caída que no pasó.
+ */
+export type ConversionStatus =
+  | "en-vivo"
+  | "sin-fuente"
+  | "dolarizado"
+  | "sin-corredor";
+
+/**
+ * Lo mismo, para el presupuesto de un viaje: depende también de en qué moneda
+ * están cargados los precios.
+ *
+ * Venezuela y Cuba tienen moneda propia y dos cotizaciones, pero sus precios
+ * se cargan en dólares: con su inflación, un precio en bolívares o en pesos
+ * cubanos queda viejo en semanas, y a un viajero ahí se le cobra en dólares.
+ * Cuando los precios ya están en la moneda del resultado no hay nada que
+ * convertir, tenga o no fuente el corredor — y si algún día la tiene,
+ * convertir dólares "desde bolívares" daría un total sin sentido.
+ */
+export function budgetConversionStatus(
+  corridor: string,
+  priceCurrency: string,
+): ConversionStatus {
+  const config = POR_CORREDOR.get(corridor);
+
+  if (config !== undefined && priceCurrency === config.quoteCurrency) {
+    return "dolarizado";
+  }
+
+  return conversionStatus(corridor);
+}
+
+export function conversionStatus(corridor: string): ConversionStatus {
+  const config = POR_CORREDOR.get(corridor);
+
+  if (config === undefined) return "sin-corredor";
+  if (isDollarized(config)) return "dolarizado";
+  if (config.source === null) return "sin-fuente";
+  return "en-vivo";
 }
 
 export {

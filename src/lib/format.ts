@@ -89,26 +89,66 @@ export function formatWeight(grams: number): string {
 }
 
 /**
- * Importes con el símbolo de la moneda.
+ * Las monedas cuyos precios se muestran con centavos.
  *
- * Sin decimales para ARS y con dos para el resto: los precios del catálogo son
- * enteros de cinco cifras y "$ 65.000,00" es ruido, pero el total convertido a
- * dólares sí necesita los centavos.
+ * Es la lista corta a propósito. Todos los catálogos locales —pesos, reales,
+ * bolivianos, soles, quetzales, colones— se cargan como enteros, y en esas
+ * monedas "$ 65.000,00" o "R$ 20,00" es ruido. El dólar es la excepción por
+ * partida doble: es la moneda del total convertido, donde los centavos son
+ * parte del dato, y es la moneda en la que se cobra en Ecuador, El Salvador y
+ * Panamá, donde un café cuesta 2,50.
+ *
+ * Antes la regla era al revés —"sin decimales solo para ARS"— y con un solo
+ * país eso alcanzaba. Con diecinueve habría que haber sumado cada moneda nueva
+ * a mano, y la que se olvidara saldría con ",00" en todos sus precios.
  */
+const MONEDAS_CON_CENTAVOS = new Set(["USD"]);
+
+/** Importes con el símbolo de la moneda: precios, subtotales y totales. */
 export function formatMoney(amount: number, currency: string): string {
-  const sinDecimales = currency === "ARS";
+  const decimales = MONEDAS_CON_CENTAVOS.has(currency) ? 2 : 0;
 
   return new Intl.NumberFormat(LOCALE, {
     style: "currency",
     currency,
-    minimumFractionDigits: sinDecimales ? 0 : 2,
-    maximumFractionDigits: sinDecimales ? 0 : 2,
+    minimumFractionDigits: decimales,
+    maximumFractionDigits: decimales,
   }).format(amount);
 }
 
-/** El valor de una cotización: siempre pesos por dólar, sin centavos. */
+/**
+ * Cuántos decimales lleva una cotización.
+ *
+ * Una cotización no es un precio: es cuántas unidades locales vale un dólar, y
+ * la cantidad de cifras que importan depende del tamaño del número. 1.220 pesos
+ * argentinos se leen bien sin centavos; 5,11 reales redondeados a "5" pierden
+ * justo la parte que distingue un día de otro. Pasó exactamente eso en el
+ * selector del presupuesto de Brasil.
+ */
+function decimalesDeCotizacion(rate: number): number {
+  return Math.abs(rate) < 100 ? 2 : 0;
+}
+
+/** Una cotización como número suelto: "1.220", "5,11". */
 export function formatRate(rate: number): string {
-  return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(rate);
+  const decimales = decimalesDeCotizacion(rate);
+
+  return new Intl.NumberFormat(LOCALE, {
+    minimumFractionDigits: decimales,
+    maximumFractionDigits: decimales,
+  }).format(rate);
+}
+
+/** Una cotización con el símbolo de la moneda local: "$ 1.220", "R$ 5,11". */
+export function formatQuote(rate: number, currency: string): string {
+  const decimales = decimalesDeCotizacion(rate);
+
+  return new Intl.NumberFormat(LOCALE, {
+    style: "currency",
+    currency,
+    minimumFractionDigits: decimales,
+    maximumFractionDigits: decimales,
+  }).format(rate);
 }
 
 /**

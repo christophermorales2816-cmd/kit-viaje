@@ -1041,3 +1041,110 @@ base tiene que quedar arriba porque es la que la página muestra por defecto.
 sin título al final. Descartarla sería el error de la sección 11 al revés — un
 destino planificable que desaparece del selector porque falta una línea de
 contenido editorial.
+
+## 13. América Latina completa
+
+Dieciséis países nuevos, y el producto pasa de tres corredores a diecinueve:
+Chile, Uruguay, Paraguay, Perú, Ecuador, Colombia y Venezuela en Sudamérica;
+México, Guatemala, Honduras, El Salvador, Nicaragua, Costa Rica y Panamá en
+México y Centroamérica; Cuba y República Dominicana en el Caribe.
+
+Cada uno con la misma estructura que Argentina, Brasil y Bolivia: una guía
+completa, nueve ciudades con sus doce meses de clima y sus dieciocho precios, y
+su corredor de cotizaciones. Quedan afuera Haití, Belice, Guyana, Surinam y
+Puerto Rico: la app está escrita en español rioplatense para países
+hispanohablantes más Brasil, y Puerto Rico es territorio de Estados Unidos.
+
+### 13.1 Antes de sumar países, lo que asumía que había pocos
+
+La primera tarea no fue cargar países sino buscar qué se rompía con muchos.
+Aparecieron bugs que ya estaban en producción:
+
+- Las guías de Brasil y Bolivia decían **"Cómo puntúa Argentina"**: el título
+  estaba escrito a mano en el componente.
+- El mapa de todas las guías decía "Las distancias de Argentina no se
+  entienden en una lista".
+- El selector del presupuesto de Brasil mostraba la cotización 5,11 como
+  **"5"**: `formatRate` redondeaba al entero sin mirar el tamaño del número.
+- El aviso de conversión decía "el total en pesos" en cualquier país.
+- La portada decía "2 países" con tres.
+
+Y lo que habría salido mal con diecinueve: `formatMoney` ponía centavos a toda
+moneda que no fuera ARS —los precios en guaraníes habrían salido con ",00"—, la
+portada armaba un botón por país en el hero, y las etiquetas del globo se
+encimaban con los siete países de Centroamérica a pocos grados entre sí.
+
+### 13.2 Países dolarizados
+
+Ecuador, El Salvador y Panamá cobran en dólares. Un corredor es dolarizado
+cuando su moneda local **es** la del resultado; no hay un flag aparte que pueda
+contradecirlo. `fetchQuotes` no consulta nada y lo devuelve como éxito, la guía
+dice "acá se paga en dólares" y el presupuesto, que el total ya está en la
+moneda que vas a usar. Los precios llevan centavos y las ciudades derivadas se
+redondean al centavo: redondear a la unidad convertiría un café de 2,50 en uno
+de 2 o de 3.
+
+### 13.3 Venezuela y Cuba: moneda propia, precios en dólares
+
+Los dos tienen moneda propia y dos cotizaciones —la tesis de Argentina llevada
+más lejos—, pero sus precios se cargan en dólares: es como se le cobra a un
+viajero, y con su inflación un precio en bolívares o en pesos cubanos quedaría
+viejo en semanas. El corredor sigue en VES o CUP, porque eso es lo que la guía
+explica, y `budgetConversionStatus` resuelve el cruce: si los precios ya están
+en la moneda del resultado no hay nada que convertir, aunque algún día el
+corredor tenga fuente.
+
+### 13.4 Ninguna fuente de cotizaciones nueva
+
+La red de la sesión en que se cargaron los países bloqueaba dolarapi, así que
+ninguna fuente se pudo verificar contra una respuesta real. Por la regla del
+`fechaAtualizacao` de Brasil, los dieciséis van con `source: null`. Conectar
+cualquiera es completar `source` en `corridors.ts` con un payload real a la
+vista.
+
+### 13.5 La ciudad base es la capital, con una excepción
+
+En todos los países nuevos la base es la capital, salvo Guatemala: el
+aeropuerto está en Ciudad de Guatemala pero casi todos los viajeros duermen en
+Antigua, a una hora, y calcular con el clima y los precios de la capital habría
+sido planificar para el lugar equivocado. Cambiar una base es mover `is_base` en
+una migración.
+
+### 13.6 Las migraciones se generaron, no se tipearon
+
+Ciento cuarenta y cuatro ciudades con doce meses cada una son 1.728 filas de
+clima. Se escribieron como datos en un generador que valida antes de emitir el
+SQL —nueve ciudades, doce meses, mínima no mayor que la máxima, una sola base,
+dieciocho productos sin nombres repetidos— y que calcula los comentarios de
+cada migración con los mismos umbrales que usa el motor, en vez de afirmarlos a
+mano. El SQL que entra al repo es el resultado, revisable como cualquier otro.
+
+Los nombres de los productos de atracciones pasan a ser genéricos —"Entrada a
+la atracción principal", "Visita guiada"— porque las ocho ciudades derivadas
+heredan los nombres de la base, y "Entrada al Cristo Redentor" en Manaos no
+tiene sentido.
+
+### 13.7 Un test que estaba mal
+
+El test de destinos exigía ids únicos entre todas las guías, con el argumento de
+que dos iguales harían ambiguo el enlace del mosaico. No era cierto: el enlace
+lleva el país, y la base declara el slug único por corredor. Con diecinueve
+países la premisa chocó con la realidad —hay una Concepción en Bolivia y otra en
+Paraguay, una Mérida en México y otra en Venezuela—, y renombrar ciudades para
+conformar al test habría empeorado las URLs. Ahora verifica lo que sí
+desambigua: que no se repitan dentro de un mismo país.
+
+Dos tests usaban "uruguay" como ejemplo de corredor inexistente. Uno empezó a
+fallar; el otro siguió pasando **por casualidad**, porque el mensaje de "sin
+fuente" también contenía la palabra. Los dos usan ahora un corredor inventado.
+
+### 13.8 Verificado en la app, no solo en los tests
+
+Contra un Postgres con las treinta migraciones aplicadas desde cero: las 215
+páginas —diecinueve guías, diecinueve planificadores y las condiciones de cada
+una de las 177 ciudades— responden sin error. Y con viajes armados en el
+planificador de punta a punta: Puno, Puerto Natales, San Cristóbal de las Casas
+y Constanza salen con campera de abrigo; Iquitos, Punta Cana y Los Roques sin
+nada de abrigo. Los totales del presupuesto, sumando cantidades desde la
+interfaz y recargando, dan exacto: US$ 158,00 en Galápagos, CLP 84.000 en
+Santiago, PYG 440.000 en Asunción.

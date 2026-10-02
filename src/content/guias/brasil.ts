@@ -16,6 +16,7 @@ import type { DestinationGuide } from "./types";
 export const brasil: DestinationGuide = {
   slug: "brasil",
   country: "Brasil",
+  subregion: "Sudamérica",
   subhead:
     "Un país del tamaño de un continente, con playa, selva y ciudad a horas de vuelo entre sí. Acá el cambio es uno solo: lo que se planifica es cuánto rinde y cuándo ir.",
 

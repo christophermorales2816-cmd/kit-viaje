@@ -7,6 +7,8 @@ import {
   formatDateRange,
   formatDuration,
   formatMoney,
+  formatQuote,
+  formatRate,
   formatTripType,
   formatWeight,
   toIsoDate,
@@ -100,6 +102,37 @@ describe("formatMoney", () => {
 
   it("muestra los dólares con centavos", () => {
     expect(formatMoney(939.42, "USD")).toContain("939,42");
+  });
+
+  it("muestra sin centavos cualquier moneda local, no solo el peso argentino", () => {
+    // La regla era "sin decimales solo para ARS": reales, bolivianos y cada
+    // moneda nueva salían con ",00" en todos sus precios.
+    for (const [monto, moneda] of [
+      [20, "BRL"],
+      [12, "BOB"],
+      [9000, "CLP"],
+      [45000, "PYG"],
+    ] as const) {
+      expect(formatMoney(monto, moneda)).not.toMatch(/,\d\d/);
+    }
+  });
+
+  it("muestra los centavos de un precio en dólares", () => {
+    // Ecuador, El Salvador y Panamá cobran en dólares: un café cuesta 2,50.
+    expect(formatMoney(2.5, "USD")).toContain("2,50");
+  });
+});
+
+describe("formatRate y formatQuote", () => {
+  it("no borra los centavos de una cotización chica", () => {
+    // El selector del presupuesto de Brasil mostraba 5,1114 como "5".
+    expect(formatRate(5.1114)).toBe("5,11");
+    expect(formatQuote(5.1114, "BRL")).toContain("5,11");
+  });
+
+  it("no agrega centavos a una cotización grande", () => {
+    expect(formatRate(1220)).toBe("1.220");
+    expect(formatQuote(1220, "ARS")).not.toMatch(/,\d\d/);
   });
 });
 

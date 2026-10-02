@@ -1,10 +1,11 @@
 import {
   fetchQuotes,
   getQuoteCorridor,
+  isDollarized,
   latestQuoteUpdate,
   resolveQuoteSpreads,
 } from "@/lib/quotes";
-import { formatMoney } from "@/lib/format";
+import { formatQuote } from "@/lib/format";
 
 /**
  * Cotizaciones en vivo (spec, sección 8.7).
@@ -27,8 +28,9 @@ import { formatMoney } from "@/lib/format";
 // símbolo equivocado y sin la parte que importa. En una moneda cuyo valor
 // entero es 5, redondear al entero no es redondear, es borrar.
 //
-// `formatMoney` ya resolvía esto y ya estaba testeada; el formateador local era
-// una copia peor.
+// Va con `formatQuote` y no con `formatMoney`: una cotización no es un precio, y
+// la cantidad de decimales que importan depende de su tamaño (5,11 contra
+// 1.220), no de la moneda.
 
 // signDisplay "exceptZero" no imprime signo para el cero, y eso incluye al
 // cero negativo: una brecha de -0,065% (el MEP contra la oficial) sale "0%",
@@ -139,7 +141,49 @@ function Marco({
   );
 }
 
+/**
+ * Lo que se muestra en un país dolarizado, en lugar de las cotizaciones.
+ *
+ * No es un estado de error ni un "todavía no": es el caso más simple del
+ * continente, y conviene decirlo como una ventaja. Lo único que cambia el costo
+ * para quien llega con dólares es lo que cobre su banco por usarlos afuera.
+ */
+function SinConversion() {
+  return (
+    <section
+      id="guia"
+      aria-labelledby="cotizaciones-titulo"
+      className="flex w-full max-w-5xl scroll-mt-8 flex-col gap-6"
+    >
+      <header className="flex flex-col gap-2">
+        <h2
+          id="cotizaciones-titulo"
+          className="text-3xl font-semibold tracking-tight text-balance"
+        >
+          Acá se paga en dólares
+        </h2>
+
+        <p className="text-muted-foreground text-sm text-pretty">
+          La moneda que circula es el dólar estadounidense, así que no hay tipo
+          de cambio que seguir ni brecha que medir. Los precios del planificador
+          ya están en dólares.
+        </p>
+      </header>
+
+      <p className="rounded-xl border p-6 text-sm text-pretty">
+        Lo único que cambia el costo es lo que cobre tu banco por usar la
+        tarjeta afuera. Si llevás efectivo, que sean billetes chicos y en buen
+        estado: los de cien suelen rechazarse en comercios chicos.
+      </p>
+    </section>
+  );
+}
+
 export async function LiveQuotes({ corridor }: { corridor: string }) {
+  const config = getQuoteCorridor(corridor);
+
+  if (config !== undefined && isDollarized(config)) return <SinConversion />;
+
   const resultado = await fetchQuotes(corridor);
 
   if (!resultado.ok) {
@@ -148,7 +192,6 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
     //
     // El título sale igual del corredor: que la fuente esté caída no cambia
     // cuántas cotizaciones tiene el país.
-    const config = getQuoteCorridor(corridor);
 
     // Un corredor sin fuente declarada no es una caída: todavía no conectamos
     // ninguna API para ese país. Decir "no pudimos traerlas ahora" invitaría a
@@ -190,7 +233,7 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
             </dt>
             <dd className="flex flex-col gap-1">
               <span className="text-2xl font-semibold tracking-tight tabular-nums">
-                {formatMoney(quote.sell, quote.baseCurrency)}
+                {formatQuote(quote.sell, quote.baseCurrency)}
               </span>
               <span className="text-muted-foreground text-xs">
                 {premiumPercent === null
@@ -221,6 +264,12 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
 
 /** Fallback del <Suspense>: mismo alto, para que el layout no salte. */
 export function LiveQuotesSkeleton({ corridor }: { corridor?: string }) {
+  // Un país dolarizado no consulta nada, así que no tiene qué esperar: se
+  // muestra directo lo mismo que va a quedar.
+  const config =
+    corridor === undefined ? undefined : getQuoteCorridor(corridor);
+  if (config !== undefined && isDollarized(config)) return <SinConversion />;
+
   const cuantas =
     corridor === undefined
       ? null
