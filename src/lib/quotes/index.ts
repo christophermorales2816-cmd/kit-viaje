@@ -3,6 +3,7 @@ export type { QuotesResult } from "./fetch";
 
 export {
   allQuoteCorridors,
+  budgetConversionStatus,
   conversionStatus,
   getQuoteCorridor,
   isDollarized,

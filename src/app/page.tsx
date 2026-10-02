@@ -52,6 +52,17 @@ const ZONAS: GuideSubregion[] = [
   "Caribe",
 ];
 
+/**
+ * Cómo se nombra cada zona dentro de una frase. "2 en Caribe" se leía mal: el
+ * Caribe lleva artículo y las otras dos no. Un Record sobre el tipo cerrado
+ * obliga a decidirlo para cada zona nueva.
+ */
+const EN_LA_ZONA: Record<GuideSubregion, string> = {
+  Sudamérica: "en Sudamérica",
+  "México y Centroamérica": "en México y Centroamérica",
+  Caribe: "en el Caribe",
+};
+
 const POR_ZONA = ZONAS.map((zona) => ({
   zona,
   guias: GUIAS.filter((guia) => guia.subregion === zona).sort((a, b) =>
@@ -85,9 +96,9 @@ const ESTADISTICAS = [
   {
     valor: String(GUIAS.length),
     etiqueta: GUIAS.length === 1 ? "país" : "países",
-    nota: POR_ZONA.map(({ zona, guias }) => `${guias.length} en ${zona}`).join(
-      ", ",
-    ),
+    nota: POR_ZONA.map(
+      ({ zona, guias }) => `${guias.length} ${EN_LA_ZONA[zona]}`,
+    ).join(", "),
   },
   { valor: "0", etiqueta: "registros", nota: "Sin cuenta y sin mail" },
   {

@@ -70,8 +70,8 @@ function AvisoDeConversion({
   if (conversion === "dolarizado") {
     return (
       <p className="text-sm text-muted-foreground">
-        En este destino se paga en dólares: el total ya está en la moneda que
-        vas a usar y no hay cotización que elegir.
+        Los precios de este destino están en dólares: el total ya está en la
+        moneda que vas a usar y no hay cotización que elegir.
       </p>
     );
   }
@@ -154,7 +154,7 @@ export function BudgetList({
             </span>
           </div>
 
-          {quotes.length > 0 ? (
+          {quotes.length > 0 && conversion !== "dolarizado" ? (
             <div className="flex flex-col items-end gap-1 print:hidden">
               <Select
                 value={quoteId ?? undefined}

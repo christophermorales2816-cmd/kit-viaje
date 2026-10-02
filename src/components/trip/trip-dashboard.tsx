@@ -15,7 +15,10 @@ import {
   type QuoteId,
 } from "@/lib/budget";
 import { budgetCsv, csvFilename, packingCsv } from "@/lib/export/csv";
-import { conversionStatus, getQuoteCorridor } from "@/lib/quotes/corridors";
+import {
+  budgetConversionStatus,
+  getQuoteCorridor,
+} from "@/lib/quotes/corridors";
 import { formatDateRange, formatDuration, formatTripType } from "@/lib/format";
 import { durationInDays } from "@/lib/packing";
 import {
@@ -147,11 +150,18 @@ export function TripDashboard({
   );
 
   const quote = quotes.find((candidate) => candidate.id === quoteId) ?? null;
+  const conversion = budgetConversionStatus(
+    destination.corridor,
+    destination.baseCurrency,
+  );
 
   let totals: BudgetTotals | null = null;
   let totalsError: string | null = null;
 
-  if (quote) {
+  // Con los precios ya en dólares no hay nada que convertir, aunque el
+  // corredor traiga cotizaciones: dividir dólares por la tasa del bolívar daría
+  // un total que parece un número y no significa nada.
+  if (quote && conversion !== "dolarizado") {
     try {
       totals = calculateBudget(budget, quote);
     } catch (cause) {
@@ -277,7 +287,7 @@ export function TripDashboard({
             totals={totals}
             totalsError={totalsError}
             quotesError={quotesError}
-            conversion={conversionStatus(destination.corridor)}
+            conversion={conversion}
             freshness={freshness}
             baseCurrency={destination.baseCurrency}
             isReadOnly={isReadOnly}

@@ -1,7 +1,23 @@
 import { argentina } from "./argentina";
 import { bolivia } from "./bolivia";
 import { brasil } from "./brasil";
+import { chile } from "./chile";
+import { colombia } from "./colombia";
+import { costaRica } from "./costa-rica";
+import { cuba } from "./cuba";
+import { ecuador } from "./ecuador";
+import { elSalvador } from "./el-salvador";
+import { guatemala } from "./guatemala";
+import { honduras } from "./honduras";
+import { mexico } from "./mexico";
+import { nicaragua } from "./nicaragua";
+import { panama } from "./panama";
+import { paraguay } from "./paraguay";
+import { peru } from "./peru";
+import { republicaDominicana } from "./republica-dominicana";
 import type { DestinationGuide } from "./types";
+import { uruguay } from "./uruguay";
+import { venezuela } from "./venezuela";
 
 export type {
   DestinationGuide,
@@ -28,7 +44,27 @@ export { GUIDE_FACTS_MAX_AGE_DAYS } from "./types";
  * La forma se diseñó para esto y se cumplió: sumar Brasil fue agregar un
  * archivo y una línea acá.
  */
-const GUIAS: DestinationGuide[] = [argentina, brasil, bolivia];
+const GUIAS: DestinationGuide[] = [
+  argentina,
+  brasil,
+  bolivia,
+  chile,
+  uruguay,
+  paraguay,
+  peru,
+  ecuador,
+  colombia,
+  venezuela,
+  mexico,
+  guatemala,
+  honduras,
+  elSalvador,
+  nicaragua,
+  costaRica,
+  panama,
+  cuba,
+  republicaDominicana,
+];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
 
@@ -44,4 +80,24 @@ export function getGuide(slug: string): DestinationGuide | undefined {
   return POR_SLUG.get(slug);
 }
 
-export { argentina, bolivia, brasil };
+export {
+  argentina,
+  bolivia,
+  brasil,
+  chile,
+  colombia,
+  costaRica,
+  cuba,
+  ecuador,
+  elSalvador,
+  guatemala,
+  honduras,
+  mexico,
+  nicaragua,
+  panama,
+  paraguay,
+  peru,
+  republicaDominicana,
+  uruguay,
+  venezuela,
+};

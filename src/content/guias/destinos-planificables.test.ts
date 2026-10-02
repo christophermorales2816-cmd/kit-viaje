@@ -87,11 +87,22 @@ describe("cada destino de una guía existe en la base", () => {
     });
   }
 
-  it("no repite un id de destino entre guías", () => {
-    // Los slugs son únicos por corredor, no globales, pero dos guías que usen
-    // el mismo id harían ambiguo el enlace del mosaico.
-    const todos = allGuides().flatMap((g) => g.places.map((p) => p.id));
-    expect(new Set(todos).size).toBe(todos.length);
+  it("acota cada id a su país, porque hay ciudades homónimas", () => {
+    // Este test exigía ids únicos entre TODAS las guías, con el argumento de
+    // que dos iguales harían ambiguo el enlace del mosaico. No era cierto: el
+    // enlace es /guia/{país}/preparar?ciudad={id}, y la base declara el slug
+    // único por corredor —el smoke de RLS verifica que el mismo slug vale en
+    // otro corredor—. Con diecinueve países la premisa chocó con la realidad:
+    // hay una Concepción en Bolivia y otra en Paraguay, y una Mérida en México
+    // y otra en Venezuela. Renombrarlas para conformar al test habría
+    // empeorado las URLs.
+    //
+    // Lo que sí tiene que valer es que dentro de un mismo país no se repitan,
+    // que es lo que de verdad desambigua el enlace.
+    for (const guia of allGuides()) {
+      const ids = guia.places.map((p) => p.id);
+      expect(new Set(ids).size, guia.slug).toBe(ids.length);
+    }
   });
 
   it("usa ids con forma de slug, que es lo que va en la URL", () => {

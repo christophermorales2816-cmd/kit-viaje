@@ -363,6 +363,30 @@ export type ConversionStatus =
   | "dolarizado"
   | "sin-corredor";
 
+/**
+ * Lo mismo, para el presupuesto de un viaje: depende también de en qué moneda
+ * están cargados los precios.
+ *
+ * Venezuela y Cuba tienen moneda propia y dos cotizaciones, pero sus precios
+ * se cargan en dólares: con su inflación, un precio en bolívares o en pesos
+ * cubanos queda viejo en semanas, y a un viajero ahí se le cobra en dólares.
+ * Cuando los precios ya están en la moneda del resultado no hay nada que
+ * convertir, tenga o no fuente el corredor — y si algún día la tiene,
+ * convertir dólares "desde bolívares" daría un total sin sentido.
+ */
+export function budgetConversionStatus(
+  corridor: string,
+  priceCurrency: string,
+): ConversionStatus {
+  const config = POR_CORREDOR.get(corridor);
+
+  if (config !== undefined && priceCurrency === config.quoteCurrency) {
+    return "dolarizado";
+  }
+
+  return conversionStatus(corridor);
+}
+
 export function conversionStatus(corridor: string): ConversionStatus {
   const config = POR_CORREDOR.get(corridor);
 

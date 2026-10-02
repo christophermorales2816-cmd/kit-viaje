@@ -33,7 +33,7 @@ describe("parseTripInput", () => {
   });
 
   it("rechaza un corredor que no existe en vez de caer a uno por defecto", () => {
-    for (const corridor of ["uruguay", "", "  ", null, undefined, 42]) {
+    for (const corridor of ["atlantida", "", "  ", null, undefined, 42]) {
       expect(parseTripInput({ ...VALIDO, corridor }).ok).toBe(false);
     }
   });

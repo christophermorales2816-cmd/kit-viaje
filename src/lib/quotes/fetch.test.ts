@@ -148,10 +148,10 @@ describe("fetchQuotes", () => {
   it("no inventa un corredor que no existe", async () => {
     responde(BRASIL);
 
-    const resultado = await fetchQuotes("uruguay");
+    const resultado = await fetchQuotes("atlantida");
 
     expect(resultado.ok).toBe(false);
     if (resultado.ok) return;
-    expect(resultado.reason).toContain("uruguay");
+    expect(resultado.reason).toContain("No hay corredor");
   });
 });

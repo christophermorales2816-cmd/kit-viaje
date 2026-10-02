@@ -6,6 +6,7 @@ import {
   allQuoteCorridors,
   ARGENTINA_QUOTES,
   BRASIL_QUOTES,
+  budgetConversionStatus,
   conversionStatus,
   getQuoteCorridor,
   isDollarized,
@@ -130,6 +131,14 @@ describe("corredores y guías van de a pares", () => {
       expect(getQuoteCorridor(guia.slug), guia.slug).toBeDefined();
     }
   });
+
+  it("cada corredor tiene su guía", () => {
+    const guias = new Set(allGuides().map((guia) => guia.slug));
+
+    for (const corredor of allQuoteCorridors()) {
+      expect(guias, corredor.corridor).toContain(corredor.corridor);
+    }
+  });
 });
 
 describe("conversionStatus", () => {
@@ -146,6 +155,21 @@ describe("conversionStatus", () => {
     // cotización en vivo" en un país donde no hay nada que cotizar.
     expect(conversionStatus("panama")).toBe("dolarizado");
     expect(conversionStatus("el-salvador")).toBe("dolarizado");
+  });
+});
+
+describe("budgetConversionStatus", () => {
+  it("no convierte precios que ya están en dólares, aunque el país tenga moneda propia", () => {
+    // Venezuela tiene bolívares y dos cotizaciones, pero sus precios se cargan
+    // en dólares. Convertirlos "desde bolívares" daría un total sin sentido.
+    expect(budgetConversionStatus("venezuela", "USD")).toBe("dolarizado");
+    expect(budgetConversionStatus("cuba", "USD")).toBe("dolarizado");
+  });
+
+  it("con precios en moneda local se comporta igual que conversionStatus", () => {
+    expect(budgetConversionStatus("argentina", "ARS")).toBe("en-vivo");
+    expect(budgetConversionStatus("bolivia", "BOB")).toBe("sin-fuente");
+    expect(budgetConversionStatus("ecuador", "USD")).toBe("dolarizado");
   });
 });
 
