@@ -14,6 +14,7 @@ import type { DestinationGuide } from "./types";
 export const argentina: DestinationGuide = {
   slug: "argentina",
   country: "Argentina",
+  subregion: "Sudamérica",
   subhead:
     "Un país que va del trópico al hielo y donde el dólar tiene más de un precio. Las dos cosas cambian lo que llevás y lo que gastás.",
 

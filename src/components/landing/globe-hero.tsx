@@ -72,6 +72,21 @@ const RAD = Math.PI / 180;
  */
 const RADIO_DEL_GLOBO = 0.85;
 
+/**
+ * Hasta cuántos destinos las etiquetas van siempre visibles.
+ *
+ * Con tres países separados por miles de kilómetros, cada nombre colgando de su
+ * punto se lee bien. Con diecinueve no: Guatemala, El Salvador, Honduras y
+ * Nicaragua quedan a pocos grados entre sí, que en este globo son pocos
+ * píxeles, y las etiquetas se encimaban en un bloque ilegible. Pasado este
+ * número la etiqueta aparece al pasar el mouse o al llegar con Tab, y la lista
+ * de países debajo del hero es la forma principal de elegir.
+ *
+ * La etiqueta sigue en el DOM aunque no se vea: es el nombre accesible del
+ * enlace, y un lector de pantalla la anuncia igual.
+ */
+const ETIQUETAS_SIEMPRE_VISIBLES_HASTA = 3;
+
 /** Cuánto dura la ráfaga de frames que dibuja el mapa de puntos. */
 const DURACION_DE_LA_RAFAGA_MS = 1200;
 
@@ -128,6 +143,7 @@ export function GlobeHero({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const foco = centro(destinations);
+  const pocos = destinations.length <= ETIQUETAS_SIEMPRE_VISIBLES_HASTA;
   const [PHI, THETA] = locationToAngles(...foco);
 
   useEffect(() => {
@@ -253,10 +269,25 @@ export function GlobeHero({
               top: `${50 - y * RADIO_DEL_GLOBO * 50}%`,
             }}
           >
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-orange-400/70" />
-            <span className="relative inline-flex size-3 rounded-full bg-orange-500 ring-2 ring-white/80" />
+            {/* Diecinueve puntos latiendo a la vez dejan de señalar nada. */}
+            {pocos ? (
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-orange-400/70" />
+            ) : null}
+            <span
+              className={
+                pocos
+                  ? "relative inline-flex size-3 rounded-full bg-orange-500 ring-2 ring-white/80"
+                  : "relative inline-flex size-2 rounded-full bg-orange-500 ring-1 ring-white/80"
+              }
+            />
 
-            <span className="absolute top-full left-1/2 mt-2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium whitespace-nowrap text-white shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white/20">
+            <span
+              className={
+                pocos
+                  ? "absolute top-full left-1/2 mt-2 -translate-x-1/2 rounded-full bg-white/10 px-3 py-1 text-sm font-medium whitespace-nowrap text-white shadow-sm backdrop-blur-sm transition-colors group-hover:bg-white/20"
+                  : "pointer-events-none absolute top-full left-1/2 z-10 mt-1 -translate-x-1/2 rounded-full bg-slate-900/90 px-2 py-0.5 text-xs font-medium whitespace-nowrap text-white opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              }
+            >
               {destino.label}
             </span>
           </Link>

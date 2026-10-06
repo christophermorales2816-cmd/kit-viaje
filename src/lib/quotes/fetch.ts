@@ -1,6 +1,10 @@
 import type { ExchangeQuote } from "@/lib/budget";
 
-import { getQuoteCorridor, type QuoteCorridor } from "./corridors";
+import {
+  getQuoteCorridor,
+  isDollarized,
+  type QuoteCorridor,
+} from "./corridors";
 import { mapQuotesResponse } from "./map";
 
 /**
@@ -45,6 +49,14 @@ export async function fetchQuotes(corridor: string): Promise<QuotesResult> {
       ok: false,
       reason: `No hay corredor de cotizaciones "${corridor}".`,
     };
+  }
+
+  // Un país dolarizado no tiene nada que traer, y eso es un éxito, no una
+  // falla: el resultado es "cero cotizaciones" y cada pantalla dice que el
+  // total ya está en dólares. Va antes del chequeo de fuente porque estos
+  // corredores tampoco tienen fuente, y por una buena razón.
+  if (isDollarized(config)) {
+    return { ok: true, quotes: [], corridor: config };
   }
 
   if (config.source === null) {

@@ -45,7 +45,13 @@ const PIN = `
   <circle cx="12" cy="9" r="2.5" fill="#ffffff" />
 </svg>`;
 
-export function PlacesMap({ places }: { places: GuidePlace[] }) {
+export function PlacesMap({
+  country,
+  places,
+}: {
+  country: string;
+  places: GuidePlace[];
+}) {
   const contenedor = useRef<HTMLDivElement>(null);
 
   // Agrupado en el orden en que aparecen los destinos, no alfabético: es el
@@ -137,7 +143,7 @@ export function PlacesMap({ places }: { places: GuidePlace[] }) {
         </h2>
 
         <p className="text-muted-foreground text-sm text-pretty">
-          Las distancias de Argentina no se entienden en una lista. Tocá un pin
+          Las distancias de {country} no se entienden en una lista. Tocá un pin
           para ver de qué destino se trata.
         </p>
       </header>

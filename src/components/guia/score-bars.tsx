@@ -6,6 +6,10 @@ import type { GuideScore } from "@/content/guias/types";
  * El disclaimer no es letra chica opcional: son opiniones fundamentadas, no un
  * índice medido, y presentarlas como otra cosa sería exactamente la
  * imprecisión que este producto dice combatir.
+ *
+ * El país llega por prop. El título decía "Cómo puntúa Argentina" escrito a
+ * mano, y así salió publicado en las guías de Brasil y de Bolivia: un texto
+ * que solo era cierto mientras hubo un país.
  */
 
 const formatoPuntaje = new Intl.NumberFormat("es-AR", {
@@ -14,10 +18,12 @@ const formatoPuntaje = new Intl.NumberFormat("es-AR", {
 });
 
 export function ScoreBars({
+  country,
   scores,
   shines,
   costs,
 }: {
+  country: string;
   scores: GuideScore[];
   shines: string[];
   costs: string[];
@@ -32,7 +38,7 @@ export function ScoreBars({
           id="puntajes-titulo"
           className="text-3xl font-semibold tracking-tight text-balance"
         >
-          Cómo puntúa Argentina
+          Cómo puntúa {country}
         </h2>
 
         <p className="text-muted-foreground text-sm">

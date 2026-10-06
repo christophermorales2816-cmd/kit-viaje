@@ -86,11 +86,16 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
 
       <FactsBoard facts={guia.facts} updatedAt={guia.factsUpdatedAt} />
 
-      <ScoreBars scores={guia.scores} shines={guia.shines} costs={guia.costs} />
+      <ScoreBars
+        country={guia.country}
+        scores={guia.scores}
+        shines={guia.shines}
+        costs={guia.costs}
+      />
 
       <PlacesGrid places={guia.places} guideSlug={guia.slug} />
 
-      <PlacesMap places={guia.places} />
+      <PlacesMap country={guia.country} places={guia.places} />
 
       <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-balance">

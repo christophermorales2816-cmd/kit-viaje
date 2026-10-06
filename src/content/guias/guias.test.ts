@@ -35,6 +35,26 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     // esta caja lo dejaba afuera y el test lo cazó.
     brasil: { lat: [-34, 6], lon: [-74, -28] },
     bolivia: { lat: [-23, -9], lon: [-70, -57] },
+    // El límite oeste llega a -110 por Isla de Pascua, a 3.700 km del
+    // continente. Es el mismo caso que Noronha en Brasil, del otro lado.
+    chile: { lat: [-57, -17], lon: [-110, -66] },
+    uruguay: { lat: [-35.5, -30], lon: [-58.6, -53] },
+    paraguay: { lat: [-28, -19], lon: [-62.7, -54] },
+    peru: { lat: [-18.5, -0], lon: [-81.5, -68.5] },
+    // Galápagos está a mil kilómetros del continente: el límite oeste es -93.
+    ecuador: { lat: [-5.1, 1.5], lon: [-93, -75] },
+    // San Andrés está frente a Nicaragua, mucho más al oeste que el continente.
+    colombia: { lat: [-4.3, 13.5], lon: [-82, -66.8] },
+    venezuela: { lat: [0.6, 12.3], lon: [-73.4, -59.8] },
+    mexico: { lat: [14.5, 32.8], lon: [-117.2, -86.7] },
+    guatemala: { lat: [13.7, 17.9], lon: [-92.3, -88.2] },
+    honduras: { lat: [12.9, 17.5], lon: [-89.4, -83.1] },
+    "el-salvador": { lat: [13.1, 14.5], lon: [-90.2, -87.6] },
+    nicaragua: { lat: [10.7, 15.1], lon: [-87.7, -82.7] },
+    "costa-rica": { lat: [8, 11.3], lon: [-86, -82.5] },
+    panama: { lat: [7.1, 9.7], lon: [-83.1, -77.1] },
+    cuba: { lat: [19.8, 23.3], lon: [-85, -74.1] },
+    "republica-dominicana": { lat: [17.5, 20], lon: [-72.1, -68.3] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

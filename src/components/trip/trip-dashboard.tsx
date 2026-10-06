@@ -15,7 +15,10 @@ import {
   type QuoteId,
 } from "@/lib/budget";
 import { budgetCsv, csvFilename, packingCsv } from "@/lib/export/csv";
-import { getQuoteCorridor } from "@/lib/quotes/corridors";
+import {
+  budgetConversionStatus,
+  getQuoteCorridor,
+} from "@/lib/quotes/corridors";
 import { formatDateRange, formatDuration, formatTripType } from "@/lib/format";
 import { durationInDays } from "@/lib/packing";
 import {
@@ -97,7 +100,8 @@ function aplicarBudget(
 /**
  * El default sale del corredor: blue en Argentina, comercial en Brasil. Antes
  * era una constante, y con dos países una constante ya no puede estar bien
- * para los dos.
+ * para los dos. En un país dolarizado no hay default ni cotizaciones, y el
+ * resultado es `null`: no hay Select que mostrar.
  */
 function elegirCotizacionInicial(
   quotes: ExchangeQuote[],
@@ -105,7 +109,11 @@ function elegirCotizacionInicial(
 ): QuoteId | null {
   const preferida = getQuoteCorridor(corridor)?.defaultQuoteId;
 
-  if (preferida !== undefined && quotes.some((q) => q.id === preferida)) {
+  if (
+    preferida !== undefined &&
+    preferida !== null &&
+    quotes.some((q) => q.id === preferida)
+  ) {
     return preferida;
   }
 
@@ -142,11 +150,18 @@ export function TripDashboard({
   );
 
   const quote = quotes.find((candidate) => candidate.id === quoteId) ?? null;
+  const conversion = budgetConversionStatus(
+    destination.corridor,
+    destination.baseCurrency,
+  );
 
   let totals: BudgetTotals | null = null;
   let totalsError: string | null = null;
 
-  if (quote) {
+  // Con los precios ya en dólares no hay nada que convertir, aunque el
+  // corredor traiga cotizaciones: dividir dólares por la tasa del bolívar daría
+  // un total que parece un número y no significa nada.
+  if (quote && conversion !== "dolarizado") {
     try {
       totals = calculateBudget(budget, quote);
     } catch (cause) {
@@ -272,6 +287,7 @@ export function TripDashboard({
             totals={totals}
             totalsError={totalsError}
             quotesError={quotesError}
+            conversion={conversion}
             freshness={freshness}
             baseCurrency={destination.baseCurrency}
             isReadOnly={isReadOnly}

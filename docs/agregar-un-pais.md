@@ -42,11 +42,31 @@ decorativos: hay tests que los fijan.
   `templado`, `calido`. Faltar uno deja un mes sin consejo.
 - **El `id` de cada lugar ES su `slug` en la base.** No hay tabla de
   traducción: si no coinciden, el mosaico enlaza a una página que no existe.
+  Tiene que ser único dentro del país, no entre países: hay una Concepción en
+  Bolivia y otra en Paraguay, y las dos son `concepcion`.
+- **El lugar destacado es la ciudad base.** La portada pone el marcador del
+  globo en el destino destacado, y ese marcador dice dónde están calibrados los
+  cálculos.
+- **`subregion`**: Sudamérica, México y Centroamérica o Caribe. Agrupa la lista
+  de países de la portada. Un país de otra zona necesita sumar la zona al tipo
+  `GuideSubregion`, al orden `ZONAS` y a `EN_LA_ZONA` en `src/app/page.tsx`; el
+  compilador avisa si falta alguno.
 
 ## 3. El corredor de cotizaciones
 
-En `corridors.ts`, declarando ids, default, referencia para la brecha, labels y
-reloj (`timeZone` + `label`).
+En `corridors.ts`. Hay tres formas, según cómo se paga en el país:
+
+| Caso                | Cómo se declara                                    | Ejemplos                            |
+| ------------------- | -------------------------------------------------- | ----------------------------------- |
+| Un tipo de cambio   | `unaCotizacion(slug, moneda, reloj)`               | Chile, México, Perú                 |
+| Varias cotizaciones | un objeto con sus `quoteIds`, default y referencia | Argentina, Bolivia, Venezuela, Cuba |
+| Dolarizado          | `dolarizado(slug, reloj)`                          | Ecuador, El Salvador, Panamá        |
+
+**Precios en dólares con moneda propia.** Si la moneda local tiene inflación
+alta y a un viajero se le cobra en dólares —Venezuela y Cuba—, el corredor
+sigue en la moneda local, porque eso es lo que la guía explica, pero
+`destinations.base_currency` y los precios van en `USD`. `budgetConversionStatus`
+reconoce el caso y el presupuesto no intenta convertir.
 
 **`source: null` si no se verificó la API contra una respuesta real.** No se
 adivina el nombre de los campos. Brasil costó un ciclo entero por escribir
@@ -63,7 +83,14 @@ que ya están. Por cada ciudad:
   corredor (hay un índice parcial que lo obliga).
 - **12 filas** en `climate_profiles`. No once.
 - **18 filas** en `products`. Las de la ciudad base a mano, en su moneda; las
-  demás derivadas con un factor y `md5(destination_id || name)::uuid`.
+  demás derivadas con un factor y `md5(destination_id || name)::uuid`. En
+  dólares, `round(precio * factor, 2)`: redondear a la unidad convierte un café
+  de 2,50 en uno de 2 o de 3.
+- Los nombres de atracciones, genéricos —"Entrada a la atracción principal"—,
+  porque las ciudades derivadas heredan los nombres de la base.
+
+Las migraciones de los dieciséis países de 2026-10 tienen la forma exacta a
+copiar; la de Chile es la más corta de leer.
 
 `packing_catalog` **no se toca**: es global y el mismo catálogo sirve para todos
 los países. Que eso ya fuera así es la razón por la que sumar un país no obliga
@@ -118,7 +145,7 @@ migración no se aplicó.**
 
 ## 7. La lista corta
 
-- [ ] `src/content/guias/<pais>.ts` con los cuatro buckets y un solo `featured`
+- [ ] `src/content/guias/<pais>.ts` con los cuatro buckets, `subregion` y un solo `featured`, que es la base
 - [ ] Registrado en `index.ts`
 - [ ] Caja del país en `CAJAS` (`guias.test.ts`)
 - [ ] Corredor en `corridors.ts` (`source: null` si no se verificó la API)
