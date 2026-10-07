@@ -332,10 +332,10 @@ const CORREDORES = [
     timeZone: "America/Santo_Domingo",
     label: "hora de Santo Domingo",
   }),
-  // Europa. El euro, la libra, el franco suizo, las coronas, el zloty y el
-  // forinto flotan y no tienen mercado paralelo: una sola cotización contra el
-  // dólar, que es la moneda con la que se compara quien viaja desde América
-  // Latina.
+  // Europa. El euro, la libra, el franco suizo, las coronas, el zloty, el
+  // forinto y el leu flotan y no tienen mercado paralelo: una sola cotización
+  // contra el dólar, que es la moneda con la que se compara quien viaja desde
+  // América Latina.
   unaCotizacion("espana", "EUR", {
     timeZone: "Europe/Madrid",
     label: "hora de Madrid",
@@ -407,6 +407,30 @@ const CORREDORES = [
   unaCotizacion("suecia", "SEK", {
     timeZone: "Europe/Stockholm",
     label: "hora de Estocolmo",
+  }),
+  unaCotizacion("dinamarca", "DKK", {
+    timeZone: "Europe/Copenhagen",
+    label: "hora de Copenhague",
+  }),
+  unaCotizacion("finlandia", "EUR", {
+    timeZone: "Europe/Helsinki",
+    label: "hora de Helsinki",
+  }),
+  unaCotizacion("islandia", "ISK", {
+    timeZone: "Atlantic/Reykjavik",
+    label: "hora de Reikiavik",
+  }),
+  unaCotizacion("eslovenia", "EUR", {
+    timeZone: "Europe/Ljubljana",
+    label: "hora de Liubliana",
+  }),
+  unaCotizacion("rumania", "RON", {
+    timeZone: "Europe/Bucharest",
+    label: "hora de Bucarest",
+  }),
+  unaCotizacion("bulgaria", "EUR", {
+    timeZone: "Europe/Sofia",
+    label: "hora de Sofía",
   }),
 ];
 

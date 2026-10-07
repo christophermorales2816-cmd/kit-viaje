@@ -76,6 +76,13 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     // Tromsø y Lofoten están por encima del círculo polar: el límite norte es 71.
     noruega: { lat: [57.8, 71.3], lon: [4.4, 31.2] },
     suecia: { lat: [55.2, 69.2], lon: [10.9, 24.3] },
+    dinamarca: { lat: [54.5, 57.8], lon: [8, 15.2] },
+    finlandia: { lat: [59.7, 70.1], lon: [19, 31.6] },
+    // Húsavík y los fiordos del oeste quedan a un paso del círculo polar.
+    islandia: { lat: [63.2, 66.7], lon: [-24.6, -13.4] },
+    eslovenia: { lat: [45.3, 46.9], lon: [13.3, 16.7] },
+    rumania: { lat: [43.6, 48.3], lon: [20.2, 29.8] },
+    bulgaria: { lat: [41.2, 44.3], lon: [22.3, 28.7] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
