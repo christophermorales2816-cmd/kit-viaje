@@ -89,6 +89,12 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     eslovaquia: { lat: [47.7, 49.7], lon: [16.8, 22.6] },
     malta: { lat: [35.7, 36.1], lon: [14.1, 14.6] },
     luxemburgo: { lat: [49.4, 50.2], lon: [5.7, 6.6] },
+    montenegro: { lat: [41.8, 43.6], lon: [18.4, 20.4] },
+    albania: { lat: [39.6, 42.7], lon: [19.2, 21.1] },
+    serbia: { lat: [42.2, 46.2], lon: [18.8, 23.1] },
+    "bosnia-y-herzegovina": { lat: [42.5, 45.3], lon: [15.7, 19.7] },
+    "macedonia-del-norte": { lat: [40.8, 42.4], lon: [20.4, 23.1] },
+    andorra: { lat: [42.4, 42.7], lon: [1.4, 1.8] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

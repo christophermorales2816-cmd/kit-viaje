@@ -1,8 +1,11 @@
+import { albania } from "./albania";
 import { alemania } from "./alemania";
+import { andorra } from "./andorra";
 import { argentina } from "./argentina";
 import { austria } from "./austria";
 import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
+import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { brasil } from "./brasil";
 import { bulgaria } from "./bulgaria";
 import { chequia } from "./chequia";
@@ -30,8 +33,10 @@ import { italia } from "./italia";
 import { letonia } from "./letonia";
 import { lituania } from "./lituania";
 import { luxemburgo } from "./luxemburgo";
+import { macedoniaDelNorte } from "./macedonia-del-norte";
 import { malta } from "./malta";
 import { mexico } from "./mexico";
+import { montenegro } from "./montenegro";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
 import { paisesBajos } from "./paises-bajos";
@@ -43,6 +48,7 @@ import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
 import { rumania } from "./rumania";
+import { serbia } from "./serbia";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import type { DestinationGuide } from "./types";
@@ -124,6 +130,12 @@ const GUIAS: DestinationGuide[] = [
   eslovaquia,
   malta,
   luxemburgo,
+  montenegro,
+  albania,
+  serbia,
+  bosniaYHerzegovina,
+  macedoniaDelNorte,
+  andorra,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -141,11 +153,14 @@ export function getGuide(slug: string): DestinationGuide | undefined {
 }
 
 export {
+  albania,
   alemania,
+  andorra,
   argentina,
   austria,
   belgica,
   bolivia,
+  bosniaYHerzegovina,
   brasil,
   bulgaria,
   chequia,
@@ -173,8 +188,10 @@ export {
   letonia,
   lituania,
   luxemburgo,
+  macedoniaDelNorte,
   malta,
   mexico,
+  montenegro,
   nicaragua,
   noruega,
   paisesBajos,
@@ -186,6 +203,7 @@ export {
   reinoUnido,
   republicaDominicana,
   rumania,
+  serbia,
   suecia,
   suiza,
   uruguay,

@@ -122,10 +122,10 @@ describe("formatMoney", () => {
     expect(formatMoney(2.5, "USD")).toContain("2,50");
   });
 
-  it("muestra los centavos en euros, libras y francos suizos", () => {
+  it("muestra los centavos en euros, libras, francos suizos y marcos bosnios", () => {
     // En Europa los precios de todos los días llevan centavos: un café a 3,50
     // redondeado a 4 es otro precio.
-    for (const moneda of ["EUR", "GBP", "CHF"]) {
+    for (const moneda of ["EUR", "GBP", "CHF", "BAM"]) {
       expect(formatMoney(3.5, moneda)).toContain("3,50");
     }
   });

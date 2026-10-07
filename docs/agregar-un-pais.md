@@ -89,12 +89,18 @@ que ya están. Por cada ciudad:
 - **12 filas** en `climate_profiles`. No once.
 - **18 filas** en `products`. Las de la ciudad base a mano, en su moneda; las
   demás derivadas con un factor y `md5(destination_id || name)::uuid`. En
-  dólares, euros, libras y francos suizos, `round(precio * factor, 2)`:
+  dólares, euros, libras, francos suizos y marcos bosnios,
+  `round(precio * factor, 2)`:
   redondear a la unidad convierte un café de 2,50 en uno de 2 o de 3. Una
   moneda con centavos nueva se suma también a `MONEDAS_CON_CENTAVOS` en
   `src/lib/format.ts`, o la pantalla los esconde.
 - Los nombres de atracciones, genéricos —"Entrada a la atracción principal"—,
   porque las ciudades derivadas heredan los nombres de la base.
+- Si una sola ciudad tiene una regla propia —el transporte gratis de Belgrado,
+  que el resto de Serbia no tiene—, va un `update` al final de la migración,
+  después de derivar las otras ocho, con un comentario que diga por qué. Un
+  precio cero lleva el motivo en el nombre, para que no parezca un dato que
+  falta.
 
 Las migraciones de los dieciséis países de 2026-10 tienen la forma exacta a
 copiar; la de Chile es la más corta de leer.
