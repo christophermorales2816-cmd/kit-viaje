@@ -47,10 +47,15 @@ decorativos: hay tests que los fijan.
 - **El lugar destacado es la ciudad base.** La portada pone el marcador del
   globo en el destino destacado, y ese marcador dice dónde están calibrados los
   cálculos.
-- **`subregion`**: Sudamérica, México y Centroamérica o Caribe. Agrupa la lista
-  de países de la portada. Un país de otra zona necesita sumar la zona al tipo
-  `GuideSubregion`, al orden `ZONAS` y a `EN_LA_ZONA` en `src/app/page.tsx`; el
-  compilador avisa si falta alguno.
+- **`subregion`**: Sudamérica, México y Centroamérica o Caribe en América; en
+  Europa, la división de la ONU —Europa del Sur, Occidental, del Norte y del
+  Este—. Agrupa la lista de países de la portada. Una zona nueva se suma al tipo
+  `GuideSubregion`, al orden `ZONAS` y al Record `CONTINENTE` de
+  `src/app/page.tsx`; el compilador avisa si falta alguno.
+- **Un país fuera de Schengen lo dice.** En Europa la entrada es parte de la
+  guía: Schengen se cuenta sumando todos sus países, y el Reino Unido tiene su
+  propia autorización previa. Ninguna de las dos reglas se da por cerrada: se
+  dice "verificá el tuyo" y "fijate si ya está vigente".
 
 ## 3. El corredor de cotizaciones
 
@@ -58,7 +63,7 @@ En `corridors.ts`. Hay tres formas, según cómo se paga en el país:
 
 | Caso                | Cómo se declara                                    | Ejemplos                            |
 | ------------------- | -------------------------------------------------- | ----------------------------------- |
-| Un tipo de cambio   | `unaCotizacion(slug, moneda, reloj)`               | Chile, México, Perú                 |
+| Un tipo de cambio   | `unaCotizacion(slug, moneda, reloj)`               | Chile, México, España, Reino Unido  |
 | Varias cotizaciones | un objeto con sus `quoteIds`, default y referencia | Argentina, Bolivia, Venezuela, Cuba |
 | Dolarizado          | `dolarizado(slug, reloj)`                          | Ecuador, El Salvador, Panamá        |
 
@@ -84,8 +89,10 @@ que ya están. Por cada ciudad:
 - **12 filas** en `climate_profiles`. No once.
 - **18 filas** en `products`. Las de la ciudad base a mano, en su moneda; las
   demás derivadas con un factor y `md5(destination_id || name)::uuid`. En
-  dólares, `round(precio * factor, 2)`: redondear a la unidad convierte un café
-  de 2,50 en uno de 2 o de 3.
+  dólares, euros, libras y francos suizos, `round(precio * factor, 2)`:
+  redondear a la unidad convierte un café de 2,50 en uno de 2 o de 3. Una
+  moneda con centavos nueva se suma también a `MONEDAS_CON_CENTAVOS` en
+  `src/lib/format.ts`, o la pantalla los esconde.
 - Los nombres de atracciones, genéricos —"Entrada a la atracción principal"—,
   porque las ciudades derivadas heredan los nombres de la base.
 

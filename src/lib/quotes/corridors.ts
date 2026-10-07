@@ -332,6 +332,106 @@ const CORREDORES = [
     timeZone: "America/Santo_Domingo",
     label: "hora de Santo Domingo",
   }),
+  // Europa. El euro, la libra, el franco suizo, las coronas, el zloty, el
+  // forinto y el leu flotan y no tienen mercado paralelo: una sola cotización
+  // contra el dólar, que es la moneda con la que se compara quien viaja desde
+  // América Latina.
+  unaCotizacion("espana", "EUR", {
+    timeZone: "Europe/Madrid",
+    label: "hora de Madrid",
+  }),
+  unaCotizacion("portugal", "EUR", {
+    timeZone: "Europe/Lisbon",
+    label: "hora de Lisboa",
+  }),
+  unaCotizacion("italia", "EUR", {
+    timeZone: "Europe/Rome",
+    label: "hora de Roma",
+  }),
+  unaCotizacion("francia", "EUR", {
+    timeZone: "Europe/Paris",
+    label: "hora de París",
+  }),
+  unaCotizacion("alemania", "EUR", {
+    timeZone: "Europe/Berlin",
+    label: "hora de Berlín",
+  }),
+  unaCotizacion("reino-unido", "GBP", {
+    timeZone: "Europe/London",
+    label: "hora de Londres",
+  }),
+  unaCotizacion("paises-bajos", "EUR", {
+    timeZone: "Europe/Amsterdam",
+    label: "hora de Ámsterdam",
+  }),
+  unaCotizacion("grecia", "EUR", {
+    timeZone: "Europe/Athens",
+    label: "hora de Atenas",
+  }),
+  unaCotizacion("suiza", "CHF", {
+    timeZone: "Europe/Zurich",
+    label: "hora de Zúrich",
+  }),
+  unaCotizacion("austria", "EUR", {
+    timeZone: "Europe/Vienna",
+    label: "hora de Viena",
+  }),
+  unaCotizacion("irlanda", "EUR", {
+    timeZone: "Europe/Dublin",
+    label: "hora de Dublín",
+  }),
+  unaCotizacion("belgica", "EUR", {
+    timeZone: "Europe/Brussels",
+    label: "hora de Bruselas",
+  }),
+  unaCotizacion("croacia", "EUR", {
+    timeZone: "Europe/Zagreb",
+    label: "hora de Zagreb",
+  }),
+  unaCotizacion("chequia", "CZK", {
+    timeZone: "Europe/Prague",
+    label: "hora de Praga",
+  }),
+  unaCotizacion("polonia", "PLN", {
+    timeZone: "Europe/Warsaw",
+    label: "hora de Varsovia",
+  }),
+  unaCotizacion("hungria", "HUF", {
+    timeZone: "Europe/Budapest",
+    label: "hora de Budapest",
+  }),
+  unaCotizacion("noruega", "NOK", {
+    timeZone: "Europe/Oslo",
+    label: "hora de Oslo",
+  }),
+  unaCotizacion("suecia", "SEK", {
+    timeZone: "Europe/Stockholm",
+    label: "hora de Estocolmo",
+  }),
+  unaCotizacion("dinamarca", "DKK", {
+    timeZone: "Europe/Copenhagen",
+    label: "hora de Copenhague",
+  }),
+  unaCotizacion("finlandia", "EUR", {
+    timeZone: "Europe/Helsinki",
+    label: "hora de Helsinki",
+  }),
+  unaCotizacion("islandia", "ISK", {
+    timeZone: "Atlantic/Reykjavik",
+    label: "hora de Reikiavik",
+  }),
+  unaCotizacion("eslovenia", "EUR", {
+    timeZone: "Europe/Ljubljana",
+    label: "hora de Liubliana",
+  }),
+  unaCotizacion("rumania", "RON", {
+    timeZone: "Europe/Bucharest",
+    label: "hora de Bucarest",
+  }),
+  unaCotizacion("bulgaria", "EUR", {
+    timeZone: "Europe/Sofia",
+    label: "hora de Sofía",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

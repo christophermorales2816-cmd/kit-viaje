@@ -91,18 +91,21 @@ export function formatWeight(grams: number): string {
 /**
  * Las monedas cuyos precios se muestran con centavos.
  *
- * Es la lista corta a propósito. Todos los catálogos locales —pesos, reales,
- * bolivianos, soles, quetzales, colones— se cargan como enteros, y en esas
- * monedas "$ 65.000,00" o "R$ 20,00" es ruido. El dólar es la excepción por
- * partida doble: es la moneda del total convertido, donde los centavos son
- * parte del dato, y es la moneda en la que se cobra en Ecuador, El Salvador y
- * Panamá, donde un café cuesta 2,50.
+ * Es la lista corta a propósito. Los catálogos de América Latina —pesos,
+ * reales, bolivianos, soles, quetzales, colones— se cargan como enteros, y en
+ * esas monedas "$ 65.000,00" o "R$ 20,00" es ruido.
+ *
+ * El dólar fue la primera excepción, por partida doble: es la moneda del total
+ * convertido, donde los centavos son parte del dato, y es la moneda en la que
+ * se cobra en Ecuador, El Salvador y Panamá, donde un café cuesta 2,50. Europa
+ * suma tres más por la misma razón: un café cuesta 2,50 euros, 3,40 libras o
+ * 4,50 francos, y redondear eso a la unidad es cambiar el precio.
  *
  * Antes la regla era al revés —"sin decimales solo para ARS"— y con un solo
  * país eso alcanzaba. Con diecinueve habría que haber sumado cada moneda nueva
  * a mano, y la que se olvidara saldría con ",00" en todos sus precios.
  */
-const MONEDAS_CON_CENTAVOS = new Set(["USD"]);
+const MONEDAS_CON_CENTAVOS = new Set(["USD", "EUR", "GBP", "CHF"]);
 
 /** Importes con el símbolo de la moneda: precios, subtotales y totales. */
 export function formatMoney(amount: number, currency: string): string {

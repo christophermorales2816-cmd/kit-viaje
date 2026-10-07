@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Kit de viaje",
   description:
-    "Equipaje y presupuesto para viajar a destinos con alta volatilidad cambiaria. Sin registro.",
+    "Qué llevar y cuánto vas a gastar, con el clima de la ciudad a la que vas y la cotización que elijas. Sin registro.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

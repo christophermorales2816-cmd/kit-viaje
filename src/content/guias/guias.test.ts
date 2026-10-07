@@ -55,6 +55,34 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     panama: { lat: [7.1, 9.7], lon: [-83.1, -77.1] },
     cuba: { lat: [19.8, 23.3], lon: [-85, -74.1] },
     "republica-dominicana": { lat: [17.5, 20], lon: [-72.1, -68.3] },
+    // Canarias está frente a África, mil kilómetros al sur de la península.
+    espana: { lat: [27.5, 44], lon: [-18.2, 4.5] },
+    // Las Azores y Madeira están en pleno Atlántico: el límite oeste es -31,5.
+    portugal: { lat: [32.5, 42.2], lon: [-31.5, -6.1] },
+    italia: { lat: [36.5, 47.2], lon: [6.5, 18.6] },
+    francia: { lat: [42, 51.2], lon: [-5.2, 8.3] },
+    alemania: { lat: [47.2, 55.1], lon: [5.8, 15.1] },
+    "reino-unido": { lat: [49.8, 59], lon: [-8.2, 1.8] },
+    "paises-bajos": { lat: [50.6, 53.6], lon: [3.2, 7.3] },
+    grecia: { lat: [34.7, 41.8], lon: [19.3, 29.7] },
+    suiza: { lat: [45.8, 47.9], lon: [5.9, 10.6] },
+    austria: { lat: [46.3, 49.1], lon: [9.5, 17.2] },
+    irlanda: { lat: [51.3, 55.5], lon: [-10.7, -5.9] },
+    belgica: { lat: [49.4, 51.6], lon: [2.5, 6.5] },
+    croacia: { lat: [42.3, 46.6], lon: [13.4, 19.5] },
+    chequia: { lat: [48.5, 51.1], lon: [12, 18.9] },
+    polonia: { lat: [49, 54.9], lon: [14.1, 24.2] },
+    hungria: { lat: [45.7, 48.6], lon: [16.1, 22.9] },
+    // Tromsø y Lofoten están por encima del círculo polar: el límite norte es 71.
+    noruega: { lat: [57.8, 71.3], lon: [4.4, 31.2] },
+    suecia: { lat: [55.2, 69.2], lon: [10.9, 24.3] },
+    dinamarca: { lat: [54.5, 57.8], lon: [8, 15.2] },
+    finlandia: { lat: [59.7, 70.1], lon: [19, 31.6] },
+    // Húsavík y los fiordos del oeste quedan a un paso del círculo polar.
+    islandia: { lat: [63.2, 66.7], lon: [-24.6, -13.4] },
+    eslovenia: { lat: [45.3, 46.9], lon: [13.3, 16.7] },
+    rumania: { lat: [43.6, 48.3], lon: [20.2, 29.8] },
+    bulgaria: { lat: [41.2, 44.3], lon: [22.3, 28.7] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

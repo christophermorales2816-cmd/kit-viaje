@@ -143,13 +143,24 @@ export interface GuidePreparation {
 }
 
 /**
- * Las tres zonas en que se agrupa la lista de países de la portada.
+ * Las zonas en que se agrupa la lista de países de la portada.
  *
- * Una unión cerrada y no un string: con diecinueve países, un "Centro América"
- * tipeado distinto abriría un cuarto grupo con un solo país adentro, y eso no
+ * Una unión cerrada y no un string: con decenas de países, un "Centro América"
+ * tipeado distinto abriría un grupo nuevo con un solo país adentro, y eso no
  * lo caza nadie hasta verlo.
+ *
+ * Las de Europa siguen la división de la ONU —sur, occidental, norte y este—,
+ * que es discutible en los bordes pero es una sola y está escrita en algún
+ * lado. Inventar una propia obligaría a defenderla país por país.
  */
-export type GuideSubregion = "Sudamérica" | "México y Centroamérica" | "Caribe";
+export type GuideSubregion =
+  | "Sudamérica"
+  | "México y Centroamérica"
+  | "Caribe"
+  | "Europa del Sur"
+  | "Europa Occidental"
+  | "Europa del Norte"
+  | "Europa del Este";
 
 export interface DestinationGuide {
   slug: string;

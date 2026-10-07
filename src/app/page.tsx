@@ -41,26 +41,40 @@ const DESTINOS = GUIAS.map((guia) => {
 });
 
 /**
- * Las zonas en el orden en que se leen, de sur a norte.
+ * Las zonas en el orden en que se muestran: América de sur a norte, después
+ * Europa.
  *
- * El tipo `GuideSubregion` garantiza que cada guía cae en una de estas tres; el
- * orden es una decisión editorial y por eso vive acá y no en el contenido.
+ * El tipo `GuideSubregion` garantiza que cada guía cae en una de estas; el
+ * orden es una decisión editorial y por eso vive acá y no en el contenido. Una
+ * zona del tipo que falte en esta lista dejaría a sus países fuera de la
+ * portada, así que el Record de abajo la exige.
  */
 const ZONAS: GuideSubregion[] = [
   "Sudamérica",
   "México y Centroamérica",
   "Caribe",
+  "Europa del Sur",
+  "Europa Occidental",
+  "Europa del Norte",
+  "Europa del Este",
 ];
 
 /**
- * Cómo se nombra cada zona dentro de una frase. "2 en Caribe" se leía mal: el
- * Caribe lleva artículo y las otras dos no. Un Record sobre el tipo cerrado
+ * El continente de cada zona, para la nota del contador de países.
+ *
+ * La nota listaba las zonas una por una ("10 en Sudamérica, 7 en México y
+ * Centroamérica, 2 en el Caribe"). Con siete zonas esa frase ya no entra
+ * debajo de un número; por continente sí. Un Record sobre el tipo cerrado
  * obliga a decidirlo para cada zona nueva.
  */
-const EN_LA_ZONA: Record<GuideSubregion, string> = {
-  Sudamérica: "en Sudamérica",
-  "México y Centroamérica": "en México y Centroamérica",
-  Caribe: "en el Caribe",
+const CONTINENTE: Record<GuideSubregion, string> = {
+  Sudamérica: "América",
+  "México y Centroamérica": "América",
+  Caribe: "América",
+  "Europa del Sur": "Europa",
+  "Europa Occidental": "Europa",
+  "Europa del Norte": "Europa",
+  "Europa del Este": "Europa",
 };
 
 const POR_ZONA = ZONAS.map((zona) => ({
@@ -92,12 +106,22 @@ const EN_VIVO = allQuoteCorridors()
  * decía que el único corredor era Argentina: un dato que hay que acordarse de
  * actualizar a mano en cada país es un dato que va a quedar viejo.
  */
+/** Cuántos países hay en cada continente, en el orden de las zonas. */
+const POR_CONTINENTE = [
+  ...ZONAS.reduce((cuenta, zona) => {
+    const cuantas = GUIAS.filter((guia) => guia.subregion === zona).length;
+    if (cuantas === 0) return cuenta;
+    const continente = CONTINENTE[zona];
+    return cuenta.set(continente, (cuenta.get(continente) ?? 0) + cuantas);
+  }, new Map<string, number>()),
+];
+
 const ESTADISTICAS = [
   {
     valor: String(GUIAS.length),
     etiqueta: GUIAS.length === 1 ? "país" : "países",
-    nota: POR_ZONA.map(
-      ({ zona, guias }) => `${guias.length} ${EN_LA_ZONA[zona]}`,
+    nota: POR_CONTINENTE.map(
+      ([continente, cuantas]) => `${cuantas} en ${continente}`,
     ).join(", "),
   },
   { valor: "0", etiqueta: "registros", nota: "Sin cuenta y sin mail" },
