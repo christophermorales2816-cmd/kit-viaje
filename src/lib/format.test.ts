@@ -121,6 +121,14 @@ describe("formatMoney", () => {
     // Ecuador, El Salvador y Panamá cobran en dólares: un café cuesta 2,50.
     expect(formatMoney(2.5, "USD")).toContain("2,50");
   });
+
+  it("muestra los centavos en euros, libras y francos suizos", () => {
+    // En Europa los precios de todos los días llevan centavos: un café a 3,50
+    // redondeado a 4 es otro precio.
+    for (const moneda of ["EUR", "GBP", "CHF"]) {
+      expect(formatMoney(3.5, moneda)).toContain("3,50");
+    }
+  });
 });
 
 describe("formatRate y formatQuote", () => {
