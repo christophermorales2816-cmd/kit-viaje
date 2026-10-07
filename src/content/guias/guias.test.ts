@@ -69,6 +69,13 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     austria: { lat: [46.3, 49.1], lon: [9.5, 17.2] },
     irlanda: { lat: [51.3, 55.5], lon: [-10.7, -5.9] },
     belgica: { lat: [49.4, 51.6], lon: [2.5, 6.5] },
+    croacia: { lat: [42.3, 46.6], lon: [13.4, 19.5] },
+    chequia: { lat: [48.5, 51.1], lon: [12, 18.9] },
+    polonia: { lat: [49, 54.9], lon: [14.1, 24.2] },
+    hungria: { lat: [45.7, 48.6], lon: [16.1, 22.9] },
+    // Tromsø y Lofoten están por encima del círculo polar: el límite norte es 71.
+    noruega: { lat: [57.8, 71.3], lon: [4.4, 31.2] },
+    suecia: { lat: [55.2, 69.2], lon: [10.9, 24.3] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

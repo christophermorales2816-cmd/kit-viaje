@@ -4,9 +4,11 @@ import { austria } from "./austria";
 import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
 import { brasil } from "./brasil";
+import { chequia } from "./chequia";
 import { chile } from "./chile";
 import { colombia } from "./colombia";
 import { costaRica } from "./costa-rica";
+import { croacia } from "./croacia";
 import { cuba } from "./cuba";
 import { ecuador } from "./ecuador";
 import { elSalvador } from "./el-salvador";
@@ -15,17 +17,21 @@ import { francia } from "./francia";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
+import { hungria } from "./hungria";
 import { irlanda } from "./irlanda";
 import { italia } from "./italia";
 import { mexico } from "./mexico";
 import { nicaragua } from "./nicaragua";
+import { noruega } from "./noruega";
 import { paisesBajos } from "./paises-bajos";
 import { panama } from "./panama";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
+import { polonia } from "./polonia";
 import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
+import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
@@ -88,6 +94,12 @@ const GUIAS: DestinationGuide[] = [
   austria,
   irlanda,
   belgica,
+  croacia,
+  chequia,
+  polonia,
+  hungria,
+  noruega,
+  suecia,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -111,9 +123,11 @@ export {
   belgica,
   bolivia,
   brasil,
+  chequia,
   chile,
   colombia,
   costaRica,
+  croacia,
   cuba,
   ecuador,
   elSalvador,
@@ -122,17 +136,21 @@ export {
   grecia,
   guatemala,
   honduras,
+  hungria,
   irlanda,
   italia,
   mexico,
   nicaragua,
+  noruega,
   paisesBajos,
   panama,
   paraguay,
   peru,
+  polonia,
   portugal,
   reinoUnido,
   republicaDominicana,
+  suecia,
   suiza,
   uruguay,
   venezuela,
