@@ -1,5 +1,7 @@
 import { alemania } from "./alemania";
 import { argentina } from "./argentina";
+import { austria } from "./austria";
+import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
 import { brasil } from "./brasil";
 import { chile } from "./chile";
@@ -10,17 +12,21 @@ import { ecuador } from "./ecuador";
 import { elSalvador } from "./el-salvador";
 import { espana } from "./espana";
 import { francia } from "./francia";
+import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
+import { irlanda } from "./irlanda";
 import { italia } from "./italia";
 import { mexico } from "./mexico";
 import { nicaragua } from "./nicaragua";
+import { paisesBajos } from "./paises-bajos";
 import { panama } from "./panama";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
 import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
+import { suiza } from "./suiza";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
 import { venezuela } from "./venezuela";
@@ -76,6 +82,12 @@ const GUIAS: DestinationGuide[] = [
   francia,
   alemania,
   reinoUnido,
+  paisesBajos,
+  grecia,
+  suiza,
+  austria,
+  irlanda,
+  belgica,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -95,6 +107,8 @@ export function getGuide(slug: string): DestinationGuide | undefined {
 export {
   alemania,
   argentina,
+  austria,
+  belgica,
   bolivia,
   brasil,
   chile,
@@ -105,17 +119,21 @@ export {
   elSalvador,
   espana,
   francia,
+  grecia,
   guatemala,
   honduras,
+  irlanda,
   italia,
   mexico,
   nicaragua,
+  paisesBajos,
   panama,
   paraguay,
   peru,
   portugal,
   reinoUnido,
   republicaDominicana,
+  suiza,
   uruguay,
   venezuela,
 };

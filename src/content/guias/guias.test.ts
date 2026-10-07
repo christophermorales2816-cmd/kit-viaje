@@ -63,6 +63,12 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     francia: { lat: [42, 51.2], lon: [-5.2, 8.3] },
     alemania: { lat: [47.2, 55.1], lon: [5.8, 15.1] },
     "reino-unido": { lat: [49.8, 59], lon: [-8.2, 1.8] },
+    "paises-bajos": { lat: [50.6, 53.6], lon: [3.2, 7.3] },
+    grecia: { lat: [34.7, 41.8], lon: [19.3, 29.7] },
+    suiza: { lat: [45.8, 47.9], lon: [5.9, 10.6] },
+    austria: { lat: [46.3, 49.1], lon: [9.5, 17.2] },
+    irlanda: { lat: [51.3, 55.5], lon: [-10.7, -5.9] },
+    belgica: { lat: [49.4, 51.6], lon: [2.5, 6.5] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
