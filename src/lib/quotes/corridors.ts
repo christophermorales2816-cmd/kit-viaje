@@ -332,6 +332,33 @@ const CORREDORES = [
     timeZone: "America/Santo_Domingo",
     label: "hora de Santo Domingo",
   }),
+  // Europa. El euro y la libra flotan y no tienen mercado paralelo: una sola
+  // cotización contra el dólar, que es la moneda con la que se compara quien
+  // viaja desde América Latina.
+  unaCotizacion("espana", "EUR", {
+    timeZone: "Europe/Madrid",
+    label: "hora de Madrid",
+  }),
+  unaCotizacion("portugal", "EUR", {
+    timeZone: "Europe/Lisbon",
+    label: "hora de Lisboa",
+  }),
+  unaCotizacion("italia", "EUR", {
+    timeZone: "Europe/Rome",
+    label: "hora de Roma",
+  }),
+  unaCotizacion("francia", "EUR", {
+    timeZone: "Europe/Paris",
+    label: "hora de París",
+  }),
+  unaCotizacion("alemania", "EUR", {
+    timeZone: "Europe/Berlin",
+    label: "hora de Berlín",
+  }),
+  unaCotizacion("reino-unido", "GBP", {
+    timeZone: "Europe/London",
+    label: "hora de Londres",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

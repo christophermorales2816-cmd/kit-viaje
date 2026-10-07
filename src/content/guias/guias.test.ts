@@ -55,6 +55,14 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     panama: { lat: [7.1, 9.7], lon: [-83.1, -77.1] },
     cuba: { lat: [19.8, 23.3], lon: [-85, -74.1] },
     "republica-dominicana": { lat: [17.5, 20], lon: [-72.1, -68.3] },
+    // Canarias está frente a África, mil kilómetros al sur de la península.
+    espana: { lat: [27.5, 44], lon: [-18.2, 4.5] },
+    // Las Azores y Madeira están en pleno Atlántico: el límite oeste es -31,5.
+    portugal: { lat: [32.5, 42.2], lon: [-31.5, -6.1] },
+    italia: { lat: [36.5, 47.2], lon: [6.5, 18.6] },
+    francia: { lat: [42, 51.2], lon: [-5.2, 8.3] },
+    alemania: { lat: [47.2, 55.1], lon: [5.8, 15.1] },
+    "reino-unido": { lat: [49.8, 59], lon: [-8.2, 1.8] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

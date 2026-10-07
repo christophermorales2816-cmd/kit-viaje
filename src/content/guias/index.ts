@@ -1,3 +1,4 @@
+import { alemania } from "./alemania";
 import { argentina } from "./argentina";
 import { bolivia } from "./bolivia";
 import { brasil } from "./brasil";
@@ -7,13 +8,18 @@ import { costaRica } from "./costa-rica";
 import { cuba } from "./cuba";
 import { ecuador } from "./ecuador";
 import { elSalvador } from "./el-salvador";
+import { espana } from "./espana";
+import { francia } from "./francia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
+import { italia } from "./italia";
 import { mexico } from "./mexico";
 import { nicaragua } from "./nicaragua";
 import { panama } from "./panama";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
+import { portugal } from "./portugal";
+import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
@@ -64,6 +70,12 @@ const GUIAS: DestinationGuide[] = [
   panama,
   cuba,
   republicaDominicana,
+  espana,
+  portugal,
+  italia,
+  francia,
+  alemania,
+  reinoUnido,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -81,6 +93,7 @@ export function getGuide(slug: string): DestinationGuide | undefined {
 }
 
 export {
+  alemania,
   argentina,
   bolivia,
   brasil,
@@ -90,13 +103,18 @@ export {
   cuba,
   ecuador,
   elSalvador,
+  espana,
+  francia,
   guatemala,
   honduras,
+  italia,
   mexico,
   nicaragua,
   panama,
   paraguay,
   peru,
+  portugal,
+  reinoUnido,
   republicaDominicana,
   uruguay,
   venezuela,
