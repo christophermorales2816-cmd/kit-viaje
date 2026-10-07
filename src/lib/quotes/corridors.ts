@@ -432,6 +432,30 @@ const CORREDORES = [
     timeZone: "Europe/Sofia",
     label: "hora de Sofía",
   }),
+  unaCotizacion("estonia", "EUR", {
+    timeZone: "Europe/Tallinn",
+    label: "hora de Tallin",
+  }),
+  unaCotizacion("letonia", "EUR", {
+    timeZone: "Europe/Riga",
+    label: "hora de Riga",
+  }),
+  unaCotizacion("lituania", "EUR", {
+    timeZone: "Europe/Vilnius",
+    label: "hora de Vilna",
+  }),
+  unaCotizacion("eslovaquia", "EUR", {
+    timeZone: "Europe/Bratislava",
+    label: "hora de Bratislava",
+  }),
+  unaCotizacion("malta", "EUR", {
+    timeZone: "Europe/Malta",
+    label: "hora de La Valeta",
+  }),
+  unaCotizacion("luxemburgo", "EUR", {
+    timeZone: "Europe/Luxembourg",
+    label: "hora de Luxemburgo",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

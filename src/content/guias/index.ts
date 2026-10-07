@@ -14,8 +14,10 @@ import { cuba } from "./cuba";
 import { dinamarca } from "./dinamarca";
 import { ecuador } from "./ecuador";
 import { elSalvador } from "./el-salvador";
+import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
+import { estonia } from "./estonia";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
 import { grecia } from "./grecia";
@@ -25,6 +27,10 @@ import { hungria } from "./hungria";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
 import { italia } from "./italia";
+import { letonia } from "./letonia";
+import { lituania } from "./lituania";
+import { luxemburgo } from "./luxemburgo";
+import { malta } from "./malta";
 import { mexico } from "./mexico";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
@@ -112,6 +118,12 @@ const GUIAS: DestinationGuide[] = [
   eslovenia,
   rumania,
   bulgaria,
+  estonia,
+  letonia,
+  lituania,
+  eslovaquia,
+  malta,
+  luxemburgo,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -145,8 +157,10 @@ export {
   dinamarca,
   ecuador,
   elSalvador,
+  eslovaquia,
   eslovenia,
   espana,
+  estonia,
   finlandia,
   francia,
   grecia,
@@ -156,6 +170,10 @@ export {
   irlanda,
   islandia,
   italia,
+  letonia,
+  lituania,
+  luxemburgo,
+  malta,
   mexico,
   nicaragua,
   noruega,
