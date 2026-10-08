@@ -1,7 +1,7 @@
 import "server-only";
 
 import { adminClient } from "@/lib/supabase/admin";
-import { getDestination, getDestinationById } from "@/lib/supabase/reference";
+import { getDestination, getDestinationById } from "@/lib/supabase/cached";
 
 import { TripWriteError } from "./errors";
 import type { TripRecord } from "./types";
@@ -95,8 +95,8 @@ export async function createTrip(input: TripInput): Promise<TripRecord> {
     .single();
 
   if (error || !data) {
-    // El detalle de Postgres viaja hasta la UI: sin él, diagnosticar esto
-    // obliga a entrar a los logs del servidor.
+    // El detalle de Postgres queda en el error para los logs; a la pantalla
+    // llega solo el código (ver messageForTripWriteFailure).
     throw new TripWriteError(
       `No se pudo crear el viaje: ${error?.message ?? "la base no devolvió la fila."}`,
       error?.code ?? null,

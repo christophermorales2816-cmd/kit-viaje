@@ -9,15 +9,17 @@ import { getGuide } from "@/content/guias";
 import {
   getDestinationsByCorridor,
   pickDestination,
-} from "@/lib/supabase/reference";
+} from "@/lib/supabase/cached";
 
 /**
  * Página 4 — el planificador (spec, secciones 8.1 y 11).
  *
  * Deja de ser estática: ahora lee las ciudades del corredor para armar el
- * selector. Dinámica con ISR y no prerenderizada, por lo mismo que la página de
+ * selector. Dinámica y no prerenderizada, por lo mismo que la página de
  * preparación (9.4): con generateStaticParams, un hipo de Supabase durante el
- * build no rompe una request, rompe el deploy entero.
+ * build no rompe una request, rompe el deploy entero. Las ciudades salen de la
+ * caché de lecturas (src/lib/supabase/cached.ts), no de una consulta por
+ * visita.
  *
  * Un slug inexistente sigue siendo 404: lo decide getGuide, no dynamicParams.
  */

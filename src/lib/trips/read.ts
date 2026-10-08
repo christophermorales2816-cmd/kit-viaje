@@ -9,7 +9,7 @@ import {
   getDestinationById,
   getPackingCatalog,
   getProducts,
-} from "@/lib/supabase/reference";
+} from "@/lib/supabase/cached";
 
 import { TRIP_COLUMNS, toTripRecord } from "./create";
 import type { TripPackingEntry, TripRecord, TripView } from "./types";
@@ -183,18 +183,18 @@ export async function getTripByShareSlug(
 }
 
 /**
- * Resuelve el id del viaje a partir del token privado, sin traer las listas.
+ * Resuelve el viaje a partir del token privado, sin traer las listas.
  *
  * Es lo que necesita cada mutación: validar que quien escribe tiene el token, y
- * nada más. Traer el viaje entero para actualizar un checkbox sería leer dos
- * tablas de más en cada tap.
+ * saber a qué ciudad va el viaje para no aceptar gastos de otra. Traer el viaje
+ * entero para actualizar un checkbox sería leer dos tablas de más en cada tap.
  */
-export async function resolveTripIdByEditToken(
+export async function resolveTripByEditToken(
   token: string,
-): Promise<string | null> {
+): Promise<{ id: string; destinationId: string } | null> {
   if (!isEditToken(token)) return null;
 
   const trip = await findTrip("edit_token", token);
 
-  return trip?.id ?? null;
+  return trip ? { id: trip.id, destinationId: trip.destinationId } : null;
 }

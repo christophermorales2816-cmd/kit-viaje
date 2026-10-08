@@ -45,6 +45,20 @@ const PIN = `
   <circle cx="12" cy="9" r="2.5" fill="#ffffff" />
 </svg>`;
 
+/**
+ * El popup de Leaflet recibe HTML. Los nombres vienen del contenido del repo,
+ * no del usuario, pero el día que vengan de otro lado un "<" en un nombre no
+ * puede convertirse en una etiqueta.
+ */
+function escaparHtml(texto: string): string {
+  return texto
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 export function PlacesMap({
   country,
   places,
@@ -111,7 +125,7 @@ export function PlacesMap({
         L.marker(place.coords, { icon: icono, title: place.name })
           .addTo(mapa)
           .bindPopup(
-            `<strong>${place.name}</strong><br><span>${place.tag}</span>`,
+            `<strong>${escaparHtml(place.name)}</strong><br><span>${escaparHtml(place.tag)}</span>`,
           );
       }
 

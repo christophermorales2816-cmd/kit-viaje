@@ -1,9 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { createTrip } from "./create";
+import { consumirCupoDeViaje } from "./cupo";
 import { messageForTripWriteFailure } from "./errors";
 import {
   setBudgetItemQty,
@@ -50,6 +52,15 @@ export async function createTripAction(
     return { error: parsed.error };
   }
 
+  // Después de validar y antes de escribir: un formulario mal cargado no gasta
+  // cupo, y un loop que crea viajes se frena acá (ver ./cupo.ts).
+  if ((await consumirCupoDeViaje(await headers())) === "lleno") {
+    return {
+      error:
+        "Se crearon demasiados viajes desde tu conexión en la última hora. Esperá un rato y probá de nuevo.",
+    };
+  }
+
   let editToken: string;
 
   try {
@@ -81,6 +92,12 @@ export async function togglePackingItemAction(
   itemId: string,
   checked: boolean,
 ): Promise<MutationResult> {
+  // El tipo de TypeScript no llega al cable: una Server Action es un endpoint
+  // público y puede recibir cualquier cosa.
+  if (typeof checked !== "boolean") {
+    return { ok: false, error: "No hay nada que cambiar." };
+  }
+
   const result = await setPackingItem(editToken, itemId, { checked });
 
   if (result.ok) refresh(editToken);

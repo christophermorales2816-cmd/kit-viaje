@@ -49,13 +49,17 @@ concurrency:
   group: migraciones-produccion
   cancel-in-progress: false
 
+# Lo único que necesita del repo es leer las migraciones.
+permissions:
+  contents: read
+
 jobs:
   push:
     name: Aplicar a producción
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
       - name: Verificar que estén los tres secrets
         env:
@@ -114,9 +118,12 @@ jobs:
             exit 1
           fi
 
-      - uses: supabase/setup-cli@v1
+      # Versión fija, no "latest": este paso corre con las llaves de la base de
+      # producción, y lo que se ejecuta con ellas tiene que ser exactamente lo
+      # que se revisó. Dependabot propone las subidas (.github/dependabot.yml).
+      - uses: supabase/setup-cli@1dedf2c611547ede7232d26866dd3c56ab903bbb # v1.7.3
         with:
-          version: latest
+          version: 2.120.0
 
       - name: Enlazar el proyecto
         env:

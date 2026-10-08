@@ -120,6 +120,21 @@ describe("fetchQuotes", () => {
     expect(resultado.reason).toContain("ENOTFOUND");
   });
 
+  it("no espera para siempre a una fuente colgada", async () => {
+    // El fetch recibe una señal de corte: si la fuente no contesta, la página
+    // sigue con el aviso en vez de quedarse esperando a que Vercel la corte.
+    const espia = vi.fn(async (_url: string, init?: RequestInit) => {
+      expect(init?.signal).toBeInstanceOf(AbortSignal);
+      throw new DOMException("The operation was aborted.", "TimeoutError");
+    });
+    vi.stubGlobal("fetch", espia);
+
+    const resultado = await fetchQuotes("brasil");
+
+    expect(espia).toHaveBeenCalledOnce();
+    expect(resultado.ok).toBe(false);
+  });
+
   it("avisa cuando la respuesta no trae ninguna cotización esperada", async () => {
     // Cero reconocidas no es "una lista vacía": es que la fuente cambió de
     // formato, y sin ninguna tasa no hay nada que convertir.

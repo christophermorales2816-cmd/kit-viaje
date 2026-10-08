@@ -3,10 +3,18 @@
 [![CI](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/ci.yml)
 [![Migraciones](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml/badge.svg)](https://github.com/christophermorales2816-cmd/kit-viaje/actions/workflows/migraciones.yml)
 
-> **¿Sumar un país?** El procedimiento completo está en
-> [`docs/agregar-un-pais.md`](docs/agregar-un-pais.md): qué cuatro archivos se
-> tocan, qué verificar y en qué orden, y los dos errores que ya nos costaron un
-> país en producción.
+> **Documentación**
+>
+> - [`docs/administrar.md`](docs/administrar.md) — cómo operar el sitio con
+>   seguridad: cuentas, claves, rutina y qué hacer si algo pasa.
+> - [`docs/arquitectura.md`](docs/arquitectura.md) — cómo está armado, para
+>   quien recibe el proyecto.
+> - [`docs/datos.md`](docs/datos.md) — diccionario de datos y reglas de los
+>   datos maestros.
+> - [`docs/seguridad.md`](docs/seguridad.md) — amenazas, controles y la
+>   auditoría del 2026-10-08.
+> - [`docs/agregar-un-pais.md`](docs/agregar-un-pais.md) — sumar un país sin
+>   sorpresas.
 
 Aplicación web sin registro que resuelve dos cosas para viajar: **qué empacar**
 y **cuánto vas a gastar**. Nació para destinos con alta volatilidad económica y
@@ -42,12 +50,13 @@ pide la siguiente decisión.
 |---|---|---|---|
 | 1 | `/` | *¿Adónde?* — el globo, sin hablar del país | Estática |
 | 2 | `/guia/[slug]` | *¿Qué me espera?* — números, cotizaciones en vivo, tablero, puntajes, destinos y mapa | Estática + `<Suspense>` para las cotizaciones |
-| 3 | `/guia/[slug]/preparar` | *¿Cuándo conviene ir y qué llevo?* — el año climático, mes a mes, y la checklist | Dinámica con ISR (1 h) |
-| 4 | `/guia/[slug]/planificar` | *¿Qué necesito para MIS fechas?* — el generador | Estática, el cálculo va en la Server Action |
+| 3 | `/guia/[slug]/preparar` | *¿Cuándo conviene ir y qué llevo?* — el año climático, mes a mes, y la checklist | Dinámica; las lecturas de la base, en caché 1 h |
+| 4 | `/guia/[slug]/planificar` | *¿Qué necesito para MIS fechas?* — el generador | Dinámica; las ciudades, en caché 1 h. El viaje se crea en la Server Action |
 
-La página 3 es dinámica y no prerenderizada a propósito: lee cuatro tablas de
+Las páginas 3 y 4 son dinámicas y no prerenderizadas a propósito: leen
 Supabase, y con `generateStaticParams` un hipo de la base durante el build no
-rompería una request, rompería el deploy entero.
+rompería una request, rompería el deploy entero. Lo que se cachea son las
+lecturas (`src/lib/supabase/cached.ts`): una hora, y por deploy.
 
 ### Criterios de aceptación
 
@@ -59,7 +68,7 @@ rompería una request, rompería el deploy entero.
 | 4 | Exportar a PDF y CSV | `src/lib/export/csv.test.ts` y CSS de impresión |
 | 5 | El dashboard privado avisa que el link es la única forma de volver | `src/components/trip/share-controls.tsx` |
 | 6 | Los tests de los motores pasan en CI | Job `web` del [workflow](./.github/workflows/ci.yml) |
-| 7 | Ninguna escritura sin `edit_token` válido | Job `database`: 21 aserciones en `supabase/tests/rls_smoke.sql` |
+| 7 | Ninguna escritura sin `edit_token` válido | Job `database`: 38 aserciones en `supabase/tests/rls_smoke.sql` |
 
 El criterio 5 reemplaza al original, que pedía un historial de "viajes
 recientes" en `localStorage`. Esa función se eliminó entera —módulo, efecto y
@@ -90,7 +99,12 @@ tracking de gastos reales. La sección 2 del spec explica el porqué de cada uno
 Las migraciones son archivos versionados en `supabase/migrations/`, en el
 formato del CLI de Supabase (`<timestamp>_<nombre>.sql`). Se aplican en orden
 alfabético y no se editan una vez aplicadas: los cambios van en una migración
-nueva.
+nueva. El diccionario de datos y las reglas de los datos maestros están en
+[`docs/datos.md`](docs/datos.md).
+
+Las de nombre `_corredor_<pais>` siembran un país cada una (ciudades, clima y
+precios) y se generan con `herramientas/corredor/generar.py`. Las demás son
+estructurales:
 
 | Migración | Contenido |
 |---|---|
@@ -102,6 +116,11 @@ nueva.
 | `20260827100000_seed_reference_data.sql` | Destino, clima, catálogo y precios de Buenos Aires |
 | `20260831040000_ezeiza_por_tramo.sql` | El traslado del aeropuerto se cobra por tramo, no por día |
 | `20260902060000_qty_desde_cero.sql` | `qty >= 0` y default 0 en las tablas de sesión |
+| `20260910100000_destinos_por_ciudad.sql` | Varias ciudades por corredor, una base |
+| `20260910140000_slug_de_ciudad.sql` | La ciudad en la URL |
+| `20261008120000_endurecer_permisos.sql` | Solo SELECT para anon; lo nuevo nace cerrado |
+| `20261008120100_cupo_de_creacion.sql` | Fecha de alta, cupo de creación de viajes y purga manual |
+| `20261008120200_moneda_coherente.sql` | Precios siempre en la moneda de su ciudad |
 
 Aplicarlas:
 
@@ -123,11 +142,14 @@ documentado arriba de todo en `20260826120200_rls_policies.sql`.
 
 ```bash
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f supabase/tests/integridad.sql
 ```
 
-21 aserciones sobre RLS, tokens, constraints de dominio, el trigger de
-`updated_at` y el borrado en cascada. Corre dentro de una transacción y termina
-con `rollback`, así que se puede correr contra una base con datos.
+El smoke son 38 aserciones sobre RLS, privilegios, tokens, constraints, el cupo
+de creación y los triggers. La de integridad verifica los datos maestros: doce
+meses de clima por ciudad, una base por país, precios en la moneda de su
+ciudad. Las dos corren dentro de una transacción y terminan con `rollback`, así
+que se pueden correr contra una base con datos.
 
 ## Los motores
 
@@ -194,11 +216,12 @@ archivos para eso:
 | `src/app/global-error.tsx` | Falla el layout raíz. Reemplaza el `<html>` entero, así que no puede usar nada del layout — de ahí los estilos inline |
 
 **No se muestra `error.message`.** En producción Next ya lo reemplaza por uno
-genérico, pero en desarrollo llega entero, y los errores de escritura de viajes
-incluyen a propósito el SQLSTATE y el texto de Postgres: eso es para los logs
-del servidor, no para la pantalla de alguien que solo quiere armar una valija.
-Lo que sí se muestra es el `digest`, que es con lo que se encuentra el error
-real en los logs y no dice nada de la base.
+genérico, pero en desarrollo llega entero, y los errores de lectura incluyen el
+texto de Postgres: eso es para los logs del servidor, no para la pantalla de
+alguien que solo quiere armar una valija. Lo que sí se muestra es el `digest`,
+que es con lo que se encuentra el error real en los logs y no dice nada de la
+base. Las escrituras de viajes muestran un mensaje fijo y, como mucho, el
+código SQLSTATE.
 
 ## CI
 
@@ -210,9 +233,15 @@ a propósito: `next build` genera los tipos de las rutas (`PageProps`,
 checkout limpio por archivos que todavía no existen.
 
 **`database`** — levanta un Postgres 16, aplica las migraciones en orden y
-corre el smoke test de RLS. Cubre el criterio de aceptación 7 del spec:
-ninguna escritura a las tablas de sesión es posible sin un `edit_token`
-válido, verificado en cada PR y no una sola vez a mano.
+corre el smoke test de RLS y el chequeo de integridad de los datos maestros.
+Cubre el criterio de aceptación 7 del spec —ninguna escritura a las tablas de
+sesión es posible sin un `edit_token` válido— y además que ninguna tabla quede
+sin RLS ni ninguna función ejecutable desde la API pública, verificado en cada
+PR y no una sola vez a mano.
+
+Las actions van fijadas por commit (SHA) y el CLI de Supabase con versión fija;
+[Dependabot](./.github/dependabot.yml) abre un PR cada semana con lo que haya
+que actualizar.
 
 **Los dos badges de arriba son dos preguntas distintas.** El de CI dice si el
 código está sano; el de Migraciones, si la base de producción está al día. Se
@@ -268,10 +297,13 @@ npm run build       # build de producción
 ## Estructura
 
 ```
+docs/                    # administración, arquitectura, datos, seguridad
+herramientas/corredor/   # generador de las migraciones de cada país
 supabase/
-├── migrations/          # historial versionado del esquema
+├── migrations/          # historial versionado del esquema y los datos
 └── tests/
-    └── rls_smoke.sql    # verificación de RLS y constraints
+    ├── rls_smoke.sql    # permisos, RLS, constraints, cupo y triggers
+    └── integridad.sql   # reglas de los datos maestros
 src/
 ├── app/                 # rutas del App Router
 │   ├── layout.tsx       # pie con el aviso de analytics y el sello de build
@@ -279,6 +311,8 @@ src/
 │   ├── global-error.tsx # último recurso: falla el layout raíz
 │   ├── not-found.tsx    # 404 propio
 │   ├── page.tsx         # 1 · landing: el globo
+│   ├── robots.ts        # todo indexable menos /viaje/
+│   ├── sitemap.ts       # las guías, desde el índice de contenido
 │   ├── guia/[slug]/
 │   │   ├── page.tsx     # 2 · guía del país
 │   │   ├── preparar/    # 3 · condiciones actuales
@@ -291,6 +325,7 @@ src/
 │   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
 │   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
 │   ├── trip/            # listas, totales, controles de compartir
+│   ├── analytics.tsx    # Vercel Analytics sin los links privados
 │   └── ui/              # componentes de Shadcn
 ├── content/guias/       # contenido editorial de las guías (sección 8.2)
 └── lib/
@@ -305,8 +340,10 @@ src/
     │   └── engine.ts    # generateBudgetList() / calculateBudget()
     ├── prepare/         # el año climático de la página 3 (sección 9)
     ├── quotes/          # dolarapi: fetch, mapeo y spread
-    ├── trips/           # Server Actions, validación y lectura de viajes
-    ├── supabase/        # clientes y lectura de datos de referencia
+    ├── trips/           # Server Actions, validación, lectura, escrituras y cupo
+    ├── supabase/        # clientes, lectura de referencia y su caché
+    ├── seguridad/       # headers HTTP y redacción de URLs
+    ├── sitio/           # dominio público, para robots y sitemap
     ├── export/          # CSV
     ├── quantity.ts      # escalado por duración, usado por los dos motores
     ├── version.ts       # el commit que está corriendo
@@ -326,4 +363,9 @@ npx shadcn@latest add select tabs checkbox
 
 Ver [`.env.example`](./.env.example). `SUPABASE_SERVICE_ROLE_KEY` es
 server-only y nunca debe llevar el prefijo `NEXT_PUBLIC_`: es la que usan las
-Server Actions para escribir, después de validar el `edit_token`.
+Server Actions para escribir, después de validar el `edit_token`, y el secreto
+con el que se hashea la IP del cupo de creación. Las dos `NEXT_PUBLIC_` también
+se usan solo en el servidor: el navegador nunca habla con Supabase.
+
+Dónde vive cada una y qué hacer si se filtra:
+[`docs/administrar.md`](docs/administrar.md#7-mapa-de-secretos).

@@ -16,9 +16,10 @@ function cell(value: string | number): string {
   const texto = String(value);
 
   // Excel y Sheets ejecutan como fórmula cualquier celda que arranque con
-  // =, +, - o @. Ningún nombre del catálogo empieza así hoy, pero el catálogo
-  // se edita desde Studio y el archivo se abre con doble click.
-  const seguro = /^[=+\-@]/.test(texto) ? `'${texto}` : texto;
+  // =, +, - o @, y algunas versiones también con tabulador o retorno de carro
+  // adelante (la lista de OWASP). Ningún nombre del catálogo empieza así hoy,
+  // pero el catálogo se edita desde Studio y el archivo se abre con doble click.
+  const seguro = /^[=+\-@\t\r]/.test(texto) ? `'${texto}` : texto;
 
   return /[",\n\r]/.test(seguro) ? `"${seguro.replaceAll('"', '""')}"` : seguro;
 }
@@ -34,7 +35,14 @@ export function toCsv(rows: (string | number)[][]): string {
 
 export function packingCsv(entries: TripPackingEntry[]): string {
   return toCsv([
-    ["Categoría", "Ítem", "Cantidad", "Peso unitario (g)", "Peso total (g)", "Listo"],
+    [
+      "Categoría",
+      "Ítem",
+      "Cantidad",
+      "Peso unitario (g)",
+      "Peso total (g)",
+      "Listo",
+    ],
     ...entries.map((entry) => [
       entry.item.category,
       entry.item.name,

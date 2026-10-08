@@ -424,4 +424,201 @@ begin
   end;
 end $$;
 
+-- ---------------------------------------------------------------------------
+-- Endurecimiento de permisos (20261008120000)
+-- ---------------------------------------------------------------------------
+
+do $$
+begin
+  -- RLS no aplica a TRUNCATE: el permiso tiene que no existir.
+  if has_table_privilege('anon', 'destinations', 'TRUNCATE')
+     or has_table_privilege('anon', 'products', 'TRUNCATE') then
+    raise exception 'FALLO: anon tiene TRUNCATE sobre los datos de referencia';
+  end if;
+
+  if has_table_privilege('anon', 'products', 'REFERENCES')
+     or has_table_privilege('anon', 'products', 'TRIGGER') then
+    raise exception 'FALLO: anon tiene permisos de más sobre products';
+  end if;
+
+  raise notice 'OK  anon solo tiene SELECT sobre los datos de referencia';
+end $$;
+
+-- Las dos reglas que cubren lo que todavía no existe. Recorren el catálogo, así
+-- que una tabla o una función que agregue una migración futura queda cubierta
+-- sin tocar este archivo.
+
+do $$
+declare
+  sin_rls text;
+begin
+  select string_agg(c.relname, ', ' order by c.relname) into sin_rls
+  from pg_class c
+  join pg_namespace n on n.oid = c.relnamespace
+  where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity;
+
+  if sin_rls is not null then
+    raise exception 'FALLO: tablas de public sin RLS: %', sin_rls;
+  end if;
+
+  raise notice 'OK  todas las tablas de public tienen RLS';
+end $$;
+
+do $$
+declare
+  expuestas text;
+begin
+  select string_agg(p.oid::regprocedure::text, ', ') into expuestas
+  from pg_proc p
+  join pg_namespace n on n.oid = p.pronamespace
+  where n.nspname = 'public'
+    and has_function_privilege('anon', p.oid, 'EXECUTE');
+
+  if expuestas is not null then
+    raise exception 'FALLO: anon puede ejecutar funciones de public: %. Cada función nueva lleva su revoke execute.', expuestas;
+  end if;
+
+  raise notice 'OK  ninguna función de public es ejecutable por anon';
+end $$;
+
+do $$
+begin
+  -- Una tabla nueva, creada como la crearía una migración futura, nace sin
+  -- permisos para anon: olvidarse de la RLS deja de exponerla.
+  create table prueba_tabla_nueva (x int);
+
+  if has_table_privilege('anon', 'prueba_tabla_nueva', 'SELECT')
+     or has_table_privilege('authenticated', 'prueba_tabla_nueva', 'SELECT') then
+    raise exception 'FALLO: una tabla nueva queda expuesta a la anon key por defecto';
+  end if;
+
+  raise notice 'OK  una tabla nueva nace cerrada para anon';
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Cupo de creación de viajes (20261008120100)
+-- ---------------------------------------------------------------------------
+
+do $$
+begin
+  set local role anon;
+  perform 1 from limites_de_creacion limit 1;
+  raise exception 'FALLO: anon pudo leer limites_de_creacion';
+exception
+  when insufficient_privilege then
+    raise notice 'OK  anon no puede leer los cupos';
+end $$;
+reset role;
+
+do $$
+begin
+  set local role anon;
+  perform consumir_cupo_de_viaje('x', 1000, 1000);
+  raise exception 'FALLO: anon pudo consumir cupo';
+exception
+  when insufficient_privilege then
+    raise notice 'OK  anon no puede llamar al cupo';
+end $$;
+reset role;
+
+do $$
+declare
+  r1 boolean; r2 boolean; r3 boolean; otro boolean;
+begin
+  set local role service_role;
+
+  -- Tope de 2 por cliente: el tercero no entra, y otro cliente sí.
+  r1 := consumir_cupo_de_viaje('cliente-de-prueba', 2, 1000);
+  r2 := consumir_cupo_de_viaje('cliente-de-prueba', 2, 1000);
+  r3 := consumir_cupo_de_viaje('cliente-de-prueba', 2, 1000);
+  otro := consumir_cupo_de_viaje('otro-cliente', 2, 1000);
+
+  if not (r1 and r2) or r3 or not otro then
+    raise exception 'FALLO: el cupo por cliente no corta donde debe (%, %, %, %)', r1, r2, r3, otro;
+  end if;
+
+  raise notice 'OK  el cupo por cliente corta en el tope y no afecta a otros';
+end $$;
+reset role;
+
+do $$
+declare
+  dentro boolean; fuera boolean;
+begin
+  set local role service_role;
+
+  -- Tope global: cuenta a todos los clientes juntos. Ya hay 3 que entraron
+  -- arriba (dos del primero y uno del segundo).
+  dentro := consumir_cupo_de_viaje('tercero', 1000, 4);
+  fuera  := consumir_cupo_de_viaje('cuarto', 1000, 4);
+
+  if not dentro or fuera then
+    raise exception 'FALLO: el tope global no corta donde debe (%, %)', dentro, fuera;
+  end if;
+
+  raise notice 'OK  el tope global frena aunque cada cliente esté dentro de su cupo';
+end $$;
+reset role;
+
+do $$
+begin
+  perform purgar_viajes_terminados(7);
+  raise exception 'FALLO: se pudo purgar con menos de 30 días';
+exception
+  when raise_exception then
+    if sqlerrm like 'FALLO:%' then raise; end if;
+    raise notice 'OK  la purga se niega a borrar viajes recientes';
+end $$;
+
+do $$
+declare
+  borrados int;
+begin
+  insert into trips (id, destination_id, start_date, end_date, trip_type)
+  values ('55555555-5555-4555-8555-555555555555',
+          '11111111-1111-1111-1111-111111111111',
+          current_date - 400, current_date - 395, 'urbano'),
+         ('66666666-6666-4666-8666-666666666666',
+          '11111111-1111-1111-1111-111111111111',
+          current_date - 40, current_date - 35, 'urbano');
+
+  borrados := purgar_viajes_terminados(365);
+
+  if borrados < 1 or exists (select 1 from trips where id = '55555555-5555-4555-8555-555555555555') then
+    raise exception 'FALLO: la purga no borró un viaje terminado hace más de un año';
+  end if;
+
+  if not exists (select 1 from trips where id = '66666666-6666-4666-8666-666666666666') then
+    raise exception 'FALLO: la purga borró un viaje que no correspondía';
+  end if;
+
+  raise notice 'OK  la purga borra solo los viajes terminados hace más de lo pedido';
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- Moneda coherente entre precios y destino (20261008120200)
+-- ---------------------------------------------------------------------------
+
+do $$
+begin
+  begin
+    insert into products (destination_id, category, name, base_price, currency)
+    values ('11111111-1111-1111-1111-111111111111', 'comida', 'Café en dólares', 3, 'USD');
+    raise exception 'FALLA  se aceptó un precio en otra moneda que la del destino';
+  exception when check_violation then
+    raise notice 'OK  se rechaza un precio en otra moneda que la del destino';
+  end;
+end $$;
+
+do $$
+begin
+  begin
+    update destinations set base_currency = 'USD'
+    where id = '11111111-1111-1111-1111-111111111111';
+    raise exception 'FALLA  se cambió la moneda de un destino con precios en la anterior';
+  exception when check_violation then
+    raise notice 'OK  no se cambia la moneda de un destino sin pasar antes sus precios';
+  end;
+end $$;
+
 rollback;

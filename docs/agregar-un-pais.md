@@ -102,8 +102,18 @@ que ya están. Por cada ciudad:
   precio cero lleva el motivo en el nombre, para que no parezca un dato que
   falta.
 
-Las migraciones de los dieciséis países de 2026-10 tienen la forma exacta a
-copiar; la de Chile es la más corta de leer.
+Las migraciones de los países de 2026-10 tienen la forma exacta a copiar; la
+de Chile es la más corta de leer. Las de Europa se generaron con
+`herramientas/corredor/generar.py`, que valida doce meses, nueve ciudades y
+dieciocho precios antes de escribir nada: describir el país en un archivo como
+`herramientas/corredor/ejemplo_andorra.py` y correr
+
+```bash
+python3 herramientas/corredor/generar.py supabase/migrations AAAAMMDD HH <archivo>
+```
+
+La base además rechaza un precio en otra moneda que la de su ciudad
+(`20261008120200_moneda_coherente.sql`).
 
 `packing_catalog` **no se toca**: es global y el mismo catálogo sirve para todos
 los países. Que eso ya fuera así es la razón por la que sumar un país no obliga
@@ -124,7 +134,7 @@ Después, contra una base **virgen** —no una que ya tenga el país a medias—
 
 ```bash
 # aplicar las migraciones una por una, en orden alfabético
-# y después el smoke de RLS, que tiene que dar 26 asserts en verde
+# y después el smoke de RLS (38 asserts en verde) y supabase/tests/integridad.sql
 ```
 
 Si la migración toca `destinations` o cualquier constraint, esto es obligatorio:
@@ -164,7 +174,7 @@ migración no se aplicó.**
 - [ ] Corredor en `corridors.ts` (`source: null` si no se verificó la API)
 - [ ] Migración: 12 filas de clima y 18 precios por ciudad, una sola base
 - [ ] `lint`, `test`, `build`, `typecheck`
-- [ ] Migraciones sobre base virgen + smoke de RLS en verde
+- [ ] Migraciones sobre base virgen + smoke de RLS e integridad en verde
 - [ ] La app mirada en el navegador: dos ciudades opuestas, listas opuestas
 - [ ] Spec actualizado
 - [ ] **Post-merge: la corrida de Migraciones en verde**
