@@ -332,8 +332,9 @@ const CORREDORES = [
     timeZone: "America/Santo_Domingo",
     label: "hora de Santo Domingo",
   }),
-  // Europa. El euro, la libra, el franco suizo, las coronas, el zloty, el
-  // forinto y el leu flotan y no tienen mercado paralelo: una sola cotización
+  // Europa. Ninguna de sus monedas tiene mercado paralelo —el euro, la libra,
+  // el franco suizo, las coronas, el zloty, el forinto, el leu, el lek, el
+  // dinar, el denar y el marco bosnio, atado al euro—: una sola cotización
   // contra el dólar, que es la moneda con la que se compara quien viaja desde
   // América Latina.
   unaCotizacion("espana", "EUR", {
@@ -431,6 +432,54 @@ const CORREDORES = [
   unaCotizacion("bulgaria", "EUR", {
     timeZone: "Europe/Sofia",
     label: "hora de Sofía",
+  }),
+  unaCotizacion("estonia", "EUR", {
+    timeZone: "Europe/Tallinn",
+    label: "hora de Tallin",
+  }),
+  unaCotizacion("letonia", "EUR", {
+    timeZone: "Europe/Riga",
+    label: "hora de Riga",
+  }),
+  unaCotizacion("lituania", "EUR", {
+    timeZone: "Europe/Vilnius",
+    label: "hora de Vilna",
+  }),
+  unaCotizacion("eslovaquia", "EUR", {
+    timeZone: "Europe/Bratislava",
+    label: "hora de Bratislava",
+  }),
+  unaCotizacion("malta", "EUR", {
+    timeZone: "Europe/Malta",
+    label: "hora de La Valeta",
+  }),
+  unaCotizacion("luxemburgo", "EUR", {
+    timeZone: "Europe/Luxembourg",
+    label: "hora de Luxemburgo",
+  }),
+  unaCotizacion("montenegro", "EUR", {
+    timeZone: "Europe/Podgorica",
+    label: "hora de Podgorica",
+  }),
+  unaCotizacion("albania", "ALL", {
+    timeZone: "Europe/Tirane",
+    label: "hora de Tirana",
+  }),
+  unaCotizacion("serbia", "RSD", {
+    timeZone: "Europe/Belgrade",
+    label: "hora de Belgrado",
+  }),
+  unaCotizacion("bosnia-y-herzegovina", "BAM", {
+    timeZone: "Europe/Sarajevo",
+    label: "hora de Sarajevo",
+  }),
+  unaCotizacion("macedonia-del-norte", "MKD", {
+    timeZone: "Europe/Skopje",
+    label: "hora de Skopie",
+  }),
+  unaCotizacion("andorra", "EUR", {
+    timeZone: "Europe/Andorra",
+    label: "hora de Andorra",
   }),
 ];
 

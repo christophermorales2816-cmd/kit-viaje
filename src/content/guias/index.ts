@@ -1,8 +1,11 @@
+import { albania } from "./albania";
 import { alemania } from "./alemania";
+import { andorra } from "./andorra";
 import { argentina } from "./argentina";
 import { austria } from "./austria";
 import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
+import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { brasil } from "./brasil";
 import { bulgaria } from "./bulgaria";
 import { chequia } from "./chequia";
@@ -14,8 +17,10 @@ import { cuba } from "./cuba";
 import { dinamarca } from "./dinamarca";
 import { ecuador } from "./ecuador";
 import { elSalvador } from "./el-salvador";
+import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
+import { estonia } from "./estonia";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
 import { grecia } from "./grecia";
@@ -25,7 +30,13 @@ import { hungria } from "./hungria";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
 import { italia } from "./italia";
+import { letonia } from "./letonia";
+import { lituania } from "./lituania";
+import { luxemburgo } from "./luxemburgo";
+import { macedoniaDelNorte } from "./macedonia-del-norte";
+import { malta } from "./malta";
 import { mexico } from "./mexico";
+import { montenegro } from "./montenegro";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
 import { paisesBajos } from "./paises-bajos";
@@ -37,6 +48,7 @@ import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
 import { rumania } from "./rumania";
+import { serbia } from "./serbia";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import type { DestinationGuide } from "./types";
@@ -112,6 +124,18 @@ const GUIAS: DestinationGuide[] = [
   eslovenia,
   rumania,
   bulgaria,
+  estonia,
+  letonia,
+  lituania,
+  eslovaquia,
+  malta,
+  luxemburgo,
+  montenegro,
+  albania,
+  serbia,
+  bosniaYHerzegovina,
+  macedoniaDelNorte,
+  andorra,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -129,11 +153,14 @@ export function getGuide(slug: string): DestinationGuide | undefined {
 }
 
 export {
+  albania,
   alemania,
+  andorra,
   argentina,
   austria,
   belgica,
   bolivia,
+  bosniaYHerzegovina,
   brasil,
   bulgaria,
   chequia,
@@ -145,8 +172,10 @@ export {
   dinamarca,
   ecuador,
   elSalvador,
+  eslovaquia,
   eslovenia,
   espana,
+  estonia,
   finlandia,
   francia,
   grecia,
@@ -156,7 +185,13 @@ export {
   irlanda,
   islandia,
   italia,
+  letonia,
+  lituania,
+  luxemburgo,
+  macedoniaDelNorte,
+  malta,
   mexico,
+  montenegro,
   nicaragua,
   noruega,
   paisesBajos,
@@ -168,6 +203,7 @@ export {
   reinoUnido,
   republicaDominicana,
   rumania,
+  serbia,
   suecia,
   suiza,
   uruguay,
