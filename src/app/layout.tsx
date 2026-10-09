@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 
+import { Analytics } from "@/components/analytics";
 import { BUILD_ID, BUILD_URL } from "@/lib/version";
 
 import "./globals.css";
@@ -34,7 +34,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/*
           Aviso de una línea, sin lógica de consentimiento (spec, sección 2).
           Vercel Web Analytics no usa cookies: identifica visitas con un hash
-          del request entrante y no guarda nada que las reidentifique. Sin
+          del request entrante y no guarda nada que las reidentifique. Las
+          páginas de un viaje no se miden (src/components/analytics.tsx). Sin
           cookies no hay nada que consentir, así que un banner de "Aceptar
           todo / Personalizar" sería resolver un problema que el proyecto no
           tiene. Se avisa igual, porque medir sin decirlo tampoco está bien.

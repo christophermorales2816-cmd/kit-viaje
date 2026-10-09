@@ -1,0 +1,29 @@
+# Actualizaciones de dependencias (auditoría de seguridad).
+#
+# Next.js estuvo en producción con una vulnerabilidad crítica publicada porque
+# nadie avisaba que había un parche. Con esto, GitHub abre un PR cuando sale
+# una versión nueva: el CI lo prueba y se mergea si está en verde.
+#
+# Las actions de los workflows van fijadas por commit (SHA) para que nadie
+# pueda cambiar lo que corre con las llaves de producción; Dependabot es el que
+# mantiene esos SHA al día.
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      # Los parches y menores juntos en un solo PR: son muchos y casi nunca
+      # rompen nada. Los mayores, cada uno por su lado, para revisarlos.
+      menores:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

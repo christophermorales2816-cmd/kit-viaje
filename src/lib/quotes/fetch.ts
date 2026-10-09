@@ -26,6 +26,15 @@ import { mapQuotesResponse } from "./map";
 export const QUOTES_REVALIDATE_SECONDS = 600;
 
 /**
+ * Cuánto se espera a la fuente antes de darla por caída.
+ *
+ * Sin tope, una fuente colgada dejaba la página esperando hasta que la función
+ * de Vercel se cortara sola, y el usuario veía una pantalla en blanco en vez
+ * del dashboard con el aviso de "no pudimos traer la cotización".
+ */
+export const QUOTES_TIMEOUT_MS = 5000;
+
+/**
  * Resultado explícito en vez de excepción.
  *
  * Una API externa caída es un caso esperable, no un bug, y la vista de
@@ -73,6 +82,7 @@ export async function fetchQuotes(corridor: string): Promise<QuotesResult> {
     const response = await fetch(source.url, {
       headers: { accept: "application/json" },
       next: { revalidate: QUOTES_REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(QUOTES_TIMEOUT_MS),
     });
 
     if (!response.ok) {

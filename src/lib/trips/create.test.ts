@@ -21,7 +21,7 @@ const getDestination = vi.fn();
 const getDestinationById = vi.fn();
 const single = vi.fn();
 
-vi.mock("@/lib/supabase/reference", () => ({
+vi.mock("@/lib/supabase/cached", () => ({
   getDestination: (corridor?: string) => getDestination(corridor),
   getDestinationById: (id: string) => getDestinationById(id),
 }));

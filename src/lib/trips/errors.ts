@@ -14,9 +14,19 @@
  * con el esquema perfectamente al día, y ahí el mensaje mandaba a mirar
  * migraciones que no tenían nada que ver.
  *
- * Ahora son dos familias distintas, y el detalle técnico viaja siempre. Un
- * mensaje que dice qué constraint falló se puede arreglar; uno que dice
+ * Ahora son dos familias distintas, y el código de Postgres viaja siempre. Un
+ * mensaje que dice qué clase de fallo fue se puede arreglar; uno que dice
  * "está desactualizada" solo se puede creer.
+ *
+ * EL TEXTO DE POSTGRES YA NO LLEGA A LA PANTALLA
+ *
+ * Durante un tiempo el mensaje completo de la base viajaba hasta el usuario,
+ * porque era la forma más rápida de diagnosticar sin entrar a los logs. La
+ * auditoría de seguridad lo sacó: ese texto nombra tablas, columnas y reglas
+ * del esquema, y le sirve más a quien está probando la app que a quien quiere
+ * armar una valija. El SQLSTATE sí se muestra —dice qué clase de fallo fue sin
+ * describir la base— y el detalle entero queda en los logs del servidor, donde
+ * lo escribe `createTripAction`.
  */
 
 /**
@@ -44,7 +54,7 @@ const CODIGOS_DE_RESTRICCION = new Set([
 export class TripWriteError extends Error {
   /** SQLSTATE que devolvió PostgREST, si vino. */
   readonly code: string | null;
-  /** Texto que devolvió Postgres, para mostrarlo tal cual. */
+  /** Texto que devolvió Postgres. Va a los logs, nunca a la pantalla. */
   readonly detail: string | null;
 
   constructor(
@@ -69,16 +79,13 @@ export class TripWriteError extends Error {
 }
 
 /**
- * El detalle técnico, entre paréntesis y al final.
+ * El código de Postgres, entre paréntesis y al final.
  *
- * No es ruido: es lo único que permite arreglar el problema sin entrar a los
- * logs del servidor. Un nombre de constraint no es información sensible —
- * describe una regla del esquema, no datos de nadie.
+ * Alcanza para saber qué clase de fallo fue y buscar el detalle en los logs.
+ * El texto de la base no se agrega: describe el esquema (ver arriba).
  */
 function conDetalle(base: string, error: TripWriteError): string {
-  const partes = [error.code, error.detail].filter(Boolean);
-
-  return partes.length > 0 ? `${base} (${partes.join(": ")})` : base;
+  return error.code ? `${base} (código ${error.code})` : base;
 }
 
 /** Mensaje para el usuario según qué clase de fallo fue. */

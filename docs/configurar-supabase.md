@@ -61,18 +61,30 @@ escribís.
 
 ## 4. Verificar que quedó bien
 
-En el **SQL Editor** del dashboard:
+En el **SQL Editor** del dashboard, pegá el contenido de
+[`supabase/tests/integridad.sql`](../supabase/tests/integridad.sql) y correlo.
+Si termina sin error, los datos maestros están completos y coherentes: doce
+meses de clima por ciudad, una ciudad base por país, precios en la moneda de su
+ciudad. Si algo falta, el error dice qué y dónde.
+
+Para tener una idea del tamaño, al 2026-10-08:
 
 ```sql
 select
-  (select count(*) from destinations)       as destinos,     -- 1
-  (select count(*) from climate_profiles)   as meses_clima,  -- 12
-  (select count(*) from climate_thresholds) as buckets,      -- 3
-  (select count(*) from packing_catalog)    as equipaje,     -- 34
-  (select count(*) from products)           as productos;    -- 18
+  (select count(distinct corridor) from destinations) as paises,       -- 55
+  (select count(*) from destinations)                 as ciudades,     -- 501
+  (select count(*) from climate_profiles)             as meses_clima,  -- 6012
+  (select count(*) from climate_thresholds)           as buckets,      -- 4
+  (select count(*) from packing_catalog)              as equipaje,     -- 34
+  (select count(*) from products)                     as productos;    -- 9018
 ```
 
-Si te da `1 · 12 · 3 · 34 · 18`, el esquema y el catálogo quedaron completos.
+### Cerrar el registro de usuarios
+
+La app no tiene cuentas. En **Authentication → Sign In / Providers**,
+desactivá _Allow new users to sign up_: así la anon key no sirve para crear
+usuarios. El resto de la configuración de seguridad del proyecto está en
+[`administrar.md`](administrar.md).
 
 ### Verificación de seguridad (recomendada)
 
@@ -90,9 +102,10 @@ psql "<CONNECTION_STRING>" -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
 La cadena de conexión está en **Project Settings → Database**. No la pegues en
 ningún lado: lleva la contraseña adentro.
 
-Son **21 aserciones** y todas tienen que decir `OK`. Cubren RLS de los dos
-grupos de tablas, formato y unicidad de los tokens, los constraints de dominio,
-el trigger de `updated_at` y el borrado en cascada.
+Son **38 aserciones** y todas tienen que decir `OK`. Cubren RLS de los dos
+grupos de tablas, que ninguna tabla quede sin RLS ni ninguna función expuesta,
+formato y unicidad de los tokens, los constraints de dominio, el cupo de
+creación de viajes, los triggers y el borrado en cascada.
 
 ## 5. Correr la app en local
 

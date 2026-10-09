@@ -1,9 +1,10 @@
 import "server-only";
 
 import { adminClient } from "@/lib/supabase/admin";
+import { getPackingCatalog, getProducts } from "@/lib/supabase/cached";
 
 import { resolveItemWrite } from "./item-write";
-import { resolveTripIdByEditToken } from "./read";
+import { resolveTripByEditToken } from "./read";
 import { isUuid } from "./validate";
 
 /**
@@ -31,6 +32,20 @@ import { isUuid } from "./validate";
  *
  * El upsert está acotado por la clave primaria (trip_id, item_id) y el itemId
  * se valida como uuid, así que sigue sin poder escribir en otro viaje.
+ *
+ * LO QUE SE ESCRIBE TIENE QUE SER DE ESTE VIAJE
+ *
+ * Un gasto se acepta solo si es de la ciudad del viaje, y un ítem de equipaje
+ * solo si existe en el catálogo. La FK ya impedía ids inventados, pero no que
+ * alguien con su propio token guardara en su viaje un gasto de otro país: la
+ * fila quedaba en la base sin aparecer nunca en pantalla. Las dos listas salen
+ * de la caché de referencia, así que el chequeo no suma consultas.
+ *
+ * LOS ERRORES DE LA BASE VAN A LOS LOGS
+ *
+ * El texto de Postgres nombra tablas y columnas. A la pantalla llega un
+ * mensaje fijo; el detalle, a `console.error`, que en Vercel queda en los logs
+ * de la función.
  */
 
 /** Lo que pasó, en un formato que la UI pueda mostrar y usar para revertir. */
@@ -38,6 +53,17 @@ export type MutationResult = { ok: true } | { ok: false; error: string };
 
 const SIN_PERMISO =
   "No se pudo guardar: este viaje no existe o el link no habilita edición.";
+
+const FALLO_DE_BASE = "No se pudo guardar. Probá de nuevo en un momento.";
+
+function falloDeBase(
+  donde: string,
+  error: { code?: string; message: string },
+): MutationResult {
+  console.error(donde, error.code ?? "", error.message);
+
+  return { ok: false, error: FALLO_DE_BASE };
+}
 
 export interface PackingItemPatch {
   qty?: number;
@@ -79,10 +105,21 @@ export async function setPackingItem(
     return { ok: false, error: "No hay nada que cambiar." };
   }
 
-  const tripId = await resolveTripIdByEditToken(editToken);
+  if (patch.checked !== undefined && typeof patch.checked !== "boolean") {
+    return { ok: false, error: "No hay nada que cambiar." };
+  }
 
-  if (!tripId) {
+  const trip = await resolveTripByEditToken(editToken);
+
+  if (!trip) {
     return { ok: false, error: SIN_PERMISO };
+  }
+
+  const tripId = trip.id;
+  const catalogo = await getPackingCatalog();
+
+  if (!catalogo.some((item) => item.id === itemId)) {
+    return { ok: false, error: "El ítem no existe." };
   }
 
   const write = resolveItemWrite(await leerPackingItem(tripId, itemId), patch);
@@ -97,9 +134,7 @@ export async function setPackingItem(
       .eq("trip_id", tripId)
       .eq("item_id", itemId);
 
-    return error
-      ? { ok: false, error: `No se pudo guardar: ${error.message}` }
-      : { ok: true };
+    return error ? falloDeBase("setPackingItem/delete", error) : { ok: true };
   }
 
   const { error } = await adminClient()
@@ -116,11 +151,7 @@ export async function setPackingItem(
       { onConflict: "trip_id,item_id" },
     );
 
-  if (error) {
-    return { ok: false, error: `No se pudo guardar: ${error.message}` };
-  }
-
-  return { ok: true };
+  return error ? falloDeBase("setPackingItem/upsert", error) : { ok: true };
 }
 
 export async function setBudgetItemQty(
@@ -132,10 +163,17 @@ export async function setBudgetItemQty(
     return { ok: false, error: "El gasto no existe." };
   }
 
-  const tripId = await resolveTripIdByEditToken(editToken);
+  const trip = await resolveTripByEditToken(editToken);
 
-  if (!tripId) {
+  if (!trip) {
     return { ok: false, error: SIN_PERMISO };
+  }
+
+  const tripId = trip.id;
+  const productos = await getProducts(trip.destinationId);
+
+  if (!productos.some((producto) => producto.id === productId)) {
+    return { ok: false, error: "El gasto no existe." };
   }
 
   // Cero saca el gasto del presupuesto: fila borrada, no fila en cero.
@@ -146,9 +184,7 @@ export async function setBudgetItemQty(
       .eq("trip_id", tripId)
       .eq("product_id", productId);
 
-    return error
-      ? { ok: false, error: `No se pudo guardar: ${error.message}` }
-      : { ok: true };
+    return error ? falloDeBase("setBudgetItemQty/delete", error) : { ok: true };
   }
 
   const { error } = await adminClient()
@@ -158,9 +194,5 @@ export async function setBudgetItemQty(
       { onConflict: "trip_id,product_id" },
     );
 
-  if (error) {
-    return { ok: false, error: `No se pudo guardar: ${error.message}` };
-  }
-
-  return { ok: true };
+  return error ? falloDeBase("setBudgetItemQty/upsert", error) : { ok: true };
 }

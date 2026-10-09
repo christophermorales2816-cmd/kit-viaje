@@ -3,9 +3,10 @@ import { describe, expect, it } from "vitest";
 import { TripWriteError, messageForTripWriteFailure } from "@/lib/trips/errors";
 
 describe("messageForTripWriteFailure", () => {
-  it("siempre deja ver el código y el detalle de Postgres", () => {
-    // Es lo que permite arreglar el problema sin entrar a los logs. La primera
-    // versión clasificaba y se tragaba la evidencia, y eso costó dos rondas.
+  it("deja ver el código de Postgres pero no su texto", () => {
+    // El código dice qué clase de fallo fue: la primera versión se lo tragaba
+    // y eso costó dos rondas. El texto nombra columnas y reglas del esquema, y
+    // va a los logs del servidor, no a la pantalla.
     const mensaje = messageForTripWriteFailure(
       new TripWriteError(
         "x",
@@ -15,7 +16,8 @@ describe("messageForTripWriteFailure", () => {
     );
 
     expect(mensaje).toContain("23514");
-    expect(mensaje).toContain("trips_max_duration");
+    expect(mensaje).not.toContain("trips_max_duration");
+    expect(mensaje).not.toContain("violates");
   });
 
   it("no afirma que falten migraciones ante un check violado", () => {

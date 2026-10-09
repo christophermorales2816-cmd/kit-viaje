@@ -19,7 +19,7 @@ import {
   getDestinationsByCorridor,
   getPackingCatalog,
   pickDestination,
-} from "@/lib/supabase/reference";
+} from "@/lib/supabase/cached";
 
 /**
  * Página 3 — "Condiciones actuales" (spec, sección 9).
@@ -33,11 +33,14 @@ import {
  * Buenos Aires. La ciudad va en la URL —`?ciudad=ushuaia`— para que la elección
  * se pueda compartir y para que el enlace al planificador la arrastre.
  *
- * DINÁMICA CON ISR, no prerenderizada (9.4). La guía sí es estática porque su
+ * DINÁMICA, no prerenderizada (9.4). La guía sí es estática porque su
  * contenido vive en el repo; esta lee cuatro tablas de Supabase. Con
  * generateStaticParams, un hipo de Supabase durante el build no rompe una
- * request: rompe el deploy entero. Con revalidate, rompe un render y el
- * siguiente lo reintenta.
+ * request: rompe el deploy entero.
+ *
+ * Leer `?ciudad=` la hace dinámica por request, así que el `revalidate` de
+ * abajo no cachea la página. Lo que se cachea son las lecturas de la base
+ * (src/lib/supabase/cached.ts): una hora, y un fallo no queda guardado.
  */
 export const revalidate = 3600;
 
@@ -94,8 +97,8 @@ export default async function PrepararPage({
   // y las preguntas frecuentes son del país y no dependen de la base.
   const hayCiudad = destino !== undefined;
 
-  // En paralelo: son lecturas independientes y encadenarlas suma round-trips a
-  // un render que igual va a cachearse una hora.
+  // En paralelo: son lecturas independientes, y cuando la caché está fría
+  // encadenarlas sumaría round-trips a Supabase.
   const [perfiles, umbrales, catalogo] = hayCiudad
     ? await Promise.all([
         getClimateProfiles(destino.id),

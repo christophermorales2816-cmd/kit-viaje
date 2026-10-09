@@ -6,7 +6,12 @@ import type { TripPackingEntry } from "@/lib/trips/types";
 
 describe("toCsv", () => {
   it("separa con comas y termina las filas con CRLF", () => {
-    expect(toCsv([["a", "b"], ["c", "d"]])).toBe("a,b\r\nc,d");
+    expect(
+      toCsv([
+        ["a", "b"],
+        ["c", "d"],
+      ]),
+    ).toBe("a,b\r\nc,d");
   });
 
   it("entrecomilla la celda que tiene el separador adentro", () => {
@@ -30,6 +35,11 @@ describe("toCsv", () => {
     expect(toCsv([["=1+1"]])).toBe("'=1+1");
     expect(toCsv([["-500"]])).toBe("'-500");
     expect(toCsv([["@casa"]])).toBe("'@casa");
+  });
+
+  it("también neutraliza las que arrancan con tabulador o retorno", () => {
+    expect(toCsv([["\t=1+1"]])).toBe("'\t=1+1");
+    expect(toCsv([["\r=1+1"]])).toBe('"\'\r=1+1"');
   });
 
   it("no toca un número negativo, que llega como number y no como texto", () => {

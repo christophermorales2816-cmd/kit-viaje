@@ -2,7 +2,7 @@ export { createTrip } from "./create";
 export {
   getTripByEditToken,
   getTripByShareSlug,
-  resolveTripIdByEditToken,
+  resolveTripByEditToken,
 } from "./read";
 export { setBudgetItemQty, setPackingItem } from "./mutate";
 export type { MutationResult, PackingItemPatch } from "./mutate";

@@ -11,14 +11,20 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Solo lectura del repo. Sin esto el token del workflow hereda los permisos por
+# defecto de la organización, que pueden incluir escribir: un paso comprometido
+# (una dependencia, una action) podría pushear o tocar releases.
+permissions:
+  contents: read
+
 jobs:
   web:
     name: Lint, tipos, tests y build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: 22
           cache: npm
@@ -68,7 +74,7 @@ jobs:
       PGDATABASE: postgres
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
       - name: Preparar los roles de Supabase
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/setup-roles.sql
@@ -88,3 +94,10 @@ jobs:
       # tablas de sesión es posible sin un edit_token válido.
       - name: Smoke test de RLS
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/rls_smoke.sql
+
+      # Las reglas de los datos maestros que el esquema no expresa con un check:
+      # 12 meses de clima por ciudad, una base por país, precios en la moneda del
+      # destino. Es el mismo archivo que se corre contra producción para
+      # verificarla (docs/administrar.md).
+      - name: Integridad de los datos maestros
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/integridad.sql

@@ -15,10 +15,9 @@ import { Button } from "@/components/ui/button";
  * salida.
  *
  * NO se muestra `error.message`. En producción Next ya lo reemplaza por uno
- * genérico, pero en desarrollo llega entero: los errores de escritura de viajes
- * incluyen a propósito el SQLSTATE y el texto de Postgres (`conDetalle`), y eso
- * es para los logs del servidor, no para la pantalla de alguien que solo quiere
- * armar una valija. El `digest` sí se muestra: es el identificador con el que
+ * genérico, pero en desarrollo llega entero: los errores de lectura incluyen
+ * el texto de Postgres, y eso es para los logs del servidor, no para la
+ * pantalla de alguien que solo quiere armar una valija. El `digest` sí se muestra: es el identificador con el que
  * se encuentra el error real en los logs, y no dice nada de la base.
  */
 export default function Error({
