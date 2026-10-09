@@ -42,7 +42,8 @@ const DESTINOS = GUIAS.map((guia) => {
 
 /**
  * Las zonas en el orden en que se muestran: América de sur a norte, después
- * Europa.
+ * Europa y después Asia de oeste a este, que sigue el recorrido desde Europa
+ * del Este.
  *
  * El tipo `GuideSubregion` garantiza que cada guía cae en una de estas; el
  * orden es una decisión editorial y por eso vive acá y no en el contenido. Una
@@ -57,6 +58,11 @@ const ZONAS: GuideSubregion[] = [
   "Europa Occidental",
   "Europa del Norte",
   "Europa del Este",
+  "Asia Occidental",
+  "Asia Central",
+  "Asia del Sur",
+  "Sudeste Asiático",
+  "Asia Oriental",
 ];
 
 /**
@@ -75,6 +81,11 @@ const CONTINENTE: Record<GuideSubregion, string> = {
   "Europa Occidental": "Europa",
   "Europa del Norte": "Europa",
   "Europa del Este": "Europa",
+  "Asia Occidental": "Asia",
+  "Asia Central": "Asia",
+  "Asia del Sur": "Asia",
+  "Sudeste Asiático": "Asia",
+  "Asia Oriental": "Asia",
 };
 
 const POR_ZONA = ZONAS.map((zona) => ({

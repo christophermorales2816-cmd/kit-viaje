@@ -1148,3 +1148,91 @@ y Constanza salen con campera de abrigo; Iquitos, Punta Cana y Los Roques sin
 nada de abrigo. Los totales del presupuesto, sumando cantidades desde la
 interfaz y recargando, dan exacto: US$ 158,00 en Galápagos, CLP 84.000 en
 Santiago, PYG 440.000 en Asunción.
+
+## 14. Asia: la base
+
+Antes del primer país de Asia, lo que el modelo tenía que saber expresar. Es el
+mismo paso que se dio antes de Europa (zonas, continentes, monedas con
+centavos), más lo que Asia trae de nuevo. El procedimiento país por país sigue
+siendo [`docs/agregar-un-pais.md`](docs/agregar-un-pais.md).
+
+### 14.1 Zonas
+
+Cinco, de la división de la ONU (M49), y en la portada de oeste a este, a
+continuación de Europa del Este: **Asia Occidental, Asia Central, Asia del Sur,
+Sudeste Asiático y Asia Oriental**. La portada cuenta por continente ("… en
+Asia") y no muestra una zona sin países.
+
+Dos países que la ONU pone en Asia Occidental ya están en Europa del Sur y ahí
+se quedan: Chipre, que es Unión Europea, y Turquía, que se viaja como parte de
+Europa. El Cáucaso —Georgia, Armenia, Azerbaiyán— va en Asia Occidental, como
+dice la ONU.
+
+### 14.2 Alcance
+
+Las guías no dan alertas de seguridad: hablan de precauciones normales. Un país
+al que los gobiernos desaconsejan viajar en todo su territorio no admite una
+guía así sin mentir, así que **queda afuera mientras eso dure**: Afganistán,
+Corea del Norte, Siria y Yemen.
+
+Se decide en la tanda de cada uno, mirando la situación de ese momento: Irak,
+Irán, Israel y Palestina, Líbano, Myanmar y Pakistán. La pregunta es la misma
+para todos: si una guía con precauciones normales es honesta.
+
+Hong Kong, Macao y Taiwán no son países en el sentido del resto de la lista,
+pero tienen moneda y reglas de entrada propias, que es exactamente lo que el
+modelo llama un corredor. Puerto Rico quedó afuera porque comparte moneda y
+frontera con Estados Unidos; estos tres tienen las suyas. Queda por decidir.
+
+Primera tanda propuesta, seis como en Europa: Japón, Corea del Sur, China,
+Tailandia, Vietnam e India.
+
+### 14.3 Monedas
+
+La regla de los centavos, que en Europa se decidió moneda por moneda, quedó
+escrita: **una moneda lleva centavos si su unidad vale más de medio dólar.**
+Explica todas las decisiones anteriores y, aplicada a Asia, suma siete: los
+dólares de Singapur y de Brunéi, el manat azerí y los dinares y riales de
+Kuwait, Baréin, Omán y Jordania. El dírham, el riyal saudí y el catarí, el
+shekel, el ringgit y el lari valen un cuarto de dólar o menos y van enteros,
+como el zloty. Las siete ya están en `MONEDAS_CON_CENTAVOS` y en el generador,
+y un test exige que las dos listas coincidan: antes eran dos copias que había
+que acordarse de tocar juntas.
+
+Las cotizaciones menores que uno —un dólar vale 0,307 dinares kuwaitíes, 0,86
+euros— se muestran con tres decimales. Con dos, "0,31" borra la diferencia
+entre un día y otro, que es el mismo error que tuvo Brasil con "5" en vez de
+"5,11".
+
+Timor Oriental es dolarizado. Camboya y Maldivas son, probablemente, el caso de
+Venezuela y Cuba: moneda propia, pero al viajero se le cobra en dólares.
+
+### 14.4 Lo que se corrigió antes de sumar países
+
+El catálogo de equipaje decía **"Adaptador de enchufe tipo I"** en la lista de
+todos los países. Era cierto cuando el único destino era Buenos Aires; con 58,
+era falso en casi todos, y en Asia lo habría sido en todos menos China. Ahora
+dice "adaptador universal", y el tipo de cada país sigue en la guía
+(`preparation.plug`), donde ya estaba.
+
+Los ids de destino de Asia arrancan en `cc = 50`. Europa usó del `10` al `46`
+y del `47` al `4f` queda para lo que falte de Europa.
+
+### 14.5 Lo que queda abierto
+
+**El globo de la portada.** Mira al punto medio de los destinos, y una esfera
+vista de frente muestra un hemisferio. Hoy el punto medio cae en el Atlántico y
+se ven los 58 países. Simulado con unos cuarenta países de Asia, se corre a
+Libia y quedan del otro lado dieciséis de los diecinueve países de América,
+además de Japón, Indonesia y Timor. La lista de países debajo del hero sigue
+siendo completa, así que nada se vuelve inalcanzable, pero qué tiene que
+mostrar el globo —girar, dejarse arrastrar, un continente por vez— es una
+decisión de diseño, y se toma cuando se toque el diseño.
+
+**La lluvia no entra en la lista de equipaje.** El motor elige por bucket de
+temperatura y por tipo de viaje; el paraguas y el impermeable dependen del
+tipo de viaje, no de `precip_probability`. En América y Europa casi no se
+notaba. En Asia sí: un viaje de playa a Bali en enero, en pleno monzón, sale
+sin nada para la lluvia. Que la lluvia sume ítems es un cambio del motor
+(sección 4), no de datos: no se resuelve cargando países, y conviene decidirlo
+antes de que los primeros de Asia lo dejen a la vista.

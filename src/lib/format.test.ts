@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -11,6 +14,7 @@ import {
   formatRate,
   formatTripType,
   formatWeight,
+  MONEDAS_CON_CENTAVOS,
   toIsoDate,
 } from "@/lib/format";
 
@@ -129,6 +133,44 @@ describe("formatMoney", () => {
       expect(formatMoney(3.5, moneda)).toContain("3,50");
     }
   });
+
+  it("muestra los centavos en las monedas de Asia que valen más de medio dólar", () => {
+    // Un kopi en Singapur cuesta 1,80; un viaje en el metro de Bakú, 0,40
+    // manat. Redondeado a la unidad, el boleto de Bakú sería gratis.
+    for (const moneda of ["SGD", "BND", "AZN", "JOD", "KWD", "BHD", "OMR"]) {
+      expect(formatMoney(0.4, moneda)).toContain("0,40");
+    }
+  });
+
+  it("no agrega centavos a las monedas de Asia que valen poco", () => {
+    // Un café en Tokio cuesta cientos de yenes; en Hanói, decenas de miles de
+    // dongs. El dírham y el ringgit valen un cuarto de dólar, como el zloty.
+    for (const moneda of ["JPY", "KRW", "CNY", "THB", "VND", "IDR", "INR"]) {
+      expect(formatMoney(12500, moneda)).not.toMatch(/,\d\d/);
+    }
+    for (const moneda of ["AED", "SAR", "QAR", "ILS", "MYR", "GEL"]) {
+      expect(formatMoney(18, moneda)).not.toMatch(/,\d\d/);
+    }
+  });
+
+  it("dice lo mismo que el generador de migraciones", () => {
+    // generar.py redondea los precios de las ciudades derivadas al centavo o
+    // a la unidad con su propia lista. Si las dos se separan, la pantalla
+    // muestra ",00" en precios que la base guardó redondeados, o esconde los
+    // centavos que sí guardó.
+    const generador = readFileSync(
+      path.join(process.cwd(), "herramientas/corredor/generar.py"),
+      "utf8",
+    );
+    const lista = generador.match(/^CON_CENTAVOS = \{([^}]*)\}/m);
+    expect(lista, "CON_CENTAVOS en generar.py").not.toBeNull();
+    const delGenerador = [...lista![1].matchAll(/"([A-Z]{3})"/g)].map(
+      ([, moneda]) => moneda,
+    );
+    expect(delGenerador.toSorted()).toEqual(
+      [...MONEDAS_CON_CENTAVOS].toSorted(),
+    );
+  });
 });
 
 describe("formatRate y formatQuote", () => {
@@ -136,6 +178,14 @@ describe("formatRate y formatQuote", () => {
     // El selector del presupuesto de Brasil mostraba 5,1114 como "5".
     expect(formatRate(5.1114)).toBe("5,11");
     expect(formatQuote(5.1114, "BRL")).toContain("5,11");
+  });
+
+  it("muestra tres decimales en una cotización menor que uno", () => {
+    // Un dólar vale 0,307 dinares kuwaitíes: con dos decimales, "0,31", y la
+    // diferencia entre un día y otro desaparece.
+    expect(formatRate(0.3071)).toBe("0,307");
+    expect(formatQuote(0.3071, "KWD")).toContain("0,307");
+    expect(formatRate(0.8612)).toBe("0,861");
   });
 
   it("no agrega centavos a una cotización grande", () => {

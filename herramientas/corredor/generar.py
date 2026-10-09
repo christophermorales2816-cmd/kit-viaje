@@ -30,8 +30,9 @@ DEST, FECHA, HORA, MODULO = sys.argv[1:5]
 PAISES = importlib.import_module(MODULO).PAISES
 
 # Monedas cuyos precios llevan centavos: las ciudades derivadas se redondean al
-# centavo y no a la unidad. Misma lista que MONEDAS_CON_CENTAVOS en format.ts.
-CON_CENTAVOS = {"USD", "EUR", "GBP", "CHF", "BAM"}
+# centavo y no a la unidad. Misma lista que MONEDAS_CON_CENTAVOS en format.ts
+# (la regla: la unidad vale más de medio dólar), y un test lo verifica.
+CON_CENTAVOS = {"USD", "EUR", "GBP", "CHF", "BAM", "SGD", "BND", "AZN", "JOD", "KWD", "BHD", "OMR"}
 
 PLANTILLA = [
     ("comida", "Desayuno", 1, True, 1, 30),
