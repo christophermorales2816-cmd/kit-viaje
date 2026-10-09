@@ -26,7 +26,7 @@ cada país de la base tiene guía, cada lugar de una guía existe como ciudad, y
 moneda de la base es una de las dos que conoce su cotización
 (`src/content/guias/destinos-planificables.test.ts`).
 
-Hoy: **55 países, 501 ciudades, 6.012 filas de clima, 9.018 precios y 34 ítems
+Hoy: **58 países, 528 ciudades, 6.336 filas de clima, 9.504 precios y 34 ítems
 de equipaje.**
 
 ## Tablas de referencia (datos maestros)

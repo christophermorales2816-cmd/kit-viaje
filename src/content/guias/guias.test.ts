@@ -95,6 +95,10 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     "bosnia-y-herzegovina": { lat: [42.5, 45.3], lon: [15.7, 19.7] },
     "macedonia-del-norte": { lat: [40.8, 42.4], lon: [20.4, 23.1] },
     andorra: { lat: [42.4, 42.7], lon: [1.4, 1.8] },
+    // Solo el oeste del Dniéster: ninguna ciudad del planificador está en Transnistria.
+    moldavia: { lat: [45.4, 48.5], lon: [26.6, 30.2] },
+    chipre: { lat: [34.5, 35.8], lon: [32.2, 34.6] },
+    turquia: { lat: [35.8, 42.2], lon: [25.6, 44.9] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
