@@ -10,6 +10,7 @@ import { brasil } from "./brasil";
 import { bulgaria } from "./bulgaria";
 import { chequia } from "./chequia";
 import { chile } from "./chile";
+import { chipre } from "./chipre";
 import { colombia } from "./colombia";
 import { costaRica } from "./costa-rica";
 import { croacia } from "./croacia";
@@ -36,6 +37,7 @@ import { luxemburgo } from "./luxemburgo";
 import { macedoniaDelNorte } from "./macedonia-del-norte";
 import { malta } from "./malta";
 import { mexico } from "./mexico";
+import { moldavia } from "./moldavia";
 import { montenegro } from "./montenegro";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
@@ -51,6 +53,7 @@ import { rumania } from "./rumania";
 import { serbia } from "./serbia";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
+import { turquia } from "./turquia";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
 import { venezuela } from "./venezuela";
@@ -136,6 +139,9 @@ const GUIAS: DestinationGuide[] = [
   bosniaYHerzegovina,
   macedoniaDelNorte,
   andorra,
+  moldavia,
+  chipre,
+  turquia,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -165,6 +171,7 @@ export {
   bulgaria,
   chequia,
   chile,
+  chipre,
   colombia,
   costaRica,
   croacia,
@@ -191,6 +198,7 @@ export {
   macedoniaDelNorte,
   malta,
   mexico,
+  moldavia,
   montenegro,
   nicaragua,
   noruega,
@@ -206,6 +214,7 @@ export {
   serbia,
   suecia,
   suiza,
+  turquia,
   uruguay,
   venezuela,
 };

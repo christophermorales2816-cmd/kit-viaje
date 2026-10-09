@@ -29,7 +29,7 @@ vuelve a ellos por un link con un token.
 | Ruta                          | Qué es                                      | Render                                                                               | Lee de Supabase      |
 | ----------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------ | -------------------- |
 | `/`                           | Portada con el globo                        | Estática                                                                             | No                   |
-| `/guia/[slug]`                | Guía del país                               | Estática (55, por `generateStaticParams`) + cotizaciones en `<Suspense>` cada 10 min | No                   |
+| `/guia/[slug]`                | Guía del país                               | Estática (58, por `generateStaticParams`) + cotizaciones en `<Suspense>` cada 10 min | No                   |
 | `/guia/[slug]/preparar`       | El año climático de una ciudad (`?ciudad=`) | Dinámica                                                                             | Sí, con caché de 1 h |
 | `/guia/[slug]/planificar`     | El formulario del viaje                     | Dinámica                                                                             | Sí, con caché de 1 h |
 | `/viaje/[editToken]`          | Dashboard privado                           | Dinámica, sin caché                                                                  | Sí                   |
@@ -37,7 +37,7 @@ vuelve a ellos por un link con un token.
 | `/robots.txt`, `/sitemap.xml` | Para buscadores                             | Estáticos                                                                            | No                   |
 
 Las páginas de guía no dependen de la base a propósito: si Supabase se cae, la
-portada y las 55 guías siguen funcionando.
+portada y las 58 guías siguen funcionando.
 
 ## Flujos
 

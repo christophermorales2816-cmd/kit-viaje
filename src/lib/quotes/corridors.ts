@@ -333,10 +333,10 @@ const CORREDORES = [
     label: "hora de Santo Domingo",
   }),
   // Europa. Ninguna de sus monedas tiene mercado paralelo —el euro, la libra,
-  // el franco suizo, las coronas, el zloty, el forinto, el leu, el lek, el
-  // dinar, el denar y el marco bosnio, atado al euro—: una sola cotización
-  // contra el dólar, que es la moneda con la que se compara quien viaja desde
-  // América Latina.
+  // el franco suizo, las coronas, el zloty, el forinto, los dos lei, el lek,
+  // el dinar, el denar, la lira turca y el marco bosnio, atado al euro—: una
+  // sola cotización contra el dólar, que es la moneda con la que se compara
+  // quien viaja desde América Latina.
   unaCotizacion("espana", "EUR", {
     timeZone: "Europe/Madrid",
     label: "hora de Madrid",
@@ -480,6 +480,18 @@ const CORREDORES = [
   unaCotizacion("andorra", "EUR", {
     timeZone: "Europe/Andorra",
     label: "hora de Andorra",
+  }),
+  unaCotizacion("moldavia", "MDL", {
+    timeZone: "Europe/Chisinau",
+    label: "hora de Chisináu",
+  }),
+  unaCotizacion("chipre", "EUR", {
+    timeZone: "Asia/Nicosia",
+    label: "hora de Nicosia",
+  }),
+  unaCotizacion("turquia", "TRY", {
+    timeZone: "Europe/Istanbul",
+    label: "hora de Estambul",
   }),
 ];
 
