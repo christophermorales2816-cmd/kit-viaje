@@ -21,6 +21,16 @@ updates:
       # rompen nada. Los mayores, cada uno por su lado, para revisarlos.
       menores:
         update-types: [minor, patch]
+    ignore:
+      # Estos dos se suben junto con Next.js, no por su cuenta. eslint-config-next
+      # 16 no soporta ESLint 10 (eslint-plugin-react se cae al recorrer el
+      # código) ni TypeScript 7 (typescript-eslint no carga). Los dos PRs se
+      # mergearon en rojo el 2026-10-09 y main quedó sin lint. Cuando Next los
+      # soporte, se suben a mano en un PR y se saca la regla.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /

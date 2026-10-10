@@ -92,6 +92,12 @@ Una tarde, en este orden. Cada punto cierra una puerta concreta.
 **Cada semana (5 minutos).** Dependabot abre PRs con actualizaciones de
 dependencias. Si el CI está en verde, se mergean. Si está en rojo, se dejan y se
 le pide a alguien que lo mire: una actualización que rompe el CI no se fuerza.
+Y no se arregla editando `package.json` desde la web de GitHub: el
+`package-lock.json` tiene que regenerarse con `npm install`, y un error de
+tipeo deja el JSON inválido y frena todos los deploys. Pasó el 2026-10-10.
+
+Las versiones mayores de ESLint y TypeScript Dependabot no las propone
+(`.github/dependabot.yml`): se suben junto con Next.js, cuando Next las soporte.
 
 **Cada mes (10 minutos).**
 
