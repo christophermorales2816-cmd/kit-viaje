@@ -106,8 +106,8 @@ no hay cotización en vivo y todo lo demás funciona.
 Ids fijos, nunca `gen_random_uuid()`, en un rango que no choque con los países
 que ya están. Los países de 2026-10 usan `00000000-0000-4000-8000-00000000{cc}{nn}`,
 con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
-`4f` queda para lo que falte de Europa, y **Asia arranca en `50`** (las cuatro primeras
-tandas usaron del `50` al `67`; hay lugar hasta `8f`). Por cada ciudad:
+`4f` queda para lo que falte de Europa, **Asia usó del `50` al `7b`** (hay lugar
+hasta `8f`) y lo que siga arranca en `90`. Por cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).

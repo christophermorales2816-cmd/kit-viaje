@@ -126,6 +126,29 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     uzbekistan: { lat: [37.1, 45.6], lon: [55.9, 73.2] },
     kazajistan: { lat: [40.5, 55.5], lon: [46.4, 87.4] },
     kirguistan: { lat: [39.1, 43.3], lon: [69.2, 80.3] },
+    "arabia-saudita": { lat: [16, 32.3], lon: [34.4, 55.7] },
+    kuwait: { lat: [28.4, 30.2], lon: [46.5, 48.6] },
+    // Con las islas Hawar, frente a Catar, al sur de la isla principal.
+    barein: { lat: [25.5, 26.4], lon: [50.3, 50.9] },
+    tayikistan: { lat: [36.6, 41.1], lon: [67.3, 75.2] },
+    turkmenistan: { lat: [35.1, 42.8], lon: [52.4, 66.7] },
+    // Addu y Fuvahmulah están al sur del ecuador: el límite sur es negativo.
+    maldivas: { lat: [-0.8, 7.2], lon: [72.6, 73.8] },
+    butan: { lat: [26.7, 28.4], lon: [88.7, 92.2] },
+    banglades: { lat: [20.5, 26.7], lon: [88, 92.7] },
+    brunei: { lat: [4, 5.1], lon: [114, 115.4] },
+    // Con Oecusse, el exclave del oeste, y la isla de Atauro.
+    "timor-oriental": { lat: [-9.6, -8.1], lon: [124, 127.4] },
+    mongolia: { lat: [41.5, 52.2], lon: [87.7, 120] },
+    irak: { lat: [29, 37.4], lon: [38.7, 48.7] },
+    iran: { lat: [25, 39.8], lon: [44, 63.4] },
+    "israel-y-palestina": { lat: [29.4, 33.4], lon: [34.2, 35.9] },
+    libano: { lat: [33, 34.7], lon: [35.1, 36.7] },
+    myanmar: { lat: [9.7, 28.6], lon: [92.1, 101.2] },
+    pakistan: { lat: [23.6, 37.1], lon: [60.8, 77.9] },
+    "hong-kong": { lat: [22.1, 22.6], lon: [113.8, 114.5] },
+    macao: { lat: [22.1, 22.22], lon: [113.52, 113.6] },
+    taiwan: { lat: [21.8, 25.4], lon: [119.9, 122.1] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

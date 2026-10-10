@@ -1179,10 +1179,15 @@ Se decide en la tanda de cada uno, mirando la situación de ese momento: Irak,
 Irán, Israel y Palestina, Líbano, Myanmar y Pakistán. La pregunta es la misma
 para todos: si una guía con precauciones normales es honesta.
 
+> **Decidido en la sección 14.11:** entran los seis, con aviso, como Venezuela.
+
 Hong Kong, Macao y Taiwán no son países en el sentido del resto de la lista,
 pero tienen moneda y reglas de entrada propias, que es exactamente lo que el
 modelo llama un corredor. Puerto Rico quedó afuera porque comparte moneda y
 frontera con Estados Unidos; estos tres tienen las suyas. Queda por decidir.
+
+> **Decidido en la sección 14.11:** entran los tres, y la portada pasa a decir
+> "destinos".
 
 Primera tanda, seis como en Europa, cargada el 2026-10-10: Japón, Corea del Sur,
 China, Tailandia, Vietnam e India (sección 14.6).
@@ -1408,3 +1413,82 @@ en Asia Occidental, como decidió la sección 14.1. Lo nuevo:
   precio más alto de su país.
 
 Los ids de destino van del `62` al `67`.
+
+### 14.11 Lo que quedaba de Asia
+
+Veinte destinos en una tanda, la última de Asia:
+
+- **Sin decisión pendiente:** Arabia Saudita, Kuwait, Baréin, Tayikistán,
+  Turkmenistán, Maldivas, Bután, Bangladés, Brunéi, Timor Oriental y Mongolia.
+- **Con aviso:** los seis que la sección 14.2 dejó para decidir en su tanda
+  —Irak, Irán, Israel y Palestina, Líbano, Myanmar y Pakistán—.
+- **Territorios:** Hong Kong, Macao y Taiwán.
+
+Quedan afuera, como decidió la sección 14.2, Afganistán, Corea del Norte, Siria
+y Yemen.
+
+**Con aviso, como Venezuela.** La pregunta de la sección 14.2 era si una guía
+con precauciones normales es honesta para esos seis. Se decidió que sí lo es si
+lo dice: cada uno lleva una entrada "Qué tener en cuenta" que manda a revisar la
+recomendación de viaje del propio país y qué cubre el seguro —muchos excluyen
+los destinos con esa recomendación—, una pregunta del FAQ con lo mismo y la
+lista de documentos en tono de advertencia. La guía no describe la situación,
+que cambia más rápido que el texto. Las ciudades del planificador son las de los
+viajes habituales:
+
+- Gaza no está en Israel y Palestina.
+- En Líbano no hay nada al sur de Sidón ni en el valle de la Bekaa.
+- En Myanmar no hay nada en Rakhine ni en el norte del estado Shan.
+- En Pakistán no hay nada en Baluchistán ni en las zonas de frontera con
+  Afganistán.
+
+Israel y Palestina son una sola guía, como los nombraba la sección 14.2: el
+shekel circula en los dos y se entra por las mismas fronteras. Belén y Jericó
+están en el planificador, con la forma de llegar.
+
+**Territorios, y la portada dice "destinos".** Hong Kong, Macao y Taiwán tienen
+moneda y frontera propias, que es lo que el modelo llama un corredor. Contarlos
+como países habría sido decir algo que la portada no tiene por qué decir, así
+que el contador, el botón y los textos de la lista pasaron a "destinos". Las
+guías siguen usando el campo `country`, que para ellos es solo el nombre.
+
+**Monedas:**
+
+- **Dos cotizaciones y precios en dólares, como Venezuela y Cuba:**
+  Turkmenistán, Irán y Myanmar. La oficial y la de la calle —o la de las casas
+  de cambio, en Irán— están muy lejos entre sí. Sus corredores declaran las dos.
+- **Moneda propia y precios en dólares, como Camboya:** Maldivas y Líbano, con
+  una sola cotización.
+- **Dolarizado, como Ecuador:** Timor Oriental. El test de los dolarizados lo
+  suma a la lista.
+- **Con centavos:** los dinares de Kuwait y Baréin y el dólar de Brunéi, que ya
+  estaban en `MONEDAS_CON_CENTAVOS`. Las demás monedas van enteras.
+
+**Climas nuevos en los extremos.** El lago Khövsgöl, en Mongolia, pasa a ser la
+ciudad más fría del sitio, con −31,6 °C de mínima en enero, por delante de
+Song-Kol (sección 14.10). Jahra, en Kuwait, pasa a ser la más calurosa, con
+47,4 °C de máxima en julio, por delante de Liwa (sección 14.8). Los dos entran
+en los topes del generador.
+
+**Reglas de entrada que no son la visa, otra vez:**
+
+- **Turkmenistán:** carta de invitación por agencia y guía durante todo el
+  recorrido.
+- **Bután:** la tasa diaria de desarrollo sostenible. Se dice que existe, pero
+  no su monto, que cambia por decreto, y los precios del planificador no la
+  incluyen.
+- **Tayikistán:** el permiso aparte para el Pamir.
+- **Irán e Irak:** quien entra a Estados Unidos con autorización electrónica,
+  como el pasaporte chileno, la pierde tras visitarlos.
+
+**Precios de Maldivas.** Son de isla local. Los atolones de resorts llevan el
+factor más alto que admite el generador (2,5), y aun así un resort puede costar
+varias veces más: la guía lo dice en la nota de alcance.
+
+**Un tope que apareció en la verificación.** Contra la base nueva, el viaje 30
+desde la misma conexión en una hora devolvió "Se crearon demasiados viajes desde
+tu conexión en la última hora". Es el cupo por cliente funcionando como debe;
+para seguir verificando se vació la tabla del cupo en la base local, no en la
+de producción.
+
+Los ids de destino van del `68` al `7b`, y Asia quedó entre `50` y `7b`.
