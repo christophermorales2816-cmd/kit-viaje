@@ -494,7 +494,8 @@ const CORREDORES = [
     label: "hora de Estambul",
   }),
   // Asia. Igual que en Europa, una sola cotización contra el dólar por país:
-  // el yen, el won, el yuan, el baht, el dong y la rupia.
+  // el yen, el won, el yuan, el baht, el dong, las rupias, el ringgit, el dólar
+  // de Singapur, el peso filipino, el riel y el kip.
   unaCotizacion("japon", "JPY", {
     timeZone: "Asia/Tokyo",
     label: "hora de Tokio",
@@ -518,6 +519,34 @@ const CORREDORES = [
   unaCotizacion("india", "INR", {
     timeZone: "Asia/Kolkata",
     label: "hora de Nueva Delhi",
+  }),
+  unaCotizacion("indonesia", "IDR", {
+    timeZone: "Asia/Makassar",
+    label: "hora de Bali",
+  }),
+  unaCotizacion("malasia", "MYR", {
+    timeZone: "Asia/Kuala_Lumpur",
+    label: "hora de Kuala Lumpur",
+  }),
+  unaCotizacion("singapur", "SGD", {
+    timeZone: "Asia/Singapore",
+    label: "hora de Singapur",
+  }),
+  unaCotizacion("filipinas", "PHP", {
+    timeZone: "Asia/Manila",
+    label: "hora de Manila",
+  }),
+  // Camboya es el caso de Venezuela y Cuba sin inflación de por medio: al
+  // viajero se le cobra en dólares y el riel es el vuelto. El corredor queda en
+  // rieles, que es la moneda del país, y los precios de la base van en USD;
+  // budgetConversionStatus ve que ya están en la moneda del resultado.
+  unaCotizacion("camboya", "KHR", {
+    timeZone: "Asia/Phnom_Penh",
+    label: "hora de Phnom Penh",
+  }),
+  unaCotizacion("laos", "LAK", {
+    timeZone: "Asia/Vientiane",
+    label: "hora de Vientián",
   }),
 ];
 

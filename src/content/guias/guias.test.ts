@@ -105,6 +105,13 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     tailandia: { lat: [5.5, 20.5], lon: [97.3, 105.7] },
     vietnam: { lat: [8.2, 23.5], lon: [102.1, 109.6] },
     india: { lat: [8, 35.6], lon: [68, 97.5] },
+    indonesia: { lat: [-11, 6], lon: [95, 141.1] },
+    // Península y Borneo: Kota Kinabalu y Kuching quedan en el este.
+    malasia: { lat: [0.8, 7.5], lon: [99.5, 119.5] },
+    singapur: { lat: [1.15, 1.48], lon: [103.6, 104.1] },
+    filipinas: { lat: [4.5, 21.2], lon: [116.9, 126.7] },
+    camboya: { lat: [10.3, 14.7], lon: [102.3, 107.7] },
+    laos: { lat: [13.9, 22.5], lon: [100, 107.7] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

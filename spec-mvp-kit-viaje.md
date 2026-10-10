@@ -1273,3 +1273,33 @@ integridad— y con la app levantada: 72 rutas sin fallas, ciudades de clima
 opuesto con listas opuestas (Sapporo, Harbin, Sapa y Leh con abrigo; Okinawa,
 Phuket y Goa sin él) y doce totales de presupuesto exactos, de JPY 17.600 en
 Tokio a VND 1.150.000 en Phu Quoc.
+
+### 14.7 Segunda tanda: el Sudeste Asiático
+
+Indonesia, Malasia, Singapur, Filipinas, Camboya y Laos. Con la primera tanda,
+el Sudeste Asiático queda completo salvo Brunéi, Timor Oriental y Myanmar (que
+se decide aparte, sección 14.2). Lo nuevo para el modelo:
+
+- **Camboya** es el caso de Venezuela y Cuba sin inflación: al viajero se le
+  cobra en dólares y el riel es el vuelto. El corredor queda en rieles y los
+  precios en USD, con centavos; el presupuesto dice "los precios de este
+  destino están en dólares" y no convierte. No hizo falta tocar código:
+  `budgetConversionStatus` ya resolvía el cruce.
+- **Singapur** es una ciudad-estado: sus nueve "ciudades" son barrios, como las
+  parroquias de Andorra. El clima es el mismo en todos y cambia el precio. Es
+  la primera moneda de Asia con centavos que se usa de verdad.
+- **La ciudad base no es la capital** en Indonesia (Ubud, en Bali), Camboya
+  (Siem Reap, por Angkor) y Laos (Luang Prabang): es donde duerme quien viaja,
+  como Antigua en Guatemala.
+- **El hemisferio sur llega a Asia**: Indonesia tiene la estación seca de
+  abril a octubre, y el mirador del Bromo, a más de dos mil metros, pide
+  abrigo en julio.
+- **El monzón cambia de costa** en Malasia y en Filipinas: las islas del este
+  de la península cierran de noviembre a febrero, y Siargao tiene la lluvia
+  cuando Palawan está seco.
+- **Los restos de bombas de la guerra**, en Camboya y Laos, se dicen como la
+  precaución práctica que son —seguir los senderos marcados— y no como alerta.
+
+El globo de la portada sigue el problema de la sección 14.5, y ahora más: con
+setenta países el punto medio cae en el norte de África y quedan del otro lado
+nueve marcadores, tres de ellos de América (Chile, Perú y México).
