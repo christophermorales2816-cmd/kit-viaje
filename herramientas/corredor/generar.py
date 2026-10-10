@@ -102,7 +102,12 @@ def validar(p):
         for m in range(12):
             assert mins[m] <= maxs[m], (p["slug"], slug, m + 1)
             assert 0 <= lluvia[m] <= 100, (p["slug"], slug, m + 1)
-            assert -25 < mins[m] < 30 and -20 < maxs[m] < 45, (p["slug"], slug, m + 1)
+            # Topes para cazar un dígito de más (300 por 30,0), no para opinar del
+            # clima: los promedios mensuales de cualquier ciudad habitada caben.
+            # Eran -25/30 y -20/45 hasta que el Golfo los pasó de verdad: en
+            # Dubái las noches de agosto no bajan de 30 y en Liwa la máxima de
+            # julio llega a 45.
+            assert -40 < mins[m] < 36 and -30 < maxs[m] < 50, (p["slug"], slug, m + 1)
         assert 0.5 <= factor <= 2.5, (p["slug"], slug, factor)
     assert c[0][6] == 1.0, (p["slug"], "la base lleva factor 1")
     assert len(p["productos"]) == 18, (p["slug"], "productos", len(p["productos"]))

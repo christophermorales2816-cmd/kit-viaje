@@ -1303,3 +1303,36 @@ se decide aparte, sección 14.2). Lo nuevo para el modelo:
 El globo de la portada sigue el problema de la sección 14.5, y ahora más: con
 setenta países el punto medio cae en el norte de África y quedan del otro lado
 nueve marcadores, tres de ellos de América (Chile, Perú y México).
+
+### 14.8 Tercera tanda: el Golfo, Jordania, Nepal y Sri Lanka
+
+Emiratos Árabes Unidos, Catar, Omán, Jordania, Nepal y Sri Lanka. Lo nuevo:
+
+- **El calor del Golfo pasó los topes del generador.** `generar.py` rechazaba
+  mínimas de 30 °C o más y máximas de 45 °C o más, pensando en un dígito de más
+  por error. En Dubái las noches de agosto no bajan de treinta y en Liwa la
+  máxima de julio llega a 45: los topes pasaron a -40/36 y -30/50, que siguen
+  cazando un 300 tipeado por 30,0. Liwa es ahora la ciudad más calurosa del
+  sitio.
+- **Las primeras monedas de Asia con centavos en uso**, además del dólar de
+  Singapur: el rial omaní y el dinar jordano, que la base para Asia ya había
+  dejado en `MONEDAS_CON_CENTAVOS`. No hubo que tocar nada para que salieran
+  bien.
+- **Catar es casi una ciudad-estado**, como Singapur: sus nueve "ciudades" son
+  barrios de Doha y los pocos lugares del resto de la península.
+- **Omán se recorre en auto**: el ítem de transporte diario es "auto de
+  alquiler, día". Salalah tiene el monzón (khareef) en julio, cuando el resto
+  del Golfo está más caluroso.
+- **Jordania tiene invierno**: Amán y Petra, en la meseta, pueden tener nieve,
+  y es el dato que va en la portada.
+- **Nepal es la altura**: Namche Bazar, a casi tres mil quinientos metros,
+  pasa el invierno bajo cero, y el mal de altura y las reglas de trekking se
+  dicen como preparación.
+- **Sri Lanka tiene dos monzones** y siempre una costa seca.
+- La base de Emiratos es Dubái y no Abu Dabi, por la misma razón que Antigua.
+
+El globo de la portada (sección 14.5) cruzó un límite con esta tanda: con
+setenta y seis países el punto medio cae en el Sahara y quedan del otro lado
+doce marcadores, entre ellos **Argentina**, Chile, Perú, México y tres países
+de Centroamérica. Todos siguen en la lista de países, pero el globo de un
+sitio para viajeros de América Latina ya no muestra la mayor parte de América.

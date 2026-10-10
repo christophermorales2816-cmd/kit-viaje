@@ -9,6 +9,7 @@ import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { brasil } from "./brasil";
 import { bulgaria } from "./bulgaria";
 import { camboya } from "./camboya";
+import { catar } from "./catar";
 import { chequia } from "./chequia";
 import { chile } from "./chile";
 import { china } from "./china";
@@ -21,6 +22,7 @@ import { cuba } from "./cuba";
 import { dinamarca } from "./dinamarca";
 import { ecuador } from "./ecuador";
 import { elSalvador } from "./el-salvador";
+import { emiratosArabesUnidos } from "./emiratos-arabes-unidos";
 import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
@@ -38,6 +40,7 @@ import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
 import { italia } from "./italia";
 import { japon } from "./japon";
+import { jordania } from "./jordania";
 import { laos } from "./laos";
 import { letonia } from "./letonia";
 import { lituania } from "./lituania";
@@ -48,8 +51,10 @@ import { malta } from "./malta";
 import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
 import { montenegro } from "./montenegro";
+import { nepal } from "./nepal";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
+import { oman } from "./oman";
 import { paisesBajos } from "./paises-bajos";
 import { panama } from "./panama";
 import { paraguay } from "./paraguay";
@@ -61,6 +66,7 @@ import { republicaDominicana } from "./republica-dominicana";
 import { rumania } from "./rumania";
 import { serbia } from "./serbia";
 import { singapur } from "./singapur";
+import { sriLanka } from "./sri-lanka";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import { tailandia } from "./tailandia";
@@ -166,6 +172,12 @@ const GUIAS: DestinationGuide[] = [
   filipinas,
   camboya,
   laos,
+  emiratosArabesUnidos,
+  catar,
+  oman,
+  jordania,
+  nepal,
+  sriLanka,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -194,6 +206,7 @@ export {
   brasil,
   bulgaria,
   camboya,
+  catar,
   chequia,
   chile,
   china,
@@ -206,6 +219,7 @@ export {
   dinamarca,
   ecuador,
   elSalvador,
+  emiratosArabesUnidos,
   eslovaquia,
   eslovenia,
   espana,
@@ -223,6 +237,7 @@ export {
   islandia,
   italia,
   japon,
+  jordania,
   laos,
   letonia,
   lituania,
@@ -233,8 +248,10 @@ export {
   mexico,
   moldavia,
   montenegro,
+  nepal,
   nicaragua,
   noruega,
+  oman,
   paisesBajos,
   panama,
   paraguay,
@@ -246,6 +263,7 @@ export {
   rumania,
   serbia,
   singapur,
+  sriLanka,
   suecia,
   suiza,
   tailandia,

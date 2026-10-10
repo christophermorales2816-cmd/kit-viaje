@@ -112,6 +112,13 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     filipinas: { lat: [4.5, 21.2], lon: [116.9, 126.7] },
     camboya: { lat: [10.3, 14.7], lon: [102.3, 107.7] },
     laos: { lat: [13.9, 22.5], lon: [100, 107.7] },
+    "emiratos-arabes-unidos": { lat: [22.6, 26.1], lon: [51.5, 56.4] },
+    catar: { lat: [24.4, 26.2], lon: [50.7, 51.7] },
+    // Con Musandam, el exclave del norte, y Salalah, en el extremo sur.
+    oman: { lat: [16.6, 26.5], lon: [51.9, 59.9] },
+    jordania: { lat: [29.1, 33.4], lon: [34.9, 39.3] },
+    nepal: { lat: [26.3, 30.5], lon: [80, 88.2] },
+    "sri-lanka": { lat: [5.9, 9.9], lon: [79.5, 82] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
