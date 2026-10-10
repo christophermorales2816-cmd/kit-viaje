@@ -493,6 +493,32 @@ const CORREDORES = [
     timeZone: "Europe/Istanbul",
     label: "hora de Estambul",
   }),
+  // Asia. Igual que en Europa, una sola cotización contra el dólar por país:
+  // el yen, el won, el yuan, el baht, el dong y la rupia.
+  unaCotizacion("japon", "JPY", {
+    timeZone: "Asia/Tokyo",
+    label: "hora de Tokio",
+  }),
+  unaCotizacion("corea-del-sur", "KRW", {
+    timeZone: "Asia/Seoul",
+    label: "hora de Seúl",
+  }),
+  unaCotizacion("china", "CNY", {
+    timeZone: "Asia/Shanghai",
+    label: "hora de Pekín",
+  }),
+  unaCotizacion("tailandia", "THB", {
+    timeZone: "Asia/Bangkok",
+    label: "hora de Bangkok",
+  }),
+  unaCotizacion("vietnam", "VND", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    label: "hora de Hanói",
+  }),
+  unaCotizacion("india", "INR", {
+    timeZone: "Asia/Kolkata",
+    label: "hora de Nueva Delhi",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

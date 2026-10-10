@@ -26,7 +26,7 @@ cada país de la base tiene guía, cada lugar de una guía existe como ciudad, y
 moneda de la base es una de las dos que conoce su cotización
 (`src/content/guias/destinos-planificables.test.ts`).
 
-Hoy: **58 países, 528 ciudades, 6.336 filas de clima, 9.504 precios y 34 ítems
+Hoy: **64 países, 582 ciudades, 6.984 filas de clima, 10.476 precios y 34 ítems
 de equipaje.**
 
 ## Tablas de referencia (datos maestros)
@@ -45,7 +45,8 @@ Las lee cualquiera, las escriben solo las migraciones.
 | `slug`          | text    | La ciudad en la URL (`?ciudad=ushuaia`). Único dentro del país                                                                      |
 
 El `cc` va por bloques de continente: Europa usó del `10` al `46`, del `47` al
-`4f` queda para lo que falte de Europa y Asia arranca en `50`.
+`4f` queda para lo que falte de Europa y Asia arranca en `50` (la primera tanda usó
+del `50` al `55`).
 
 ### `climate_profiles` — doce filas por ciudad
 
