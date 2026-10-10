@@ -10,8 +10,10 @@ import { brasil } from "./brasil";
 import { bulgaria } from "./bulgaria";
 import { chequia } from "./chequia";
 import { chile } from "./chile";
+import { china } from "./china";
 import { chipre } from "./chipre";
 import { colombia } from "./colombia";
+import { coreaDelSur } from "./corea-del-sur";
 import { costaRica } from "./costa-rica";
 import { croacia } from "./croacia";
 import { cuba } from "./cuba";
@@ -28,9 +30,11 @@ import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
 import { hungria } from "./hungria";
+import { india } from "./india";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
 import { italia } from "./italia";
+import { japon } from "./japon";
 import { letonia } from "./letonia";
 import { lituania } from "./lituania";
 import { luxemburgo } from "./luxemburgo";
@@ -53,10 +57,12 @@ import { rumania } from "./rumania";
 import { serbia } from "./serbia";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
+import { tailandia } from "./tailandia";
 import { turquia } from "./turquia";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
 import { venezuela } from "./venezuela";
+import { vietnam } from "./vietnam";
 
 export type {
   DestinationGuide,
@@ -142,6 +148,12 @@ const GUIAS: DestinationGuide[] = [
   moldavia,
   chipre,
   turquia,
+  japon,
+  coreaDelSur,
+  china,
+  tailandia,
+  vietnam,
+  india,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -171,8 +183,10 @@ export {
   bulgaria,
   chequia,
   chile,
+  china,
   chipre,
   colombia,
+  coreaDelSur,
   costaRica,
   croacia,
   cuba,
@@ -189,9 +203,11 @@ export {
   guatemala,
   honduras,
   hungria,
+  india,
   irlanda,
   islandia,
   italia,
+  japon,
   letonia,
   lituania,
   luxemburgo,
@@ -214,7 +230,9 @@ export {
   serbia,
   suecia,
   suiza,
+  tailandia,
   turquia,
   uruguay,
   venezuela,
+  vietnam,
 };

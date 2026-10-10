@@ -1184,8 +1184,8 @@ pero tienen moneda y reglas de entrada propias, que es exactamente lo que el
 modelo llama un corredor. Puerto Rico quedó afuera porque comparte moneda y
 frontera con Estados Unidos; estos tres tienen las suyas. Queda por decidir.
 
-Primera tanda propuesta, seis como en Europa: Japón, Corea del Sur, China,
-Tailandia, Vietnam e India.
+Primera tanda, seis como en Europa, cargada el 2026-10-10: Japón, Corea del Sur,
+China, Tailandia, Vietnam e India (sección 14.6).
 
 ### 14.3 Monedas
 
@@ -1236,3 +1236,40 @@ notaba. En Asia sí: un viaje de playa a Bali en enero, en pleno monzón, sale
 sin nada para la lluvia. Que la lluvia sume ítems es un cambio del motor
 (sección 4), no de datos: no se resuelve cargando países, y conviene decidirlo
 antes de que los primeros de Asia lo dejen a la vista.
+
+### 14.6 Primera tanda: Japón, Corea del Sur, China, Tailandia, Vietnam e India
+
+Seis países con la misma forma que el resto —guía completa, nueve ciudades con
+sus doce meses de clima y dieciocho precios— y una cotización contra el dólar
+cada uno, sin fuente todavía. Lo que cada uno le enseñó al modelo:
+
+- **Japón** es el único país del sitio con enchufes de 100 V: es el dato que
+  la portada muestra al lado del nombre. La propina no existe, así que su
+  precio es cero y el nombre del ítem lo dice.
+- **Corea del Sur** tiene una autorización previa (K-ETA) que se suspendió por
+  temporadas para algunos pasaportes; la guía explica el mecanismo y manda a
+  verificar. Los mapas que hay que llevar son los locales.
+- **China** cambia la preparación antes que la valija: se paga con el celular
+  (Alipay o WeChat Pay, que aceptan tarjetas extranjeras) y muchos servicios
+  occidentales no funcionan con una conexión china. Harbin es la ciudad más
+  fría del planificador.
+- **Tailandia** es el primer país donde el clima se lee en la lluvia: todas
+  sus ciudades son cálidas, ninguna llega a frío, y Ko Samui tiene el monzón
+  en otros meses que Phuket.
+- **Vietnam** tiene tres climas en un país y la lluvia del centro llega en
+  otoño, cuando el sur ya está seco.
+- **India** tiene el calor más fuerte del sitio antes del monzón y, en Leh, a
+  más de tres mil metros, su ciudad más fría. Los nombres van en castellano
+  (Bombay, Benarés) y la guía menciona una vez el otro nombre.
+
+El primer dato destacado de cada guía es el que la portada muestra al lado del
+país, y se lee como una frase: "100 V en los enchufes", "+40 °C en Delhi, Agra
+y Benarés en mayo". En la primera versión decía "Taj Mahal el mausoleo de
+mármol de Agra"; se reordenó para que diga lo que más cambia cómo se prepara
+el viaje.
+
+Verificado contra una base virgen —79 migraciones, smoke de RLS e
+integridad— y con la app levantada: 72 rutas sin fallas, ciudades de clima
+opuesto con listas opuestas (Sapporo, Harbin, Sapa y Leh con abrigo; Okinawa,
+Phuket y Goa sin él) y doce totales de presupuesto exactos, de JPY 17.600 en
+Tokio a VND 1.150.000 en Phu Quoc.
