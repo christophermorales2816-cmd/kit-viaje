@@ -8,6 +8,7 @@ import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { brasil } from "./brasil";
 import { bulgaria } from "./bulgaria";
+import { camboya } from "./camboya";
 import { chequia } from "./chequia";
 import { chile } from "./chile";
 import { china } from "./china";
@@ -24,6 +25,7 @@ import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
 import { estonia } from "./estonia";
+import { filipinas } from "./filipinas";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
 import { grecia } from "./grecia";
@@ -31,14 +33,17 @@ import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
 import { hungria } from "./hungria";
 import { india } from "./india";
+import { indonesia } from "./indonesia";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
 import { italia } from "./italia";
 import { japon } from "./japon";
+import { laos } from "./laos";
 import { letonia } from "./letonia";
 import { lituania } from "./lituania";
 import { luxemburgo } from "./luxemburgo";
 import { macedoniaDelNorte } from "./macedonia-del-norte";
+import { malasia } from "./malasia";
 import { malta } from "./malta";
 import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
@@ -55,6 +60,7 @@ import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
 import { rumania } from "./rumania";
 import { serbia } from "./serbia";
+import { singapur } from "./singapur";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import { tailandia } from "./tailandia";
@@ -154,6 +160,12 @@ const GUIAS: DestinationGuide[] = [
   tailandia,
   vietnam,
   india,
+  indonesia,
+  malasia,
+  singapur,
+  filipinas,
+  camboya,
+  laos,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -181,6 +193,7 @@ export {
   bosniaYHerzegovina,
   brasil,
   bulgaria,
+  camboya,
   chequia,
   chile,
   china,
@@ -197,6 +210,7 @@ export {
   eslovenia,
   espana,
   estonia,
+  filipinas,
   finlandia,
   francia,
   grecia,
@@ -204,14 +218,17 @@ export {
   honduras,
   hungria,
   india,
+  indonesia,
   irlanda,
   islandia,
   italia,
   japon,
+  laos,
   letonia,
   lituania,
   luxemburgo,
   macedoniaDelNorte,
+  malasia,
   malta,
   mexico,
   moldavia,
@@ -228,6 +245,7 @@ export {
   republicaDominicana,
   rumania,
   serbia,
+  singapur,
   suecia,
   suiza,
   tailandia,

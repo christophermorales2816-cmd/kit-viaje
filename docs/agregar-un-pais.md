@@ -90,10 +90,10 @@ En Asia, Timor Oriental es dolarizado: su moneda es el dólar.
 alta y a un viajero se le cobra en dólares —Venezuela y Cuba—, el corredor
 sigue en la moneda local, porque eso es lo que la guía explica, pero
 `destinations.base_currency` y los precios van en `USD`. `budgetConversionStatus`
-reconoce el caso y el presupuesto no intenta convertir. En Asia es el caso
-probable de Camboya, donde al turista se le cobra en dólares y el riel es el
-vuelto, y de Maldivas, donde todo lo turístico se cobra en dólares: se decide
-en la tanda de cada uno.
+reconoce el caso y el presupuesto no intenta convertir. En Asia es el caso de
+Camboya, donde al turista se le cobra en dólares y el riel es el vuelto: el
+corredor es `unaCotizacion("camboya", "KHR", …)` y los precios van en USD. Es
+también el caso probable de Maldivas, que se decide en su tanda.
 
 **`source: null` si no se verificó la API contra una respuesta real.** No se
 adivina el nombre de los campos. Brasil costó un ciclo entero por escribir
@@ -106,8 +106,8 @@ no hay cotización en vivo y todo lo demás funciona.
 Ids fijos, nunca `gen_random_uuid()`, en un rango que no choque con los países
 que ya están. Los países de 2026-10 usan `00000000-0000-4000-8000-00000000{cc}{nn}`,
 con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
-`4f` queda para lo que falte de Europa, y **Asia arranca en `50`** (la primera
-tanda usó del `50` al `55`; hay lugar hasta `8f`). Por cada ciudad:
+`4f` queda para lo que falte de Europa, y **Asia arranca en `50`** (las dos primeras
+tandas usaron del `50` al `5b`; hay lugar hasta `8f`). Por cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).
