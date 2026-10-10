@@ -30,15 +30,15 @@ const GUIAS = allGuides();
  * la que están calibrados los cálculos. No hace falta un campo nuevo: el test
  * de contenido ya garantiza que hay exactamente uno por guía.
  */
-const DESTINOS = GUIAS.map((guia) => {
-  const base = guia.places.find((place) => place.featured) ?? guia.places[0];
+function base(guia: DestinationGuide) {
+  return guia.places.find((place) => place.featured) ?? guia.places[0];
+}
 
-  return {
-    href: `/guia/${guia.slug}`,
-    label: guia.country,
-    coords: base.coords,
-  };
-});
+const DESTINOS = GUIAS.map((guia) => ({
+  href: `/guia/${guia.slug}`,
+  label: guia.country,
+  coords: base(guia).coords,
+}));
 
 /**
  * Las zonas en el orden en que se muestran: América de sur a norte, después
@@ -87,6 +87,31 @@ const CONTINENTE: Record<GuideSubregion, string> = {
   "Sudeste Asiático": "Asia",
   "Asia Oriental": "Asia",
 };
+
+/**
+ * Adónde mira el globo al cargar, antes de empezar a girar (spec, 14.9).
+ *
+ * La longitud es el promedio de los países de América y Europa: cae en el
+ * Atlántico, y desde ahí se ven los 58, de México a Chipre. Es también lo que
+ * ve quien entra sin JavaScript, para quien el globo no gira.
+ *
+ * La latitud no es un promedio sino el punto medio entre el marcador más al
+ * norte y el más al sur. Queda fija mientras gira, y así los dos extremos
+ * —Islandia y Uruguay, hoy— pasan a la misma distancia del centro, unos 50°.
+ * El promedio de todos caía en 29° norte, y el Río de la Plata giraba a 64°,
+ * pegado al borde del disco.
+ */
+const INICIO: [number, number] = (() => {
+  const lats = DESTINOS.map((destino) => destino.coords[0]);
+  const atlanticos = GUIAS.filter((guia) =>
+    ["América", "Europa"].includes(CONTINENTE[guia.subregion]),
+  ).map((guia) => base(guia).coords[1]);
+
+  return [
+    (Math.max(...lats) + Math.min(...lats)) / 2,
+    atlanticos.reduce((a, lon) => a + lon, 0) / atlanticos.length,
+  ];
+})();
 
 const POR_ZONA = ZONAS.map((zona) => ({
   zona,
@@ -205,14 +230,16 @@ export default function Home() {
           </div>
 
           <div className="flex w-full max-w-[460px] flex-col gap-2">
-            <GlobeHero destinations={DESTINOS} />
+            <GlobeHero destinations={DESTINOS} inicio={INICIO} />
 
             {/*
-              Dicho de frente (spec, 8.1): el globo insinúa "elegí cualquier
-              país" y todavía hay dos. Esconderlo sería peor que decirlo.
+              Dicho de frente (spec, 8.1): el globo muestra un lado a la vez,
+              así que la lista es la forma segura de llegar a cualquier país.
+              Y que se puede arrastrar no se adivina mirándolo.
             */}
             <p className="text-center text-sm text-balance text-slate-400">
-              Tocá un punto del globo, o elegí el país en la lista de abajo.
+              Arrastrá el globo para girarlo y tocá un punto, o elegí el país en
+              la lista de abajo.
             </p>
           </div>
         </div>
