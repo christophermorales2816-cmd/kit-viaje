@@ -44,6 +44,9 @@ Las lee cualquiera, las escriben solo las migraciones.
 | `is_base`       | boolean | La ciudad por defecto del país. Exactamente una por país                                                                            |
 | `slug`          | text    | La ciudad en la URL (`?ciudad=ushuaia`). Único dentro del país                                                                      |
 
+El `cc` va por bloques de continente: Europa usó del `10` al `46`, del `47` al
+`4f` queda para lo que falte de Europa y Asia arranca en `50`.
+
 ### `climate_profiles` — doce filas por ciudad
 
 | Columna                | Tipo    | Significado                                                    |
@@ -79,8 +82,10 @@ Un mes cae en todos los buckets que toca su rango: 8 / 20 °C es `frio`,
 | `base_qty`, `scales_with_days`, `days_per_unit`, `max_qty` |             | Cuántos sugiere el presupuesto según la duración del viaje                                 |
 
 Las ciudades que no son la base copian los precios de la base multiplicados por
-un factor (0,80 un pueblo, 1,30 un lugar de lujo). Las monedas con centavos
-(USD, EUR, GBP, CHF, BAM) redondean al centavo; el resto, a la unidad.
+un factor (0,80 un pueblo, 1,30 un lugar de lujo). Las monedas cuya unidad
+vale más de medio dólar (hoy USD, EUR, GBP, CHF y BAM; ya están listas SGD,
+BND, AZN, JOD, KWD, BHD y OMR para Asia) redondean al centavo; el resto, a la
+unidad. La lista es `MONEDAS_CON_CENTAVOS` en `src/lib/format.ts`.
 
 ### `packing_catalog` — el catálogo de equipaje, global
 
