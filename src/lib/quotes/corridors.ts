@@ -496,8 +496,9 @@ const CORREDORES = [
   // Asia. Igual que en Europa, una sola cotización contra el dólar por país:
   // el yen, el won, el yuan, el baht, el dong, las rupias, el ringgit, el dólar
   // de Singapur, el peso filipino, el riel, el kip, el dírham, el riyal catarí,
-  // el rial omaní y el dinar jordano. Las monedas del Golfo y de Jordania están
-  // atadas al dólar: la cotización casi no se mueve.
+  // el rial omaní, el dinar jordano, el lari, el dram, el manat, el som uzbeko,
+  // el tenge y el som kirguís. Las monedas del Golfo y de Jordania están atadas
+  // al dólar: la cotización casi no se mueve.
   unaCotizacion("japon", "JPY", {
     timeZone: "Asia/Tokyo",
     label: "hora de Tokio",
@@ -573,6 +574,30 @@ const CORREDORES = [
   unaCotizacion("sri-lanka", "LKR", {
     timeZone: "Asia/Colombo",
     label: "hora de Colombo",
+  }),
+  unaCotizacion("georgia", "GEL", {
+    timeZone: "Asia/Tbilisi",
+    label: "hora de Tiflis",
+  }),
+  unaCotizacion("armenia", "AMD", {
+    timeZone: "Asia/Yerevan",
+    label: "hora de Ereván",
+  }),
+  unaCotizacion("azerbaiyan", "AZN", {
+    timeZone: "Asia/Baku",
+    label: "hora de Bakú",
+  }),
+  unaCotizacion("uzbekistan", "UZS", {
+    timeZone: "Asia/Tashkent",
+    label: "hora de Taskent",
+  }),
+  unaCotizacion("kazajistan", "KZT", {
+    timeZone: "Asia/Almaty",
+    label: "hora de Almaty",
+  }),
+  unaCotizacion("kirguistan", "KGS", {
+    timeZone: "Asia/Bishkek",
+    label: "hora de Biskek",
   }),
 ];
 

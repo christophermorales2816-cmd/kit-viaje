@@ -119,6 +119,13 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     jordania: { lat: [29.1, 33.4], lon: [34.9, 39.3] },
     nepal: { lat: [26.3, 30.5], lon: [80, 88.2] },
     "sri-lanka": { lat: [5.9, 9.9], lon: [79.5, 82] },
+    georgia: { lat: [41, 43.6], lon: [40, 46.8] },
+    armenia: { lat: [38.8, 41.3], lon: [43.4, 46.7] },
+    // Con Najicheván, el exclave del oeste, del otro lado de Armenia.
+    azerbaiyan: { lat: [38.3, 42], lon: [44.7, 50.7] },
+    uzbekistan: { lat: [37.1, 45.6], lon: [55.9, 73.2] },
+    kazajistan: { lat: [40.5, 55.5], lon: [46.4, 87.4] },
+    kirguistan: { lat: [39.1, 43.3], lon: [69.2, 80.3] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
