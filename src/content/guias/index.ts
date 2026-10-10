@@ -2,7 +2,9 @@ import { albania } from "./albania";
 import { alemania } from "./alemania";
 import { andorra } from "./andorra";
 import { argentina } from "./argentina";
+import { armenia } from "./armenia";
 import { austria } from "./austria";
+import { azerbaiyan } from "./azerbaiyan";
 import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
@@ -30,6 +32,7 @@ import { estonia } from "./estonia";
 import { filipinas } from "./filipinas";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
+import { georgia } from "./georgia";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
@@ -41,6 +44,8 @@ import { islandia } from "./islandia";
 import { italia } from "./italia";
 import { japon } from "./japon";
 import { jordania } from "./jordania";
+import { kazajistan } from "./kazajistan";
+import { kirguistan } from "./kirguistan";
 import { laos } from "./laos";
 import { letonia } from "./letonia";
 import { lituania } from "./lituania";
@@ -73,6 +78,7 @@ import { tailandia } from "./tailandia";
 import { turquia } from "./turquia";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
+import { uzbekistan } from "./uzbekistan";
 import { venezuela } from "./venezuela";
 import { vietnam } from "./vietnam";
 
@@ -178,6 +184,12 @@ const GUIAS: DestinationGuide[] = [
   jordania,
   nepal,
   sriLanka,
+  georgia,
+  armenia,
+  azerbaiyan,
+  uzbekistan,
+  kazajistan,
+  kirguistan,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -199,7 +211,9 @@ export {
   alemania,
   andorra,
   argentina,
+  armenia,
   austria,
+  azerbaiyan,
   belgica,
   bolivia,
   bosniaYHerzegovina,
@@ -227,6 +241,7 @@ export {
   filipinas,
   finlandia,
   francia,
+  georgia,
   grecia,
   guatemala,
   honduras,
@@ -238,6 +253,8 @@ export {
   italia,
   japon,
   jordania,
+  kazajistan,
+  kirguistan,
   laos,
   letonia,
   lituania,
@@ -269,6 +286,7 @@ export {
   tailandia,
   turquia,
   uruguay,
+  uzbekistan,
   venezuela,
   vietnam,
 };

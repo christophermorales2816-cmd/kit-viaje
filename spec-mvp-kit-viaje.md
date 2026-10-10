@@ -1372,3 +1372,39 @@ directo y sin un render de React por frame. Un marcador del lado de atrás
 queda con `visibility: hidden`: no se ve, no se clickea y no se llega con Tab.
 La lista de países debajo del hero sigue siendo la forma de llegar a
 cualquier país sin depender del globo.
+
+### 14.10 Cuarta tanda: el Cáucaso y Asia Central
+
+Georgia, Armenia, Azerbaiyán, Uzbekistán, Kazajistán y Kirguistán. Con esta
+tanda la zona Asia Central tiene países y aparece en la portada; el Cáucaso va
+en Asia Occidental, como decidió la sección 14.1. Lo nuevo:
+
+- **Reglas de entrada que no son la visa.** Georgia pide por ley, desde 2024,
+  un seguro médico por toda la estadía. Uzbekistán registra cada noche: los
+  hoteles lo hacen solos y dan un comprobante que hay que guardar. Armenia
+  tiene cerradas las fronteras con Turquía y con Azerbaiyán, y se llega en
+  avión o desde Georgia o Irán. Azerbaiyán pide visa electrónica a casi todos,
+  y sus fronteras terrestres estuvieron cerradas a los viajeros desde 2020: se
+  dice como dato a verificar, no como regla fija.
+- **Zonas que no forman parte del viaje.** Abjasia y Osetia del Sur en
+  Georgia, Karabaj en Azerbaiyán y las zonas de frontera de montaña en
+  Kirguistán se nombran como Transnistria en Moldavia: un dato de entrada, sin
+  tono de alerta, y ninguna ciudad del planificador está ahí. Por lo mismo,
+  ninguna ciudad de Armenia queda sobre la frontera con Azerbaiyán.
+- **Song-Kol es la ciudad más fría del sitio**, con −24 °C de mínima en enero,
+  apenas por debajo de Harbin. Sus yurtas abren de junio a septiembre, y el
+  consejo de clima frío de Kirguistán dice que en pleno invierno el lago está
+  congelado y sin campamentos, no solo que hace frío. Astaná y Burabay rondan
+  los veinte bajo cero.
+- **La base de Kazajistán es Almaty y no Astaná**, por la misma razón que Dubái
+  en Emiratos: es por donde entra casi todo el que viaja, y desde donde se sale
+  a las montañas, los lagos y los cañones.
+- **El manat azerí es la primera moneda de la tanda con centavos**, y ya estaba
+  en `MONEDAS_CON_CENTAVOS` desde la base para Asia. El lari, el dram, el som
+  uzbeko, el tenge y el som kirguís van enteros; el som uzbeko, con montos de
+  cientos de miles, como el dong o el kip.
+- **Cuatro estaciones de esquí**: Gudauri, Tsaghkadzor, Shahdag y Shymbulak,
+  sobre Almaty. Salvo Tsaghkadzor, que cuesta como Ereván, tienen el factor de
+  precio más alto de su país.
+
+Los ids de destino van del `62` al `67`.
