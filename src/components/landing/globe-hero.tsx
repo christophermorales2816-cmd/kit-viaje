@@ -15,15 +15,28 @@ import { useEffect, useRef } from "react";
  * El destino entra por prop en vez de estar escrito acá: cuando haya más de un
  * corredor, este mismo componente dibuja varios marcadores sin tocarse.
  *
- * EL GLOBO NO GIRA, Y ESO ES A PROPÓSITO
+ * EL GLOBO GIRA, Y SE QUEDA QUIETO CUANDO HACE FALTA
  *
- * cobe dibuja sobre un <canvas> WebGL: no hay elementos, no hay eventos de
- * click sobre el marcador ni hit-testing que se pueda pedir prestado. El
- * marcador clickeable es un <button> de HTML puesto encima, y para que quede
- * encima del punto correcto el globo se fija con Buenos Aires mirando a cámara
- * en vez de rotar. Un globo que gira necesitaría recalcular la posición del
- * botón en cada frame para terminar con un blanco móvil, que es peor de
- * clickear y bastante peor de usar con teclado.
+ * Con un solo corredor el globo estaba fijo, mirando a Buenos Aires: un blanco
+ * móvil es peor de clickear y bastante peor de usar con teclado. Con países en
+ * tres continentes eso dejó de alcanzar, porque una esfera vista de frente
+ * muestra un hemisferio: con 76 países, el punto medio caía en el Sahara y
+ * Argentina quedaba del otro lado (spec, 14.8).
+ *
+ * Ahora gira (spec, 14.9), y lo que hacía mala idea un globo que gira se
+ * resuelve así:
+ *
+ *   - Se detiene apenas el mouse entra al globo o el foco llega a un marcador
+ *     con Tab: el punto al que apuntás no se mueve.
+ *   - Quien pidió menos movimiento en el sistema (prefers-reduced-motion) ve el
+ *     globo quieto; igual puede arrastrarlo.
+ *   - Se arrastra con el mouse o el dedo para elegir qué lado mirar.
+ *   - Arranca mirando al Atlántico, con América y Europa a la vista, que es lo
+ *     que muestra también sin JavaScript.
+ *   - Fuera de pantalla no dibuja.
+ *
+ * Los marcadores siguen siendo HTML encima del canvas, y se reubican en cada
+ * frame con la misma proyección que usa cobe.
  *
  * Como el marcador es HTML, además: se llega con Tab, se activa con Enter,
  * tiene nombre accesible y sigue funcionando si WebGL no está disponible. El
@@ -91,6 +104,34 @@ const ETIQUETAS_SIEMPRE_VISIBLES_HASTA = 3;
 const DURACION_DE_LA_RAFAGA_MS = 1200;
 
 /**
+ * Velocidad del giro: una vuelta por minuto. Más rápido no da tiempo a leer
+ * los nombres; más lento parece quieto.
+ */
+const GRADOS_POR_MS = 360 / 60_000;
+
+/** Arrastrar el ancho entero del globo lo gira media vuelta. */
+const GRADOS_POR_ANCHO = 180;
+
+/** Una longitud cualquiera, llevada a [-180, 180). */
+export function normalizarLongitud(lon: number): number {
+  return ((((lon + 180) % 360) + 360) % 360) - 180;
+}
+
+/**
+ * La longitud que mira la cámara después de arrastrar `dx` píxeles sobre un
+ * globo de `ancho` píxeles. Arrastrar a la derecha lleva la superficie a la
+ * derecha, como con la mano sobre una pelota: la cámara mira más al oeste.
+ */
+export function longitudTrasArrastre(
+  lonInicial: number,
+  dx: number,
+  ancho: number,
+): number {
+  if (ancho <= 0) return normalizarLongitud(lonInicial);
+  return normalizarLongitud(lonInicial - (dx / ancho) * GRADOS_POR_ANCHO);
+}
+
+/**
  * Punto medio de las coordenadas, que es adónde mira la cámara.
  *
  * Con un solo destino esto devuelve ese destino y el globo queda igual que
@@ -137,26 +178,37 @@ export function proyectar(
 
 export function GlobeHero({
   destinations,
+  inicio,
 }: {
   /** Los destinos que el globo ofrece. Uno o varios. */
   destinations: GlobeDestination[];
+  /**
+   * [latitud, longitud] adonde mira el globo al cargar, antes de girar. La
+   * latitud queda fija como inclinación. Sin este dato, el punto medio de los
+   * destinos.
+   */
+  inicio?: [number, number];
 }) {
+  const contenedorRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const foco = centro(destinations);
+  const marcadoresRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const foco = inicio ?? centro(destinations);
   const pocos = destinations.length <= ETIQUETAS_SIEMPRE_VISIBLES_HASTA;
-  const [PHI, THETA] = locationToAngles(...foco);
+  const [LAT, LON] = foco;
+  const [PHI, THETA] = locationToAngles(LAT, LON);
 
   useEffect(() => {
+    const contenedor = contenedorRef.current;
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!contenedor || !canvas) return;
 
     const lado = () => canvas.offsetWidth * 2;
 
     const globe = createGlobe(canvas, {
       devicePixelRatio: 2,
-      // Sin esto el canvas queda en blanco: el globo se dibuja en una ráfaga
-      // corta al principio y después nadie lo redibuja, así que el compositor
-      // se lleva el contenido. Ver el bloque de abajo.
+      // Sin esto el canvas queda en blanco cuando el globo deja de dibujar
+      // (pausado, quieto o fuera de pantalla): el compositor se lleva el
+      // contenido. Ver el bloque de abajo.
       context: { preserveDrawingBuffer: true },
       width: lado(),
       height: lado(),
@@ -175,12 +227,13 @@ export function GlobeHero({
     // El canvas es fluido: sin esto, girar el teléfono lo deja renderizado con
     // la medida vieja. En cobe v2 el tamaño se cambia con update(), no con el
     // onRender por frame de la v1.
-    const medir = () => globe.update({ width: lado(), height: lado() });
-
-    window.addEventListener("resize", medir);
+    const medir = () => {
+      globe.update({ width: lado(), height: lado() });
+      arrancar();
+    };
 
     /*
-      RÁFAGA CORTA DE FRAMES, Y DESPUÉS SE APAGA
+      CUÁNDO SE DIBUJA
 
       cobe 2.0.1 no tiene bucle interno —no hay requestAnimationFrame en su
       bundle—, así que dibuja solo cuando se lo pide. El primer frame trae la
@@ -194,45 +247,170 @@ export function GlobeHero({
         + preserveDrawingBuffer .............. 0/5
         + un update() diferido a un frame .... 0/5
         + bucle rAF permanente ............... 5/5
-        + bucle acotado y buffer preservado .. 5/5   ← esto
+        + bucle acotado y buffer preservado .. 5/5
 
-      El bucle permanente también funciona, pero deja un rAF corriendo para
-      siempre por un globo que no gira. Con el buffer preservado alcanza con la
-      ráfaga: se apaga sola y el último frame queda pintado. Verificado a los
-      2,5s, 5s, 9s y 15s, y después de redimensionar.
+      El bucle corre mientras el globo gira o se arrastra, y además durante
+      una ráfaga corta al arrancar, para que el mapa aparezca aunque el globo
+      esté quieto. Cuando nada lo mueve —mouse encima, foco en un marcador,
+      movimiento reducido o fuera de pantalla— se apaga, y el buffer
+      preservado deja pintado el último frame.
     */
+    const quieto = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let lon = LON;
+    // Dos motivos separados para detenerse: con uno solo, sacar el foco con
+    // Tab mientras el mouse sigue encima lo haría girar bajo el puntero.
+    let encima = false;
+    let conFoco = false;
+    let enPantalla = true;
+    let arrastre: { x: number; lon: number; id: number } | null = null;
     let frame = 0;
-    let inicio: number | null = null;
+    let ultimo: number | null = null;
+    let arranque: number | null = null;
 
-    // El instante de arranque sale del propio requestAnimationFrame y no de
-    // performance.now(): es el mismo reloj que compara la condición de abajo,
-    // así que no hace falta suponer que los dos comparten origen.
+    const gira = () =>
+      !quieto.matches && !encima && !conFoco && arrastre === null;
+
+    // Se escribe el estilo directo, sin pasar por React: son decenas de
+    // marcadores en cada frame, y un render por frame no aporta nada.
+    const ubicar = () => {
+      destinations.forEach((destino, i) => {
+        const el = marcadoresRef.current[i];
+        if (!el) return;
+        const { x, y, visible } = proyectar(destino.coords, [LAT, lon]);
+        el.style.left = `${50 + x * RADIO_DEL_GLOBO * 50}%`;
+        el.style.top = `${50 - y * RADIO_DEL_GLOBO * 50}%`;
+        // Del otro lado del planeta no se ve, no se clickea y no se llega con
+        // Tab: visibility hidden hace las tres cosas.
+        el.style.visibility = visible ? "visible" : "hidden";
+      });
+    };
+
+    // El tiempo sale del propio requestAnimationFrame: es el mismo reloj que
+    // se compara abajo, así que no hace falta suponer un origen común.
     const dibujar = (ahora: number) => {
-      inicio ??= ahora;
-      globe.update({});
-      if (ahora - inicio < DURACION_DE_LA_RAFAGA_MS) {
+      arranque ??= ahora;
+      const dt = ultimo === null ? 0 : ahora - ultimo;
+      ultimo = ahora;
+
+      if (gira()) lon = normalizarLongitud(lon - GRADOS_POR_MS * dt);
+      const [phi, theta] = locationToAngles(LAT, lon);
+      globe.update({ phi, theta });
+      ubicar();
+
+      const sigue =
+        enPantalla &&
+        (gira() ||
+          arrastre !== null ||
+          ahora - arranque < DURACION_DE_LA_RAFAGA_MS);
+
+      if (sigue) {
         frame = requestAnimationFrame(dibujar);
+      } else {
+        frame = 0;
+        ultimo = null;
       }
     };
 
-    frame = requestAnimationFrame(dibujar);
+    function arrancar() {
+      if (frame === 0 && enPantalla) frame = requestAnimationFrame(dibujar);
+    }
+
+    // Solo el mouse pausa al entrar: en pantallas táctiles no hay "encima", y
+    // el pointerenter de un toque dejaría el globo quieto hasta tocar afuera.
+    const alEntrar = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") encima = true;
+    };
+    const alSalir = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      encima = false;
+      arrancar();
+    };
+
+    // El foco se va de un marcador a otro sin salir del globo: se sigue
+    // girando solo cuando el foco salió del contenedor entero.
+    // Solo el foco de teclado: apretar el mouse sobre un marcador también lo
+    // enfoca, y si el puntero se va sin soltar el click, el globo quedaba
+    // quieto hasta tocar en otro lado. Con el mouse ya manda `encima`.
+    const alEntrarFoco = (e: FocusEvent) => {
+      if ((e.target as Element).matches(":focus-visible")) conFoco = true;
+    };
+    const alSalirFoco = (e: FocusEvent) => {
+      if (contenedor.contains(e.relatedTarget as Node | null)) return;
+      conFoco = false;
+      arrancar();
+    };
+
+    const alApretar = (e: PointerEvent) => {
+      arrastre = { x: e.clientX, lon, id: e.pointerId };
+      canvas.setPointerCapture(e.pointerId);
+      arrancar();
+    };
+    const alMover = (e: PointerEvent) => {
+      if (arrastre === null || e.pointerId !== arrastre.id) return;
+      lon = longitudTrasArrastre(
+        arrastre.lon,
+        e.clientX - arrastre.x,
+        canvas.offsetWidth,
+      );
+    };
+    const alSoltar = (e: PointerEvent) => {
+      if (arrastre === null || e.pointerId !== arrastre.id) return;
+      arrastre = null;
+      arrancar();
+    };
+
+    const observador = new IntersectionObserver(([entrada]) => {
+      enPantalla = entrada?.isIntersecting ?? true;
+      if (enPantalla) arrancar();
+    });
+
+    contenedor.addEventListener("pointerenter", alEntrar);
+    contenedor.addEventListener("pointerleave", alSalir);
+    contenedor.addEventListener("focusin", alEntrarFoco);
+    contenedor.addEventListener("focusout", alSalirFoco);
+    canvas.addEventListener("pointerdown", alApretar);
+    canvas.addEventListener("pointermove", alMover);
+    canvas.addEventListener("pointerup", alSoltar);
+    canvas.addEventListener("pointercancel", alSoltar);
+    quieto.addEventListener("change", arrancar);
+    window.addEventListener("resize", medir);
+    observador.observe(contenedor);
+
+    arrancar();
 
     return () => {
       cancelAnimationFrame(frame);
-      globe.destroy();
+      observador.disconnect();
+      contenedor.removeEventListener("pointerenter", alEntrar);
+      contenedor.removeEventListener("pointerleave", alSalir);
+      contenedor.removeEventListener("focusin", alEntrarFoco);
+      contenedor.removeEventListener("focusout", alSalirFoco);
+      canvas.removeEventListener("pointerdown", alApretar);
+      canvas.removeEventListener("pointermove", alMover);
+      canvas.removeEventListener("pointerup", alSoltar);
+      canvas.removeEventListener("pointercancel", alSoltar);
+      quieto.removeEventListener("change", arrancar);
       window.removeEventListener("resize", medir);
+      globe.destroy();
     };
     // Las dependencias son los ángulos y las coordenadas, no el array: un
     // literal nuevo en cada render recrearía el globo en cada render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [PHI, THETA, JSON.stringify(destinations.map((d) => d.coords))]);
+  }, [LAT, LON, JSON.stringify(destinations.map((d) => d.coords))]);
 
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[420px]">
+    <div
+      ref={contenedorRef}
+      className="relative mx-auto aspect-square w-full max-w-[420px]"
+    >
+      {/*
+        touch-action pan-y: en el teléfono, arrastrar de costado gira el globo
+        y arrastrar para arriba o abajo sigue scrolleando la página.
+      */}
       <canvas
         ref={canvasRef}
         aria-hidden
-        className="size-full [contain:layout_paint_size]"
+        className="size-full cursor-grab touch-pan-y [contain:layout_paint_size] active:cursor-grabbing"
       />
 
       {/*
@@ -240,21 +418,20 @@ export function GlobeHero({
         funcionan sin JavaScript, se abren en otra pestaña y Next precarga la
         guía al pasar el mouse. El canvas queda como decoración.
 
-        La posición sale de la misma proyección ortográfica que usa cobe, y no
-        de suponer que el destino está en el centro — que era cierto con un
-        solo país y dejó de serlo con dos.
+        La posición del primer render sale de la misma proyección ortográfica
+        que usa cobe, mirando al punto de inicio: es lo que ve quien no tiene
+        JavaScript. Después, el efecto los reubica en cada frame.
       */}
-      {destinations.map((destino) => {
+      {destinations.map((destino, i) => {
         const { x, y, visible } = proyectar(destino.coords, foco);
-
-        // Del otro lado del planeta no se dibuja: un marcador ahí estaría
-        // señalando el océano equivocado.
-        if (!visible) return null;
 
         return (
           <Link
             key={destino.href}
             href={destino.href}
+            ref={(el) => {
+              marcadoresRef.current[i] = el;
+            }}
             /*
               El enlace mide lo que mide el punto, y la etiqueta cuelga en
               absoluto: así `-translate-y-1/2` centra EL PUNTO sobre la
@@ -267,6 +444,9 @@ export function GlobeHero({
             style={{
               left: `${50 + x * RADIO_DEL_GLOBO * 50}%`,
               top: `${50 - y * RADIO_DEL_GLOBO * 50}%`,
+              // Del otro lado del planeta no se dibuja: un marcador ahí
+              // estaría señalando el océano equivocado.
+              visibility: visible ? "visible" : "hidden",
             }}
           >
             {/* Diecinueve puntos latiendo a la vez dejan de señalar nada. */}

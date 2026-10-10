@@ -1229,6 +1229,8 @@ siendo completa, así que nada se vuelve inalcanzable, pero qué tiene que
 mostrar el globo —girar, dejarse arrastrar, un continente por vez— es una
 decisión de diseño, y se toma cuando se toque el diseño.
 
+> **Resuelto en la sección 14.9:** el globo gira y se arrastra.
+
 **La lluvia no entra en la lista de equipaje.** El motor elige por bucket de
 temperatura y por tipo de viaje; el paraguas y el impermeable dependen del
 tipo de viaje, no de `precip_probability`. En América y Europa casi no se
@@ -1336,3 +1338,37 @@ setenta y seis países el punto medio cae en el Sahara y quedan del otro lado
 doce marcadores, entre ellos **Argentina**, Chile, Perú, México y tres países
 de Centroamérica. Todos siguen en la lista de países, pero el globo de un
 sitio para viajeros de América Latina ya no muestra la mayor parte de América.
+
+### 14.9 El globo gira
+
+Con setenta y seis países, un globo quieto ya no podía mostrarlos (sección
+14.8). Se eligió que gire, de las tres opciones de la sección 14.5. Un
+continente por vez obligaba a sumar un control de pestañas al hero.
+
+- **Una vuelta por minuto**, de oeste a este como la Tierra. Más rápido no da
+  tiempo a leer los nombres; más lento parece quieto.
+- **Se detiene cuando hace falta**, que era el motivo por el que no giraba. Se
+  detiene apenas entra el mouse al globo, para que el punto al que apuntás no
+  se mueva, y cuando un marcador recibe el foco con Tab. En pantallas táctiles
+  no hay "encima": ahí sigue girando.
+- **Se arrastra** con el mouse o con el dedo, en la dirección de la mano. En el
+  teléfono, arrastrar de costado gira el globo y arrastrar para arriba o para
+  abajo sigue scrolleando la página (`touch-action: pan-y`).
+- **Con `prefers-reduced-motion`** el globo no gira solo, pero se puede
+  arrastrar igual.
+- **Arranca mirando al Atlántico**, en el promedio de longitud de América y
+  Europa. Desde ahí se ven los 58 países de los dos continentes, de México a
+  Chipre, Argentina incluida. Es también lo que ve quien entra sin JavaScript.
+- **La inclinación no es el promedio de latitud**, que caía en 29° norte y
+  hacía girar al Río de la Plata a 64° del centro, pegado al borde. Es el punto
+  medio entre el marcador más al norte (Islandia) y el más al sur (Uruguay): los
+  dos pasan a unos 50° del centro.
+- **Fuera de pantalla no dibuja**: un `IntersectionObserver` apaga el bucle.
+  Cuando el globo se detiene, el canvas queda con el último frame.
+
+Los marcadores siguen siendo enlaces HTML encima del canvas. En cada frame se
+reubican con la misma proyección que dibuja cobe, escribiendo el estilo
+directo y sin un render de React por frame. Un marcador del lado de atrás
+queda con `visibility: hidden`: no se ve, no se clickea y no se llega con Tab.
+La lista de países debajo del hero sigue siendo la forma de llegar a
+cualquier país sin depender del globo.

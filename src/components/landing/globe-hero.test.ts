@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { proyectar } from "./globe-hero";
+import {
+  longitudTrasArrastre,
+  normalizarLongitud,
+  proyectar,
+} from "./globe-hero";
 
 const BUENOS_AIRES: [number, number] = [-34.6037, -58.3816];
 const RIO: [number, number] = [-22.9068, -43.1729];
@@ -73,5 +77,83 @@ describe("proyectar", () => {
       12,
     );
     expect(vuelta.visible).toBe(ida.visible);
+  });
+});
+
+/**
+ * El giro. La longitud que mira la cámara se mueve sin parar, y lo que puede
+ * salir mal es aritmético: que crezca sin tope, que salte al cruzar el
+ * antimeridiano, o que arrastrar gire para el lado contrario a la mano.
+ */
+describe("normalizarLongitud", () => {
+  it("deja igual lo que ya está en rango", () => {
+    expect(normalizarLongitud(-58.38)).toBeCloseTo(-58.38, 10);
+    expect(normalizarLongitud(0)).toBe(0);
+    expect(normalizarLongitud(179.5)).toBeCloseTo(179.5, 10);
+  });
+
+  it("da la vuelta en el antimeridiano para los dos lados", () => {
+    expect(normalizarLongitud(181)).toBeCloseTo(-179, 10);
+    expect(normalizarLongitud(-181)).toBeCloseTo(179, 10);
+    expect(normalizarLongitud(180)).toBe(-180);
+  });
+
+  it("no se va de rango después de muchas vueltas", () => {
+    // Un minuto por vuelta: una pestaña abierta un día entero son 1440.
+    expect(normalizarLongitud(-15 - 360 * 1440)).toBeCloseTo(-15, 6);
+    expect(normalizarLongitud(-15 + 360 * 1440)).toBeCloseTo(-15, 6);
+  });
+
+  it("no cambia lo que se ve: la proyección da lo mismo", () => {
+    const sinNormalizar = proyectar(BUENOS_AIRES, [10, -58.38 - 720]);
+    const normalizado = proyectar(BUENOS_AIRES, [
+      10,
+      normalizarLongitud(-58.38 - 720),
+    ]);
+
+    expect(normalizado.x).toBeCloseTo(sinNormalizar.x, 10);
+    expect(normalizado.y).toBeCloseTo(sinNormalizar.y, 10);
+  });
+});
+
+describe("longitudTrasArrastre", () => {
+  it("sin moverse, la cámara no se mueve", () => {
+    expect(longitudTrasArrastre(-15, 0, 400)).toBeCloseTo(-15, 10);
+  });
+
+  it("arrastrar el ancho entero gira media vuelta", () => {
+    expect(longitudTrasArrastre(0, 400, 400)).toBe(-180);
+    expect(longitudTrasArrastre(0, -400, 400)).toBe(-180);
+    expect(longitudTrasArrastre(0, 200, 400)).toBeCloseTo(-90, 10);
+  });
+
+  it("arrastrar a la derecha trae a la vista lo que estaba a la izquierda", () => {
+    // Con la cámara en el Atlántico, Buenos Aires está a la izquierda del
+    // centro. Arrastrar a la derecha lo tiene que acercar al centro, como
+    // empujar una pelota con la mano.
+    const antes = proyectar(BUENOS_AIRES, [0, -15]);
+    const despues = proyectar(BUENOS_AIRES, [
+      0,
+      longitudTrasArrastre(-15, 50, 400),
+    ]);
+
+    expect(antes.x).toBeLessThan(0);
+    expect(despues.x).toBeGreaterThan(antes.x);
+  });
+
+  it("no depende de cuánto mide el globo, sino de la fracción arrastrada", () => {
+    expect(longitudTrasArrastre(30, 100, 400)).toBeCloseTo(
+      longitudTrasArrastre(30, 50, 200),
+      10,
+    );
+  });
+
+  it("con un globo sin medida todavía, no gira ni devuelve NaN", () => {
+    // Antes del primer layout offsetWidth es 0, y dx / 0 es Infinity.
+    expect(longitudTrasArrastre(-15, 30, 0)).toBeCloseTo(-15, 10);
+  });
+
+  it("cruza el antimeridiano sin salto", () => {
+    expect(longitudTrasArrastre(170, -100, 400)).toBeCloseTo(-145, 10);
   });
 });
