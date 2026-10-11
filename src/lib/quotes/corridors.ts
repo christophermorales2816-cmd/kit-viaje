@@ -270,6 +270,48 @@ const CUBA: QuoteCorridor = {
   source: null,
 };
 
+/**
+ * Turkmenistán, Irán y Myanmar llevan la tesis de Venezuela y Cuba a Asia: la
+ * cotización oficial y la que se consigue en la calle o en una casa de cambio
+ * están muy lejos entre sí. Sus precios van en dólares, como en Venezuela, y
+ * el corredor muestra las dos. Sin fuente verificada, por la misma regla.
+ */
+const TURKMENISTAN: QuoteCorridor = {
+  corridor: "turkmenistan",
+  baseCurrency: "TMT",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "paralelo"],
+  defaultQuoteId: "paralelo",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", paralelo: "Paralelo" },
+  clock: { timeZone: "Asia/Ashgabat", label: "hora de Asjabad" },
+  source: null,
+};
+
+const IRAN: QuoteCorridor = {
+  corridor: "iran",
+  baseCurrency: "IRR",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "libre"],
+  defaultQuoteId: "libre",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", libre: "Libre (casas de cambio)" },
+  clock: { timeZone: "Asia/Tehran", label: "hora de Teherán" },
+  source: null,
+};
+
+const MYANMAR: QuoteCorridor = {
+  corridor: "myanmar",
+  baseCurrency: "MMK",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "mercado"],
+  defaultQuoteId: "mercado",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", mercado: "Mercado" },
+  clock: { timeZone: "Asia/Yangon", label: "hora de Rangún" },
+  source: null,
+};
+
 const CORREDORES = [
   ARGENTINA,
   BRASIL,
@@ -598,6 +640,81 @@ const CORREDORES = [
   unaCotizacion("kirguistan", "KGS", {
     timeZone: "Asia/Bishkek",
     label: "hora de Biskek",
+  }),
+  // Lo que quedaba de Asia (spec, 14.11). Maldivas y Líbano son el caso de
+  // Camboya: moneda propia y precios en dólares, una sola cotización. Timor
+  // Oriental es dolarizado, como Ecuador. Hong Kong, Macao y Taiwán son
+  // territorios con moneda y frontera propias.
+  unaCotizacion("arabia-saudita", "SAR", {
+    timeZone: "Asia/Riyadh",
+    label: "hora de Riad",
+  }),
+  unaCotizacion("kuwait", "KWD", {
+    timeZone: "Asia/Kuwait",
+    label: "hora de Kuwait",
+  }),
+  unaCotizacion("barein", "BHD", {
+    timeZone: "Asia/Bahrain",
+    label: "hora de Manama",
+  }),
+  unaCotizacion("tayikistan", "TJS", {
+    timeZone: "Asia/Dushanbe",
+    label: "hora de Dusambé",
+  }),
+  TURKMENISTAN,
+  unaCotizacion("maldivas", "MVR", {
+    timeZone: "Indian/Maldives",
+    label: "hora de Malé",
+  }),
+  unaCotizacion("butan", "BTN", {
+    timeZone: "Asia/Thimphu",
+    label: "hora de Timbu",
+  }),
+  unaCotizacion("banglades", "BDT", {
+    timeZone: "Asia/Dhaka",
+    label: "hora de Daca",
+  }),
+  unaCotizacion("brunei", "BND", {
+    timeZone: "Asia/Brunei",
+    label: "hora de Bandar Seri Begawan",
+  }),
+  dolarizado("timor-oriental", {
+    timeZone: "Asia/Dili",
+    label: "hora de Dili",
+  }),
+  unaCotizacion("mongolia", "MNT", {
+    timeZone: "Asia/Ulaanbaatar",
+    label: "hora de Ulán Bator",
+  }),
+  unaCotizacion("irak", "IQD", {
+    timeZone: "Asia/Baghdad",
+    label: "hora de Bagdad",
+  }),
+  IRAN,
+  unaCotizacion("israel-y-palestina", "ILS", {
+    timeZone: "Asia/Jerusalem",
+    label: "hora de Jerusalén",
+  }),
+  unaCotizacion("libano", "LBP", {
+    timeZone: "Asia/Beirut",
+    label: "hora de Beirut",
+  }),
+  MYANMAR,
+  unaCotizacion("pakistan", "PKR", {
+    timeZone: "Asia/Karachi",
+    label: "hora de Islamabad",
+  }),
+  unaCotizacion("hong-kong", "HKD", {
+    timeZone: "Asia/Hong_Kong",
+    label: "hora de Hong Kong",
+  }),
+  unaCotizacion("macao", "MOP", {
+    timeZone: "Asia/Macau",
+    label: "hora de Macao",
+  }),
+  unaCotizacion("taiwan", "TWD", {
+    timeZone: "Asia/Taipei",
+    label: "hora de Taipéi",
   }),
 ];
 

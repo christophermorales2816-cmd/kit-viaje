@@ -19,7 +19,7 @@
 Aplicación web sin registro que resuelve dos cosas para viajar: **qué empacar**
 y **cuánto vas a gastar**. Nació para destinos con alta volatilidad económica y
 multiplicidad cambiaria —el MVP fue un solo corredor, Buenos Aires— y hoy cubre
-América Latina completa, casi toda Europa y los primeros países de Asia, con el
+América Latina completa, casi toda Europa y casi toda Asia, con el
 clima de cada ciudad y el presupuesto en moneda local.
 
 La especificación completa vive en [`spec-mvp-kit-viaje.md`](./spec-mvp-kit-viaje.md)

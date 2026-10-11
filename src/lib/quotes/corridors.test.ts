@@ -45,14 +45,15 @@ describe("registro de corredores", () => {
   });
 
   it("no le inventa cotizaciones a un país dolarizado", () => {
-    // Ecuador, El Salvador y Panamá cobran en dólares. Cualquier cotización
-    // que se declarara acá sería un número que no existe.
+    // Ecuador, El Salvador, Panamá y Timor Oriental cobran en dólares.
+    // Cualquier cotización que se declarara acá sería un número que no existe.
     const dolarizados = allQuoteCorridors().filter(isDollarized);
 
     expect(dolarizados.map((c) => c.corridor).sort()).toEqual([
       "ecuador",
       "el-salvador",
       "panama",
+      "timor-oriental",
     ]);
 
     for (const corredor of dolarizados) {

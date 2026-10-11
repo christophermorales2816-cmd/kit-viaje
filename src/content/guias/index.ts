@@ -1,15 +1,20 @@
 import { albania } from "./albania";
 import { alemania } from "./alemania";
 import { andorra } from "./andorra";
+import { arabiaSaudita } from "./arabia-saudita";
 import { argentina } from "./argentina";
 import { armenia } from "./armenia";
 import { austria } from "./austria";
 import { azerbaiyan } from "./azerbaiyan";
+import { banglades } from "./banglades";
+import { barein } from "./barein";
 import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { brasil } from "./brasil";
+import { brunei } from "./brunei";
 import { bulgaria } from "./bulgaria";
+import { butan } from "./butan";
 import { camboya } from "./camboya";
 import { catar } from "./catar";
 import { chequia } from "./chequia";
@@ -36,31 +41,42 @@ import { georgia } from "./georgia";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
+import { hongKong } from "./hong-kong";
 import { hungria } from "./hungria";
 import { india } from "./india";
 import { indonesia } from "./indonesia";
+import { irak } from "./irak";
+import { iran } from "./iran";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
+import { israelYPalestina } from "./israel-y-palestina";
 import { italia } from "./italia";
 import { japon } from "./japon";
 import { jordania } from "./jordania";
 import { kazajistan } from "./kazajistan";
 import { kirguistan } from "./kirguistan";
+import { kuwait } from "./kuwait";
 import { laos } from "./laos";
 import { letonia } from "./letonia";
+import { libano } from "./libano";
 import { lituania } from "./lituania";
 import { luxemburgo } from "./luxemburgo";
+import { macao } from "./macao";
 import { macedoniaDelNorte } from "./macedonia-del-norte";
 import { malasia } from "./malasia";
+import { maldivas } from "./maldivas";
 import { malta } from "./malta";
 import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
+import { mongolia } from "./mongolia";
 import { montenegro } from "./montenegro";
+import { myanmar } from "./myanmar";
 import { nepal } from "./nepal";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
 import { oman } from "./oman";
 import { paisesBajos } from "./paises-bajos";
+import { pakistan } from "./pakistan";
 import { panama } from "./panama";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
@@ -75,6 +91,10 @@ import { sriLanka } from "./sri-lanka";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import { tailandia } from "./tailandia";
+import { taiwan } from "./taiwan";
+import { tayikistan } from "./tayikistan";
+import { timorOriental } from "./timor-oriental";
+import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
 import type { DestinationGuide } from "./types";
 import { uruguay } from "./uruguay";
@@ -190,6 +210,26 @@ const GUIAS: DestinationGuide[] = [
   uzbekistan,
   kazajistan,
   kirguistan,
+  arabiaSaudita,
+  kuwait,
+  barein,
+  tayikistan,
+  turkmenistan,
+  maldivas,
+  butan,
+  banglades,
+  brunei,
+  timorOriental,
+  mongolia,
+  irak,
+  iran,
+  israelYPalestina,
+  libano,
+  myanmar,
+  pakistan,
+  hongKong,
+  macao,
+  taiwan,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -210,15 +250,20 @@ export {
   albania,
   alemania,
   andorra,
+  arabiaSaudita,
   argentina,
   armenia,
   austria,
   azerbaiyan,
+  banglades,
+  barein,
   belgica,
   bolivia,
   bosniaYHerzegovina,
   brasil,
+  brunei,
   bulgaria,
+  butan,
   camboya,
   catar,
   chequia,
@@ -245,31 +290,42 @@ export {
   grecia,
   guatemala,
   honduras,
+  hongKong,
   hungria,
   india,
   indonesia,
+  irak,
+  iran,
   irlanda,
   islandia,
+  israelYPalestina,
   italia,
   japon,
   jordania,
   kazajistan,
   kirguistan,
+  kuwait,
   laos,
   letonia,
+  libano,
   lituania,
   luxemburgo,
+  macao,
   macedoniaDelNorte,
   malasia,
+  maldivas,
   malta,
   mexico,
   moldavia,
+  mongolia,
   montenegro,
+  myanmar,
   nepal,
   nicaragua,
   noruega,
   oman,
   paisesBajos,
+  pakistan,
   panama,
   paraguay,
   peru,
@@ -284,6 +340,10 @@ export {
   suecia,
   suiza,
   tailandia,
+  taiwan,
+  tayikistan,
+  timorOriental,
+  turkmenistan,
   turquia,
   uruguay,
   uzbekistan,

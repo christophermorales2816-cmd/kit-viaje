@@ -136,13 +136,18 @@ const EN_VIVO = allQuoteCorridors()
   }));
 
 /**
- * El número de países y su nota salen del contenido.
+ * El número de destinos y su nota salen del contenido.
  *
  * "2 países" estuvo fijo mientras había tres. Es el mismo error que el 404 que
  * decía que el único corredor era Argentina: un dato que hay que acordarse de
  * actualizar a mano en cada país es un dato que va a quedar viejo.
+ *
+ * Dice "destinos" y no "países" desde que entraron Hong Kong, Macao y Taiwán
+ * (spec, 14.11): tienen moneda y frontera propias, que es lo que el modelo
+ * llama un corredor, pero contarlos como países habría sido decir algo que la
+ * portada no tiene por qué decir.
  */
-/** Cuántos países hay en cada continente, en el orden de las zonas. */
+/** Cuántos destinos hay en cada continente, en el orden de las zonas. */
 const POR_CONTINENTE = [
   ...ZONAS.reduce((cuenta, zona) => {
     const cuantas = GUIAS.filter((guia) => guia.subregion === zona).length;
@@ -155,7 +160,7 @@ const POR_CONTINENTE = [
 const ESTADISTICAS = [
   {
     valor: String(GUIAS.length),
-    etiqueta: GUIAS.length === 1 ? "país" : "países",
+    etiqueta: GUIAS.length === 1 ? "destino" : "destinos",
     nota: POR_CONTINENTE.map(
       ([continente, cuantas]) => `${cuantas} en ${continente}`,
     ).join(", "),
@@ -204,10 +209,10 @@ export default function Home() {
             </p>
 
             <p className="text-sm text-pretty text-slate-400">
-              Guías de país con lo que hay que saber antes de reservar, y dos
-              motores que arman tu equipaje según el clima de tus fechas y tu
-              presupuesto en la cotización que elijas. Te llevás la planilla en
-              CSV.
+              Guías de cada destino con lo que hay que saber antes de reservar,
+              y dos motores que arman tu equipaje según el clima de tus fechas y
+              tu presupuesto en la cotización que elijas. Te llevás la planilla
+              en CSV.
             </p>
 
             {/*
@@ -225,7 +230,7 @@ export default function Home() {
               size="lg"
               className="bg-white text-slate-950 hover:bg-slate-200"
             >
-              <Link href="#paises">Elegir entre {GUIAS.length} países</Link>
+              <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
             </Button>
           </div>
 
@@ -238,8 +243,8 @@ export default function Home() {
               Y que se puede arrastrar no se adivina mirándolo.
             */}
             <p className="text-center text-sm text-balance text-slate-400">
-              Arrastrá el globo para girarlo y tocá un punto, o elegí el país en
-              la lista de abajo.
+              Arrastrá el globo para girarlo y tocá un punto, o elegí el destino
+              en la lista de abajo.
             </p>
           </div>
         </div>
@@ -284,7 +289,7 @@ export default function Home() {
           </h2>
 
           <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-            Cada país tiene su guía, su clima mes a mes por ciudad y su
+            Cada destino tiene su guía, su clima mes a mes por ciudad y su
             presupuesto en moneda local. Al lado del nombre, lo que más cambia
             cómo se prepara ese viaje.
           </p>

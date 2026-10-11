@@ -8,11 +8,11 @@ import type { DestinationGuide } from "./types";
  * revisión visible. Al tocar cualquier texto de `facts`, mover `factsUpdatedAt`.
  *
  * Lo que este país aporta: la montaña como estación. El lago Song-Kol, a más
- * de tres mil metros, es la ciudad más fría del planificador, y sus yurtas
- * abren solo de junio a septiembre: el consejo de clima tiene que decir que
- * en enero ahí no hay viaje posible, no solo que hace frío. Los permisos de
- * zona de frontera se dicen como dato de entrada, y ninguna ciudad del
- * planificador los necesita.
+ * de tres mil metros, es de las ciudades más frías del planificador, y sus
+ * yurtas abren solo de junio a septiembre: el consejo de clima tiene que
+ * decir que en enero ahí no hay viaje posible, no solo que hace frío. Los
+ * permisos de zona de frontera se dicen como dato de entrada, y ninguna
+ * ciudad del planificador los necesita.
  */
 export const kirguistan: DestinationGuide = {
   slug: "kirguistan",
