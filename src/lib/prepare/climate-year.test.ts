@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import type { ClimateProfile, ClimateThreshold } from "@/lib/packing";
+import type {
+  ClimateProfile,
+  ClimateThreshold,
+  PrecipThreshold,
+} from "@/lib/packing";
 
 import {
   CALOR_EXIGENTE,
@@ -119,6 +123,39 @@ describe("resolveClimateYear", () => {
 
     expect(año[3].buckets).toEqual(["templado"]);
     expect(año[3].primaryBucket).toBe("templado");
+  });
+});
+
+describe("resolveClimateYear con lluvia (sección 14.12)", () => {
+  const LLUVIA: PrecipThreshold[] = [{ id: "lluvia", precipMin: 40 }];
+
+  it("marca la lluvia mes por mes, no el año entero", () => {
+    // Bangkok: enero seco, septiembre en pleno monzón.
+    const meses = resolveClimateYear(
+      [perfil(1, 22, 32, 6), perfil(9, 25, 33, 70)],
+      UMBRALES,
+      LLUVIA,
+    );
+
+    expect(meses[0].rainBuckets).toEqual([]);
+    expect(meses[8].rainBuckets).toEqual(["lluvia"]);
+  });
+
+  it("la lluvia no le disputa el bucket principal al calor", () => {
+    const [enero] = resolveClimateYear(
+      [perfil(1, 24, 31, 62)],
+      UMBRALES,
+      LLUVIA,
+    );
+
+    expect(enero.primaryBucket).toBe("calido");
+    expect(enero.buckets).not.toContain("lluvia");
+  });
+
+  it("sin umbrales de lluvia ningún mes la tiene", () => {
+    const meses = resolveClimateYear([perfil(1, 24, 31, 90)], UMBRALES);
+
+    expect(meses.every((mes) => mes.rainBuckets.length === 0)).toBe(true);
   });
 });
 

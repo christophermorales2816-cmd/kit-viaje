@@ -4,8 +4,13 @@ import {
   bucketIndexForTemperature,
   orderThresholds,
   resolveClimateBuckets,
+  resolveRainBuckets,
 } from "@/lib/packing/climate";
-import type { ClimateProfile, ClimateThreshold } from "@/lib/packing/types";
+import type {
+  ClimateProfile,
+  ClimateThreshold,
+  PrecipThreshold,
+} from "@/lib/packing/types";
 
 /** El seed de la migración 20260826120300 (spec, sección 4). */
 const THRESHOLDS: ClimateThreshold[] = [
@@ -141,5 +146,55 @@ describe("resolveClimateBuckets", () => {
     const resultado = resolveClimateBuckets([7, 8], [profile(7, 5, 9)], []);
     expect(resultado.buckets).toEqual([]);
     expect(resultado.monthsWithoutData).toEqual([7, 8]);
+  });
+});
+
+describe("resolveRainBuckets (sección 14.12)", () => {
+  /** El seed de la migración 20261011120000. */
+  const LLUVIA: PrecipThreshold[] = [{ id: "lluvia", precipMin: 40 }];
+
+  function lluvia(month: number, precipProbability: number | null): ClimateProfile {
+    return { month, tempMin: 22, tempMax: 31, precipProbability };
+  }
+
+  it("activa el bucket en un mes que llega al umbral, inclusive", () => {
+    expect(resolveRainBuckets([1], [lluvia(1, 40)], LLUVIA)).toEqual(["lluvia"]);
+    expect(resolveRainBuckets([1], [lluvia(1, 62)], LLUVIA)).toEqual(["lluvia"]);
+  });
+
+  it("no lo activa en un mes que no llega", () => {
+    expect(resolveRainBuckets([7], [lluvia(7, 39)], LLUVIA)).toEqual([]);
+  });
+
+  it("alcanza con un mes de lluvia en todo el viaje", () => {
+    // Abril seco y mayo en el monzón: la segunda mitad pide paraguas.
+    const perfiles = [lluvia(4, 22), lluvia(5, 50)];
+    expect(resolveRainBuckets([4, 5], perfiles, LLUVIA)).toEqual(["lluvia"]);
+  });
+
+  it("solo mira los meses del viaje", () => {
+    const perfiles = [lluvia(1, 70), lluvia(7, 10)];
+    expect(resolveRainBuckets([7], perfiles, LLUVIA)).toEqual([]);
+  });
+
+  it("no inventa lluvia en un mes sin el dato", () => {
+    expect(resolveRainBuckets([3], [lluvia(3, null)], LLUVIA)).toEqual([]);
+    expect(resolveRainBuckets([3], [], LLUVIA)).toEqual([]);
+  });
+
+  it("con varios umbrales devuelve los que alcanza, de menor a mayor", () => {
+    const umbrales: PrecipThreshold[] = [
+      { id: "monzon", precipMin: 70 },
+      { id: "lluvia", precipMin: 40 },
+    ];
+    expect(resolveRainBuckets([7], [lluvia(7, 85)], umbrales)).toEqual([
+      "lluvia",
+      "monzon",
+    ]);
+    expect(resolveRainBuckets([7], [lluvia(7, 55)], umbrales)).toEqual(["lluvia"]);
+  });
+
+  it("sin umbrales no resuelve nada", () => {
+    expect(resolveRainBuckets([1], [lluvia(1, 90)], [])).toEqual([]);
   });
 });

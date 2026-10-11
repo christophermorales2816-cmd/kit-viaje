@@ -8,6 +8,7 @@ import {
   getClimateThresholds,
   getDestinationById,
   getPackingCatalog,
+  getPrecipThresholds,
   getProducts,
 } from "@/lib/supabase/cached";
 
@@ -47,11 +48,12 @@ async function loadView(
   const admin = adminClient();
 
   // Todo en paralelo: nada de esto depende del resultado de lo otro, y en
-  // serie serían seis viajes encadenados antes de pintar el dashboard.
+  // serie serían ocho viajes encadenados antes de pintar el dashboard.
   const [
     destination,
     climateProfiles,
     climateThresholds,
+    precipThresholds,
     catalog,
     products,
     packingResult,
@@ -60,6 +62,7 @@ async function loadView(
     getDestinationById(trip.destinationId),
     getClimateProfiles(trip.destinationId),
     getClimateThresholds(),
+    getPrecipThresholds(),
     getPackingCatalog(),
     getProducts(trip.destinationId),
     admin
@@ -102,6 +105,7 @@ async function loadView(
     trip,
     climateProfiles,
     climateThresholds,
+    precipThresholds,
     catalog,
   }).items.map((entry) => {
     const elegido = elegidoPacking.get(entry.item.id);

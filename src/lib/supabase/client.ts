@@ -5,7 +5,7 @@ import { requireEnv } from "./env";
 /**
  * Cliente de lectura de los datos de referencia (spec, sección 3).
  *
- * Usa la anon key, que es pública por diseño: las cinco tablas de referencia
+ * Usa la anon key, que es pública por diseño: las seis tablas de referencia
  * tienen una política de select con `using (true)` y los privilegios de
  * escritura revocados. No puede tocar las tablas de sesión — esas tienen RLS
  * habilitada y cero políticas.

@@ -124,6 +124,51 @@ describe("suggestItemsForBuckets", () => {
     expect(suggestItemsForBuckets(CATALOGO, ["polar"], "polar", 3)).toEqual([]);
   });
 
+  describe("en un mes de lluvia (sección 14.12)", () => {
+    // El paraguas sirve con cualquier temperatura: por especificidad quedaba
+    // siempre último, y la tarjeta de un mes de monzón no decía nada de la
+    // lluvia.
+    const CON_PARAGUAS = [...CATALOGO, item("paraguas", [...TODOS, "lluvia"])];
+
+    it("pone primero lo de la lluvia", () => {
+      const ids = suggestItemsForBuckets(
+        CON_PARAGUAS,
+        ["templado", "calido"],
+        "calido",
+        4,
+        ["lluvia"],
+      ).map((i) => i.id);
+
+      expect(ids[0]).toBe("paraguas");
+      // El resto sigue el orden de siempre: el calor define el mes.
+      expect(ids[1]).toBe("short");
+    });
+
+    it("en un mes seco el paraguas no le gana a lo específico", () => {
+      const ids = suggestItemsForBuckets(
+        CON_PARAGUAS,
+        ["templado", "calido"],
+        "calido",
+        4,
+      ).map((i) => i.id);
+
+      expect(ids).not.toContain("paraguas");
+    });
+
+    it("sugiere un ítem que solo es de lluvia", () => {
+      const poncho = item("poncho", ["lluvia"]);
+      const ids = suggestItemsForBuckets(
+        [...CATALOGO, poncho],
+        ["calido"],
+        "calido",
+        4,
+        ["lluvia"],
+      ).map((i) => i.id);
+
+      expect(ids[0]).toBe("poncho");
+    });
+  });
+
   it("no muta el catálogo recibido", () => {
     const original = CATALOGO.map((i) => i.id);
     suggestItemsForBuckets(CATALOGO, TODOS, "templado", 5);

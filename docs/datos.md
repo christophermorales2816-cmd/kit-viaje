@@ -69,6 +69,17 @@ arranca en `90`.
 Un mes cae en todos los buckets que toca su rango: 8 / 20 °C es `frio`,
 `fresco` y `templado` a la vez.
 
+### `precip_thresholds` — los buckets de lluvia
+
+| `id`     | `precip_min` | Lo que pide la valija  |
+| -------- | ------------ | ---------------------- |
+| `lluvia` | 40           | Paraguas e impermeable |
+
+Un viaje toca el bucket si alguno de sus meses llega al umbral. Lo etiquetado
+con un bucket de lluvia entra en **cualquier** tipo de viaje; el resto del
+catálogo sigue filtrando por tipo. La lluvia suma y nunca saca nada: la ciudad
+lleva paraguas aunque no llueva (spec, sección 14.12).
+
 ### `products` — dieciocho precios por ciudad
 
 | Columna                                                    | Tipo        | Significado                                                                                |
@@ -93,7 +104,7 @@ unidad. La lista es `MONEDAS_CON_CENTAVOS` en `src/lib/format.ts`.
 | Columna                                                    | Significado                                                      |
 | ---------------------------------------------------------- | ---------------------------------------------------------------- |
 | `category`, `name`, `weight_g`                             | El ítem y su peso                                                |
-| `climate_tags`                                             | En qué buckets de clima se sugiere                               |
+| `climate_tags`                                             | En qué buckets de clima o de lluvia se sugiere                   |
 | `trip_type_tags`                                           | En qué tipos de viaje: `playa`, `urbano`, `aventura`, `negocios` |
 | `base_qty`, `scales_with_days`, `days_per_unit`, `max_qty` | Cantidad según la duración                                       |
 
@@ -120,7 +131,7 @@ viaje y lo guardado se superpone encima (`src/lib/trips/read.ts`).
 | Slug con forma de URL, único en el país                                   | Check + índice único                             |
 | Precios en la moneda de su ciudad                                         | Trigger en `products` y en `destinations`        |
 | Una moneda por país                                                       | CI                                               |
-| Buckets del catálogo que existen                                          | CI                                               |
+| Buckets que existen; ninguno de temperatura y de lluvia a la vez          | CI                                               |
 | Cada tipo de viaje con ítems                                              | CI                                               |
 | Precio ≥ 0, cantidades > 0, mes 1–12, lluvia 0–100, `temp_min ≤ temp_max` | Checks de la tabla                               |
 | Viaje de 1 a 30 días, fin después del inicio                              | Checks de `trips` + validación en el servidor    |

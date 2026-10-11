@@ -18,6 +18,7 @@ import {
   getClimateThresholds,
   getDestinationsByCorridor,
   getPackingCatalog,
+  getPrecipThresholds,
   pickDestination,
 } from "@/lib/supabase/cached";
 
@@ -99,15 +100,16 @@ export default async function PrepararPage({
 
   // En paralelo: son lecturas independientes, y cuando la caché está fría
   // encadenarlas sumaría round-trips a Supabase.
-  const [perfiles, umbrales, catalogo] = hayCiudad
+  const [perfiles, umbrales, umbralesDeLluvia, catalogo] = hayCiudad
     ? await Promise.all([
         getClimateProfiles(destino.id),
         getClimateThresholds(),
+        getPrecipThresholds(),
         getPackingCatalog(),
       ])
-    : [[], [], []];
+    : [[], [], [], []];
 
-  const meses = resolveClimateYear(perfiles, umbrales);
+  const meses = resolveClimateYear(perfiles, umbrales, umbralesDeLluvia);
   const resumen = summarizeYear(meses);
 
   return (

@@ -5,6 +5,7 @@ import type {
   ClimateProfile,
   ClimateThreshold,
   PackingCatalogItem,
+  PrecipThreshold,
   TripType,
 } from "@/lib/packing";
 
@@ -196,7 +197,7 @@ export async function getDestinationById(id: string): Promise<Destination> {
 }
 
 // ---------------------------------------------------------------------------
-// climate_profiles / climate_thresholds
+// climate_profiles / climate_thresholds / precip_thresholds
 // ---------------------------------------------------------------------------
 
 export async function getClimateProfiles(
@@ -231,6 +232,43 @@ export async function getClimateThresholds(): Promise<ClimateThreshold[]> {
   return (data ?? []).map((row) => ({
     id: row.id,
     tempMax: numeric(row.temp_max),
+  }));
+}
+
+/**
+ * Códigos con los que PostgREST dice que una tabla no existe: el de su caché de
+ * esquema, y el de Postgres, que es el que devolvían las versiones anteriores.
+ */
+const TABLA_INEXISTENTE = new Set(["PGRST205", "42P01"]);
+
+/** Si el error es "esa tabla no existe" y no cualquier otro fallo. */
+export function esTablaInexistente(
+  error: Pick<PostgrestError, "code"> | null,
+): boolean {
+  return error !== null && TABLA_INEXISTENTE.has(error.code);
+}
+
+/**
+ * Los buckets de lluvia (spec, sección 14.12).
+ *
+ * Contra una base sin la migración que crea la tabla —un deploy que llegó
+ * antes que la corrida de Migraciones, o una base que quedó atrás— devuelve una
+ * lista vacía en vez de fallar. Sin umbrales la lluvia no suma nada y la lista
+ * de equipaje sale como salía antes: romper el dashboard de un viaje por algo
+ * que solo agrega sugerencias sería peor que mostrarlo sin ellas. Cualquier
+ * otro error sí falla, como en el resto de las lecturas.
+ */
+export async function getPrecipThresholds(): Promise<PrecipThreshold[]> {
+  const { data, error } = await referenceClient()
+    .from("precip_thresholds")
+    .select("id, precip_min");
+
+  if (esTablaInexistente(error)) return [];
+  if (error) fail("los umbrales de lluvia", error);
+
+  return (data ?? []).map((row) => ({
+    id: row.id,
+    precipMin: requiredNumeric(row.precip_min, "precip_thresholds.precip_min"),
   }));
 }
 

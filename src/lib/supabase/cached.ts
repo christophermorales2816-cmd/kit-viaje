@@ -69,6 +69,11 @@ export const getClimateThresholds = cachear(
   referencia.getClimateThresholds,
 );
 
+export const getPrecipThresholds = cachear(
+  "umbrales-de-lluvia",
+  referencia.getPrecipThresholds,
+);
+
 export const getPackingCatalog = cachear(
   "catalogo-de-equipaje",
   referencia.getPackingCatalog,

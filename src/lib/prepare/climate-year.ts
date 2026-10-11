@@ -1,8 +1,10 @@
 import {
   resolveClimateBuckets,
+  resolveRainBuckets,
   type ClimateBucketId,
   type ClimateProfile,
   type ClimateThreshold,
+  type PrecipThreshold,
 } from "@/lib/packing";
 
 /**
@@ -146,11 +148,18 @@ export interface MonthClimate {
   buckets: ClimateBucketId[];
   /** El bucket que manda para el consejo y los chips. `null` si no hay datos. */
   primaryBucket: ClimateBucketId | null;
+  /**
+   * Buckets de lluvia del mes (sección 14.12). Van aparte de `buckets` porque
+   * no compiten por el bucket principal: un mes de monzón sigue siendo cálido,
+   * y el consejo de la tarjeta habla del calor. Lo que cambia son los chips.
+   */
+  rainBuckets: ClimateBucketId[];
 }
 
 export function resolveClimateYear(
   profiles: ClimateProfile[],
   thresholds: ClimateThreshold[],
+  precipThresholds: PrecipThreshold[] = [],
 ): MonthClimate[] {
   return Array.from({ length: 12 }, (_, i) => {
     const month = i + 1;
@@ -178,6 +187,11 @@ export function resolveClimateYear(
       season: resolveSeason(tempMin, tempMax, precipProbability),
       buckets,
       primaryBucket: mostDemandingBucket(buckets),
+      rainBuckets: resolveRainBuckets(
+        [month],
+        profile ? [profile] : [],
+        precipThresholds,
+      ),
     };
   });
 }

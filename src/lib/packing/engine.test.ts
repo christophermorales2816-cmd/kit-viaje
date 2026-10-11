@@ -6,6 +6,7 @@ import type {
   ClimateProfile,
   ClimateThreshold,
   PackingCatalogItem,
+  PrecipThreshold,
   TripType,
 } from "@/lib/packing/types";
 
@@ -256,5 +257,126 @@ describe("determinismo y datos faltantes", () => {
         catalog: FULL_CATALOG,
       }),
     ).toThrow(RangeError);
+  });
+});
+
+describe("la lluvia (sección 14.12)", () => {
+  const LLUVIA: PrecipThreshold[] = [{ id: "lluvia", precipMin: 40 }];
+
+  /** Bali: enero en pleno monzón, julio seco. Cálido los dos. */
+  const BALI: ClimateProfile[] = [
+    { month: 1, tempMin: 24, tempMax: 31, precipProbability: 62 },
+    { month: 7, tempMin: 23, tempMax: 30, precipProbability: 18 },
+  ];
+
+  const TODOS = ["frio", "templado", "calido"];
+
+  // Los dos ítems de lluvia tal como quedan en la migración 20261011120000:
+  // todas las temperaturas más 'lluvia', y los tipos de viaje de siempre.
+  const paraguas = item("calido", "urbano", {
+    id: "paraguas",
+    name: "Paraguas compacto",
+    climateTags: [...TODOS, "lluvia"],
+    tripTypeTags: ["urbano", "negocios"],
+  });
+  const impermeable = item("calido", "urbano", {
+    id: "impermeable",
+    name: "Impermeable liviano",
+    climateTags: [...TODOS, "lluvia"],
+    tripTypeTags: ["urbano", "aventura"],
+  });
+  const short = item("calido", "playa", { id: "short", name: "Short" });
+  const CATALOGO = [paraguas, impermeable, short];
+
+  function ids(
+    month: "enero" | "julio",
+    tripType: TripType,
+    precipThresholds: PrecipThreshold[] = LLUVIA,
+  ) {
+    const fechas =
+      month === "enero"
+        ? { startDate: "2027-01-10", endDate: "2027-01-17" }
+        : { startDate: "2027-07-10", endDate: "2027-07-17" };
+
+    return generatePackingList({
+      trip: { ...fechas, tripType },
+      climateProfiles: BALI,
+      climateThresholds: THRESHOLDS,
+      precipThresholds,
+      catalog: CATALOGO,
+    }).items.map((entrada) => entrada.item.id);
+  }
+
+  it("la playa en pleno monzón lleva paraguas e impermeable", () => {
+    // El caso que abrió el tema: antes salía sin nada para la lluvia.
+    expect(ids("enero", "playa").sort()).toEqual([
+      "impermeable",
+      "paraguas",
+      "short",
+    ]);
+  });
+
+  it("la misma playa en el mes seco no lleva nada para la lluvia", () => {
+    expect(ids("julio", "playa")).toEqual(["short"]);
+  });
+
+  it("con lluvia entra en cualquier tipo de viaje", () => {
+    // Los negocios llevaban paraguas y ahora suman el impermeable; la aventura
+    // llevaba impermeable y suma el paraguas.
+    expect(ids("enero", "negocios").sort()).toEqual(["impermeable", "paraguas"]);
+    expect(ids("enero", "aventura").sort()).toEqual(["impermeable", "paraguas"]);
+  });
+
+  it("suma y nunca resta: la ciudad los lleva aunque no llueva", () => {
+    // La lista arranca en cero: un ítem de más no cuesta nada, y uno de menos
+    // no se puede agregar a mano.
+    expect(ids("julio", "urbano").sort()).toEqual(["impermeable", "paraguas"]);
+    expect(ids("julio", "negocios")).toEqual(["paraguas"]);
+    expect(ids("julio", "aventura")).toEqual(["impermeable"]);
+  });
+
+  it("un ítem que solo es de lluvia no entra en un mes seco", () => {
+    const poncho = item("calido", "playa", {
+      id: "poncho",
+      climateTags: ["lluvia"],
+      tripTypeTags: ["playa"],
+    });
+    const lista = generatePackingList({
+      trip: { startDate: "2027-07-10", endDate: "2027-07-17", tripType: "playa" },
+      climateProfiles: BALI,
+      climateThresholds: THRESHOLDS,
+      precipThresholds: LLUVIA,
+      catalog: [poncho],
+    });
+
+    expect(lista.items).toEqual([]);
+  });
+
+  it("informa los buckets de lluvia aparte de los de temperatura", () => {
+    const lista = generatePackingList({
+      trip: { startDate: "2027-01-10", endDate: "2027-01-17", tripType: "playa" },
+      climateProfiles: BALI,
+      climateThresholds: THRESHOLDS,
+      precipThresholds: LLUVIA,
+      catalog: CATALOGO,
+    });
+
+    expect(lista.climateBuckets).toEqual(["templado", "calido"]);
+    expect(lista.rainBuckets).toEqual(["lluvia"]);
+  });
+
+  it("sin umbrales de lluvia la lista sale como antes", () => {
+    // Es lo que pasa contra una base sin la migración: la lectura devuelve una
+    // lista vacía de umbrales y nada se rompe.
+    expect(ids("enero", "playa", [])).toEqual(["short"]);
+
+    const sinElCampo = generatePackingList({
+      trip: { startDate: "2027-01-10", endDate: "2027-01-17", tripType: "playa" },
+      climateProfiles: BALI,
+      climateThresholds: THRESHOLDS,
+      catalog: CATALOGO,
+    });
+    expect(sinElCampo.items.map((entrada) => entrada.item.id)).toEqual(["short"]);
+    expect(sinElCampo.rainBuckets).toEqual([]);
   });
 });

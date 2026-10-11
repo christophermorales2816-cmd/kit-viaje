@@ -66,6 +66,7 @@ begin
     raise exception 'FALLO: anon no pudo leer destinations';
   end if;
   select count(*) into n from climate_thresholds;
+  select count(*) into n from precip_thresholds;
   raise notice 'OK  anon lee los datos de referencia';
 end $$;
 reset role;

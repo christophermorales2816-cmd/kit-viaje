@@ -17,18 +17,25 @@ const CHIPS_POR_MES = 4;
 /**
  * ¿Los doce meses piden lo mismo?
  *
- * En Río la respuesta es sí, y no es un error de datos: en el mes más fresco
- * del año la máxima sigue arriba de los 25 grados, así que los doce meses caen
- * en el mismo clima y las doce tarjetas muestran los mismos chips.
+ * En Iquitos la respuesta es sí, y no es un error de datos: hace calor todo el
+ * año y llueve seguido todo el año, así que los doce meses caen en el mismo
+ * clima y las doce tarjetas muestran los mismos chips.
  *
  * El título "Qué llevar según el mes" promete una variación que en ese caso no
  * existe. En vez de fabricarla —que sería inventar información— la sección lo
  * dice, y remite a lo que sí cambia: el calor y la lluvia, que están más
  * arriba.
+ *
+ * La lluvia cuenta para decidirlo (sección 14.12): en Río, enero trae paraguas
+ * y julio no, así que sus tarjetas ya no son iguales aunque la ropa lo sea.
  */
 function mismoClimaTodoElAño(months: MonthClimate[]): boolean {
-  const buckets = new Set(months.map((mes) => mes.primaryBucket));
-  return buckets.size === 1 && !buckets.has(null);
+  if (months.some((mes) => mes.primaryBucket === null)) return false;
+
+  const climas = new Set(
+    months.map((mes) => [mes.primaryBucket, ...mes.rainBuckets].join("+")),
+  );
+  return climas.size === 1;
 }
 
 function temperatura(mes: MonthClimate): string {
@@ -74,6 +81,7 @@ export function MonthCards({
             mes.buckets,
             mes.primaryBucket,
             CHIPS_POR_MES,
+            mes.rainBuckets,
           );
           const consejo = mes.primaryBucket
             ? adviceByBucket[mes.primaryBucket]

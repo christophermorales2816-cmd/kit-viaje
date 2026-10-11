@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { pickDestination, type Destination } from "./reference";
+import {
+  esTablaInexistente,
+  pickDestination,
+  type Destination,
+} from "./reference";
 
 /**
  * Qué ciudad mira la página cuando la URL trae una (spec, 11.4).
@@ -62,5 +66,25 @@ describe("pickDestination", () => {
   it("devuelve undefined solo cuando no hay ninguna ciudad", () => {
     expect(pickDestination([], "ushuaia")).toBeUndefined();
     expect(pickDestination([], undefined)).toBeUndefined();
+  });
+});
+
+describe("esTablaInexistente", () => {
+  // Decide si la lectura de los umbrales de lluvia (sección 14.12) cae en una
+  // lista vacía o rompe la página. Solo el "esa tabla no existe" se perdona:
+  // cualquier otro fallo tiene que verse.
+  it("reconoce la tabla que falta, con el código de hoy y el de antes", () => {
+    expect(esTablaInexistente({ code: "PGRST205" })).toBe(true);
+    expect(esTablaInexistente({ code: "42P01" })).toBe(true);
+  });
+
+  it("no perdona ningún otro error", () => {
+    expect(esTablaInexistente({ code: "42501" })).toBe(false); // sin permiso
+    expect(esTablaInexistente({ code: "PGRST301" })).toBe(false); // token
+    expect(esTablaInexistente({ code: "" })).toBe(false);
+  });
+
+  it("sin error, no hay nada que perdonar", () => {
+    expect(esTablaInexistente(null)).toBe(false);
   });
 });

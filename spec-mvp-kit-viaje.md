@@ -160,6 +160,10 @@ create table climate_thresholds (
 
 Editable directo en Supabase Studio — no hace falta panel de admin para el MVP.
 
+> **Actualizado por la sección 14.12:** hay un segundo tipo de bucket, el de
+> lluvia, en su propia tabla (`precip_thresholds`). Lo etiquetado con un bucket
+> de lluvia entra en cualquier tipo de viaje: es la única excepción al paso 3.
+
 **Extensión a `packing_catalog`** (cantidad variable por duración del viaje):
 
 ```sql
@@ -1244,6 +1248,10 @@ sin nada para la lluvia. Que la lluvia sume ítems es un cambio del motor
 (sección 4), no de datos: no se resuelve cargando países, y conviene decidirlo
 antes de que los primeros de Asia lo dejen a la vista.
 
+> **Resuelto en la sección 14.12:** la lluvia es un bucket propio, y el
+> paraguas y el impermeable entran en cualquier viaje que toque un mes de
+> lluvia.
+
 ### 14.6 Primera tanda: Japón, Corea del Sur, China, Tailandia, Vietnam e India
 
 Seis países con la misma forma que el resto —guía completa, nueve ciudades con
@@ -1492,3 +1500,64 @@ para seguir verificando se vació la tabla del cupo en la base local, no en la
 de producción.
 
 Los ids de destino van del `68` al `7b`, y Asia quedó entre `50` y `7b`.
+
+### 14.12 La lluvia entra en la valija
+
+Cierra lo que la sección 14.5 dejó abierto: la lista de equipaje no miraba la
+probabilidad de lluvia, y un viaje de playa a Bali en enero —62 % en Seminyak—
+salía sin nada para la lluvia.
+
+**Un bucket que no sale de la temperatura.** `lluvia` se activa cuando algún
+mes del viaje llega al 40 % de probabilidad de lluvia. El umbral vive en una
+tabla propia, `precip_thresholds`, por lo mismo que los de temperatura viven en
+`climate_thresholds` (sección 4): se ajusta desde Studio, sin deploy. No va en
+`climate_thresholds` porque ahí un `temp_max` en null quiere decir "el bucket
+más cálido".
+
+**Por qué 40.** La mediana de las 11.088 filas de clima es 29 % y el percentil
+75, 40 %: llover cuatro días de cada diez, tres días mojados por semana. Con 40
+entran los monzones —Bombay y Goa de junio a septiembre, Bangkok, Siem Reap,
+Bali en enero—, las tormentas de verano de Río, Florianópolis e Iguazú y las
+costas lluviosas del norte, como Bergen, Galway y Reikiavik. Quedan afuera el
+Mediterráneo en verano, los desiertos y Lima. Un cuarto de los meses del sitio
+queda marcado como de lluvia.
+
+**La lluvia no mira el tipo de viaje.** Es la única excepción al paso 3 de la
+sección 4: lo etiquetado con un bucket de lluvia entra en cualquier viaje,
+porque la lluvia moja igual en la playa que en un viaje de trabajo. El paraguas
+y el impermeable llevan la etiqueta, además de las cuatro de temperatura que ya
+tenían, y conservan sus tipos de viaje:
+
+| Tipo de viaje | Mes seco               | Mes de lluvia          |
+| ------------- | ---------------------- | ---------------------- |
+| playa         | nada                   | paraguas e impermeable |
+| urbano        | paraguas e impermeable | lo mismo               |
+| aventura      | impermeable            | suma el paraguas       |
+| negocios      | paraguas               | suma el impermeable    |
+
+**Suma, nunca resta.** La versión más limpia habría sido que el paraguas
+dependa solo de la lluvia, también en la ciudad. No se hizo por dos razones. La
+lista arranca en cero (sección 4), así que un ítem de más no cuesta nada —queda
+en cero—, y uno de menos no hay forma de agregarlo a mano: Montevideo, con un
+25 % de lluvia todo el año, se habría quedado sin paraguas. Y la lectura de un
+viaje superpone lo guardado sobre lo que genera el motor
+(`src/lib/trips/read.ts`), así que un ítem que el motor deja de generar
+desaparece del viaje de quien ya lo había elegido.
+
+**Las tarjetas por mes también la muestran.** En "Condiciones actuales" cada
+mes calcula su lluvia aparte de su bucket principal: un septiembre de monzón
+sigue siendo cálido y el consejo de la tarjeta habla del calor, pero los chips
+ponen primero lo de la lluvia. El aviso de que "se empaca parecido los doce
+meses" cuenta la lluvia: Río, cálido todo el año, ya no lo muestra, porque de
+noviembre a marzo suma el paraguas; Iquitos, con calor y lluvia los doce meses,
+sí.
+
+**Contra una base sin la migración, nada se rompe.** Si la tabla todavía no
+existe, la lectura de los umbrales devuelve una lista vacía y la lista de
+equipaje sale como salía antes. Romper el dashboard de un viaje por algo que
+solo agrega sugerencias sería peor que mostrarlo sin ellas.
+
+`supabase/tests/integridad.sql` acepta en el catálogo buckets de las dos tablas
+y falla si un id está en las dos: el bucket se activaría también por la
+temperatura, y lo etiquetado con él entraría en cualquier viaje aunque no
+lloviera.

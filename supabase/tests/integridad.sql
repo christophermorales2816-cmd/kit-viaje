@@ -113,15 +113,36 @@ begin
     raise exception 'FALLO: tiene que haber un solo bucket de clima sin tope, y hay %', abiertos;
   end if;
 
+  -- Un bucket es de temperatura (climate_thresholds) o de lluvia
+  -- (precip_thresholds, sección 14.12): el catálogo puede usar los dos.
   select string_agg(distinct t, ', ') into mal
   from packing_catalog, unnest(climate_tags) as t
-  where t not in (select id from climate_thresholds);
+  where t not in (select id from climate_thresholds)
+    and t not in (select id from precip_thresholds);
 
   if mal is not null then
     raise exception 'FALLO: el catálogo usa buckets de clima que no existen: %', mal;
   end if;
 
   raise notice 'OK  los buckets de clima son coherentes con el catálogo';
+end $$;
+
+do $$
+declare
+  mal text;
+begin
+  -- Con el mismo id en las dos tablas, el bucket se activaría por la
+  -- temperatura además de por la lluvia, y lo etiquetado con él entraría en
+  -- cualquier tipo de viaje aunque el mes fuera seco.
+  select string_agg(id, ', ') into mal
+  from climate_thresholds
+  join precip_thresholds using (id);
+
+  if mal is not null then
+    raise exception 'FALLO: buckets que son de temperatura y de lluvia a la vez: %', mal;
+  end if;
+
+  raise notice 'OK  ningún bucket es de temperatura y de lluvia a la vez';
 end $$;
 
 do $$
