@@ -48,10 +48,11 @@ decorativos: hay tests que los fijan.
   globo en el destino destacado, y ese marcador dice dónde están calibrados los
   cálculos.
 - **`subregion`**: Sudamérica, México y Centroamérica o Caribe en América. En
-  Europa y Asia, la división de la ONU: Europa del Sur, Occidental, del Norte y
-  del Este; Asia Occidental, Central, del Sur, Sudeste Asiático y Asia
-  Oriental. Turquía y Chipre, que la ONU pone en Asia, están en Europa del Sur;
-  el Cáucaso queda en Asia Occidental. Agrupa la lista de países de la portada.
+  Europa, África y Asia, la división de la ONU: Europa del Sur, Occidental, del
+  Norte y del Este; África del Norte, Occidental, Central, Oriental y Austral;
+  Asia Occidental, Central, del Sur, Sudeste Asiático y Asia Oriental. Turquía
+  y Chipre, que la ONU pone en Asia, están en Europa del Sur; el Cáucaso queda
+  en Asia Occidental. Agrupa la lista de países de la portada.
   Una zona nueva se suma al tipo `GuideSubregion`, al orden `ZONAS` y al Record
   `CONTINENTE` de `src/app/page.tsx`; el compilador avisa si falta alguno.
 - **La entrada es parte de la guía, y nunca se da por cerrada.** En Europa,
@@ -60,6 +61,13 @@ decorativos: hay tests que los fijan.
   electrónica, visa a la llegada, exención por pasaporte— y cambia seguido. La
   guía dice cuál es el mecanismo, no si tu pasaporte lo necesita: "verificá el
   tuyo" y "fijate si ya está vigente".
+- **En África, la entrada también es salud.** Muchos países piden el
+  certificado de fiebre amarilla a quien llega de un país con riesgo, y varios
+  de Sudamérica lo son: la guía lo dice en el tablero, en la checklist de
+  documentos y en las preguntas. Algunos piden más: una autorización
+  electrónica antes de embarcar (Kenia) o un seguro de viaje estatal aparte del
+  propio (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda
+  a consultar a un médico de viajes; la guía no receta.
 - **Los nombres, en castellano.** Se usa el nombre que usa la prensa en
   castellano (Pekín, Tokio, Seúl, Hanói, Calcuta) y el `slug` va sin acentos ni
   eñes (`pekin`, `hanoi`). Si la ciudad se conoce más por otro nombre, la guía
@@ -72,7 +80,8 @@ decorativos: hay tests que los fijan.
   Indonesia y Timor Oriental están casi enteros al sur del ecuador.
 - **El enchufe va en la guía** (`preparation.plug`). La lista de equipaje dice
   "adaptador universal" para todos los países; el tipo de cada uno lo da la
-  guía.
+  guía. En Sudáfrica el universal casi nunca sirve —el tipo M no viene en
+  casi ninguno—, y la guía lo dice en el hero.
 
 ## 3. El corredor de cotizaciones
 
@@ -107,7 +116,7 @@ Ids fijos, nunca `gen_random_uuid()`, en un rango que no choque con los países
 que ya están. Los países de 2026-10 usan `00000000-0000-4000-8000-00000000{cc}{nn}`,
 con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
 `4f` queda para lo que falte de Europa, **Asia usó del `50` al `7b`** (hay lugar
-hasta `8f`) y lo que siga arranca en `90`. Por cada ciudad:
+hasta `8f`) y **África arranca en `90`**. Por cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).
@@ -128,7 +137,9 @@ hasta `8f`) y lo que siga arranca en `90`. Por cada ciudad:
   que el resto de Serbia no tiene—, va un `update` al final de la migración,
   después de derivar las otras ocho, con un comentario que diga por qué. Un
   precio cero lleva el motivo en el nombre, para que no parezca un dato que
-  falta.
+  falta. Vale igual para varias ciudades: en Kenia y Tanzania, los parques de
+  la costa y de Zanzíbar cuestan una fracción de los del safari, y derivados
+  con el factor salían varias veces más caros.
 
 Las migraciones de los países de 2026-10 tienen la forma exacta a copiar; la
 de Chile es la más corta de leer. Las de Europa se generaron con

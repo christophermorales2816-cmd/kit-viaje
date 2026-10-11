@@ -149,6 +149,17 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     "hong-kong": { lat: [22.1, 22.6], lon: [113.8, 114.5] },
     macao: { lat: [22.1, 22.22], lon: [113.52, 113.6] },
     taiwan: { lat: [21.8, 25.4], lon: [119.9, 122.1] },
+    // Sin el Sahara Occidental: el límite sur es el de Marruecos propiamente
+    // dicho, a la altura de Tarfaya (spec, 15.2).
+    marruecos: { lat: [27.6, 36], lon: [-13.2, -1] },
+    // Abu Simbel está a menos de cuarenta kilómetros de la frontera con Sudán.
+    egipto: { lat: [22, 31.7], lon: [24.7, 35.8] },
+    tunez: { lat: [30.2, 37.6], lon: [7.5, 11.7] },
+    sudafrica: { lat: [-35, -22], lon: [16.4, 33] },
+    // Nanyuki está sobre el ecuador, del lado norte: el límite norte es positivo.
+    kenia: { lat: [-4.8, 5.1], lon: [33.8, 42] },
+    // Con Zanzíbar, frente a la costa: Stone Town, Nungwi y Paje están en la isla.
+    tanzania: { lat: [-11.8, -0.9], lon: [29.3, 40.5] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

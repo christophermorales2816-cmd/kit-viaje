@@ -1561,3 +1561,134 @@ solo agrega sugerencias sería peor que mostrarlo sin ellas.
 y falla si un id está en las dos: el bucket se activaría también por la
 temperatura, y lo etiquetado con él entraría en cualquier viaje aunque no
 lloviera.
+
+## 15. África: la base y la primera tanda
+
+Lo mismo que se hizo antes de Europa y de Asia —zonas, alcance, monedas y lo
+que el modelo todavía no sabía expresar—, esta vez en el mismo PR que la
+primera tanda. El procedimiento país por país sigue siendo
+[`docs/agregar-un-pais.md`](docs/agregar-un-pais.md).
+
+### 15.1 Zonas
+
+Cinco, de la división de la ONU (M49): **África del Norte, Occidental, Central,
+Oriental y Austral**. En la portada, África va entre Europa y Asia: los
+continentes van de oeste a este, y África tiene casi la misma longitud que
+Europa. Adentro, de norte a sur. La portada cuenta por continente ("… en
+África") y no muestra una zona sin países: con la primera tanda se ven África
+del Norte, Oriental y Austral.
+
+Egipto va en África del Norte con el Sinaí incluido, como dice la ONU.
+
+### 15.2 Alcance
+
+La regla es la de la sección 14.2: un país al que los gobiernos desaconsejan
+viajar en todo su territorio **queda afuera mientras eso dure**. En octubre de
+2026 son ocho: Libia, Sudán, Sudán del Sur, Somalia, Malí, Burkina Faso, Níger y
+la República Centroafricana.
+
+Se deciden en la tanda de cada uno, mirando la situación de ese momento, como
+Irak o Irán en Asia: Chad, la República Democrática del Congo y Uganda, que hoy
+figuran en el nivel más alto de la recomendación de Estados Unidos, y los
+países con regiones enteras desaconsejadas pero viajes habituales en el resto,
+como Nigeria, Camerún, Etiopía, Mozambique o Mauritania. La pregunta es la de
+14.2: si una guía con precauciones normales es honesta.
+
+Los territorios:
+
+- **El Sahara Occidental** es un territorio en disputa que Marruecos administra
+  en su mayor parte. No es un corredor —no tiene moneda ni frontera propias en
+  la práctica— y ninguna ciudad de Marruecos del planificador está ahí. La guía
+  lo dice como dato de entrada, sin tomar posición.
+- **Somalilandia** tiene moneda y fronteras propias, pero la recomendación que
+  alcanza a Somalia la incluye: queda afuera con ella.
+- **Canarias, Ceuta, Melilla y Madeira** son España y Portugal; Canarias y
+  Madeira ya están en sus guías.
+- **Reunión, Mayotte y Santa Elena** quedan por decidir cuando toque. Las dos
+  primeras son Francia y usan el euro, aunque no estén en Schengen; Santa Elena
+  es británica, con moneda propia.
+
+### 15.3 Monedas
+
+Ninguna moneda propia de un país africano vale hoy más de medio dólar, así que
+ninguna lleva centavos; la que más se acerca es el dinar tunecino, con
+alrededor de un tercio. Lo que África trae:
+
+- **Monedas cerradas.** El dírham marroquí y el dinar tunecino no se consiguen
+  afuera ni se pueden sacar del país: se cambian allá. Las guías lo dicen, y el
+  modelo no necesita nada, porque el presupuesto ya está en moneda local.
+- **Monedas atadas.** Los francos CFA y el escudo caboverdiano están atados al
+  euro, y en Lesoto, Esuatini y Namibia el rand vale lo mismo que la moneda
+  local y se acepta. Para el modelo siguen siendo una cotización contra el
+  dólar.
+- **Precios en dólares con moneda propia, como Camboya:** probablemente
+  Zimbabue y Liberia, donde el dólar circula junto a la moneda local.
+- **Dos cotizaciones, como Venezuela:** probablemente Argelia, donde el dinar
+  oficial y el del mercado están muy lejos.
+
+Los dos últimos casos se deciden en su tanda.
+
+### 15.4 La entrada también es salud
+
+En Europa y en Asia, la entrada era la visa. En África también es salud y,
+en algunos países, un seguro:
+
+- **Fiebre amarilla.** Muchos países piden el certificado internacional de
+  vacunación a quien llega de un país con riesgo, y varios de Sudamérica están
+  en esas listas: Sudáfrica incluye a Argentina y Brasil, y cuenta también una
+  escala de más de doce horas. Las guías lo dicen en el tablero, en la
+  checklist de documentos y en las preguntas, con el mismo cuidado que la
+  visa: el mecanismo, y no la lista, que cambia.
+- **Malaria.** Donde hay, la checklist de salud lo avisa en tono de advertencia
+  y manda a consultar a un médico de viajes. La guía no receta.
+- **Un seguro estatal obligatorio.** Tanzania lo exige aparte del que tenga
+  cada uno: Zanzíbar desde octubre de 2024 y el continente desde el 1 de
+  octubre de 2026. Es el dato de su portada, como el seguro de Georgia (14.10).
+- **Una autorización antes de embarcar.** Kenia la pide a casi todos (eTA),
+  como el Reino Unido en Europa.
+
+### 15.5 Primera tanda: Marruecos, Egipto, Túnez, Sudáfrica, Kenia y Tanzania
+
+Seis países con la misma forma que el resto —guía completa, nueve ciudades con
+sus doce meses de clima y dieciocho precios— y una cotización contra el dólar
+cada uno, sin fuente todavía. Lo que cada uno le enseñó al modelo:
+
+- **Marruecos** rompe la idea de que África es calor: en Imlil, en el Alto
+  Atlas, las noches de enero bajan de cero, y en Merzouga, entre las dunas, el
+  verano pasa los cuarenta grados. La base es Marrakech y no Rabat, como Dubái
+  en Emiratos.
+- **Egipto** casi no tiene lluvia: lo que cambia la valija es el calor, que en
+  Asuán y Luxor pasa los cuarenta en junio. Las ciudades son las del Nilo y el
+  mar Rojo, más Sharm el-Sheij, al que se llega en avión; el norte del Sinaí,
+  el desierto occidental y las fronteras no están.
+- **Túnez** tiene una moneda que no se puede sacar del país, y ese es el dato de
+  su portada. Es Mediterráneo y Sahara: de Djerba, con el invierno más suave,
+  a los cuarenta y un grados de Douz en julio.
+- **Sudáfrica** es el primer país donde el adaptador universal que sugiere la
+  lista casi nunca sirve: el enchufe es de tipo M. Es también hemisferio sur,
+  con un Cabo mediterráneo que llueve en invierno, al revés que el resto del
+  país. La base es Ciudad del Cabo, su capital legislativa.
+- **Kenia** está sobre el ecuador y no hace calor: Nairobi, a 1.700 metros,
+  tiene once grados de mínima en julio, y es el dato de su portada. Sus dos
+  temporadas de lluvia, de marzo a mayo y de octubre a diciembre, las marca el
+  bucket de lluvia de la sección 14.12.
+- **Tanzania** pide el seguro estatal propio, que es el dato de su portada, y
+  su año lo ordena la lluvia: abril es el mes más mojado en las nueve ciudades.
+  La base es Arusha, la puerta de los safaris del norte, como Siem Reap en
+  Camboya.
+
+**Precios de los parques.** En Kenia y Tanzania, la entrada a un parque y la
+excursión del día se derivan de la base con el factor, y en la costa y en
+Zanzíbar salían varias veces más caras de lo que cuestan: allá los parques son
+marinos o el bosque de Jozani, y la excursión va en barco. Las dos migraciones
+lo corrigen con un update al final, como el transporte gratis de Belgrado. Los
+lodges de safari, en cambio, cuestan bastante más de lo que el factor permite
+—el tope es 2,5—, y las guías lo dicen en la nota de alcance, como los resorts
+de Maldivas.
+
+**Los extremos no cambian.** La mínima más baja de la tanda es la de Imlil en
+enero, −1,5 °C, y la máxima más alta, 41,8 °C, la de Merzouga en julio y la de
+Abu Simbel en junio. Khövsgöl y Jahra siguen siendo la ciudad más fría y la más
+calurosa del sitio (sección 14.11).
+
+Los ids de destino van del `90` al `95`.

@@ -28,6 +28,7 @@ import { croacia } from "./croacia";
 import { cuba } from "./cuba";
 import { dinamarca } from "./dinamarca";
 import { ecuador } from "./ecuador";
+import { egipto } from "./egipto";
 import { elSalvador } from "./el-salvador";
 import { emiratosArabesUnidos } from "./emiratos-arabes-unidos";
 import { eslovaquia } from "./eslovaquia";
@@ -54,6 +55,7 @@ import { italia } from "./italia";
 import { japon } from "./japon";
 import { jordania } from "./jordania";
 import { kazajistan } from "./kazajistan";
+import { kenia } from "./kenia";
 import { kirguistan } from "./kirguistan";
 import { kuwait } from "./kuwait";
 import { laos } from "./laos";
@@ -66,6 +68,7 @@ import { macedoniaDelNorte } from "./macedonia-del-norte";
 import { malasia } from "./malasia";
 import { maldivas } from "./maldivas";
 import { malta } from "./malta";
+import { marruecos } from "./marruecos";
 import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
 import { mongolia } from "./mongolia";
@@ -88,12 +91,15 @@ import { rumania } from "./rumania";
 import { serbia } from "./serbia";
 import { singapur } from "./singapur";
 import { sriLanka } from "./sri-lanka";
+import { sudafrica } from "./sudafrica";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
 import { tailandia } from "./tailandia";
 import { taiwan } from "./taiwan";
+import { tanzania } from "./tanzania";
 import { tayikistan } from "./tayikistan";
 import { timorOriental } from "./timor-oriental";
+import { tunez } from "./tunez";
 import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
 import type { DestinationGuide } from "./types";
@@ -230,6 +236,12 @@ const GUIAS: DestinationGuide[] = [
   hongKong,
   macao,
   taiwan,
+  marruecos,
+  egipto,
+  tunez,
+  sudafrica,
+  kenia,
+  tanzania,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -277,6 +289,7 @@ export {
   cuba,
   dinamarca,
   ecuador,
+  egipto,
   elSalvador,
   emiratosArabesUnidos,
   eslovaquia,
@@ -303,6 +316,7 @@ export {
   japon,
   jordania,
   kazajistan,
+  kenia,
   kirguistan,
   kuwait,
   laos,
@@ -315,6 +329,7 @@ export {
   malasia,
   maldivas,
   malta,
+  marruecos,
   mexico,
   moldavia,
   mongolia,
@@ -337,12 +352,15 @@ export {
   serbia,
   singapur,
   sriLanka,
+  sudafrica,
   suecia,
   suiza,
   tailandia,
   taiwan,
+  tanzania,
   tayikistan,
   timorOriental,
+  tunez,
   turkmenistan,
   turquia,
   uruguay,
