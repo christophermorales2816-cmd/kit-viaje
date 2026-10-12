@@ -66,13 +66,14 @@ decorativos: hay tests que los fijan.
   de Sudamérica lo son: la guía lo dice en el tablero, en la checklist de
   documentos y en las preguntas. Algunos piden más: la vacuna a todos los
   viajeros, vengan de donde vengan (Ghana, Costa de Marfil, Camerún, la RD del
-  Congo), una autorización electrónica antes de embarcar (Kenia, Seychelles),
-  un registro online aparte de la visa (Cabo Verde, Mozambique), un registro
-  en la policía al llegar (Chad) o un seguro de viaje estatal aparte del
-  propio (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda
-  a consultar a un médico de viajes; la guía no receta.
-- **Un país con zonas desaconsejadas entra con aviso, o no entra** (spec, 14.2
-  y 15.8). Si los gobiernos desaconsejan viajar a todo el país, queda afuera;
+  Congo, Angola, Gabón, Guinea-Bisáu, la República del Congo), una
+  autorización electrónica antes de embarcar (Kenia, Seychelles), un registro
+  online aparte de la visa (Cabo Verde, Mozambique), un registro en la policía
+  al llegar (Chad) o un seguro de viaje estatal aparte del propio (Tanzania).
+  Donde hay malaria, la checklist de salud lo avisa y manda a consultar a un
+  médico de viajes; la guía no receta.
+- **Un país con zonas desaconsejadas entra con aviso, o no entra** (spec, 14.2,
+  15.8 y 15.9). Si los gobiernos desaconsejan viajar a todo el país, queda afuera;
   los casos dudosos se deciden en su tanda. Los que entran llevan el mismo
   bloque en todas las guías —el modelo es `pakistan.ts`—: la entrada
   `tener-en-cuenta` al final de `facts`, que manda a revisar la recomendación
@@ -111,7 +112,8 @@ En `corridors.ts`. Hay tres formas, según cómo se paga en el país:
 
 En Asia, Timor Oriental es dolarizado: su moneda es el dólar. Las varias
 cotizaciones llegaron a Asia con Turkmenistán, Irán y Myanmar, y a África con
-Malaui: la oficial y la paralela, con los precios en dólares, como Venezuela.
+Malaui, Burundi y Argelia: la oficial y la paralela, con los precios en
+dólares, como Venezuela.
 
 **Precios en dólares con moneda propia.** Si la moneda local tiene inflación
 alta y a un viajero se le cobra en dólares —Venezuela y Cuba—, el corredor

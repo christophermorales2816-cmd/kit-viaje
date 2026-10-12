@@ -195,6 +195,17 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
       lon: [12.2, 31.4],
     },
     chad: { lat: [7.4, 23.5], lon: [13.4, 24.1] },
+    mauritania: { lat: [14.6, 27.4], lon: [-17.2, -4.7] },
+    burundi: { lat: [-4.5, -2.3], lon: [28.9, 30.9] },
+    // Con las Bijagós, al suroeste de Bisáu: Orango es lo más al oeste.
+    "guinea-bisau": { lat: [10.8, 12.8], lon: [-16.8, -13.6] },
+    argelia: { lat: [18.9, 37.2], lon: [-8.7, 12] },
+    angola: { lat: [-18.1, -4.3], lon: [11.6, 24.1] },
+    // Cruza el ecuador: Libreville está apenas al norte; Loango, al sur.
+    gabon: { lat: [-4.1, 2.4], lon: [8.6, 14.6] },
+    // Con Bioko, al norte, frente a Camerún, y Annobón, al sur del ecuador.
+    "guinea-ecuatorial": { lat: [-1.6, 3.9], lon: [5.5, 11.4] },
+    "republica-del-congo": { lat: [-5.2, 3.8], lon: [11, 18.8] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

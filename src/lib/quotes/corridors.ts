@@ -330,6 +330,35 @@ const MALAUI: QuoteCorridor = {
   source: null,
 };
 
+/**
+ * Burundi y Argelia, igual que Malaui (spec, 15.9): el franco burundés y el
+ * dinar tienen una cotización oficial y otra paralela muy lejos entre sí, así
+ * que los precios van en dólares y el corredor muestra las dos.
+ */
+const BURUNDI: QuoteCorridor = {
+  corridor: "burundi",
+  baseCurrency: "BIF",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "paralelo"],
+  defaultQuoteId: "paralelo",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", paralelo: "Paralelo" },
+  clock: { timeZone: "Africa/Bujumbura", label: "hora de Buyumbura" },
+  source: null,
+};
+
+const ARGELIA: QuoteCorridor = {
+  corridor: "argelia",
+  baseCurrency: "DZD",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "paralelo"],
+  defaultQuoteId: "paralelo",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", paralelo: "Paralelo" },
+  clock: { timeZone: "Africa/Algiers", label: "hora de Argel" },
+  source: null,
+};
+
 const CORREDORES = [
   ARGENTINA,
   BRASIL,
@@ -869,6 +898,34 @@ const CORREDORES = [
   unaCotizacion("chad", "XAF", {
     timeZone: "Africa/Ndjamena",
     label: "hora de Yamena",
+  }),
+  // África, quinta tanda (spec, 15.9). Mauritania, Burundi y Guinea-Bisáu
+  // entran con aviso, como la cuarta.
+  unaCotizacion("mauritania", "MRU", {
+    timeZone: "Africa/Nouakchott",
+    label: "hora de Nuakchot",
+  }),
+  BURUNDI,
+  unaCotizacion("guinea-bisau", "XOF", {
+    timeZone: "Africa/Bissau",
+    label: "hora de Bisáu",
+  }),
+  ARGELIA,
+  unaCotizacion("angola", "AOA", {
+    timeZone: "Africa/Luanda",
+    label: "hora de Luanda",
+  }),
+  unaCotizacion("gabon", "XAF", {
+    timeZone: "Africa/Libreville",
+    label: "hora de Libreville",
+  }),
+  unaCotizacion("guinea-ecuatorial", "XAF", {
+    timeZone: "Africa/Malabo",
+    label: "hora de Malabo",
+  }),
+  unaCotizacion("republica-del-congo", "XAF", {
+    timeZone: "Africa/Brazzaville",
+    label: "hora de Brazzaville",
   }),
 ];
 
