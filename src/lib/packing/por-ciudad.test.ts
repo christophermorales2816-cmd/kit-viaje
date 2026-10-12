@@ -5,6 +5,7 @@ import type {
   ClimateProfile,
   ClimateThreshold,
   PackingCatalogItem,
+  PrecipThreshold,
 } from "./types";
 
 /**
@@ -157,5 +158,60 @@ describe("la lista depende de la ciudad, no del país", () => {
         "pasaporte",
       );
     }
+  });
+});
+
+describe("la lluvia también la decide la ciudad (sección 14.12)", () => {
+  /** El umbral que siembra la migración 20261011120000. */
+  const LLUVIA: PrecipThreshold[] = [{ id: "lluvia", precipMin: 40 }];
+  const TODAS = ["frio", "fresco", "templado", "calido"];
+
+  const PARA_LA_LLUVIA: PackingCatalogItem[] = [
+    {
+      ...item("paraguas", "Paraguas compacto", [...TODAS, "lluvia"]),
+      tripTypeTags: ["urbano", "negocios"],
+    },
+    {
+      ...item("impermeable", "Impermeable liviano", [...TODAS, "lluvia"]),
+      tripTypeTags: ["urbano", "aventura"],
+    },
+  ];
+
+  function playa(profile: ClimateProfile, startDate: string, endDate: string) {
+    return generatePackingList({
+      trip: { startDate, endDate, tripType: "playa" },
+      climateProfiles: [profile],
+      climateThresholds: UMBRALES,
+      precipThresholds: LLUVIA,
+      catalog: PARA_LA_LLUVIA,
+    }).items.map((linea) => linea.item.id);
+  }
+
+  it("Seminyak en enero, con 62 % de lluvia, lleva las dos cosas", () => {
+    const enero = {
+      month: 1,
+      tempMin: 23.6,
+      tempMax: 30.8,
+      precipProbability: 62,
+    };
+    expect(playa(enero, "2027-01-10", "2027-01-17").sort()).toEqual([
+      "impermeable",
+      "paraguas",
+    ]);
+  });
+
+  it("Seminyak en julio, la temporada seca, no lleva ninguna", () => {
+    const julio = {
+      month: 7,
+      tempMin: 22.4,
+      tempMax: 29.6,
+      precipProbability: 18,
+    };
+    expect(playa(julio, "2027-07-10", "2027-07-17")).toEqual([]);
+  });
+
+  it("Dubái en julio no lleva nada para la lluvia", () => {
+    const julio = { month: 7, tempMin: 31, tempMax: 42, precipProbability: 0 };
+    expect(playa(julio, "2027-07-10", "2027-07-17")).toEqual([]);
   });
 });

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { argentina } from "@/content/guias/argentina";
 
+import type { PackingCatalogItem } from "@/lib/packing";
 import type { MonthClimate } from "@/lib/prepare/climate-year";
 
 import { AvoidTable } from "./avoid-table";
@@ -96,7 +97,11 @@ describe("secciones de preparación", () => {
 });
 
 describe("tarjetas por mes", () => {
-  function mes(month: number, primaryBucket: string | null): MonthClimate {
+  function mes(
+    month: number,
+    primaryBucket: string | null,
+    rainBuckets: string[] = [],
+  ): MonthClimate {
     return {
       month,
       shortName: "Ene",
@@ -107,15 +112,16 @@ describe("tarjetas por mes", () => {
       season: "media",
       buckets: primaryBucket ? [primaryBucket] : [],
       primaryBucket,
+      rainBuckets,
     };
   }
 
   const AVISO = "se empaca parecido los doce meses";
 
   it("avisa cuando los doce meses piden lo mismo", () => {
-    // Es el caso de Río: la máxima del mes más fresco sigue arriba de 25, así
-    // que las doce tarjetas salen iguales. Decirlo es mejor que dejar que el
-    // título prometa una variación que no existe.
+    // Es el caso de Iquitos: calor y lluvia todo el año, así que las doce
+    // tarjetas salen iguales. Decirlo es mejor que dejar que el título prometa
+    // una variación que no existe.
     const html = renderToStaticMarkup(
       <MonthCards
         months={Array.from({ length: 12 }, (_, i) => mes(i + 1, "calido"))}
@@ -139,6 +145,61 @@ describe("tarjetas por mes", () => {
     );
 
     expect(html).not.toContain(AVISO);
+  });
+
+  it("no avisa cuando la ropa es la misma pero la lluvia cambia", () => {
+    // Río: cálido los doce meses, pero de noviembre a marzo llueve y el resto
+    // del año no. Las tarjetas de esos meses suman el paraguas.
+    const html = renderToStaticMarkup(
+      <MonthCards
+        months={Array.from({ length: 12 }, (_, i) =>
+          mes(i + 1, "calido", i < 3 || i > 9 ? ["lluvia"] : []),
+        )}
+        catalog={[]}
+        adviceByBucket={{ calido: "Ropa liviana." }}
+      />,
+    );
+
+    expect(html).not.toContain(AVISO);
+  });
+
+  it("en un mes de lluvia muestra primero lo de la lluvia", () => {
+    const paraguas: PackingCatalogItem = {
+      id: "paraguas",
+      category: "accesorios",
+      name: "Paraguas compacto",
+      weightG: 350,
+      climateTags: ["frio", "fresco", "templado", "calido", "lluvia"],
+      tripTypeTags: ["urbano", "negocios"],
+      baseQty: 1,
+      scalesWithDays: false,
+      daysPerUnit: null,
+      maxQty: null,
+    };
+    const short: PackingCatalogItem = {
+      ...paraguas,
+      id: "short",
+      category: "ropa",
+      name: "Short o bermuda",
+      climateTags: ["calido"],
+    };
+
+    const html = renderToStaticMarkup(
+      <MonthCards
+        months={[mes(1, "calido", ["lluvia"]), mes(7, "calido")]}
+        catalog={[short, paraguas]}
+        adviceByBucket={{ calido: "Ropa liviana." }}
+      />,
+    );
+
+    const [lluvioso, seco] = html.split("<article").slice(1);
+    expect(lluvioso.indexOf("Paraguas compacto")).toBeGreaterThan(-1);
+    expect(lluvioso.indexOf("Paraguas compacto")).toBeLessThan(
+      lluvioso.indexOf("Short o bermuda"),
+    );
+    expect(seco.indexOf("Short o bermuda")).toBeLessThan(
+      seco.indexOf("Paraguas compacto"),
+    );
   });
 
   it("no avisa cuando no hay datos de clima en ningún mes", () => {

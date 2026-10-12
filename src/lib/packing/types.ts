@@ -29,6 +29,17 @@ export interface ClimateThreshold {
   tempMax: number | null;
 }
 
+/**
+ * Bucket de lluvia (spec, sección 14.12). No sale de la temperatura sino de
+ * `precipProbability`, y vive en su propia tabla, `precip_thresholds`. Lo
+ * etiquetado con un bucket de lluvia entra en cualquier tipo de viaje.
+ */
+export interface PrecipThreshold {
+  id: ClimateBucketId;
+  /** Probabilidad mínima, escala 0-100, inclusive. */
+  precipMin: number;
+}
+
 export interface ClimateProfile {
   /** 1-12. */
   month: number;

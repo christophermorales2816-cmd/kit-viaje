@@ -1,4 +1,9 @@
-import type { ClimateBucketId, ClimateProfile, ClimateThreshold } from "./types";
+import type {
+  ClimateBucketId,
+  ClimateProfile,
+  ClimateThreshold,
+  PrecipThreshold,
+} from "./types";
 
 /**
  * Resolución de buckets de clima (spec, sección 4, paso 2).
@@ -120,4 +125,42 @@ export function resolveClimateBuckets(
     .map((index) => ordered[index].id);
 
   return { buckets, monthsWithoutData };
+}
+
+/**
+ * Buckets de lluvia que toca un viaje (spec, sección 14.12).
+ *
+ * Entra un bucket si CUALQUIER mes cubierto llega a su umbral. Es la misma
+ * regla de unión que la temperatura: un viaje de treinta días que arranca seco
+ * y termina en el monzón necesita el paraguas para la segunda mitad.
+ *
+ * Un mes sin probabilidad de lluvia no activa nada, y no se reporta aparte: si
+ * también le falta la temperatura ya está en `monthsWithoutData`, y si solo le
+ * falta la lluvia, la lista sale como salía antes de que la lluvia contara, que
+ * es justo lo que se sabe.
+ *
+ * Devuelve los ids de menor a mayor umbral.
+ */
+export function resolveRainBuckets(
+  months: number[],
+  profiles: ClimateProfile[],
+  precipThresholds: PrecipThreshold[],
+): ClimateBucketId[] {
+  const lluvias = months
+    .map(
+      (month) =>
+        profiles.find((candidate) => candidate.month === month)
+          ?.precipProbability,
+    )
+    .filter((value): value is number => typeof value === "number");
+
+  if (lluvias.length === 0) return [];
+
+  // "Algún mes llega al umbral" es lo mismo que "el mes más lluvioso llega".
+  const masLluvioso = Math.max(...lluvias);
+
+  return [...precipThresholds]
+    .sort((a, b) => a.precipMin - b.precipMin || a.id.localeCompare(b.id, "es"))
+    .filter((threshold) => masLluvioso >= threshold.precipMin)
+    .map((threshold) => threshold.id);
 }

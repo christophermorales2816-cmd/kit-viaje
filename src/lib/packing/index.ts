@@ -10,6 +10,7 @@ export {
   bucketIndexForTemperature,
   orderThresholds,
   resolveClimateBuckets,
+  resolveRainBuckets,
 } from "./climate";
 export type { ResolvedClimate } from "./climate";
 export { resolveQuantity } from "@/lib/quantity";
@@ -21,6 +22,7 @@ export type {
   ClimateThreshold,
   PackingCatalogItem,
   PackingTrip,
+  PrecipThreshold,
   QuantityRule,
   TripType,
 } from "./types";
