@@ -17,6 +17,14 @@ import { allGuides } from "@/content/guias";
  * peor que no decir nada, porque el lector la cree y se va. Un dato que hay que
  * acordarse de actualizar en cada país es un dato que va a quedar viejo.
  */
+/**
+ * Las guías por nombre, como un índice: con más de cien destinos, el orden en
+ * que se sumaron no le sirve a nadie para encontrar el suyo.
+ */
+const GUIAS_POR_NOMBRE = [...allGuides()].sort((a, b) =>
+  a.country.localeCompare(b.country, "es"),
+);
+
 export default function NotFound() {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-24 text-center">
@@ -37,7 +45,7 @@ export default function NotFound() {
         </p>
 
         <ul className="flex flex-wrap justify-center gap-2">
-          {allGuides().map((guia) => (
+          {GUIAS_POR_NOMBRE.map((guia) => (
             <li key={guia.slug}>
               <Link
                 href={`/guia/${guia.slug}`}

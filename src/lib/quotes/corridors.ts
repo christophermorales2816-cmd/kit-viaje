@@ -360,6 +360,9 @@ const ARGELIA: QuoteCorridor = {
 };
 
 const CORREDORES = [
+  // América (spec, 10 a 13). Argentina y Brasil son los únicos con fuente en
+  // vivo. Argentina, Bolivia, Venezuela y Cuba tienen más de una cotización;
+  // Ecuador, El Salvador y Panamá son dolarizados.
   ARGENTINA,
   BRASIL,
   BOLIVIA,
@@ -790,8 +793,9 @@ const CORREDORES = [
     timeZone: "Africa/Dar_es_Salaam",
     label: "hora de Arusha",
   }),
-  // Namibia: el dólar namibio vale lo mismo que el rand, pero es otra moneda,
-  // con su propio código, y el corredor la cotiza aparte.
+  // África, segunda tanda (spec, 15.6). Namibia: el dólar namibio vale lo
+  // mismo que el rand, pero es otra moneda, con su propio código, y el
+  // corredor la cotiza aparte.
   unaCotizacion("namibia", "NAD", {
     timeZone: "Africa/Windhoek",
     label: "hora de Windhoek",
@@ -828,6 +832,8 @@ const CORREDORES = [
     timeZone: "Africa/Dakar",
     label: "hora de Dakar",
   }),
+  // África, tercera tanda (spec, 15.7). Malaui tiene dos cotizaciones, como
+  // Venezuela (ver MALAUI, arriba).
   unaCotizacion("madagascar", "MGA", {
     timeZone: "Indian/Antananarivo",
     label: "hora de Antananarivo",
