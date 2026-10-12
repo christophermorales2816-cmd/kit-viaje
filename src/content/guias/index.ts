@@ -11,6 +11,7 @@ import { azerbaiyan } from "./azerbaiyan";
 import { banglades } from "./banglades";
 import { barein } from "./barein";
 import { belgica } from "./belgica";
+import { benin } from "./benin";
 import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { botsuana } from "./botsuana";
@@ -29,6 +30,7 @@ import { chile } from "./chile";
 import { china } from "./china";
 import { chipre } from "./chipre";
 import { colombia } from "./colombia";
+import { comoras } from "./comoras";
 import { coreaDelSur } from "./corea-del-sur";
 import { costaDeMarfil } from "./costa-de-marfil";
 import { costaRica } from "./costa-rica";
@@ -39,6 +41,7 @@ import { ecuador } from "./ecuador";
 import { egipto } from "./egipto";
 import { elSalvador } from "./el-salvador";
 import { emiratosArabesUnidos } from "./emiratos-arabes-unidos";
+import { eritrea } from "./eritrea";
 import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
@@ -54,6 +57,7 @@ import { georgia } from "./georgia";
 import { ghana } from "./ghana";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
+import { guinea } from "./guinea";
 import { guineaBisau } from "./guinea-bisau";
 import { guineaEcuatorial } from "./guinea-ecuatorial";
 import { honduras } from "./honduras";
@@ -77,6 +81,7 @@ import { laos } from "./laos";
 import { lesoto } from "./lesoto";
 import { letonia } from "./letonia";
 import { libano } from "./libano";
+import { liberia } from "./liberia";
 import { lituania } from "./lituania";
 import { luxemburgo } from "./luxemburgo";
 import { macao } from "./macao";
@@ -118,6 +123,7 @@ import { santoTomeYPrincipe } from "./santo-tome-y-principe";
 import { senegal } from "./senegal";
 import { serbia } from "./serbia";
 import { seychelles } from "./seychelles";
+import { sierraLeona } from "./sierra-leona";
 import { singapur } from "./singapur";
 import { sriLanka } from "./sri-lanka";
 import { sudafrica } from "./sudafrica";
@@ -128,6 +134,7 @@ import { taiwan } from "./taiwan";
 import { tanzania } from "./tanzania";
 import { tayikistan } from "./tayikistan";
 import { timorOriental } from "./timor-oriental";
+import { togo } from "./togo";
 import { tunez } from "./tunez";
 import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
@@ -137,6 +144,7 @@ import { uruguay } from "./uruguay";
 import { uzbekistan } from "./uzbekistan";
 import { venezuela } from "./venezuela";
 import { vietnam } from "./vietnam";
+import { yibuti } from "./yibuti";
 import { zambia } from "./zambia";
 import { zimbabue } from "./zimbabue";
 
@@ -306,6 +314,14 @@ const GUIAS: DestinationGuide[] = [
   gabon,
   guineaEcuatorial,
   republicaDelCongo,
+  togo,
+  benin,
+  liberia,
+  sierraLeona,
+  guinea,
+  comoras,
+  yibuti,
+  eritrea,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -336,6 +352,7 @@ export {
   banglades,
   barein,
   belgica,
+  benin,
   bolivia,
   bosniaYHerzegovina,
   botsuana,
@@ -354,6 +371,7 @@ export {
   china,
   chipre,
   colombia,
+  comoras,
   coreaDelSur,
   costaDeMarfil,
   costaRica,
@@ -364,6 +382,7 @@ export {
   egipto,
   elSalvador,
   emiratosArabesUnidos,
+  eritrea,
   eslovaquia,
   eslovenia,
   espana,
@@ -379,6 +398,7 @@ export {
   ghana,
   grecia,
   guatemala,
+  guinea,
   guineaBisau,
   guineaEcuatorial,
   honduras,
@@ -402,6 +422,7 @@ export {
   lesoto,
   letonia,
   libano,
+  liberia,
   lituania,
   luxemburgo,
   macao,
@@ -443,6 +464,7 @@ export {
   senegal,
   serbia,
   seychelles,
+  sierraLeona,
   singapur,
   sriLanka,
   sudafrica,
@@ -453,6 +475,7 @@ export {
   tanzania,
   tayikistan,
   timorOriental,
+  togo,
   tunez,
   turkmenistan,
   turquia,
@@ -461,6 +484,7 @@ export {
   uzbekistan,
   venezuela,
   vietnam,
+  yibuti,
   zambia,
   zimbabue,
 };

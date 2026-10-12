@@ -26,8 +26,8 @@ cada país de la base tiene guía, cada lugar de una guía existe como ciudad, y
 moneda de la base es una de las dos que conoce su cotización
 (`src/content/guias/destinos-planificables.test.ts`).
 
-Hoy: **140 destinos —tres de ellos territorios: Hong Kong, Macao y Taiwán—,
-1.266 ciudades, 15.192 filas de clima, 22.788 precios y 34 ítems de equipaje.**
+Hoy: **148 destinos —tres de ellos territorios: Hong Kong, Macao y Taiwán—,
+1.338 ciudades, 16.056 filas de clima, 24.084 precios y 34 ítems de equipaje.**
 
 ## Tablas de referencia (datos maestros)
 
@@ -45,8 +45,8 @@ Las lee cualquiera, las escriben solo las migraciones.
 | `slug`          | text    | La ciudad en la URL (`?ciudad=ushuaia`). Único dentro del país                                                                      |
 
 El `cc` va por bloques de continente: Europa usó del `10` al `46`, del `47` al
-`4f` queda para lo que falte de Europa, Asia usó del `50` al `7b` y África
-arranca en `90`; sus cinco primeras tandas usaron del `90` al `b5`.
+`4f` queda para lo que falte de Europa, Asia usó del `50` al `7b` y África,
+en seis tandas, del `90` al `bd`.
 
 ### `climate_profiles` — doce filas por ciudad
 

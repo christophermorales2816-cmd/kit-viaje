@@ -10,13 +10,14 @@ import type { DestinationGuide } from "./types";
  * manda a revisar la recomendación de viaje del propio país y qué cubre el
  * seguro.
  *
- * Lo que este país aporta: el calor más alto de África en el planificador
- * —Atar llega a cuarenta y tres grados en junio—, que es el dato de su
- * portada. Es una república islámica: no se vende alcohol. Las ciudades del
- * planificador son la capital, el Banc d'Arguin, el Adrar y el río Senegal;
- * ninguna está al norte del trópico de Cáncer, en el este ni cerca de las
- * fronteras con Malí, Argelia o el Sahara Occidental, así que Nuadibú, pegada
- * a esa frontera, no está.
+ * Lo que este país aporta: el calor del Sahara —Atar llega a cuarenta y tres
+ * grados en junio—, que es el dato de su portada. Fue la máxima de África en
+ * el planificador hasta que la sexta tanda sumó el lago Assal, en Yibuti
+ * (spec, 15.10). Es una república islámica: no se vende alcohol. Las ciudades
+ * del planificador son la capital, el Banc d'Arguin, el Adrar y el río
+ * Senegal; ninguna está al norte del trópico de Cáncer, en el este ni cerca de
+ * las fronteras con Malí, Argelia o el Sahara Occidental, así que Nuadibú,
+ * pegada a esa frontera, no está.
  */
 export const mauritania: DestinationGuide = {
   slug: "mauritania",
