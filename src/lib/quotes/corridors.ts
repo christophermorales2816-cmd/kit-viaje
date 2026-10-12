@@ -312,6 +312,24 @@ const MYANMAR: QuoteCorridor = {
   source: null,
 };
 
+/**
+ * Malaui lleva la misma tesis a África: el kwacha tiene una cotización oficial
+ * y otra en el mercado paralelo muy lejos entre sí. Sus precios van en
+ * dólares, como en Venezuela, y el corredor muestra las dos (spec, 15.7). Sin
+ * fuente verificada, por la misma regla.
+ */
+const MALAUI: QuoteCorridor = {
+  corridor: "malaui",
+  baseCurrency: "MWK",
+  quoteCurrency: "USD",
+  quoteIds: ["oficial", "paralelo"],
+  defaultQuoteId: "paralelo",
+  referenceQuoteId: "oficial",
+  labels: { oficial: "Oficial", paralelo: "Paralelo" },
+  clock: { timeZone: "Africa/Blantyre", label: "hora de Lilongwe" },
+  source: null,
+};
+
 const CORREDORES = [
   ARGENTINA,
   BRASIL,
@@ -780,6 +798,37 @@ const CORREDORES = [
   unaCotizacion("senegal", "XOF", {
     timeZone: "Africa/Dakar",
     label: "hora de Dakar",
+  }),
+  unaCotizacion("madagascar", "MGA", {
+    timeZone: "Indian/Antananarivo",
+    label: "hora de Antananarivo",
+  }),
+  MALAUI,
+  unaCotizacion("ghana", "GHS", {
+    timeZone: "Africa/Accra",
+    label: "hora de Accra",
+  }),
+  unaCotizacion("costa-de-marfil", "XOF", {
+    timeZone: "Africa/Abidjan",
+    label: "hora de Abiyán",
+  }),
+  unaCotizacion("gambia", "GMD", {
+    timeZone: "Africa/Banjul",
+    label: "hora de Kololi",
+  }),
+  // Lesoto y Esuatini, como Namibia: su moneda vale lo mismo que el rand, pero
+  // tiene código propio y el corredor la cotiza aparte.
+  unaCotizacion("lesoto", "LSL", {
+    timeZone: "Africa/Maseru",
+    label: "hora de Maseru",
+  }),
+  unaCotizacion("esuatini", "SZL", {
+    timeZone: "Africa/Mbabane",
+    label: "hora de Ezulwini",
+  }),
+  unaCotizacion("santo-tome-y-principe", "STN", {
+    timeZone: "Africa/Sao_Tome",
+    label: "hora de Santo Tomé",
   }),
 ];
 

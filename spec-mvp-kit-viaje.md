@@ -1592,7 +1592,8 @@ Irak o Irán en Asia: Chad, la República Democrática del Congo y Uganda, que h
 figuran en el nivel más alto de la recomendación de Estados Unidos, y los
 países con regiones enteras desaconsejadas pero viajes habituales en el resto,
 como Nigeria, Camerún, Etiopía, Mozambique o Mauritania. La pregunta es la de
-14.2: si una guía con precauciones normales es honesta.
+14.2: si una guía con precauciones normales es honesta. Ruanda se sumó a esta
+lista en la tercera tanda (15.7).
 
 Los territorios:
 
@@ -1761,3 +1762,73 @@ Fish en enero. Khövsgöl y Jahra siguen siendo la ciudad más fría y la más
 calurosa del sitio (sección 14.11).
 
 Los ids de destino van del `96` al `9d`.
+
+### 15.7 Tercera tanda: Madagascar, Malaui, Ghana, Costa de Marfil, Gambia, Lesoto, Esuatini y Santo Tomé y Príncipe
+
+Ocho países con la misma forma —guía completa, nueve ciudades con sus doce
+meses de clima y dieciocho precios, cotización sin fuente todavía—. Con Santo
+Tomé y Príncipe aparece África Central en la portada: ya se ven las cinco
+zonas.
+
+**Ruanda queda para decidir.** Iba en esta tanda, pero el 17 de mayo de 2026
+Estados Unidos subió su recomendación al nivel 3, por el brote de ébola en el
+este del Congo, con nivel 4 a menos de diez kilómetros de la frontera: justo
+donde están los volcanes de los gorilas y el lago Kivu. Pasa a la lista de
+15.2, con Chad, el Congo y Uganda, y entra Costa de Marfil en su lugar. Costa
+de Marfil tiene la frontera norte en nivel 4, como Kenia la de Somalia, y
+Ghana tiene partes del norte con más precaución: ninguna ciudad del
+planificador está ahí, y las guías lo dicen como dato de entrada.
+
+**Malaui es el caso de Venezuela.** La 15.3 lo esperaba en Argelia, y apareció
+antes: el kwacha tiene una cotización oficial y otra paralela muy lejos entre
+sí. Como Turkmenistán, Irán y Myanmar, el corredor tiene las dos —por
+defecto, la paralela— y los precios van en dólares, con centavos. Es el dato
+de su portada.
+
+**La vacuna, para todos.** Ghana y Costa de Marfil piden el certificado de la
+fiebre amarilla a todos los viajeros, no solo a quien llega de un país con
+riesgo, y Ghana lo controla antes de migraciones: es el dato de su portada.
+Santo Tomé y Príncipe también puede pedirlo a cualquiera, y su guía dice que
+se lleve.
+
+Lo que cada uno le enseñó al modelo:
+
+- **Madagascar** tiene varios climas en una isla: invierno fresco en las
+  tierras altas —diez grados de noche en Antananarivo en julio, seis en
+  Antsirabe—, una selva que activa el bucket de lluvia (14.12) los doce meses
+  en Ranomafana, y un sur seco que no lo activa nunca. El dato de su portada
+  son los lémures; la nota de alcance dice que el auto con chofer y los vuelos
+  internos no entran en el presupuesto.
+- **Malaui**, además de las dos cotizaciones, tiene el lago y la meseta de
+  Nyika, que baja a dos grados en julio.
+- **Ghana** tiene dos temporadas de lluvia y el harmattan, el viento del
+  Sahara, de diciembre a febrero. Accra es de lo más seco de la costa.
+- **Costa de Marfil** es el segundo país del franco CFA, la misma moneda que
+  Senegal. La base es Abiyán y no Yamusukro, la capital, como Dubái en
+  Emiratos.
+- **Gambia** tiene sol de noviembre a mayo, sin una gota de lluvia en la
+  costa, y es el dato de su portada; río arriba, Janjanbureh pasa los cuarenta
+  grados en abril. La base es Kololi, como Grand Baie en Mauricio.
+- **Lesoto** está entero por encima de los mil metros, y su punto más bajo, a
+  mil cuatrocientos, es el dato de su portada. Afriski, a más de tres mil, baja
+  a ocho bajo cero en julio y se esquía. Como Namibia, su moneda vale lo mismo
+  que el rand, y el enchufe es el M.
+- **Esuatini**, la última monarquía absoluta de África, tiene tres climas de
+  oeste a este en pocos kilómetros; el lowveld de Hlane no llega nunca al
+  bucket de lluvia. Su enchufe también es el M.
+- **Santo Tomé y Príncipe** está sobre el ecuador, con una sola temporada
+  seca, la gravana, de junio a septiembre. Las tarjetas extranjeras casi no
+  funcionan, y la guía lo dice.
+
+**Precios.** Esta vez no hizo falta ninguna excepción: con el factor, las
+entradas a los parques de Malaui quedan cerca de lo que cuestan. Los lodges y
+los resorts —Liwonde, Mkhaya, Príncipe, el Ilhéu das Rolas— cuestan más de lo
+que el factor permite, y las notas de alcance lo dicen. Ninguna moneda nueva
+lleva centavos; Malaui los lleva porque sus precios están en dólares.
+
+**Los extremos.** La mínima más baja de África en el planificador pasa a ser
+la de Afriski en julio, −8,4 °C, y la máxima de la tanda, 40,6 °C, la de
+Janjanbureh en abril, por debajo de Merzouga. Khövsgöl y Jahra siguen siendo la
+ciudad más fría y la más calurosa del sitio (sección 14.11).
+
+Los ids de destino van del `9e` al `a5`.
