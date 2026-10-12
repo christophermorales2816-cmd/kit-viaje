@@ -149,13 +149,14 @@ export interface GuidePreparation {
  * tipeado distinto abriría un grupo nuevo con un solo país adentro, y eso no
  * lo caza nadie hasta verlo.
  *
- * Las de Europa y Asia siguen la división de la ONU (M49), que es discutible en
- * los bordes pero es una sola y está escrita en algún lado. Inventar una propia
- * obligaría a defenderla país por país. Dos excepciones, ya decididas: Turquía
- * y Chipre, que la ONU pone en Asia Occidental, están en Europa del Sur —Chipre
- * es Unión Europea y Turquía se viaja como parte de Europa; sus guías lo
- * explican—. El Cáucaso (Georgia, Armenia, Azerbaiyán) sí queda en Asia
- * Occidental, como dice la ONU.
+ * Las de Europa, África y Asia siguen la división de la ONU (M49), que es
+ * discutible en los bordes pero es una sola y está escrita en algún lado.
+ * Inventar una propia obligaría a defenderla país por país. Dos excepciones, ya
+ * decididas: Turquía y Chipre, que la ONU pone en Asia Occidental, están en
+ * Europa del Sur —Chipre es Unión Europea y Turquía se viaja como parte de
+ * Europa; sus guías lo explican—. El Cáucaso (Georgia, Armenia, Azerbaiyán) sí
+ * queda en Asia Occidental, como dice la ONU, y Egipto en África del Norte,
+ * con el Sinaí incluido.
  */
 export type GuideSubregion =
   | "Sudamérica"
@@ -165,6 +166,11 @@ export type GuideSubregion =
   | "Europa Occidental"
   | "Europa del Norte"
   | "Europa del Este"
+  | "África del Norte"
+  | "África Occidental"
+  | "África Central"
+  | "África Oriental"
+  | "África Austral"
   | "Asia Occidental"
   | "Asia Central"
   | "Asia del Sur"

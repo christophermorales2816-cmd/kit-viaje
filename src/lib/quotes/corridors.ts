@@ -716,6 +716,33 @@ const CORREDORES = [
     timeZone: "Asia/Taipei",
     label: "hora de Taipéi",
   }),
+  // África, primera tanda (spec, 15.5). Una cotización contra el dólar cada
+  // una y sin fuente todavía, como el resto. Marruecos cambia la hora durante
+  // el Ramadán: la zona de IANA ya lo sabe, así que el reloj no necesita nada.
+  unaCotizacion("marruecos", "MAD", {
+    timeZone: "Africa/Casablanca",
+    label: "hora de Marrakech",
+  }),
+  unaCotizacion("egipto", "EGP", {
+    timeZone: "Africa/Cairo",
+    label: "hora de El Cairo",
+  }),
+  unaCotizacion("tunez", "TND", {
+    timeZone: "Africa/Tunis",
+    label: "hora de Túnez",
+  }),
+  unaCotizacion("sudafrica", "ZAR", {
+    timeZone: "Africa/Johannesburg",
+    label: "hora de Ciudad del Cabo",
+  }),
+  unaCotizacion("kenia", "KES", {
+    timeZone: "Africa/Nairobi",
+    label: "hora de Nairobi",
+  }),
+  unaCotizacion("tanzania", "TZS", {
+    timeZone: "Africa/Dar_es_Salaam",
+    label: "hora de Arusha",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));
