@@ -160,6 +160,18 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     kenia: { lat: [-4.8, 5.1], lon: [33.8, 42] },
     // Con Zanzíbar, frente a la costa: Stone Town, Nungwi y Paje están en la isla.
     tanzania: { lat: [-11.8, -0.9], lon: [29.3, 40.5] },
+    namibia: { lat: [-29.1, -16.8], lon: [11.6, 25.4] },
+    // Kasane está en la punta norte, sobre el río Chobe.
+    botsuana: { lat: [-27, -17.7], lon: [19.9, 29.4] },
+    zimbabue: { lat: [-22.5, -15.5], lon: [25.2, 33.1] },
+    zambia: { lat: [-18.2, -8.1], lon: [21.9, 33.8] },
+    // Con Rodrigues, a casi seiscientos kilómetros al este de la isla principal.
+    mauricio: { lat: [-20.6, -19.6], lon: [57.2, 63.6] },
+    // Solo las islas interiores y las Amirantes: Desroches es lo más al sur, y
+    // Aldabra, que no está en el planificador, quedaría afuera.
+    seychelles: { lat: [-5.8, -3.6], lon: [53.5, 56] },
+    "cabo-verde": { lat: [14.7, 17.3], lon: [-25.4, -22.6] },
+    senegal: { lat: [12.2, 16.8], lon: [-17.6, -11.3] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

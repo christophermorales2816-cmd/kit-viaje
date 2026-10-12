@@ -1562,7 +1562,7 @@ y falla si un id está en las dos: el bucket se activaría también por la
 temperatura, y lo etiquetado con él entraría en cualquier viaje aunque no
 lloviera.
 
-## 15. África: la base y la primera tanda
+## 15. África
 
 Lo mismo que se hizo antes de Europa y de Asia —zonas, alcance, monedas y lo
 que el modelo todavía no sabía expresar—, esta vez en el mismo PR que la
@@ -1692,3 +1692,72 @@ Abu Simbel en junio. Khövsgöl y Jahra siguen siendo la ciudad más fría y la 
 calurosa del sitio (sección 14.11).
 
 Los ids de destino van del `90` al `95`.
+
+### 15.6 Segunda tanda: el sur de África, las islas del Índico, Cabo Verde y Senegal
+
+Ocho países con la misma forma —guía completa, nueve ciudades con sus doce
+meses de clima y dieciocho precios, una cotización contra el dólar sin fuente
+todavía—: Namibia, Botsuana, Zimbabue, Zambia, Mauricio, Seychelles, Cabo Verde
+y Senegal. Con los dos últimos aparece en la portada África Occidental.
+
+**Zimbabue y Zambia van en África Oriental.** Se viajan junto con Botsuana y
+Namibia, y en el habla de todos los días son "el sur de África", pero la ONU
+los pone en África Oriental, con Mauricio y Seychelles. La portada sigue a la
+ONU (15.1): una división propia habría que defenderla país por país.
+
+**Zimbabue es el caso de Camboya.** La 15.3 lo dejaba para su tanda, y se
+decidió así: la moneda oficial es el ZiG, pero al viajero se le cobra en
+dólares casi todo, así que el corredor es
+`unaCotizacion("zimbabue", "ZWG", …)` y los precios de la base van en USD, con
+centavos. La guía explica las dos cosas, y el dato de su portada es el de los
+billetes chicos: no circulan monedas de dólar.
+
+Lo que cada uno le enseñó al modelo:
+
+- **Namibia** es desierto y su portada habla del frío: en Sossusvlei, las
+  madrugadas de julio rondan los cinco grados, y en el Kalahari, los tres. La
+  costa, por la corriente de Benguela, es fresca y con niebla todo el año. Se
+  recorre en auto alquilado, y la nota de alcance dice que el presupuesto no
+  lo incluye.
+- **Botsuana** tiene el agua al revés: el delta del Okavango se inunda en plena
+  temporada seca, con lluvia que cayó meses antes en Angola. La base es Maun,
+  la puerta del delta, como Arusha en Tanzania. Los campamentos del delta se
+  venden en paquetes en dólares, muy por encima de lo que el factor permite, y
+  la nota de alcance lo dice.
+- **Zimbabue**, además de los dólares, tiene la meseta templada y el valle del
+  Zambeze, que en octubre pasa los treinta y cinco grados. La base es Cataratas
+  Victoria y no Harare.
+- **Zambia** tiene tres estaciones y no dos: entre el invierno seco y las
+  lluvias, septiembre y octubre son a la vez los meses de más calor y los
+  mejores para los safaris. La base es Livingstone, el lado zambiano de las
+  cataratas.
+- **Mauricio** cambia en pocos kilómetros: el oeste es seco y la meseta
+  central, en Curepipe, tiene el bucket de lluvia (14.12) once meses de doce.
+  Rodrigues, a casi seiscientos kilómetros, entra como una ciudad más del país.
+- **Seychelles** no le pide visa a nadie, pero sí una autorización online
+  antes de volar, y ese es el dato de su portada, como la eTA de Kenia. No
+  tiene invierno: la mínima nunca baja de veinticuatro grados. Desroches y
+  Bird son islas con un resort, y entran porque mucha gente viaja a eso.
+- **Cabo Verde** pide a todos un registro online, aparte de la visa, y es el
+  dato de su portada. Casi no llueve —ningún mes de ninguna ciudad llega al
+  bucket de lluvia— y la valija la definen el viento y el sol; la excepción es
+  Chã das Caldeiras, adentro del volcán de Fogo, con noches de diez grados.
+- **Senegal** trae el primer franco CFA y dos estaciones bien marcadas. Ninguna
+  ciudad del planificador está en Casamance ni en el este, sobre la frontera
+  con Malí, y la guía lo dice como dato de entrada, como Kenia con la frontera
+  de Somalia.
+
+**Precios de los parques.** En Botsuana, Gaborone, Tsodilo y Serowe no cobran
+la tarifa de los parques del norte: lo que se visita ahí son reservas chicas y
+un sitio arqueológico, y derivada de Maun la entrada salía casi tres veces más
+cara. En Zimbabue, la atracción principal de la base es el sendero de las
+cataratas, más caro que la entrada a los parques y a Gran Zimbabue, que con el
+factor salían a casi cien dólares por día. Las dos migraciones lo corrigen con
+un update al final, como Kenia y Tanzania.
+
+**Los extremos no cambian.** La mínima más baja de la tanda es la del Kalahari
+Central en julio, 2 °C, y la máxima más alta, 38,5 °C, la del cañón del río
+Fish en enero. Khövsgöl y Jahra siguen siendo la ciudad más fría y la más
+calurosa del sitio (sección 14.11).
+
+Los ids de destino van del `96` al `9d`.

@@ -156,7 +156,8 @@ export interface GuidePreparation {
  * Europa del Sur —Chipre es Unión Europea y Turquía se viaja como parte de
  * Europa; sus guías lo explican—. El Cáucaso (Georgia, Armenia, Azerbaiyán) sí
  * queda en Asia Occidental, como dice la ONU, y Egipto en África del Norte,
- * con el Sinaí incluido.
+ * con el Sinaí incluido. Zimbabue y Zambia, que se viajan junto con Botsuana y
+ * Namibia, quedan en África Oriental, también como dice la ONU.
  */
 export type GuideSubregion =
   | "Sudamérica"

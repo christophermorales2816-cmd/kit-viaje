@@ -65,9 +65,10 @@ decorativos: hay tests que los fijan.
   certificado de fiebre amarilla a quien llega de un país con riesgo, y varios
   de Sudamérica lo son: la guía lo dice en el tablero, en la checklist de
   documentos y en las preguntas. Algunos piden más: una autorización
-  electrónica antes de embarcar (Kenia) o un seguro de viaje estatal aparte del
-  propio (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda
-  a consultar a un médico de viajes; la guía no receta.
+  electrónica antes de embarcar (Kenia, Seychelles), un registro online aparte
+  de la visa (Cabo Verde) o un seguro de viaje estatal aparte del propio
+  (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda a
+  consultar a un médico de viajes; la guía no receta.
 - **Los nombres, en castellano.** Se usa el nombre que usa la prensa en
   castellano (Pekín, Tokio, Seúl, Hanói, Calcuta) y el `slug` va sin acentos ni
   eñes (`pekin`, `hanoi`). Si la ciudad se conoce más por otro nombre, la guía
@@ -80,8 +81,8 @@ decorativos: hay tests que los fijan.
   Indonesia y Timor Oriental están casi enteros al sur del ecuador.
 - **El enchufe va en la guía** (`preparation.plug`). La lista de equipaje dice
   "adaptador universal" para todos los países; el tipo de cada uno lo da la
-  guía. En Sudáfrica el universal casi nunca sirve —el tipo M no viene en
-  casi ninguno—, y la guía lo dice en el hero.
+  guía. En Sudáfrica y en Namibia el universal casi nunca sirve —el tipo M no
+  viene en casi ninguno—, y la guía lo dice.
 
 ## 3. El corredor de cotizaciones
 
@@ -102,7 +103,9 @@ sigue en la moneda local, porque eso es lo que la guía explica, pero
 reconoce el caso y el presupuesto no intenta convertir. En Asia es el caso de
 Camboya, donde al turista se le cobra en dólares y el riel es el vuelto: el
 corredor es `unaCotizacion("camboya", "KHR", …)` y los precios van en USD. Es
-también el caso probable de Maldivas, que se decide en su tanda.
+también el caso probable de Maldivas, que se decide en su tanda. En África es
+Zimbabue: el corredor es `unaCotizacion("zimbabue", "ZWG", …)`, con el ZiG,
+y los precios van en USD.
 
 **`source: null` si no se verificó la API contra una respuesta real.** No se
 adivina el nombre de los campos. Brasil costó un ciclo entero por escribir
@@ -139,7 +142,8 @@ hasta `8f`) y **África arranca en `90`**. Por cada ciudad:
   precio cero lleva el motivo en el nombre, para que no parezca un dato que
   falta. Vale igual para varias ciudades: en Kenia y Tanzania, los parques de
   la costa y de Zanzíbar cuestan una fracción de los del safari, y derivados
-  con el factor salían varias veces más caros.
+  con el factor salían varias veces más caros; en Botsuana y Zimbabue pasa lo
+  mismo con las reservas chicas y los parques.
 
 Las migraciones de los países de 2026-10 tienen la forma exacta a copiar; la
 de Chile es la más corta de leer. Las de Europa se generaron con
