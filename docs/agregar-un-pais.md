@@ -64,7 +64,8 @@ decorativos: hay tests que los fijan.
 - **En África, la entrada también es salud.** Muchos países piden el
   certificado de fiebre amarilla a quien llega de un país con riesgo, y varios
   de Sudamérica lo son: la guía lo dice en el tablero, en la checklist de
-  documentos y en las preguntas. Algunos piden más: una autorización
+  documentos y en las preguntas. Algunos piden más: la vacuna a todos los
+  viajeros, vengan de donde vengan (Ghana, Costa de Marfil), una autorización
   electrónica antes de embarcar (Kenia, Seychelles), un registro online aparte
   de la visa (Cabo Verde) o un seguro de viaje estatal aparte del propio
   (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda a
@@ -81,8 +82,8 @@ decorativos: hay tests que los fijan.
   Indonesia y Timor Oriental están casi enteros al sur del ecuador.
 - **El enchufe va en la guía** (`preparation.plug`). La lista de equipaje dice
   "adaptador universal" para todos los países; el tipo de cada uno lo da la
-  guía. En Sudáfrica y en Namibia el universal casi nunca sirve —el tipo M no
-  viene en casi ninguno—, y la guía lo dice.
+  guía. En Sudáfrica, Namibia, Lesoto y Esuatini el universal casi nunca sirve
+  —el tipo M no viene en casi ninguno—, y la guía lo dice.
 
 ## 3. El corredor de cotizaciones
 
@@ -94,7 +95,9 @@ En `corridors.ts`. Hay tres formas, según cómo se paga en el país:
 | Varias cotizaciones | un objeto con sus `quoteIds`, default y referencia | Argentina, Bolivia, Venezuela, Cuba |
 | Dolarizado          | `dolarizado(slug, reloj)`                          | Ecuador, El Salvador, Panamá        |
 
-En Asia, Timor Oriental es dolarizado: su moneda es el dólar.
+En Asia, Timor Oriental es dolarizado: su moneda es el dólar. Las varias
+cotizaciones llegaron a Asia con Turkmenistán, Irán y Myanmar, y a África con
+Malaui: la oficial y la paralela, con los precios en dólares, como Venezuela.
 
 **Precios en dólares con moneda propia.** Si la moneda local tiene inflación
 alta y a un viajero se le cobra en dólares —Venezuela y Cuba—, el corredor

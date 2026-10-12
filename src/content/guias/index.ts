@@ -25,6 +25,7 @@ import { china } from "./china";
 import { chipre } from "./chipre";
 import { colombia } from "./colombia";
 import { coreaDelSur } from "./corea-del-sur";
+import { costaDeMarfil } from "./costa-de-marfil";
 import { costaRica } from "./costa-rica";
 import { croacia } from "./croacia";
 import { cuba } from "./cuba";
@@ -37,10 +38,13 @@ import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
 import { estonia } from "./estonia";
+import { esuatini } from "./esuatini";
 import { filipinas } from "./filipinas";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
+import { gambia } from "./gambia";
 import { georgia } from "./georgia";
+import { ghana } from "./ghana";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { honduras } from "./honduras";
@@ -61,13 +65,16 @@ import { kenia } from "./kenia";
 import { kirguistan } from "./kirguistan";
 import { kuwait } from "./kuwait";
 import { laos } from "./laos";
+import { lesoto } from "./lesoto";
 import { letonia } from "./letonia";
 import { libano } from "./libano";
 import { lituania } from "./lituania";
 import { luxemburgo } from "./luxemburgo";
 import { macao } from "./macao";
 import { macedoniaDelNorte } from "./macedonia-del-norte";
+import { madagascar } from "./madagascar";
 import { malasia } from "./malasia";
+import { malaui } from "./malaui";
 import { maldivas } from "./maldivas";
 import { malta } from "./malta";
 import { marruecos } from "./marruecos";
@@ -92,6 +99,7 @@ import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
 import { rumania } from "./rumania";
+import { santoTomeYPrincipe } from "./santo-tome-y-principe";
 import { senegal } from "./senegal";
 import { serbia } from "./serbia";
 import { seychelles } from "./seychelles";
@@ -258,6 +266,14 @@ const GUIAS: DestinationGuide[] = [
   seychelles,
   caboVerde,
   senegal,
+  madagascar,
+  malaui,
+  ghana,
+  costaDeMarfil,
+  gambia,
+  lesoto,
+  esuatini,
+  santoTomeYPrincipe,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -302,6 +318,7 @@ export {
   chipre,
   colombia,
   coreaDelSur,
+  costaDeMarfil,
   costaRica,
   croacia,
   cuba,
@@ -314,10 +331,13 @@ export {
   eslovenia,
   espana,
   estonia,
+  esuatini,
   filipinas,
   finlandia,
   francia,
+  gambia,
   georgia,
+  ghana,
   grecia,
   guatemala,
   honduras,
@@ -338,13 +358,16 @@ export {
   kirguistan,
   kuwait,
   laos,
+  lesoto,
   letonia,
   libano,
   lituania,
   luxemburgo,
   macao,
   macedoniaDelNorte,
+  madagascar,
   malasia,
+  malaui,
   maldivas,
   malta,
   marruecos,
@@ -369,6 +392,7 @@ export {
   reinoUnido,
   republicaDominicana,
   rumania,
+  santoTomeYPrincipe,
   senegal,
   serbia,
   seychelles,

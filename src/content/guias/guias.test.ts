@@ -172,6 +172,16 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     seychelles: { lat: [-5.8, -3.6], lon: [53.5, 56] },
     "cabo-verde": { lat: [14.7, 17.3], lon: [-25.4, -22.6] },
     senegal: { lat: [12.2, 16.8], lon: [-17.6, -11.3] },
+    madagascar: { lat: [-25.7, -11.8], lon: [43, 50.6] },
+    malaui: { lat: [-17.2, -9.3], lon: [32.6, 36] },
+    ghana: { lat: [4.6, 11.2], lon: [-3.3, 1.3] },
+    "costa-de-marfil": { lat: [4.3, 10.8], lon: [-8.7, -2.4] },
+    gambia: { lat: [13, 13.9], lon: [-16.9, -13.7] },
+    lesoto: { lat: [-30.7, -28.5], lon: [27, 29.5] },
+    esuatini: { lat: [-27.4, -25.7], lon: [30.7, 32.2] },
+    // Con Príncipe, al noreste, y el Ilhéu das Rolas, sobre el ecuador mismo:
+    // el límite sur es negativo.
+    "santo-tome-y-principe": { lat: [-0.1, 1.8], lon: [6.4, 7.5] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
