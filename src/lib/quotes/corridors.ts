@@ -830,6 +830,46 @@ const CORREDORES = [
     timeZone: "Africa/Sao_Tome",
     label: "hora de Santo Tomé",
   }),
+  // África, cuarta tanda: los países que entran con aviso (spec, 15.8). Para
+  // el corredor no cambia nada; el aviso vive en la guía.
+  unaCotizacion("nigeria", "NGN", {
+    timeZone: "Africa/Lagos",
+    label: "hora de Lagos",
+  }),
+  unaCotizacion("etiopia", "ETB", {
+    timeZone: "Africa/Addis_Ababa",
+    label: "hora de Adís Abeba",
+  }),
+  unaCotizacion("uganda", "UGX", {
+    timeZone: "Africa/Kampala",
+    label: "hora de Kampala",
+  }),
+  unaCotizacion("ruanda", "RWF", {
+    timeZone: "Africa/Kigali",
+    label: "hora de Kigali",
+  }),
+  unaCotizacion("mozambique", "MZN", {
+    timeZone: "Africa/Maputo",
+    label: "hora de Maputo",
+  }),
+  // Camerún y Chad comparten el franco CFA de África Central (XAF), que vale
+  // lo mismo que el de África Occidental (XOF) pero es otra moneda.
+  unaCotizacion("camerun", "XAF", {
+    timeZone: "Africa/Douala",
+    label: "hora de Duala",
+  }),
+  // La RD del Congo es el caso de Camboya y Zimbabue: al viajero se le cobra
+  // en dólares y el franco congoleño es la moneda del país. El corredor queda
+  // en CDF y los precios de la base van en USD. Lubumbashi tiene una hora más
+  // que Kinshasa; el reloj es el de la ciudad base.
+  unaCotizacion("republica-democratica-del-congo", "CDF", {
+    timeZone: "Africa/Kinshasa",
+    label: "hora de Kinshasa",
+  }),
+  unaCotizacion("chad", "XAF", {
+    timeZone: "Africa/Ndjamena",
+    label: "hora de Yamena",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

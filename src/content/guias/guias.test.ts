@@ -182,6 +182,19 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     // Con Príncipe, al noreste, y el Ilhéu das Rolas, sobre el ecuador mismo:
     // el límite sur es negativo.
     "santo-tome-y-principe": { lat: [-0.1, 1.8], lon: [6.4, 7.5] },
+    nigeria: { lat: [4.2, 13.9], lon: [2.6, 14.7] },
+    etiopia: { lat: [3.3, 15], lon: [32.9, 48] },
+    // Cruza el ecuador: Bwindi y el lago Bunyonyi quedan al sur.
+    uganda: { lat: [-1.5, 4.3], lon: [29.5, 35.1] },
+    ruanda: { lat: [-2.9, -1], lon: [28.8, 31] },
+    mozambique: { lat: [-26.9, -10.4], lon: [30.2, 40.9] },
+    camerun: { lat: [1.6, 13.1], lon: [8.4, 16.2] },
+    // Muanda, sobre el Atlántico, es el extremo oeste; Lubumbashi, el sur.
+    "republica-democratica-del-congo": {
+      lat: [-13.5, 5.4],
+      lon: [12.2, 31.4],
+    },
+    chad: { lat: [7.4, 23.5], lon: [13.4, 24.1] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
