@@ -206,6 +206,18 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     // Con Bioko, al norte, frente a Camerún, y Annobón, al sur del ecuador.
     "guinea-ecuatorial": { lat: [-1.6, 3.9], lon: [5.5, 11.4] },
     "republica-del-congo": { lat: [-5.2, 3.8], lon: [11, 18.8] },
+    togo: { lat: [6, 11.2], lon: [-0.2, 1.9] },
+    benin: { lat: [6.1, 12.5], lon: [0.7, 3.9] },
+    // Harper, en el cabo Palmas, es el extremo sudeste.
+    liberia: { lat: [4.3, 8.6], lon: [-11.6, -7.3] },
+    "sierra-leona": { lat: [6.8, 10.1], lon: [-13.4, -10.2] },
+    guinea: { lat: [7.1, 12.8], lon: [-15.2, -7.6] },
+    // Solo las tres islas del país: Mayotte, al sudeste, quedaría afuera.
+    comoras: { lat: [-12.5, -11.3], lon: [43.1, 44.6] },
+    // El lago Abbé está sobre la frontera con Etiopía: es el extremo oeste.
+    yibuti: { lat: [10.9, 12.8], lon: [41.7, 43.5] },
+    // Con las islas Dahlak, frente a Massawa.
+    eritrea: { lat: [12.3, 18.1], lon: [36.4, 43.2] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(

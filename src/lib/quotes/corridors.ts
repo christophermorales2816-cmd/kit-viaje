@@ -927,6 +927,43 @@ const CORREDORES = [
     timeZone: "Africa/Brazzaville",
     label: "hora de Brazzaville",
   }),
+  // África, sexta tanda (spec, 15.10). Eritrea entra con aviso, como la
+  // cuarta.
+  unaCotizacion("togo", "XOF", {
+    timeZone: "Africa/Lome",
+    label: "hora de Lomé",
+  }),
+  unaCotizacion("benin", "XOF", {
+    timeZone: "Africa/Porto-Novo",
+    label: "hora de Cotonú",
+  }),
+  // Liberia es el caso de Camboya: los dos dólares circulan juntos y al
+  // viajero se le cobra en el estadounidense. El corredor queda en dólares
+  // liberianos, la moneda del país, y los precios de la base van en USD.
+  unaCotizacion("liberia", "LRD", {
+    timeZone: "Africa/Monrovia",
+    label: "hora de Monrovia",
+  }),
+  unaCotizacion("sierra-leona", "SLE", {
+    timeZone: "Africa/Freetown",
+    label: "hora de Freetown",
+  }),
+  unaCotizacion("guinea", "GNF", {
+    timeZone: "Africa/Conakry",
+    label: "hora de Conakri",
+  }),
+  unaCotizacion("comoras", "KMF", {
+    timeZone: "Indian/Comoro",
+    label: "hora de Moroni",
+  }),
+  unaCotizacion("yibuti", "DJF", {
+    timeZone: "Africa/Djibouti",
+    label: "hora de Yibuti",
+  }),
+  unaCotizacion("eritrea", "ERN", {
+    timeZone: "Africa/Asmara",
+    label: "hora de Asmara",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

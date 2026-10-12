@@ -61,30 +61,30 @@ decorativos: hay tests que los fijan.
   electrónica, visa a la llegada, exención por pasaporte— y cambia seguido. La
   guía dice cuál es el mecanismo, no si tu pasaporte lo necesita: "verificá el
   tuyo" y "fijate si ya está vigente".
-- **En África, la entrada también es salud.** Muchos países piden el
-  certificado de fiebre amarilla a quien llega de un país con riesgo, y varios
-  de Sudamérica lo son: la guía lo dice en el tablero, en la checklist de
-  documentos y en las preguntas. Algunos piden más: la vacuna a todos los
-  viajeros, vengan de donde vengan (Ghana, Costa de Marfil, Camerún, la RD del
-  Congo, Angola, Gabón, Guinea-Bisáu, la República del Congo), una
+- **En África, la entrada también es salud.** Muchos países piden el certificado
+  de fiebre amarilla a quien llega de un país con riesgo, y varios de Sudamérica
+  lo son: la guía lo dice en el tablero, en la checklist de documentos y en las
+  preguntas. Algunos piden más: la vacuna a todos los viajeros, vengan de donde
+  vengan (Ghana, Costa de Marfil, Camerún, la RD del Congo, Angola, Gabón,
+  Guinea-Bisáu, la República del Congo, Togo, Benín, Liberia, Sierra Leona), una
   autorización electrónica antes de embarcar (Kenia, Seychelles), un registro
-  online aparte de la visa (Cabo Verde, Mozambique), un registro en la policía
-  al llegar (Chad) o un seguro de viaje estatal aparte del propio (Tanzania).
-  Donde hay malaria, la checklist de salud lo avisa y manda a consultar a un
-  médico de viajes; la guía no receta.
+  online aparte de la visa (Cabo Verde, Mozambique, y Togo también al salir), un
+  registro en la policía al llegar (Chad), un permiso para cada destino fuera de
+  la capital (Eritrea) o un seguro de viaje estatal aparte del propio
+  (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda a
+  consultar a un médico de viajes; la guía no receta.
 - **Un país con zonas desaconsejadas entra con aviso, o no entra** (spec, 14.2,
-  15.8 y 15.9). Si los gobiernos desaconsejan viajar a todo el país, queda afuera;
-  los casos dudosos se deciden en su tanda. Los que entran llevan el mismo
-  bloque en todas las guías —el modelo es `pakistan.ts`—: la entrada
-  `tener-en-cuenta` al final de `facts`, que manda a revisar la recomendación
-  de viaje del propio país y qué cubre el seguro; el primer punto de
-  `keyPoints` y de `costs`; el primer consejo de cada columna; la checklist
-  `documentos` en tono de advertencia; una fila de `avoid` y la primera
-  pregunta del FAQ. La guía no describe la situación, que cambia más rápido
-  que el texto. **Ninguna ciudad del planificador está en una zona
-  desaconsejada**: antes de elegir las nueve, se revisan las recomendaciones
-  vigentes (Estados Unidos y el Reino Unido, por lo menos), y la entrada
-  `tener-en-cuenta` dice qué queda afuera.
+  15.8, 15.9 y 15.10). Si los gobiernos desaconsejan viajar a todo el país,
+  queda afuera; los casos dudosos se deciden en su tanda. Los que entran llevan
+  el mismo bloque en todas las guías —el modelo es `pakistan.ts`—: la entrada
+  `tener-en-cuenta` al final de `facts`, que manda a revisar la recomendación de
+  viaje del propio país y qué cubre el seguro; el primer punto de `keyPoints` y
+  de `costs`; el primer consejo de cada columna; la checklist `documentos` en
+  tono de advertencia; una fila de `avoid` y la primera pregunta del FAQ. La
+  guía no describe la situación, que cambia más rápido que el texto. **Ninguna
+  ciudad del planificador está en una zona desaconsejada**: antes de elegir las
+  nueve, se revisan las recomendaciones vigentes (Estados Unidos y el Reino
+  Unido, por lo menos), y la entrada `tener-en-cuenta` dice qué queda afuera.
 - **Los nombres, en castellano.** Se usa el nombre que usa la prensa en
   castellano (Pekín, Tokio, Seúl, Hanói, Calcuta) y el `slug` va sin acentos ni
   eñes (`pekin`, `hanoi`). Si la ciudad se conoce más por otro nombre, la guía
@@ -116,17 +116,18 @@ Malaui, Burundi y Argelia: la oficial y la paralela, con los precios en
 dólares, como Venezuela.
 
 **Precios en dólares con moneda propia.** Si la moneda local tiene inflación
-alta y a un viajero se le cobra en dólares —Venezuela y Cuba—, el corredor
-sigue en la moneda local, porque eso es lo que la guía explica, pero
-`destinations.base_currency` y los precios van en `USD`. `budgetConversionStatus`
-reconoce el caso y el presupuesto no intenta convertir. En Asia es el caso de
-Camboya, donde al turista se le cobra en dólares y el riel es el vuelto: el
-corredor es `unaCotizacion("camboya", "KHR", …)` y los precios van en USD. Es
-también el caso probable de Maldivas, que se decide en su tanda. En África es
-Zimbabue, con el ZiG, y la RD del Congo, con el franco congoleño: los
-corredores son `unaCotizacion("zimbabue", "ZWG", …)` y
-`unaCotizacion("republica-democratica-del-congo", "CDF", …)`, y los precios
-van en USD.
+alta y a un viajero se le cobra en dólares —Venezuela y Cuba—, el corredor sigue
+en la moneda local, porque eso es lo que la guía explica, pero
+`destinations.base_currency` y los precios van en `USD`.
+`budgetConversionStatus` reconoce el caso y el presupuesto no intenta convertir.
+En Asia es el caso de Camboya, donde al turista se le cobra en dólares y el riel
+es el vuelto: el corredor es `unaCotizacion("camboya", "KHR", …)` y los precios
+van en USD. Es también el caso de Maldivas y del Líbano (spec, 14.11).
+En África es Zimbabue, con el ZiG, la RD del Congo, con el franco congoleño, y
+Liberia, donde el dólar liberiano circula junto al estadounidense: los
+corredores son `unaCotizacion("zimbabue", "ZWG", …)`,
+`unaCotizacion("republica-democratica-del-congo", "CDF", …)` y
+`unaCotizacion("liberia", "LRD", …)`, y los precios van en USD.
 
 **`source: null` si no se verificó la API contra una respuesta real.** No se
 adivina el nombre de los campos. Brasil costó un ciclo entero por escribir

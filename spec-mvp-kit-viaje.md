@@ -1612,6 +1612,13 @@ Los territorios:
   primeras son Francia y usan el euro, aunque no estén en Schengen; Santa Elena
   es británica, con moneda propia.
 
+> **Decidido en la sección 15.10:** quedan afuera las tres. Reunión y Mayotte
+> comparten moneda y reglas de entrada con Francia, como Puerto Rico con
+> Estados Unidos (sección 13). Santa Elena tiene moneda propia, atada a la
+> libra, pero es un territorio de ultramar, y en América no entró ninguno. La
+> guía de Comoras dice que Mayotte no está. Si alguno se suma, es un corredor
+> nuevo y se decide en su propia tanda.
+
 ### 15.3 Monedas
 
 Ninguna moneda propia de un país africano vale hoy más de medio dólar, así que
@@ -1631,6 +1638,10 @@ alrededor de un tercio. Lo que África trae:
   oficial y el del mercado están muy lejos.
 
 Los dos últimos casos se deciden en su tanda.
+
+> **Decidido:** Zimbabue (15.6), la RD del Congo (15.8) y Liberia (15.10) van
+> con los precios en dólares; Malaui (15.7), Burundi y Argelia (15.9), con dos
+> cotizaciones.
 
 ### 15.4 La entrada también es salud
 
@@ -2003,3 +2014,80 @@ mínima de la tanda es la de Timgad en enero, 0,4 °C, por encima de Afriski
 del sitio (sección 14.11).
 
 Los ids de destino van del `ae` al `b5`.
+
+### 15.10 Sexta tanda: Togo, Benín, Liberia, Sierra Leona, Guinea, Comoras, Yibuti y Eritrea
+
+Ocho países con la misma forma —guía completa, nueve ciudades con sus doce
+meses de clima y dieciocho precios, cotización sin fuente todavía—. Con ellos,
+África queda completa en el planificador: cuarenta y seis países, todos menos
+los ocho que la sección 15.2 dejó afuera, que se revisan cuando cambien sus
+recomendaciones.
+
+**Con aviso, uno.** Eritrea: el Reino Unido desaconseja todo viaje a menos de
+veinticinco kilómetros de cualquier frontera terrestre y los que no sean
+esenciales al resto del país. La regla de 15.8 la alcanza: entra con aviso.
+Los otros siete van con precauciones normales, y las zonas desaconsejadas, si
+las hay, se dicen como dato de entrada.
+
+**Las ciudades, fuera de las zonas desaconsejadas**, con la misma revisión de
+15.8:
+
+- **Togo:** nada al norte de Kandé ni cerca de la frontera con Burkina Faso,
+  así que Koutammakou, la tierra de los batammariba, no está.
+- **Benín:** nada en el Atacora ni en el Alibori, así que los parques de la
+  Pendjari y W no están.
+- **Yibuti:** nada cerca de la frontera con Eritrea ni al norte de Obock, donde
+  además hace falta un permiso del gobierno.
+- **Eritrea:** nada a menos de veinticinco kilómetros de una frontera
+  terrestre. Para salir de la región de Asmara hace falta un permiso para cada
+  destino, y la guía lo dice.
+
+**Precios en dólares, uno más.** La 15.3 esperaba a Liberia, y se decidió así:
+el dólar liberiano y el estadounidense circulan juntos y al viajero se le cobra
+en el segundo, como en Camboya, Zimbabue y la RD del Congo. El corredor queda
+en dólares liberianos (`LRD`) y los precios van en USD, con centavos.
+
+**Los territorios.** Reunión, Mayotte y Santa Elena quedan afuera; la nota de
+15.2 dice por qué.
+
+Lo que cada uno le enseñó al modelo:
+
+- **Togo** pide, además de la visa, un registro online antes de llegar y otro
+  antes de irse: el de Cabo Verde (15.6), pero de ida y de vuelta. El dato de
+  su portada es lo angosto del país, cincuenta y seis kilómetros de costa.
+- **Benín** tiene el vudú como religión reconocida, con feriado nacional el 10
+  de enero: es el dato de su portada. La base es Cotonú y no Porto Novo, la
+  capital, como Abiyán en Costa de Marfil.
+- **Liberia** trae, además de los dólares, el enchufe estadounidense a 120 V,
+  un caso raro en África: la fila del secador en `avoid` es la de Japón y no la
+  del resto del continente. El dato de su portada es la lluvia: Monrovia es una
+  de las capitales más lluviosas del mundo, y el bucket de lluvia (14.12) se
+  activa de abril a noviembre.
+- **Sierra Leona** tiene una moneda que perdió tres ceros en 2022 —el leone
+  nuevo, `SLE`, y no el viejo, `SLL`—, y en la calle todavía se oyen precios en
+  la vieja: es el dato de su portada. El aeropuerto está del otro lado de la
+  bahía, y la guía explica el cruce.
+- **Guinea** junta una de las temporadas de lluvia más fuertes del mundo en la
+  costa con las noches frescas del Futa Yalón, el dato de su portada. Su FAQ
+  aclara que Mali, el pueblo de la meseta, no es el país vecino.
+- **Comoras** es un archipiélago de tres islas, con la visa al llegar, en
+  efectivo. La cumbre del Karthala lleva el bucket frío a una guía tropical, y
+  las tortugas de Mohéli, que desovan todo el año, son el dato de su portada.
+- **Yibuti** tiene la máxima más alta de África en el planificador: el lago
+  Assal, 45,6 °C en julio. El dato de su portada son los tiburones ballena del
+  golfo de Tadjoura.
+- **Eritrea**, además del aviso, pide la visa en una embajada y un permiso para
+  cada destino fuera de la región de Asmara, que es el dato de su portada. No
+  hay cajeros para tarjetas extranjeras.
+
+**Precios.** Ninguna excepción. Ninguna moneda nueva lleva centavos: la que
+más vale, el nakfa, no llega a una décima de dólar. Liberia los lleva porque sus
+precios están en dólares.
+
+**Los extremos.** La máxima más alta de África en el planificador pasa a ser la
+del lago Assal en julio, 45,6 °C, por encima de Atar (15.9). La mínima de la
+tanda es la de Debre Bizen en enero, 6,2 °C, por encima de las de Timgad (15.9)
+y Afriski (15.7). Khövsgöl y Jahra siguen siendo la ciudad más fría y la más
+calurosa del sitio (sección 14.11).
+
+Los ids de destino van del `b6` al `bd`.
