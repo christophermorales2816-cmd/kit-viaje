@@ -1595,6 +1595,9 @@ como Nigeria, Camerún, Etiopía, Mozambique o Mauritania. La pregunta es la de
 14.2: si una guía con precauciones normales es honesta. Ruanda se sumó a esta
 lista en la tercera tanda (15.7).
 
+> **Decidido en la sección 15.8:** entran con aviso, como en Asia. Mauritania va
+> en la quinta tanda.
+
 Los territorios:
 
 - **El Sahara Occidental** es un territorio en disputa que Marruecos administra
@@ -1832,3 +1835,94 @@ Janjanbureh en abril, por debajo de Merzouga. Khövsgöl y Jahra siguen siendo l
 ciudad más fría y la más calurosa del sitio (sección 14.11).
 
 Los ids de destino van del `9e` al `a5`.
+
+### 15.8 Cuarta tanda: los países con aviso
+
+Ocho países con la misma forma —guía completa, nueve ciudades con sus doce
+meses de clima y dieciocho precios, cotización sin fuente todavía—: Nigeria,
+Etiopía, Uganda, Ruanda, Mozambique, Camerún, la República Democrática del
+Congo y Chad. Mauritania, el noveno de la lista de 15.2, va en la quinta tanda.
+
+**Con aviso, como en Asia.** La pregunta de 15.2 era la de 14.2: si una guía
+con precauciones normales es honesta para estos países. Se decidió como en la
+sección 14.11: entran, y cada guía lleva la entrada "Qué tener en cuenta", que
+manda a revisar la recomendación de viaje del propio país y qué cubre el
+seguro, la misma pregunta al principio del FAQ y la checklist de documentos en
+tono de advertencia. La guía no describe la situación. Tampoco menciona las
+leyes locales que afectan a viajeros LGBT: se decidió no tratarlas como dato
+de entrada, igual en todos los países.
+
+**Las ciudades, fuera de las zonas desaconsejadas.** Las recomendaciones de
+Estados Unidos y del Reino Unido se revisaron el 12 de octubre de 2026, y
+ninguna ciudad del planificador está en una zona adonde alguno de los dos pida
+no ir. La revisión cambió el primer borrador en tres países:
+
+- **Etiopía:** nada en Amhara, Tigray, Afar ni Oromía. Por eso no están
+  Lalibela, Gondar ni Axum, y tampoco los lagos del Rift al sur de la capital:
+  Bishoftu y el lago Langano están en zonas de Oromía que Estados Unidos
+  desaconseja desde agosto, y su lugar lo ocupan Dorze, en los montes Gamo, y
+  Turmi, en el valle del Omo. Al sur y al este se llega en avión; a Harar, por
+  ruta desde Dire Dawa, y la guía manda a revisar también ese camino.
+- **Uganda:** nada en Karamoja ni sobre la frontera con Sudán del Sur. El
+  Parque Nacional Reina Isabel, que varias recomendaciones señalan, dejó su
+  lugar al lago Mburo. Bwindi está cerca de la frontera con el Congo, y la guía
+  lo dice.
+- **Chad:** nada en el norte, en el lago Chad ni en las zonas de frontera,
+  salvo la capital, que mira a Camerún del otro lado del río. El Ennedi y los
+  lagos de Ounianga, sus destinos más conocidos, están en provincias del norte
+  adonde el Reino Unido pide no ir; salieron con Bongor, que está sobre la
+  frontera, y entraron el parque de Manda, Bitkine y el lago Fitri.
+
+En el resto, la lista ya cumplía: Nigeria sin el norte ni el delta del Níger;
+Ruanda sin la franja de diez kilómetros sobre la frontera con el Congo (15.7);
+Mozambique sin Cabo Delgado ni los distritos del norte de Niassa y Nampula;
+Camerún sin el Noroeste, el Sudoeste ni el norte, y la RD del Congo sin el este
+ni las otras provincias desaconsejadas. A Gorongosa y a la Isla de Mozambique
+se llega por ruta, y la guía manda a revisar esos caminos.
+
+Lo que cada uno le enseñó al modelo:
+
+- **Nigeria** ya no da la visa al llegar: casi todos los pasaportes de fuera
+  de África Occidental la tramitan online, y las aerolíneas no embarcan sin
+  ella. Es el dato de su portada. La base es Lagos y no Abuja, como Duala en
+  Camerún.
+- **Etiopía** tiene calendario y hora propios: trece meses, siete u ocho años
+  atrás, y las horas contadas desde que sale el sol. Es el dato de su portada,
+  porque cambia cómo se lee un horario. Adís Abeba, a más de dos mil
+  trescientos metros, cae en el bucket `frio` las noches de diciembre.
+- **Uganda** tiene el permiso de los gorilas, que cuesta más que el resto del
+  viaje y no entra en el presupuesto: es el dato de su portada. Dejó de pedir
+  el certificado de la fiebre amarilla en octubre de 2026, y la guía lo dice
+  con el cuidado de siempre: otro país puede pedirlo a quien llega de Uganda.
+- **Ruanda** prohíbe las bolsas de plástico, y en el aeropuerto te las pueden
+  sacar: es el dato de su portada y la primera regla de entrada que cambia cómo
+  se arma la valija. Musanze queda con el precio derivado: lo caro allá son
+  los permisos del parque de los volcanes, que no entran en el presupuesto.
+- **Mozambique** tiene la temporada de ciclones, de diciembre a marzo, que es
+  el dato de su portada. Se habla portugués, y la guía lo cuenta como ventaja.
+- **Camerún** trae el franco CFA de África Central, que vale lo mismo que el de
+  África Occidental pero no se acepta en su zona, ni el de ella acá. Le dicen
+  "África en miniatura", que es el dato de su portada, y pide la vacuna de la
+  fiebre amarilla a todos.
+- **La RD del Congo es el caso de Camboya y Zimbabue.** El corredor es
+  `unaCotizacion("republica-democratica-del-congo", "CDF", …)` y los precios
+  van en USD, con centavos. El dato de su portada son los dólares: los
+  billetes viejos o manchados se rechazan. Lubumbashi tiene una hora más que
+  Kinshasa; el reloj del corredor es el de la ciudad base.
+- **Chad** tiene el Sahel en la ciudad base: Yamena pasa los cuarenta y un
+  grados en abril, y es el dato de su portada. Hay que registrarse en la
+  policía, y para las fotos puede hacer falta un permiso.
+
+**Precios.** Los parques de Uganda —Murchison, Kibale, el lago Mburo y Bwindi—
+y los de Ruanda —Nyungwe y Akagera— cobran una entrada mucho más cara que la
+atracción principal de la capital, y sus migraciones lo corrigen con un update
+al final, como Kenia y Tanzania. Los permisos de gorilas y chimpancés no entran
+en el presupuesto, y las guías lo dicen. Ninguna moneda nueva lleva centavos;
+la RD del Congo los lleva porque sus precios están en dólares.
+
+**Los extremos no cambian.** La mínima más baja de la tanda es la de
+Lubumbashi en julio, 6,2 °C, y la máxima más alta, 41 °C, la de Yamena y el lago
+Fitri en abril, por debajo de Merzouga. Khövsgöl y Jahra siguen siendo la
+ciudad más fría y la más calurosa del sitio (sección 14.11).
+
+Los ids de destino van del `a6` al `ad`.

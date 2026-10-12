@@ -18,7 +18,9 @@ import { bulgaria } from "./bulgaria";
 import { butan } from "./butan";
 import { caboVerde } from "./cabo-verde";
 import { camboya } from "./camboya";
+import { camerun } from "./camerun";
 import { catar } from "./catar";
+import { chad } from "./chad";
 import { chequia } from "./chequia";
 import { chile } from "./chile";
 import { china } from "./china";
@@ -39,6 +41,7 @@ import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
 import { estonia } from "./estonia";
 import { esuatini } from "./esuatini";
+import { etiopia } from "./etiopia";
 import { filipinas } from "./filipinas";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
@@ -83,10 +86,12 @@ import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
 import { mongolia } from "./mongolia";
 import { montenegro } from "./montenegro";
+import { mozambique } from "./mozambique";
 import { myanmar } from "./myanmar";
 import { namibia } from "./namibia";
 import { nepal } from "./nepal";
 import { nicaragua } from "./nicaragua";
+import { nigeria } from "./nigeria";
 import { noruega } from "./noruega";
 import { oman } from "./oman";
 import { paisesBajos } from "./paises-bajos";
@@ -97,7 +102,9 @@ import { peru } from "./peru";
 import { polonia } from "./polonia";
 import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
+import { republicaDemocraticaDelCongo } from "./republica-democratica-del-congo";
 import { republicaDominicana } from "./republica-dominicana";
+import { ruanda } from "./ruanda";
 import { rumania } from "./rumania";
 import { santoTomeYPrincipe } from "./santo-tome-y-principe";
 import { senegal } from "./senegal";
@@ -117,6 +124,7 @@ import { tunez } from "./tunez";
 import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
 import type { DestinationGuide } from "./types";
+import { uganda } from "./uganda";
 import { uruguay } from "./uruguay";
 import { uzbekistan } from "./uzbekistan";
 import { venezuela } from "./venezuela";
@@ -274,6 +282,14 @@ const GUIAS: DestinationGuide[] = [
   lesoto,
   esuatini,
   santoTomeYPrincipe,
+  nigeria,
+  etiopia,
+  uganda,
+  ruanda,
+  mozambique,
+  camerun,
+  republicaDemocraticaDelCongo,
+  chad,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -311,7 +327,9 @@ export {
   butan,
   caboVerde,
   camboya,
+  camerun,
   catar,
+  chad,
   chequia,
   chile,
   china,
@@ -332,6 +350,7 @@ export {
   espana,
   estonia,
   esuatini,
+  etiopia,
   filipinas,
   finlandia,
   francia,
@@ -376,10 +395,12 @@ export {
   moldavia,
   mongolia,
   montenegro,
+  mozambique,
   myanmar,
   namibia,
   nepal,
   nicaragua,
+  nigeria,
   noruega,
   oman,
   paisesBajos,
@@ -390,7 +411,9 @@ export {
   polonia,
   portugal,
   reinoUnido,
+  republicaDemocraticaDelCongo,
   republicaDominicana,
+  ruanda,
   rumania,
   santoTomeYPrincipe,
   senegal,
@@ -409,6 +432,7 @@ export {
   tunez,
   turkmenistan,
   turquia,
+  uganda,
   uruguay,
   uzbekistan,
   venezuela,
