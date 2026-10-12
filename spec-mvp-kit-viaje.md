@@ -1926,3 +1926,80 @@ Fitri en abril, por debajo de Merzouga. Khövsgöl y Jahra siguen siendo la
 ciudad más fría y la más calurosa del sitio (sección 14.11).
 
 Los ids de destino van del `a6` al `ad`.
+
+### 15.9 Quinta tanda: Mauritania, Burundi, Guinea-Bisáu, Argelia, Angola, Gabón, Guinea Ecuatorial y la República del Congo
+
+Ocho países con la misma forma —guía completa, nueve ciudades con sus doce
+meses de clima y dieciocho precios, cotización sin fuente todavía—. Con ellos,
+África Central queda completa en la portada, salvo la República Centroafricana,
+que la sección 15.2 dejó afuera.
+
+**Con aviso, tres.** Mauritania, el último de la lista de 15.2, entra como los
+de la cuarta tanda (15.8). Burundi y Guinea-Bisáu no estaban en esa lista, pero
+los dos figuran en el nivel 3 de la recomendación de Estados Unidos
+("reconsiderar el viaje"), y la regla de 15.8 los alcanza: entran con aviso.
+Los otros cinco van con precauciones normales, y las zonas desaconsejadas, si
+las hay, se dicen como dato de entrada, como en Kenia.
+
+**Las ciudades, fuera de las zonas desaconsejadas**, con la misma revisión de
+15.8:
+
+- **Mauritania:** nada al norte del trópico de Cáncer, en el este ni cerca de
+  las fronteras con Malí, Argelia o el Sahara Occidental. Por eso no está
+  Nuadibú, la segunda ciudad, pegada a esa frontera.
+- **Burundi:** nada en Cibitoke ni en Bubanza, en el parque de la Kibira ni
+  sobre la frontera con el Congo, al oeste de Buyumbura.
+- **Guinea-Bisáu:** nada a menos de veinte kilómetros de la frontera con
+  Senegal, así que Varela y São Domingos no están.
+- **Argelia:** nada cerca de las fronteras del sur y del este ni en el Sahara
+  profundo —Tamanrasset, Djanet, Illizi—; Ghardaïa es lo más al sur.
+- **Angola:** nada en Cabinda ni en las Lundas.
+- **República del Congo:** nada a menos de cincuenta kilómetros de la frontera
+  con la República Centroafricana ni en el Pool fuera de la capital. Como la
+  ruta entre Brazzaville y Pointe-Noire cruza el Pool, la guía recomienda
+  volar.
+
+**Dos cotizaciones, dos más.** La 15.3 esperaba a Argelia, y se decidió así:
+el dinar tiene una cotización oficial y otra paralela muy lejos entre sí, como
+el kwacha de Malaui (15.7). Burundi es el mismo caso con el franco burundés.
+Los dos corredores declaran `oficial` y `paralelo` —por defecto, la
+paralela— y los precios van en dólares, con centavos.
+
+Lo que cada uno le enseñó al modelo:
+
+- **Mauritania** tiene la máxima más alta de África en el planificador: Atar,
+  43,4 °C en junio, que es el dato de su portada. Es una república islámica, y
+  la guía dice que no se vende alcohol.
+- **Burundi**, además de las dos cotizaciones, tiene el lago Tanganica, el
+  segundo más profundo del mundo, que es el dato de su portada.
+- **Guinea-Bisáu** es un archipiélago al que se llega en barco, sin cajeros:
+  las ochenta y ocho islas de las Bijagós son el dato de su portada.
+- **Argelia** trae ciudades romanas enteras —Timgad, Djémila y Tipaza—, el dato
+  de su portada, y una visa que se tramita en un consulado, con reserva o
+  carta de invitación. El dinar, como el dírham y el dinar tunecino, no se
+  puede sacar del país.
+- **Angola** tiene costa tropical sin calor de trópico: la corriente de
+  Benguela trae el cacimbo, un invierno fresco y nublado, que es el dato de su
+  portada. Casi todos los pasaportes de América y Europa entran sin visa por
+  turismo.
+- **Gabón** es casi todo selva, con trece parques nacionales, y es de los
+  países más caros de África: los lodges de Loango y la Lopé se venden en
+  paquetes, y la nota de alcance lo dice.
+- **Guinea Ecuatorial** es el único país de África con el español como idioma
+  oficial, y es el dato de su portada. Bioko y el continente se viajan por
+  separado, y el sur de la isla pide un permiso.
+- **La República del Congo**, la de Brazzaville, tiene los gorilas de llanura
+  de Odzala, el dato de su portada, en lodges que llevan el factor más alto
+  que admite el generador (2,5). Su FAQ aclara que no es la RD del Congo.
+
+**Precios.** Ninguna excepción esta vez. Ninguna moneda nueva lleva centavos:
+la uguiya, el kwanza y los francos CFA valen mucho menos que medio dólar.
+Burundi y Argelia los llevan porque sus precios están en dólares.
+
+**Los extremos.** La máxima más alta de África en el planificador pasa a ser la
+de Atar en junio, 43,4 °C, por encima de Merzouga y Abu Simbel (15.5). La
+mínima de la tanda es la de Timgad en enero, 0,4 °C, por encima de Afriski
+(15.7). Khövsgöl y Jahra siguen siendo la ciudad más fría y la más calurosa
+del sitio (sección 14.11).
+
+Los ids de destino van del `ae` al `b5`.

@@ -1,7 +1,9 @@
 import { albania } from "./albania";
 import { alemania } from "./alemania";
 import { andorra } from "./andorra";
+import { angola } from "./angola";
 import { arabiaSaudita } from "./arabia-saudita";
+import { argelia } from "./argelia";
 import { argentina } from "./argentina";
 import { armenia } from "./armenia";
 import { austria } from "./austria";
@@ -15,6 +17,7 @@ import { botsuana } from "./botsuana";
 import { brasil } from "./brasil";
 import { brunei } from "./brunei";
 import { bulgaria } from "./bulgaria";
+import { burundi } from "./burundi";
 import { butan } from "./butan";
 import { caboVerde } from "./cabo-verde";
 import { camboya } from "./camboya";
@@ -45,11 +48,14 @@ import { etiopia } from "./etiopia";
 import { filipinas } from "./filipinas";
 import { finlandia } from "./finlandia";
 import { francia } from "./francia";
+import { gabon } from "./gabon";
 import { gambia } from "./gambia";
 import { georgia } from "./georgia";
 import { ghana } from "./ghana";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
+import { guineaBisau } from "./guinea-bisau";
+import { guineaEcuatorial } from "./guinea-ecuatorial";
 import { honduras } from "./honduras";
 import { hongKong } from "./hong-kong";
 import { hungria } from "./hungria";
@@ -82,6 +88,7 @@ import { maldivas } from "./maldivas";
 import { malta } from "./malta";
 import { marruecos } from "./marruecos";
 import { mauricio } from "./mauricio";
+import { mauritania } from "./mauritania";
 import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
 import { mongolia } from "./mongolia";
@@ -102,6 +109,7 @@ import { peru } from "./peru";
 import { polonia } from "./polonia";
 import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
+import { republicaDelCongo } from "./republica-del-congo";
 import { republicaDemocraticaDelCongo } from "./republica-democratica-del-congo";
 import { republicaDominicana } from "./republica-dominicana";
 import { ruanda } from "./ruanda";
@@ -290,6 +298,14 @@ const GUIAS: DestinationGuide[] = [
   camerun,
   republicaDemocraticaDelCongo,
   chad,
+  mauritania,
+  burundi,
+  guineaBisau,
+  argelia,
+  angola,
+  gabon,
+  guineaEcuatorial,
+  republicaDelCongo,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -310,7 +326,9 @@ export {
   albania,
   alemania,
   andorra,
+  angola,
   arabiaSaudita,
+  argelia,
   argentina,
   armenia,
   austria,
@@ -324,6 +342,7 @@ export {
   brasil,
   brunei,
   bulgaria,
+  burundi,
   butan,
   caboVerde,
   camboya,
@@ -354,11 +373,14 @@ export {
   filipinas,
   finlandia,
   francia,
+  gabon,
   gambia,
   georgia,
   ghana,
   grecia,
   guatemala,
+  guineaBisau,
+  guineaEcuatorial,
   honduras,
   hongKong,
   hungria,
@@ -391,6 +413,7 @@ export {
   malta,
   marruecos,
   mauricio,
+  mauritania,
   mexico,
   moldavia,
   mongolia,
@@ -411,6 +434,7 @@ export {
   polonia,
   portugal,
   reinoUnido,
+  republicaDelCongo,
   republicaDemocraticaDelCongo,
   republicaDominicana,
   ruanda,
