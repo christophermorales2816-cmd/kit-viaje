@@ -743,6 +743,44 @@ const CORREDORES = [
     timeZone: "Africa/Dar_es_Salaam",
     label: "hora de Arusha",
   }),
+  // Namibia: el dólar namibio vale lo mismo que el rand, pero es otra moneda,
+  // con su propio código, y el corredor la cotiza aparte.
+  unaCotizacion("namibia", "NAD", {
+    timeZone: "Africa/Windhoek",
+    label: "hora de Windhoek",
+  }),
+  unaCotizacion("botsuana", "BWP", {
+    timeZone: "Africa/Gaborone",
+    label: "hora de Maun",
+  }),
+  // Zimbabue es el caso de Camboya: al viajero se le cobra en dólares y el ZiG
+  // es la moneda del país. El corredor queda en ZiG y los precios de la base
+  // van en USD; budgetConversionStatus ve que ya están en la moneda del
+  // resultado.
+  unaCotizacion("zimbabue", "ZWG", {
+    timeZone: "Africa/Harare",
+    label: "hora de Cataratas Victoria",
+  }),
+  unaCotizacion("zambia", "ZMW", {
+    timeZone: "Africa/Lusaka",
+    label: "hora de Livingstone",
+  }),
+  unaCotizacion("mauricio", "MUR", {
+    timeZone: "Indian/Mauritius",
+    label: "hora de Grand Baie",
+  }),
+  unaCotizacion("seychelles", "SCR", {
+    timeZone: "Indian/Mahe",
+    label: "hora de Victoria",
+  }),
+  unaCotizacion("cabo-verde", "CVE", {
+    timeZone: "Atlantic/Cape_Verde",
+    label: "hora de Santa Maria",
+  }),
+  unaCotizacion("senegal", "XOF", {
+    timeZone: "Africa/Dakar",
+    label: "hora de Dakar",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

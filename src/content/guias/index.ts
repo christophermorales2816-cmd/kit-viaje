@@ -11,10 +11,12 @@ import { barein } from "./barein";
 import { belgica } from "./belgica";
 import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
+import { botsuana } from "./botsuana";
 import { brasil } from "./brasil";
 import { brunei } from "./brunei";
 import { bulgaria } from "./bulgaria";
 import { butan } from "./butan";
+import { caboVerde } from "./cabo-verde";
 import { camboya } from "./camboya";
 import { catar } from "./catar";
 import { chequia } from "./chequia";
@@ -69,11 +71,13 @@ import { malasia } from "./malasia";
 import { maldivas } from "./maldivas";
 import { malta } from "./malta";
 import { marruecos } from "./marruecos";
+import { mauricio } from "./mauricio";
 import { mexico } from "./mexico";
 import { moldavia } from "./moldavia";
 import { mongolia } from "./mongolia";
 import { montenegro } from "./montenegro";
 import { myanmar } from "./myanmar";
+import { namibia } from "./namibia";
 import { nepal } from "./nepal";
 import { nicaragua } from "./nicaragua";
 import { noruega } from "./noruega";
@@ -88,7 +92,9 @@ import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
 import { republicaDominicana } from "./republica-dominicana";
 import { rumania } from "./rumania";
+import { senegal } from "./senegal";
 import { serbia } from "./serbia";
+import { seychelles } from "./seychelles";
 import { singapur } from "./singapur";
 import { sriLanka } from "./sri-lanka";
 import { sudafrica } from "./sudafrica";
@@ -107,6 +113,8 @@ import { uruguay } from "./uruguay";
 import { uzbekistan } from "./uzbekistan";
 import { venezuela } from "./venezuela";
 import { vietnam } from "./vietnam";
+import { zambia } from "./zambia";
+import { zimbabue } from "./zimbabue";
 
 export type {
   DestinationGuide,
@@ -242,6 +250,14 @@ const GUIAS: DestinationGuide[] = [
   sudafrica,
   kenia,
   tanzania,
+  namibia,
+  botsuana,
+  zimbabue,
+  zambia,
+  mauricio,
+  seychelles,
+  caboVerde,
+  senegal,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -272,10 +288,12 @@ export {
   belgica,
   bolivia,
   bosniaYHerzegovina,
+  botsuana,
   brasil,
   brunei,
   bulgaria,
   butan,
+  caboVerde,
   camboya,
   catar,
   chequia,
@@ -330,11 +348,13 @@ export {
   maldivas,
   malta,
   marruecos,
+  mauricio,
   mexico,
   moldavia,
   mongolia,
   montenegro,
   myanmar,
+  namibia,
   nepal,
   nicaragua,
   noruega,
@@ -349,7 +369,9 @@ export {
   reinoUnido,
   republicaDominicana,
   rumania,
+  senegal,
   serbia,
+  seychelles,
   singapur,
   sriLanka,
   sudafrica,
@@ -367,4 +389,6 @@ export {
   uzbekistan,
   venezuela,
   vietnam,
+  zambia,
+  zimbabue,
 };
