@@ -172,8 +172,14 @@ export { GUIDE_FACTS_MAX_AGE_DAYS } from "./types";
  * singleton importado a mano: la página necesita resolver el slug de la URL.
  * La forma se diseñó para esto y se cumplió: sumar Brasil fue agregar un
  * archivo y una línea acá.
+ *
+ * Van por continente y, adentro, en el orden en que se sumaron. El orden no se
+ * ve en la portada, que agrupa por zona y ordena por nombre, ni en la 404, que
+ * ordena por nombre; sí en el sitemap. Un país nuevo va al final de su
+ * continente, y el import y el export, en orden alfabético.
  */
 const GUIAS: DestinationGuide[] = [
+  // AMÉRICA (spec, 10 a 13)
   argentina,
   brasil,
   bolivia,
@@ -193,6 +199,8 @@ const GUIAS: DestinationGuide[] = [
   panama,
   cuba,
   republicaDominicana,
+
+  // EUROPA
   espana,
   portugal,
   italia,
@@ -232,6 +240,8 @@ const GUIAS: DestinationGuide[] = [
   moldavia,
   chipre,
   turquia,
+
+  // ASIA (spec, 14)
   japon,
   coreaDelSur,
   china,
@@ -276,6 +286,8 @@ const GUIAS: DestinationGuide[] = [
   hongKong,
   macao,
   taiwan,
+
+  // ÁFRICA (spec, 15)
   marruecos,
   egipto,
   tunez,

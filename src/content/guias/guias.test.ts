@@ -26,9 +26,13 @@ const MS_PER_DAY = 86_400_000;
  * Brasil cruza el ecuador: su límite norte es positivo. Una caja "hemisferio
  * sur" heredada de Argentina habría marcado media docena de destinos válidos
  * como errores.
+ *
+ * Van por continente, en el mismo orden que el índice de guías. Un comentario
+ * arriba de una caja explica por qué es más grande de lo que parece.
  */
 const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
   {
+    // AMÉRICA
     argentina: { lat: [-56, -21], lon: [-74, -53] },
     // El límite este llega a -28 y no a -34 por Fernando de Noronha, que está
     // mar adentro, bastante más al este que el continente. La primera versión de
@@ -55,6 +59,8 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     panama: { lat: [7.1, 9.7], lon: [-83.1, -77.1] },
     cuba: { lat: [19.8, 23.3], lon: [-85, -74.1] },
     "republica-dominicana": { lat: [17.5, 20], lon: [-72.1, -68.3] },
+
+    // EUROPA
     // Canarias está frente a África, mil kilómetros al sur de la península.
     espana: { lat: [27.5, 44], lon: [-18.2, 4.5] },
     // Las Azores y Madeira están en pleno Atlántico: el límite oeste es -31,5.
@@ -99,6 +105,8 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     moldavia: { lat: [45.4, 48.5], lon: [26.6, 30.2] },
     chipre: { lat: [34.5, 35.8], lon: [32.2, 34.6] },
     turquia: { lat: [35.8, 42.2], lon: [25.6, 44.9] },
+
+    // ASIA
     japon: { lat: [24, 46], lon: [122, 146] },
     "corea-del-sur": { lat: [33, 38.7], lon: [124.5, 131] },
     china: { lat: [18, 54], lon: [73, 135] },
@@ -149,6 +157,8 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     "hong-kong": { lat: [22.1, 22.6], lon: [113.8, 114.5] },
     macao: { lat: [22.1, 22.22], lon: [113.52, 113.6] },
     taiwan: { lat: [21.8, 25.4], lon: [119.9, 122.1] },
+
+    // ÁFRICA
     // Sin el Sahara Occidental: el límite sur es el de Marruecos propiamente
     // dicho, a la altura de Tarfaya (spec, 15.2).
     marruecos: { lat: [27.6, 36], lon: [-13.2, -1] },

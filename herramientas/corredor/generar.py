@@ -12,9 +12,10 @@ Uso (desde la raíz del repo):
 
     python3 herramientas/corredor/generar.py supabase/migrations AAAAMMDD HH <modulo>
 
-<modulo> es un archivo .py de esta carpeta, sin extensión, que define una
-lista PAISES (ver ejemplo_andorra.py). Las migraciones salen numeradas
-AAAAMMDDHH0100, AAAAMMDDHH0200, ... en el orden de PAISES.
+<modulo> es un archivo .py, sin extensión, que define una lista PAISES (ver
+ejemplo_andorra.py). Puede estar en esta carpeta o en cualquiera que esté en
+PYTHONPATH. Las migraciones salen numeradas AAAAMMDDHH0100, AAAAMMDDHH0200,
+... en el orden de PAISES.
 
 La migración generada es la fuente de verdad, no el archivo de datos: una vez
 aplicada en producción no se regenera nunca. Un cambio posterior va en una
@@ -23,9 +24,8 @@ migración nueva.
 import re, sys, os, importlib
 sys.path.insert(0, os.path.dirname(__file__))
 
-# Uso: gen.py <destino> <fecha AAAAMMDD> <hora HH> <modulo>
-# Solo genera los países del módulo pedido: las migraciones ya aplicadas en
-# producción no se regeneran nunca.
+# Los cuatro argumentos del uso de arriba. Solo genera los países del módulo
+# pedido: las migraciones ya aplicadas en producción no se regeneran nunca.
 DEST, FECHA, HORA, MODULO = sys.argv[1:5]
 PAISES = importlib.import_module(MODULO).PAISES
 
@@ -114,6 +114,10 @@ def validar(p):
     nombres = [n or PLANTILLA[i][1] for i, (_, n) in enumerate(p["productos"])]
     assert len(set(nombres)) == 18, (p["slug"], "nombres de producto repetidos")
     assert re.match(r"^[A-Z]{3}$", p["moneda"])
+    # El encabezado sale como comentario SQL, con "-- " adelante: con 77
+    # columnas, cada línea de la migración queda en 80.
+    for linea in p["encabezado"].strip().splitlines():
+        assert len(linea) <= 77, (p["slug"], "encabezado de más de 77 columnas", linea)
 
 def migracion(p, ts):
     cc, moneda = p["cc"], p["moneda"]
