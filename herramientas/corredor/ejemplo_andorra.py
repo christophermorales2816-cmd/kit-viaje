@@ -13,6 +13,10 @@
 #       grep -ho "8000-00000000[0-9a-f]\{2\}00'" supabase/migrations/*.sql | sort -u
 # productos: 18 tuplas (precio, nombre); None usa el nombre por defecto de la
 #     PLANTILLA de generar.py. El orden es el de la plantilla.
+# encabezado: el comentario de la migración, en líneas de hasta 77 columnas.
+# extra: opcional. SQL escrito a mano que va al final de la migración, para
+#     una excepción de una sola ciudad —el precio de un parque, por ejemplo—,
+#     con su comentario.
 
 ANDORRA = dict(
     slug="andorra", nombre="Andorra", moneda="EUR", cc="43",

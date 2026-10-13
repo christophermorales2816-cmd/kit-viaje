@@ -146,6 +146,16 @@ const EN_VIVO = allQuoteCorridors()
     cuantas: corredor.quoteIds.length,
   }));
 
+/** Cuántos destinos hay en cada continente, en el orden de las zonas. */
+const POR_CONTINENTE = [
+  ...ZONAS.reduce((cuenta, zona) => {
+    const cuantas = GUIAS.filter((guia) => guia.subregion === zona).length;
+    if (cuantas === 0) return cuenta;
+    const continente = CONTINENTE[zona];
+    return cuenta.set(continente, (cuenta.get(continente) ?? 0) + cuantas);
+  }, new Map<string, number>()),
+];
+
 /**
  * El número de destinos y su nota salen del contenido.
  *
@@ -158,16 +168,6 @@ const EN_VIVO = allQuoteCorridors()
  * llama un corredor, pero contarlos como países habría sido decir algo que la
  * portada no tiene por qué decir.
  */
-/** Cuántos destinos hay en cada continente, en el orden de las zonas. */
-const POR_CONTINENTE = [
-  ...ZONAS.reduce((cuenta, zona) => {
-    const cuantas = GUIAS.filter((guia) => guia.subregion === zona).length;
-    if (cuantas === 0) return cuenta;
-    const continente = CONTINENTE[zona];
-    return cuenta.set(continente, (cuenta.get(continente) ?? 0) + cuantas);
-  }, new Map<string, number>()),
-];
-
 const ESTADISTICAS = [
   {
     valor: String(GUIAS.length),
@@ -261,10 +261,10 @@ export default function Home() {
         </div>
         {/*
           Los cuatro números del reference son de cobertura ("146 países"). Los
-          nuestros no pueden serlo sin mentir, así que dicen lo que este
-          producto sí tiene: tasas en vivo, cero fricción de entrada, un
-          corredor honesto y gratis. El tercero es el que incomoda, y por eso
-          está.
+          nuestros empiezan por la cobertura, contada del contenido y no escrita
+          a mano, y siguen con lo que el producto sí tiene: cero fricción de
+          entrada, las cotizaciones que de verdad se traen en vivo y gratis. El
+          tercero es el que incomoda —son pocas—, y por eso está.
         */}
         <dl
           aria-label="En números"
