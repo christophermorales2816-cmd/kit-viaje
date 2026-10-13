@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 
 import type { GuidePlace } from "@/content/guias";
+import { sinSaltoDeAntimeridiano } from "@/lib/antimeridiano";
 
 /**
  * "El país de un vistazo" (spec, sección 8.8).
@@ -121,8 +122,14 @@ export function PlacesMap({
         popupAnchor: [0, -26],
       });
 
-      for (const place of places) {
-        L.marker(place.coords, { icon: icono, title: place.name })
+      // Fiyi y Kiribati cruzan el antimeridiano: sin esto, sus pines quedan en
+      // las dos puntas del mapa y el encuadre muestra el planeta entero.
+      const coords = sinSaltoDeAntimeridiano(
+        places.map((place) => place.coords),
+      );
+
+      for (const [i, place] of places.entries()) {
+        L.marker(coords[i], { icon: icono, title: place.name })
           .addTo(mapa)
           .bindPopup(
             `<strong>${escaparHtml(place.name)}</strong><br><span>${escaparHtml(place.tag)}</span>`,
@@ -132,7 +139,7 @@ export function PlacesMap({
       // El encuadre sale de los destinos, no de un centro y un zoom a mano: si
       // mañana se suma un destino en otra punta del país, el mapa se reencuadra
       // solo en vez de dejarlo afuera.
-      mapa.fitBounds(L.latLngBounds(places.map((place) => place.coords)), {
+      mapa.fitBounds(L.latLngBounds(coords), {
         padding: [32, 32],
       });
     })();

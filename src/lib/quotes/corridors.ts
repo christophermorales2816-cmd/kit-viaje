@@ -970,6 +970,84 @@ const CORREDORES = [
     timeZone: "Africa/Asmara",
     label: "hora de Asmara",
   }),
+  // Oceanía (spec, 16). Australia y Nueva Zelanda, con centavos; Kiribati,
+  // Nauru y Tuvalu usan el dólar australiano, y las Islas Cook, el
+  // neozelandés. Palaos, Micronesia y las Islas Marshall son dolarizados,
+  // como Ecuador. Papúa Nueva Guinea entra con aviso.
+  unaCotizacion("australia", "AUD", {
+    timeZone: "Australia/Sydney",
+    label: "hora de Sídney",
+  }),
+  unaCotizacion("nueva-zelanda", "NZD", {
+    timeZone: "Pacific/Auckland",
+    label: "hora de Auckland",
+  }),
+  unaCotizacion("fiyi", "FJD", {
+    timeZone: "Pacific/Fiji",
+    label: "hora de Nadi",
+  }),
+  unaCotizacion("papua-nueva-guinea", "PGK", {
+    timeZone: "Pacific/Port_Moresby",
+    label: "hora de Port Moresby",
+  }),
+  unaCotizacion("islas-salomon", "SBD", {
+    timeZone: "Pacific/Guadalcanal",
+    label: "hora de Honiara",
+  }),
+  unaCotizacion("vanuatu", "VUV", {
+    timeZone: "Pacific/Efate",
+    label: "hora de Port Vila",
+  }),
+  // Nueva Caledonia y la Polinesia Francesa comparten el franco CFP (XPF),
+  // atado al euro. En la Polinesia, las Marquesas tienen media hora menos que
+  // Tahití; el reloj es el de la ciudad base.
+  unaCotizacion("nueva-caledonia", "XPF", {
+    timeZone: "Pacific/Noumea",
+    label: "hora de Numea",
+  }),
+  unaCotizacion("polinesia-francesa", "XPF", {
+    timeZone: "Pacific/Tahiti",
+    label: "hora de Papeete",
+  }),
+  unaCotizacion("samoa", "WST", {
+    timeZone: "Pacific/Apia",
+    label: "hora de Apia",
+  }),
+  unaCotizacion("tonga", "TOP", {
+    timeZone: "Pacific/Tongatapu",
+    label: "hora de Nukualofa",
+  }),
+  unaCotizacion("islas-cook", "NZD", {
+    timeZone: "Pacific/Rarotonga",
+    label: "hora de Avarua",
+  }),
+  unaCotizacion("tuvalu", "AUD", {
+    timeZone: "Pacific/Funafuti",
+    label: "hora de Funafuti",
+  }),
+  // Kiritimati, en las islas de la Línea, tiene dos horas más que Tarawa: es
+  // el primer lugar del mundo en empezar el día. El reloj es el de la base.
+  unaCotizacion("kiribati", "AUD", {
+    timeZone: "Pacific/Tarawa",
+    label: "hora de Tarawa",
+  }),
+  unaCotizacion("nauru", "AUD", {
+    timeZone: "Pacific/Nauru",
+    label: "hora de Yaren",
+  }),
+  dolarizado("islas-marshall", {
+    timeZone: "Pacific/Majuro",
+    label: "hora de Majuro",
+  }),
+  // Yap y Chuuk tienen una hora menos que Pohnpei y Kosrae.
+  dolarizado("micronesia", {
+    timeZone: "Pacific/Pohnpei",
+    label: "hora de Pohnpei",
+  }),
+  dolarizado("palaos", {
+    timeZone: "Pacific/Palau",
+    label: "hora de Koror",
+  }),
 ];
 
 const POR_CORREDOR = new Map(CORREDORES.map((c) => [c.corridor, c]));

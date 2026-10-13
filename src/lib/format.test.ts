@@ -142,6 +142,22 @@ describe("formatMoney", () => {
     }
   });
 
+  it("muestra los centavos en los dólares australiano y neozelandés", () => {
+    // Un flat white en Sídney cuesta 5,50; en Auckland, 5,20. Sin centavos,
+    // la mitad de los precios de Oceanía saldrían redondeados.
+    for (const moneda of ["AUD", "NZD"]) {
+      expect(formatMoney(5.5, moneda)).toContain("5,50");
+    }
+  });
+
+  it("no agrega centavos a las monedas del Pacífico que valen poco", () => {
+    // El dólar fiyiano, el tala y el paʻanga valen menos de medio dólar; el
+    // franco CFP de Tahití y el vatu, menos de un centavo.
+    for (const moneda of ["FJD", "WST", "TOP", "PGK", "SBD", "VUV", "XPF"]) {
+      expect(formatMoney(12, moneda)).not.toMatch(/,\d\d/);
+    }
+  });
+
   it("no agrega centavos a las monedas de Asia que valen poco", () => {
     // Un café en Tokio cuesta cientos de yenes; en Hanói, decenas de miles de
     // dongs. El dírham y el ringgit valen un cuarto de dólar, como el zloty.

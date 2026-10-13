@@ -176,7 +176,11 @@ export type GuideSubregion =
   | "Asia Central"
   | "Asia del Sur"
   | "Sudeste Asiático"
-  | "Asia Oriental";
+  | "Asia Oriental"
+  | "Australia y Nueva Zelanda"
+  | "Melanesia"
+  | "Micronesia"
+  | "Polinesia";
 
 export interface DestinationGuide {
   slug: string;

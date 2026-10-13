@@ -42,9 +42,10 @@ const DESTINOS = GUIAS.map((guia) => ({
 
 /**
  * Las zonas en el orden en que se muestran: América de sur a norte, después
- * Europa, África de norte a sur y Asia de oeste a este. Los continentes van de
- * oeste a este (spec, 15.1): África, que tiene casi la misma longitud que
- * Europa, queda entre Europa y Asia.
+ * Europa, África de norte a sur, Asia de oeste a este y Oceanía, que empieza
+ * por Australia y Nueva Zelanda y termina en la Polinesia. Los continentes van
+ * de oeste a este (spec, 15.1 y 16.1): África, que tiene casi la misma
+ * longitud que Europa, queda entre Europa y Asia, y Oceanía, al final.
  *
  * El tipo `GuideSubregion` garantiza que cada guía cae en una de estas; el
  * orden es una decisión editorial y por eso vive acá y no en el contenido. Una
@@ -69,6 +70,10 @@ const ZONAS: GuideSubregion[] = [
   "Asia del Sur",
   "Sudeste Asiático",
   "Asia Oriental",
+  "Australia y Nueva Zelanda",
+  "Melanesia",
+  "Micronesia",
+  "Polinesia",
 ];
 
 /**
@@ -97,6 +102,10 @@ const CONTINENTE: Record<GuideSubregion, string> = {
   "Asia del Sur": "Asia",
   "Sudeste Asiático": "Asia",
   "Asia Oriental": "Asia",
+  "Australia y Nueva Zelanda": "Oceanía",
+  Melanesia: "Oceanía",
+  Micronesia: "Oceanía",
+  Polinesia: "Oceanía",
 };
 
 /**
@@ -108,7 +117,8 @@ const CONTINENTE: Record<GuideSubregion, string> = {
  *
  * La latitud no es un promedio sino el punto medio entre el marcador más al
  * norte y el más al sur. Queda fija mientras gira, y así los dos extremos
- * —Islandia y Uruguay, hoy— pasan a la misma distancia del centro, unos 50°.
+ * —Islandia y Nueva Zelanda, hoy— pasan a la misma distancia del centro,
+ * unos 50°.
  * El promedio de todos caía en 29° norte, y el Río de la Plata giraba a 64°,
  * pegado al borde del disco.
  */
