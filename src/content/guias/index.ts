@@ -6,6 +6,7 @@ import { arabiaSaudita } from "./arabia-saudita";
 import { argelia } from "./argelia";
 import { argentina } from "./argentina";
 import { armenia } from "./armenia";
+import { australia } from "./australia";
 import { austria } from "./austria";
 import { azerbaiyan } from "./azerbaiyan";
 import { banglades } from "./banglades";
@@ -50,6 +51,7 @@ import { esuatini } from "./esuatini";
 import { etiopia } from "./etiopia";
 import { filipinas } from "./filipinas";
 import { finlandia } from "./finlandia";
+import { fiyi } from "./fiyi";
 import { francia } from "./francia";
 import { gabon } from "./gabon";
 import { gambia } from "./gambia";
@@ -69,6 +71,9 @@ import { irak } from "./irak";
 import { iran } from "./iran";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
+import { islasCook } from "./islas-cook";
+import { islasMarshall } from "./islas-marshall";
+import { islasSalomon } from "./islas-salomon";
 import { israelYPalestina } from "./israel-y-palestina";
 import { italia } from "./italia";
 import { japon } from "./japon";
@@ -76,6 +81,7 @@ import { jordania } from "./jordania";
 import { kazajistan } from "./kazajistan";
 import { kenia } from "./kenia";
 import { kirguistan } from "./kirguistan";
+import { kiribati } from "./kiribati";
 import { kuwait } from "./kuwait";
 import { laos } from "./laos";
 import { lesoto } from "./lesoto";
@@ -95,22 +101,29 @@ import { marruecos } from "./marruecos";
 import { mauricio } from "./mauricio";
 import { mauritania } from "./mauritania";
 import { mexico } from "./mexico";
+import { micronesia } from "./micronesia";
 import { moldavia } from "./moldavia";
 import { mongolia } from "./mongolia";
 import { montenegro } from "./montenegro";
 import { mozambique } from "./mozambique";
 import { myanmar } from "./myanmar";
 import { namibia } from "./namibia";
+import { nauru } from "./nauru";
 import { nepal } from "./nepal";
 import { nicaragua } from "./nicaragua";
 import { nigeria } from "./nigeria";
 import { noruega } from "./noruega";
+import { nuevaCaledonia } from "./nueva-caledonia";
+import { nuevaZelanda } from "./nueva-zelanda";
 import { oman } from "./oman";
 import { paisesBajos } from "./paises-bajos";
 import { pakistan } from "./pakistan";
+import { palaos } from "./palaos";
 import { panama } from "./panama";
+import { papuaNuevaGuinea } from "./papua-nueva-guinea";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
+import { polinesiaFrancesa } from "./polinesia-francesa";
 import { polonia } from "./polonia";
 import { portugal } from "./portugal";
 import { reinoUnido } from "./reino-unido";
@@ -119,6 +132,7 @@ import { republicaDemocraticaDelCongo } from "./republica-democratica-del-congo"
 import { republicaDominicana } from "./republica-dominicana";
 import { ruanda } from "./ruanda";
 import { rumania } from "./rumania";
+import { samoa } from "./samoa";
 import { santoTomeYPrincipe } from "./santo-tome-y-principe";
 import { senegal } from "./senegal";
 import { serbia } from "./serbia";
@@ -135,13 +149,16 @@ import { tanzania } from "./tanzania";
 import { tayikistan } from "./tayikistan";
 import { timorOriental } from "./timor-oriental";
 import { togo } from "./togo";
+import { tonga } from "./tonga";
 import { tunez } from "./tunez";
 import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
+import { tuvalu } from "./tuvalu";
 import type { DestinationGuide } from "./types";
 import { uganda } from "./uganda";
 import { uruguay } from "./uruguay";
 import { uzbekistan } from "./uzbekistan";
+import { vanuatu } from "./vanuatu";
 import { venezuela } from "./venezuela";
 import { vietnam } from "./vietnam";
 import { yibuti } from "./yibuti";
@@ -334,6 +351,25 @@ const GUIAS: DestinationGuide[] = [
   comoras,
   yibuti,
   eritrea,
+
+  // OCEANÍA (spec, 16)
+  australia,
+  nuevaZelanda,
+  fiyi,
+  papuaNuevaGuinea,
+  islasSalomon,
+  vanuatu,
+  nuevaCaledonia,
+  polinesiaFrancesa,
+  samoa,
+  tonga,
+  islasCook,
+  tuvalu,
+  kiribati,
+  nauru,
+  islasMarshall,
+  micronesia,
+  palaos,
 ];
 
 const POR_SLUG = new Map(GUIAS.map((guia) => [guia.slug, guia]));
@@ -359,6 +395,7 @@ export {
   argelia,
   argentina,
   armenia,
+  australia,
   austria,
   azerbaiyan,
   banglades,
@@ -403,6 +440,7 @@ export {
   etiopia,
   filipinas,
   finlandia,
+  fiyi,
   francia,
   gabon,
   gambia,
@@ -422,6 +460,9 @@ export {
   iran,
   irlanda,
   islandia,
+  islasCook,
+  islasMarshall,
+  islasSalomon,
   israelYPalestina,
   italia,
   japon,
@@ -429,6 +470,7 @@ export {
   kazajistan,
   kenia,
   kirguistan,
+  kiribati,
   kuwait,
   laos,
   lesoto,
@@ -448,22 +490,29 @@ export {
   mauricio,
   mauritania,
   mexico,
+  micronesia,
   moldavia,
   mongolia,
   montenegro,
   mozambique,
   myanmar,
   namibia,
+  nauru,
   nepal,
   nicaragua,
   nigeria,
   noruega,
+  nuevaCaledonia,
+  nuevaZelanda,
   oman,
   paisesBajos,
   pakistan,
+  palaos,
   panama,
+  papuaNuevaGuinea,
   paraguay,
   peru,
+  polinesiaFrancesa,
   polonia,
   portugal,
   reinoUnido,
@@ -472,6 +521,7 @@ export {
   republicaDominicana,
   ruanda,
   rumania,
+  samoa,
   santoTomeYPrincipe,
   senegal,
   serbia,
@@ -488,12 +538,15 @@ export {
   tayikistan,
   timorOriental,
   togo,
+  tonga,
   tunez,
   turkmenistan,
   turquia,
+  tuvalu,
   uganda,
   uruguay,
   uzbekistan,
+  vanuatu,
   venezuela,
   vietnam,
   yibuti,

@@ -38,6 +38,9 @@ decorativos: hay tests que los fijan.
 - **1 lugar destacado** (`featured: true`), exactamente uno.
 - **Coordenadas reales** de cada lugar. Un signo cambiado planta el pin en
   China, así que hay que agregar la caja del país a `CAJAS` en `guias.test.ts`.
+  Si el país cruza el antimeridiano —Fiyi, Kiribati—, la caja va de oeste a
+  este pasando por 180, con el límite oeste mayor que el este; el mapa junta
+  los pines solo (`src/lib/antimeridiano.ts`, spec 16.4).
 - **`preparation.adviceByBucket` con los cuatro buckets**: `frio`, `fresco`,
   `templado`, `calido`. Faltar uno deja un mes sin consejo.
 - **El `id` de cada lugar ES su `slug` en la base.** No hay tabla de
@@ -48,12 +51,13 @@ decorativos: hay tests que los fijan.
   globo en el destino destacado, y ese marcador dice dónde están calibrados los
   cálculos.
 - **`subregion`**: Sudamérica, México y Centroamérica o Caribe en América. En
-  Europa, África y Asia, la división de la ONU: Europa del Sur, Occidental, del
-  Norte y del Este; África del Norte, Occidental, Central, Oriental y Austral;
-  Asia Occidental, Central, del Sur, Sudeste Asiático y Asia Oriental. Turquía
-  y Chipre, que la ONU pone en Asia, están en Europa del Sur; el Cáucaso queda
-  en Asia Occidental. Agrupa la lista de países de la portada.
-  Una zona nueva se suma al tipo `GuideSubregion`, al orden `ZONAS` y al Record
+  Europa, África, Asia y Oceanía, la división de la ONU: Europa del Sur,
+  Occidental, del Norte y del Este; África del Norte, Occidental, Central,
+  Oriental y Austral; Asia Occidental, Central, del Sur, Sudeste Asiático y Asia
+  Oriental; Australia y Nueva Zelanda, Melanesia, Micronesia y Polinesia.
+  Turquía y Chipre, que la ONU pone en Asia, están en Europa del Sur; el Cáucaso
+  queda en Asia Occidental. Agrupa la lista de países de la portada. Una zona
+  nueva se suma al tipo `GuideSubregion`, al orden `ZONAS` y al Record
   `CONTINENTE` de `src/app/page.tsx`; el compilador avisa si falta alguno.
 - **La entrada es parte de la guía, y nunca se da por cerrada.** En Europa,
   Schengen se cuenta sumando todos sus países y el Reino Unido tiene su propia
@@ -73,6 +77,13 @@ decorativos: hay tests que los fijan.
   la capital (Eritrea) o un seguro de viaje estatal aparte del propio
   (Tanzania). Donde hay malaria, la checklist de salud lo avisa y manda a
   consultar a un médico de viajes; la guía no receta.
+- **En Oceanía, la entrada también es la comida.** Australia, Nueva Zelanda y
+  Nueva Caledonia controlan la bioseguridad: se declara toda la comida, y en
+  Nueva Zelanda el calzado y el equipo de camping llegan limpios. La fiebre
+  amarilla se dice solo donde se pide, que en Oceanía no es en todos lados. Las
+  Islas Marshall piden la vacuna contra el sarampión, Palaos sella un
+  compromiso ambiental en el pasaporte, y a las Islas Cook y a Tuvalu se llega
+  con escala en Nueva Zelanda o en Fiyi, que tienen sus propias reglas.
 - **Un país con zonas desaconsejadas entra con aviso, o no entra** (spec, 14.2,
   15.8, 15.9 y 15.10). Si los gobiernos desaconsejan viajar a todo el país,
   queda afuera; los casos dudosos se deciden en su tanda. Los que entran llevan
@@ -98,7 +109,9 @@ decorativos: hay tests que los fijan.
 - **El enchufe va en la guía** (`preparation.plug`). La lista de equipaje dice
   "adaptador universal" para todos los países; el tipo de cada uno lo da la
   guía. En Sudáfrica, Namibia, Lesoto y Esuatini el universal casi nunca sirve
-  —el tipo M no viene en casi ninguno—, y la guía lo dice.
+  —el tipo M no viene en casi ninguno—, y la guía lo dice. Donde el enchufe es
+  el estadounidense a 120 V —Japón, Liberia, las Islas Marshall, Micronesia,
+  Palaos—, la fila del secador en `avoid` es la de la planchita de 220 V.
 
 ## 3. El corredor de cotizaciones
 
@@ -110,7 +123,11 @@ En `corridors.ts`. Hay tres formas, según cómo se paga en el país:
 | Varias cotizaciones | un objeto con sus `quoteIds`, default y referencia | Argentina, Bolivia, Venezuela, Cuba |
 | Dolarizado          | `dolarizado(slug, reloj)`                          | Ecuador, El Salvador, Panamá        |
 
-En Asia, Timor Oriental es dolarizado: su moneda es el dólar. Las varias
+En Asia, Timor Oriental es dolarizado: su moneda es el dólar, y en Oceanía lo
+son las Islas Marshall, Micronesia y Palaos. Un país que usa la moneda de otro
+—Kiribati, Nauru y Tuvalu el dólar australiano, las Islas Cook el
+neozelandés— no es dolarizado: es `unaCotizacion("kiribati", "AUD", …)`, con
+la moneda prestada. Las varias
 cotizaciones llegaron a Asia con Turkmenistán, Irán y Myanmar, y a África con
 Malaui, Burundi y Argelia: la oficial y la paralela, con los precios en
 dólares, como Venezuela.
@@ -141,7 +158,8 @@ Ids fijos, nunca `gen_random_uuid()`, en un rango que no choque con los países
 que ya están. Los países de 2026-10 usan `00000000-0000-4000-8000-00000000{cc}{nn}`,
 con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
 `4f` queda para lo que falte de Europa, **Asia usó del `50` al `7b`** (hay lugar
-hasta `8f`) y **África arranca en `90`**. Por cada ciudad:
+hasta `8f`), **África, del `90` al `bd`**, y **Oceanía, del `c0` al `d0`**. Por
+cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).
@@ -150,7 +168,8 @@ hasta `8f`) y **África arranca en `90`**. Por cada ciudad:
   demás derivadas con un factor y `md5(destination_id || name)::uuid`. **Una
   moneda lleva centavos si su unidad vale más de medio dólar** —dólar, euro,
   libra, franco suizo, marco bosnio; en Asia, los dólares de Singapur y Brunéi,
-  el manat azerí y los dinares y riales de Kuwait, Baréin, Omán y Jordania—, y
+  el manat azerí y los dinares y riales de Kuwait, Baréin, Omán y Jordania; en
+  Oceanía, el dólar australiano y el neozelandés—, y
   ahí las derivadas van con `round(precio * factor, 2)`: redondear a la unidad
   convierte un café de 2,50 en uno de 2 o de 3. Las demás, enteras. La lista
   vive en `MONEDAS_CON_CENTAVOS` (`src/lib/format.ts`) y en `CON_CENTAVOS`
@@ -165,7 +184,9 @@ hasta `8f`) y **África arranca en `90`**. Por cada ciudad:
   falta. Vale igual para varias ciudades: en Kenia y Tanzania, los parques de
   la costa y de Zanzíbar cuestan una fracción de los del safari, y derivados
   con el factor salían varias veces más caros; en Botsuana y Zimbabue pasa lo
-  mismo con las reservas chicas y los parques.
+  mismo con las reservas chicas y los parques. En Oceanía, la entrada al volcán
+  de Tanna, en Vanuatu, y el permiso de las Islas Rocosas, en Palaos, que se
+  paga una vez y vale lo mismo en tres destinos.
 
 Las migraciones de los países de 2026-10 tienen la forma exacta a copiar; la
 de Chile es la más corta de leer. Las de Europa se generaron con

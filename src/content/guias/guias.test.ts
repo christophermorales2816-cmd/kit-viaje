@@ -29,6 +29,10 @@ const MS_PER_DAY = 86_400_000;
  *
  * Van por continente, en el mismo orden que el índice de guías. Un comentario
  * arriba de una caja explica por qué es más grande de lo que parece.
+ *
+ * Una caja que cruza el antimeridiano —Fiyi, Kiribati— va de oeste a este
+ * pasando por 180: su límite oeste es mayor que el este, y un destino está
+ * adentro si queda al este del primero o al oeste del segundo.
  */
 const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
   {
@@ -228,6 +232,39 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     yibuti: { lat: [10.9, 12.8], lon: [41.7, 43.5] },
     // Con las islas Dahlak, frente a Massawa.
     eritrea: { lat: [12.3, 18.1], lon: [36.4, 43.2] },
+
+    // OCEANÍA
+    // De Perth, sobre el Índico, a Brisbane, y de Cairns a Hobart, en Tasmania.
+    australia: { lat: [-44, -10], lon: [112, 154.5] },
+    "nueva-zelanda": { lat: [-47.5, -34], lon: [166, 179] },
+    // Cruza el antimeridiano: Taveuni queda al este del meridiano 180.
+    fiyi: { lat: [-19, -16], lon: [176.8, -179.5] },
+    // Con Kavieng, en Nueva Irlanda, al norte, y Alotau, en la punta sudeste.
+    "papua-nueva-guinea": { lat: [-11, -2], lon: [140.8, 153] },
+    "islas-salomon": { lat: [-10.5, -7.5], lon: [155.5, 162.5] },
+    vanuatu: { lat: [-20.5, -13], lon: [166, 170.5] },
+    // Con las islas de la Lealtad, al este de la isla grande.
+    "nueva-caledonia": { lat: [-23, -19.5], lon: [163.5, 168.5] },
+    // Con Nuku Hiva, en las Marquesas, a casi mil quinientos kilómetros de
+    // Tahití.
+    "polinesia-francesa": { lat: [-18.5, -8], lon: [-152.5, -139.5] },
+    samoa: { lat: [-14.2, -13.3], lon: [-172.85, -171.3] },
+    // De Tongatapu, al sur, a Vava'u, al norte.
+    tonga: { lat: [-21.6, -18.4], lon: [-175.5, -173.7] },
+    // Con Aitutaki, al norte de Rarotonga, y Mangaia y Mauke, al este.
+    "islas-cook": { lat: [-22.5, -18.3], lon: [-160.3, -157] },
+    // Nukulaelae, al sudeste, queda a un paso del meridiano 180.
+    tuvalu: { lat: [-10, -5.2], lon: [175.8, 180] },
+    // Cruza el antimeridiano: Kiritimati y Tabuaeran, en las islas de la
+    // Línea, quedan a más de tres mil kilómetros al este de Tarawa.
+    kiribati: { lat: [-1, 4.5], lon: [172.3, -157] },
+    // La más chica de todas: la isla entera mide unos cinco kilómetros.
+    nauru: { lat: [-0.6, -0.45], lon: [166.88, 166.98] },
+    "islas-marshall": { lat: [5.4, 10.4], lon: [168.8, 172.4] },
+    // De Yap, al oeste, a Kosrae, al este: más de dos mil quinientos
+    // kilómetros.
+    micronesia: { lat: [4.8, 10], lon: [137.6, 163.4] },
+    palaos: { lat: [6.7, 8.4], lon: [134, 135] },
   };
 
 describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
@@ -327,8 +364,15 @@ describe.each(allGuides().map((guia) => [guia.country, guia] as const))(
         // pasa el rango del planeta y planta el pin en China.
         expect(lat).toBeGreaterThan(caja.lat[0]);
         expect(lat).toBeLessThan(caja.lat[1]);
-        expect(lon).toBeGreaterThan(caja.lon[0]);
-        expect(lon).toBeLessThan(caja.lon[1]);
+        if (caja.lon[0] < caja.lon[1]) {
+          expect(lon).toBeGreaterThan(caja.lon[0]);
+          expect(lon).toBeLessThan(caja.lon[1]);
+        } else {
+          expect(
+            lon > caja.lon[0] || lon < caja.lon[1],
+            `${place.id} queda fuera de la caja que cruza el antimeridiano`,
+          ).toBe(true);
+        }
       }
     });
 

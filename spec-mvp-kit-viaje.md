@@ -1618,6 +1618,11 @@ Los territorios:
 > libra, pero es un territorio de ultramar, y en América no entró ninguno. La
 > guía de Comoras dice que Mayotte no está. Si alguno se suma, es un corredor
 > nuevo y se decide en su propia tanda.
+>
+> **Revisado en la sección 16.2:** con el criterio de Oceanía, ser territorio
+> ya no alcanza para quedar afuera. Santa Elena sigue afuera porque casi no
+> recibe viajeros; Reunión y Mayotte, porque comparten moneda y reglas de
+> entrada con Francia.
 
 ### 15.3 Monedas
 
@@ -2091,3 +2096,175 @@ y Afriski (15.7). Khövsgöl y Jahra siguen siendo la ciudad más fría y la má
 calurosa del sitio (sección 14.11).
 
 Los ids de destino van del `b6` al `bd`.
+
+## 16. Oceanía
+
+Lo mismo que antes de Asia y de África —zonas, alcance, monedas y lo que el
+modelo todavía no sabía expresar—, y esta vez el continente entero en una sola
+tanda: diecisiete destinos en el mismo PR. El procedimiento país por país sigue
+siendo [`docs/agregar-un-pais.md`](docs/agregar-un-pais.md).
+
+### 16.1 Zonas
+
+Cuatro, de la división de la ONU (M49): **Australia y Nueva Zelanda,
+Melanesia, Micronesia y Polinesia**. En la portada, Oceanía va al final: los
+continentes van de oeste a este, y Oceanía sigue a Asia Oriental. Adentro, de
+Australia y Nueva Zelanda a la Polinesia. La portada cuenta por continente
+("… en Oceanía").
+
+Como dice la ONU, Kiribati va en Micronesia aunque las islas de la Línea estén
+en medio de la Polinesia, y Fiyi, en Melanesia.
+
+### 16.2 Alcance
+
+Ningún país de Oceanía tiene hoy una recomendación de no viajar a todo su
+territorio. Uno tiene regiones enteras desaconsejadas: **Papúa Nueva Guinea**,
+que entra con aviso, como Pakistán (14.11) y los países en duda de África
+(15.8). Sus ciudades quedan fuera de esas zonas, con la revisión de 15.8: nada
+en Hela, Southern Highlands ni Enga, ni en el centro de Bougainville, ni en las
+tierras altas salvo Goroka. Nueva Caledonia y las Islas Salomón piden más
+precaución que el resto, sin zonas desaconsejadas: van con precauciones
+normales.
+
+**Los territorios.** El criterio de 14.2 —moneda o reglas de entrada propias,
+que es lo que el modelo llama un corredor— se afinó con una condición más: que
+se viaje a ellos como a un país. Entran tres:
+
+- **Nueva Caledonia y la Polinesia Francesa** son Francia, pero tienen moneda
+  propia, el franco CFP, y reglas de entrada propias: una visa Schengen sola no
+  alcanza.
+- **Las Islas Cook** son un estado libre asociado a Nueva Zelanda, con frontera
+  propia, aunque usen el dólar neozelandés.
+
+Y quedan afuera:
+
+- **Hawái, Guam y las Marianas del Norte**, como Puerto Rico (sección 13):
+  comparten moneda y frontera con Estados Unidos.
+- **Niue, Wallis y Futuna, Samoa Americana, Tokelau y Pitcairn**, que tienen
+  moneda o frontera propias pero casi no reciben viajeros. Si alguno se suma,
+  es un corredor nuevo, en su propia tanda.
+
+Con este criterio, ser territorio deja de alcanzar para quedar afuera, y la
+nota de 15.2 sobre Santa Elena se corrigió: sigue afuera, ahora porque casi no
+recibe viajeros.
+
+### 16.3 Monedas
+
+La regla de 14.3 —centavos si la unidad vale más de medio dólar— deja adentro
+**el dólar australiano y el neozelandés**, que se sumaron a
+`MONEDAS_CON_CENTAVOS` y al generador. El resto va entero: el dólar fiyiano, el
+kina, el dólar salomonense, el vatu, el franco CFP, el tala y el pa'anga.
+
+Lo que Oceanía trae:
+
+- **Monedas prestadas.** Kiribati, Nauru y Tuvalu usan el dólar australiano, y
+  las Islas Cook, el neozelandés. Kiribati, Tuvalu y las Cook acuñan además
+  monedas propias que valen lo mismo y solo se aceptan ahí: la moneda
+  triangular de dos dólares de las Cook es el dato de su portada. Para el
+  modelo, el corredor es la moneda prestada, con su cotización:
+  `unaCotizacion("kiribati", "AUD", …)`.
+- **Una moneda compartida.** Nueva Caledonia y la Polinesia usan el mismo franco
+  CFP, atado al euro: dos corredores con la misma moneda, como los del franco
+  CFA en África. `Intl` lo escribe "CFPF", y así sale en los precios.
+- **Dólares, como Ecuador.** Las Islas Marshall, Micronesia y Palaos usan el
+  dólar estadounidense: van con `dolarizado` en los corredores, y el test de
+  los dolarizados ahora nombra siete.
+
+### 16.4 El antimeridiano
+
+Oceanía es el primer continente que cruza el meridiano 180, y eso tocó tres
+cosas:
+
+- **Las cajas del test.** Fiyi —Taveuni queda al este del meridiano— y
+  Kiribati —las islas de la Línea, a más de tres mil kilómetros al este de
+  Tarawa— tienen cajas que cruzan la línea: su límite oeste es mayor que el
+  este, y el test lo entiende.
+- **El mapa de cada guía.** Leaflet encuadra los pines con longitudes de -180 a
+  180: con Taveuni en -179,9 y Nadi en 177,4, el mapa de Fiyi salía con el
+  planeta entero y un pin en cada borde. `src/lib/antimeridiano.ts` corre 360
+  grados las longitudes negativas cuando los pines ocupan más de media vuelta,
+  y el mapa los junta. Sus tests lo prueban con Fiyi, Kiribati, Tonga y
+  Argentina.
+- **La hora.** La línea de cambio de fecha no sigue el meridiano: Samoa y Tonga
+  tienen trece horas más que Greenwich, y Kiritimati, catorce —el primer lugar
+  del mundo en empezar el día—; las Islas Cook y Tahití, diez menos. Entre Samoa
+  y las Cook hay casi un día entero. Cada corredor tiene su zona horaria, y las
+  guías lo dicen donde cambia el viaje: en Kiribati, en la Polinesia, donde las
+  Marquesas tienen media hora menos, y en Micronesia, donde Yap y Chuuk tienen
+  una hora menos que Pohnpei.
+
+El globo de la portada no necesitó nada: proyecta con senos y cosenos, que no
+saben de antimeridianos.
+
+### 16.5 La tanda: diecisiete destinos
+
+Catorce países y tres territorios con la misma forma —guía completa, nueve
+ciudades con sus doce meses de clima y dieciocho precios, cotización sin fuente
+todavía—, cargados el 2026-10-13 en una sola tanda. Con ellos, Oceanía queda
+completa en el planificador, y el sitio llega a 165 destinos.
+
+Lo que cada uno le enseñó al modelo:
+
+- **Australia** trae la bioseguridad como dato de entrada —toda la comida se
+  declara al llegar, el dato de su portada— y tres husos horarios. La base es
+  Sídney y no Canberra, como Abiyán en Costa de Marfil.
+- **Nueva Zelanda** pide la NZeTA y una tasa de turismo antes de volar, el dato
+  de su portada, y lleva la bioseguridad al calzado y al equipo de camping.
+  Queenstown en julio tiene la mínima más baja de Oceanía.
+- **Fiyi** es el primer país partido por el antimeridiano. El dato de su
+  portada es el kava, la bebida de la bienvenida.
+- **Papúa Nueva Guinea** entra con aviso. Desde la capital no hay ruta a la
+  costa norte ni a las tierras altas, así que el tramo largo del presupuesto es
+  un vuelo interno. El dato de su portada son sus más de ochocientas lenguas.
+- **Islas Salomón** tiene dos tipos de enchufe, el de patas en V y el
+  británico, y malaria en todo el país. El dato de su portada son los
+  naufragios de la Segunda Guerra frente a Guadalcanal.
+- **Vanuatu** carga aparte la entrada al volcán Yasur en Tanna, con un `update`
+  al final de la migración, como el Kilimanjaro. Se maneja por la derecha, como
+  en Nueva Caledonia.
+- **Nueva Caledonia** es el primer territorio de Oceanía: una visa Schengen sola
+  no alcanza. El dato de su portada es la laguna, patrimonio de la humanidad.
+- **Polinesia Francesa** lleva en Bora Bora el factor más alto que admite el
+  generador, 2,5, y tiene tres husos horarios. El dato de su portada son sus
+  118 islas, en un mar del tamaño de Europa.
+- **Samoa** cambia el nombre del hotel en su presupuesto: "Hotel 3★ o fale de
+  playa con media pensión". El dato de su portada es la línea de cambio de
+  fecha, que la deja un día adelante de Samoa Americana.
+- **Tonga** tiene el domingo sagrado por ley —cierran los comercios y no hay
+  vuelos—, y es el dato de su portada.
+- **Islas Cook** suma la escala en Auckland a los datos de entrada: el país no
+  pide visa, pero Nueva Zelanda puede pedir la autorización de tránsito.
+- **Tuvalu** es el país más bajo del planificador: su punto más alto está a 4,6
+  metros, el dato de su portada. A las otras islas se llega solo en el barco
+  del gobierno.
+- **Kiribati** es el segundo país partido por el antimeridiano, y el más
+  extremo: Kiritimati, a UTC+14, es el dato de su portada.
+- **Nauru** es el país más chico del planificador. Pide la visa antes de viajar,
+  con la reserva del hotel, y sus nueve "ciudades" son los distritos y lugares
+  de la vuelta a la isla.
+- **Islas Marshall** es el primer país del planificador que pide el
+  comprobante de la vacuna contra el sarampión, y el primero dolarizado de
+  Oceanía. Los enchufes son de 120 V, como en Liberia.
+- **Micronesia** son cuatro estados a miles de kilómetros, con dos husos
+  horarios. El dato de su portada es el dinero de piedra de Yap.
+- **Palaos** sella un compromiso ambiental en el pasaporte, el dato de su
+  portada, y es el único de Oceanía donde la propina se acostumbra. El permiso
+  de las Islas Rocosas se paga una vez y vale lo mismo en tres destinos: va con
+  un `update` al final de la migración.
+
+**La entrada.** Siguen las reglas de 15.4: la fiebre amarilla se dice donde se
+pide —Australia, Fiyi, Papúa, las Salomón, Nueva Caledonia, la Polinesia,
+Samoa, Kiribati, Micronesia y Palaos— y no donde no. La malaria va en tono de
+advertencia en Papúa, las Salomón y Vanuatu; en el resto de las islas
+tropicales, el aviso es el dengue.
+
+**Precios.** Las dos excepciones de arriba, Tanna y las Islas Rocosas. Los
+nombres de atracción, museo, visita y excursión quedaron genéricos, porque las
+ciudades derivadas heredan los nombres de la base.
+
+**Los extremos.** La mínima más baja de Oceanía es la de Queenstown en julio,
+-1,4 °C, y la máxima más alta, la de Uluru en enero, 37,8 °C. Khövsgöl y
+Jahra siguen siendo la ciudad más fría y la más calurosa del sitio (sección
+14.11).
+
+Los ids de destino van del `c0` al `d0`.

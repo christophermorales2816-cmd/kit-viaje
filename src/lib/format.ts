@@ -112,6 +112,13 @@ export function formatWeight(grams: number): string {
  * el lari: valen un cuarto de dólar o menos, como el zloty. Están desde antes
  * de que haya un solo país de Asia para que ninguna tanda tenga que acordarse.
  *
+ * En Oceanía, el dólar australiano y el neozelandés sí (spec, 16.3): valen más
+ * de medio dólar, y los usan también Kiribati, Nauru y Tuvalu el primero y las
+ * Islas Cook el segundo. El dólar fiyiano, el tala de Samoa, el paʻanga de
+ * Tonga, el kina, el dólar salomonense, el vatu y el franco CFP valen menos y
+ * van enteros. Palaos, Micronesia y las Islas Marshall cobran en dólares
+ * estadounidenses.
+ *
  * Antes la regla era al revés —"sin decimales solo para ARS"— y con un solo
  * país eso alcanzaba. Con diecinueve habría que haber sumado cada moneda nueva
  * a mano, y la que se olvidara saldría con ",00" en todos sus precios.
@@ -133,6 +140,8 @@ export const MONEDAS_CON_CENTAVOS: ReadonlySet<string> = new Set([
   "KWD",
   "BHD",
   "OMR",
+  "AUD",
+  "NZD",
 ]);
 
 /** Importes con el símbolo de la moneda: precios, subtotales y totales. */
