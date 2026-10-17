@@ -8,6 +8,7 @@ import {
   formatCategory,
   formatDate,
   formatDateRange,
+  formatDistance,
   formatDuration,
   formatMoney,
   formatQuote,
@@ -81,6 +82,17 @@ describe("formatDuration", () => {
   it("usa el singular para un día", () => {
     expect(formatDuration(1)).toBe("1 día");
     expect(formatDuration(7)).toBe("7 días");
+  });
+});
+
+describe("formatDistance", () => {
+  it("redondea a kilómetros enteros, con separador de miles", () => {
+    expect(formatDistance(5.8)).toBe("6 km");
+    expect(formatDistance(2805.4)).toBe("2.805 km");
+  });
+
+  it("no muestra cero kilómetros", () => {
+    expect(formatDistance(0.3)).toBe("menos de 1 km");
   });
 });
 

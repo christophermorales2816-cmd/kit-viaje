@@ -30,6 +30,15 @@ describe("redactarUrl", () => {
     expect(redactarUrl(url)).toBe(url);
   });
 
+  it("borra lo que se buscó en el selector de aeropuertos", () => {
+    expect(redactarUrl("https://kit.app/vuelos?buscar=Rosario")).toBe(
+      "https://kit.app/vuelos?buscar=[busqueda]",
+    );
+    expect(redactarUrl("/vuelos?x=1&buscar=San%20Pablo#lista")).toBe(
+      "/vuelos?x=1&buscar=[busqueda]#lista",
+    );
+  });
+
   it("no confunde un token con un texto que solo empieza parecido", () => {
     // 33 caracteres: no es un token, y redactarlo a medias dejaría el resto.
     const url = `/viaje/${TOKEN}f`;

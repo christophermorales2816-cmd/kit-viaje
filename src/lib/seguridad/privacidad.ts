@@ -10,11 +10,15 @@
  * Las rutas se reconocen por la forma exacta del token (32 o 16 hex, ver
  * src/lib/trips/validate.ts), no por el prefijo: así `/viaje/ver/...` no se
  * confunde con `/viaje/{edit_token}`.
+ *
+ * Tampoco sale lo que alguien escribió en el buscador de aeropuertos
+ * (`/vuelos?buscar=`, spec 17.3): casi siempre es la ciudad donde vive.
  */
 export function redactarUrl(url: string): string {
   return url
     .replace(/\/viaje\/ver\/[0-9a-f]{16}(?=$|[/?#])/gi, "/viaje/ver/[link]")
-    .replace(/\/viaje\/[0-9a-f]{32}(?=$|[/?#])/gi, "/viaje/[link]");
+    .replace(/\/viaje\/[0-9a-f]{32}(?=$|[/?#])/gi, "/viaje/[link]")
+    .replace(/([?&]buscar=)[^&#]*/g, "$1[busqueda]");
 }
 
 /** Las rutas donde no se carga ningún script de terceros. */

@@ -77,8 +77,17 @@ cumplir: se pierde al cambiar de dispositivo o limpiar el sitio, y quien confió
 en él perdió el viaje. El aviso al lado del link dice la verdad en su lugar
 (spec, 6C).
 
-Fuera del MVP y sin planificar: cuentas, más corredores, i18n, monetización y
-tracking de gastos reales. La sección 2 del spec explica el porqué de cada uno.
+Fuera del MVP y sin planificar: cuentas, i18n y tracking de gastos reales. La
+sección 2 del spec explica el porqué de cada uno. La monetización entra como
+experimento, con los links de afiliado de la sección de vuelos.
+
+### Vuelos, en construcción
+
+Una sección nueva, `/vuelos`, para planear desde la ciudad de cada uno: qué está
+volando, a dónde se llega y cuánto cuesta (spec, sección 17). Va por pasos, un
+PR cada uno. El primero ya está: los aeropuertos del mundo, la sugerencia del
+tuyo según tu conexión y el selector "Salgo desde". La página todavía no se
+enlaza ni se indexa.
 
 ## Stack
 
@@ -298,7 +307,9 @@ npm run build       # build de producción
 
 ```
 docs/                    # administración, arquitectura, datos, seguridad
-herramientas/corredor/   # generador de las migraciones de cada país
+herramientas/
+├── corredor/            # generador de las migraciones de cada país
+└── aeropuertos/         # generador de la lista de aeropuertos (OurAirports)
 supabase/
 ├── migrations/          # historial versionado del esquema y los datos
 └── tests/
@@ -311,20 +322,23 @@ src/
 │   ├── global-error.tsx # último recurso: falla el layout raíz
 │   ├── not-found.tsx    # 404 propio
 │   ├── page.tsx         # 1 · landing: el globo
-│   ├── robots.ts        # todo indexable menos /viaje/
+│   ├── robots.ts        # todo indexable menos /viaje/ y /api/
 │   ├── sitemap.ts       # las guías, desde el índice de contenido
 │   ├── guia/[slug]/
 │   │   ├── page.tsx     # 2 · guía del país
 │   │   ├── preparar/    # 3 · condiciones actuales
 │   │   └── planificar/  # 4 · el generador
-│   └── viaje/
-│       ├── [editToken]/     # dashboard privado
-│       └── ver/[shareSlug]/ # vista compartida, solo lectura
+│   ├── viaje/
+│   │   ├── [editToken]/     # dashboard privado
+│   │   └── ver/[shareSlug]/ # vista compartida, solo lectura
+│   ├── vuelos/          # "Salgo desde": el aeropuerto de salida (sección 17)
+│   └── api/aeropuertos/ # la búsqueda del selector, cacheada en la CDN
 ├── components/
 │   ├── landing/         # globo y formulario de viaje nuevo
 │   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
 │   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
 │   ├── trip/            # listas, totales, controles de compartir
+│   ├── vuelos/          # buscador y opciones de aeropuerto
 │   ├── analytics.tsx    # Vercel Analytics sin los links privados
 │   └── ui/              # componentes de Shadcn
 ├── content/guias/       # contenido editorial de las guías (sección 8.2)
@@ -341,6 +355,7 @@ src/
     ├── prepare/         # el año climático de la página 3 (sección 9)
     ├── quotes/          # dolarapi: fetch, mapeo y spread
     ├── trips/           # Server Actions, validación, lectura, escrituras y cupo
+    ├── vuelos/          # aeropuertos, búsqueda, cercanía, ubicación y la cookie de origen
     ├── supabase/        # clientes, lectura de referencia y su caché
     ├── seguridad/       # headers HTTP y redacción de URLs
     ├── sitio/           # dominio público, para robots y sitemap

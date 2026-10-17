@@ -110,6 +110,22 @@ Las versiones mayores de ESLint y TypeScript Dependabot no las propone
    publicación es la primera señal de abuso.
 3. Security Advisor de Supabase: cero errores.
 
+**Cada seis meses (15 minutos).** Actualizar la lista de aeropuertos, que
+cambia cuando abre uno nuevo o cierra uno viejo: Nom Pen, Ulán Bator y Dakar
+cambiaron de aeropuerto en los últimos años.
+
+```bash
+curl -L -o /tmp/airports.csv \
+  https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv
+python3 herramientas/aeropuertos/generar.py /tmp/airports.csv src/lib/vuelos/aeropuertos.json
+npm test
+```
+
+El diff del JSON muestra qué aeropuertos entraron, salieron o cambiaron. Si el
+script falla, no escribe nada: dice qué encontró raro. Si un test falla porque
+una ciudad de las guías dejó de encontrarse, el arreglo suele ser una línea en
+`src/lib/vuelos/nombres-en-castellano.ts`. Va por PR, como todo.
+
 **Cuando termina un trabajo con alguien** (una persona, una agencia, una
 herramienta): sacarle el acceso el mismo día, y si tuvo acceso a una clave,
 rotarla (sección 6).
@@ -123,6 +139,7 @@ Siempre por un PR a `main`:
 | Código                           | PR → CI en verde → merge. Vercel publica solo.                                                           |
 | Datos (precios, ciudades, clima) | Una **migración nueva** en `supabase/migrations/`. Al mergear, el workflow _Migraciones_ la aplica sola. |
 | Un país nuevo                    | [`docs/agregar-un-pais.md`](agregar-un-pais.md)                                                          |
+| Los aeropuertos                  | Se regeneran con el script de la sección 3; el JSON no se edita a mano.                                  |
 | Volver atrás                     | GitHub → el PR → _Revert_. Si urge, Vercel → Deployments → el deploy anterior → _Instant Rollback_.      |
 
 **No edites datos a mano en Supabase Studio.** Lo que se cambia ahí no queda en

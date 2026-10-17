@@ -40,6 +40,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           todo / Personalizar" sería resolver un problema que el proyecto no
           tiene. Se avisa igual, porque medir sin decirlo tampoco está bien.
 
+          La única cookie del sitio es la del aeropuerto de salida
+          (src/lib/vuelos/origen.ts): la pone quien elige uno con un botón, y
+          /vuelos dice al lado qué guarda y cómo se borra (spec, 17.3).
+
           `print:hidden` para que no salga en el PDF exportado: el spec pide
           imprimir la lista de equipaje, no el pie de página.
         */}
