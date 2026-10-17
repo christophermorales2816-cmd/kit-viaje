@@ -42,7 +42,7 @@ Ledger vivo, no lista cerrada de una sola vez — a medida que aparezcan decisio
 - Notificaciones: consecuencia directa de no tener login, no una exclusión aparte — sin cuenta no hay canal (mail/push) al que notificar.
 - Tracking de gastos reales e historial de gastos por viaje (vs. el presupuesto estimado): a diferencia de los ítems anteriores, esto no es un "más adelante en este proyecto" — es scope de un proyecto de finanzas/blog aparte que ya tenés en mente. Lo registro acá para no perderlo, no para reabrirlo en este MVP.
 
-**Sobre el aviso de cookies:** Vercel Web Analytics no usa cookies — identifica visitas con un hash generado del request entrante, sin datos que las reidentifiquen, y no guarda nada de forma permanente. Al no registrar información personalmente identificable, se puede usar sin banners de consentimiento de cookies. Si es la única herramienta activa (sin Google Analytics ni terceros en el plan), un banner "Aceptar todo / Personalizar" no tiene nada que consentir — no se setea ninguna cookie. Lo que sí conviene, y es mucho más simple: un aviso de una sola línea, sin lógica de consent management real ("Usamos analytics sin cookies para saber qué se usa. No vendemos datos ni mostramos anuncios."). Si preferís igual el patrón completo de consentimiento granular por si más adelante sumás algo que sí use cookies, decímelo y lo diseño así desde ya — pero con el plan de hoy, sería resolver un problema que no tenés.
+**Sobre el aviso de cookies:** Vercel Web Analytics no usa cookies — identifica visitas con un hash generado del request entrante, sin datos que las reidentifiquen, y no guarda nada de forma permanente. Al no registrar información personalmente identificable, se puede usar sin banners de consentimiento de cookies. Si es la única herramienta activa (sin Google Analytics ni terceros en el plan), un banner "Aceptar todo / Personalizar" no tiene nada que consentir — no se setea ninguna cookie. Lo que sí conviene, y es mucho más simple: un aviso de una sola línea, sin lógica de consent management real ("Usamos analytics sin cookies para saber qué se usa. No vendemos datos ni mostramos anuncios."). Si preferís igual el patrón completo de consentimiento granular por si más adelante sumás algo que sí use cookies, decímelo y lo diseño así desde ya — pero con el plan de hoy, sería resolver un problema que no tenés. (Desde la sección 17 el sitio pone una cookie: la del aeropuerto de salida, y solo si alguien lo elige con un botón. Ver 17.3.)
 
 ## 3. Modelo de datos
 
@@ -2268,3 +2268,194 @@ Jahra siguen siendo la ciudad más fría y la más calurosa del sitio (sección
 14.11).
 
 Los ids de destino van del `c0` al `d0`.
+
+## 17. Vuelos
+
+Una sección nueva, `/vuelos`, para planear el viaje: de dónde salís, a dónde
+llegás, cuánto cuesta. El pedido original era una tabla en tiempo real con los
+vuelos de todo el mundo, mapas de rutas y conexiones, y comparadores y
+buscadores de ofertas. Se reordenó antes de escribir código (17.1), con tres
+condiciones del dueño: presupuesto cero por ahora, afiliados como experimento
+—si no funcionan, no pasa nada— y cualquier ciudad del mundo como origen.
+
+### 17.1 Qué es, y lo que se corrigió del pedido
+
+- **Una tabla con todos los vuelos del mundo no le sirve a nadie.** En el aire
+  hay entre 10.000 y 20.000 aviones a la vez: una tabla así no se puede leer ni
+  buscar, y en el celular no entra. En su lugar, un mapa en vivo con todos los
+  aviones, unos pocos números globales y tablas acotadas: lo que vuela desde un
+  aeropuerto, o en una ruta.
+- **El comparador no vende pasajes: deriva.** Muestra precios de referencia,
+  con su antigüedad —como las cotizaciones—, y manda a comprar a otro sitio por
+  un link de afiliado.
+- **El diseño visual va al final; la estructura, ahora.** Qué hay en cada
+  pantalla y cómo se navega se decide antes, porque cambiarlo después cuesta el
+  doble.
+
+Tres capas, cada una responde una pregunta, como el resto del sitio:
+
+| Capa        | Pregunta                 | Qué tiene                                                                                   |
+| ----------- | ------------------------ | ------------------------------------------------------------------------------------------- |
+| **En vivo** | ¿Qué está pasando ahora? | El mapa del mundo con los aviones en el aire, un contador y lo que vuela en cada aeropuerto |
+| **Rutas**   | ¿Cómo llego?             | Las conexiones desde tu aeropuerto: directo o con una escala                                |
+| **Precios** | ¿Cuánto sale?            | El calendario de precios por fecha, la comparación entre rutas y aerolíneas, y las alertas  |
+
+Y dónde vive cada cosa: la sección `/vuelos`; en cada guía, un bloque "Cómo
+llegar desde tu ciudad", con la ruta y el precio hasta la ciudad base, y en el
+planificador, el pasaje dentro del presupuesto, que hoy calcula todo menos el
+gasto más grande del viaje.
+
+### 17.2 Fuentes, licencias y costos
+
+| Para qué        | Fuente                                                   | Hoy                | Al lanzar                                                                      |
+| --------------- | -------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
+| Aeropuertos     | OurAirports, de dominio público                          | Gratis             | Gratis                                                                         |
+| Tu ciudad       | La ubicación aproximada que agrega Vercel a cada request | Gratis             | Incluido                                                                       |
+| Mapas           | MapLibre con OpenFreeMap, sin clave y con uso comercial  | Gratis             | Gratis                                                                         |
+| Aviones en vivo | adsb.lol, y la ruta de cada vuelo por su número          | Gratis             | Hay que confirmar que la licencia admite uso comercial; si no, una fuente paga |
+| Rutas y precios | Travelpayouts, la red de afiliados de Aviasales          | Gratis, con cuenta | Gratis; paga comisión                                                          |
+| Mails           | Un servicio con plan gratuito                            | Gratis             | Gratis hasta varios miles por mes                                              |
+| Hosting         | Vercel                                                   | Plan Hobby         | Plan Pro, unos 20 dólares por mes                                              |
+
+Lo que no existe gratis, y qué se hace en su lugar:
+
+- **Precios en vivo.** Amadeus, la fuente gratuita que usaba casi todo el
+  mundo, cerró su portal para desarrolladores el 2026-07-17. Los precios de
+  Travelpayouts son los que otros usuarios encontraron en los últimos días, de
+  dos a siete: alcanzan para un calendario y para comparar, y se muestran con
+  su antigüedad ("precio visto hace 3 días"). La búsqueda en vivo la hace
+  Aviasales cuando alguien hace clic, y ahí está la comisión.
+- **El cartel de un aeropuerto** —horarios, puertas, demoras— solo está en APIs
+  pagas. En su lugar va "En el aire ahora, desde y hacia este aeropuerto": los
+  aviones en vuelo de adsb.lol con la ruta de cada uno.
+
+Dos condiciones para encender los afiliados (17.4): el plan Hobby de Vercel es
+para uso personal y no comercial, así que un sitio con links de afiliado pasa
+al plan Pro, y la licencia de adsb.lol tiene que estar confirmada. La cuenta de
+Travelpayouts la crea el dueño, y su clave va a las variables de entorno de
+Vercel, nunca a un chat ni al repo. Hasta entonces se construye con datos de
+prueba.
+
+### 17.3 La base: los aeropuertos, tu ciudad y "Salgo desde"
+
+Todo lo demás de la sección sale del aeropuerto del que sale cada uno, así que
+es lo primero.
+
+**Los aeropuertos.** Salen de OurAirports, de dominio público, a través de
+`herramientas/aeropuertos/generar.py`, que escribe
+`src/lib/vuelos/aeropuertos.json`: un aeropuerto por línea, para que un diff
+se lea. Entran los que tienen código IATA y vuelos regulares, de los cuatro
+tipos que los tienen —grande, mediano, chico e hidroaeropuerto—: 4.079 en 233
+países y territorios, bajados el 2026-10-16. El generador valida antes de
+escribir: códigos únicos, coordenadas en rango, una cantidad razonable y una
+lista de aeropuertos que tienen que estar, desde Ezeiza hasta Funafuti. Los
+nombres van como los escribe OurAirports, en inglés o en el idioma local; los
+países, en castellano, con los nombres de las guías donde Intl escribe otro
+("Rumania" y no "Rumanía", "Costa de Marfil" y no "Côte d'Ivoire").
+
+La lista está al día: Nom Pen ya vuela desde Techo (KTI), Ulán Bator desde el
+aeropuerto nuevo (UBN) y Dakar desde Blaise Diagne (DSS), y el de Biskek es
+BSZ. Pesa 464 KB, así que es solo del servidor (`server-only`): al navegador le
+llega lo que pide, ya resumido. El build lo verifica.
+
+**La búsqueda** encuentra por el código ("EZE", u OACI: "SAEZ"), la ciudad, el
+nombre del aeropuerto o el país, sin acentos y por el comienzo de cada palabra:
+"bue" encuentra Buenos Aires, "ires" no. Como OurAirports está en inglés o en
+el idioma local, `src/lib/vuelos/nombres-en-castellano.ts` tiene las ciudades
+que en castellano se llaman distinto —Londres, Nueva York, Pekín, Atenas, que
+para OurAirports es "Spata-Artemida"—, con sus aeropuertos en orden de
+importancia. Una ciudad sin aeropuerto propio lleva el que la sirve, con un
+comentario: buscar "Jerusalén" y no encontrar nada no le sirve a nadie.
+
+El orden de los resultados se ajustó probándolo con búsquedas reales:
+
+1. El código exacto.
+2. La ciudad. Dentro de las ciudades, primero los aeropuertos grandes, después
+   la ciudad que empieza con lo escrito ("london" pone London antes que East
+   London) y, en una ciudad del diccionario, su orden: Heathrow antes que
+   Gatwick.
+3. El país escrito entero. "Argentina" tiene que traer Aeroparque y Ezeiza, no
+   Ushuaia primero porque su aeropuerto se llama "Malvinas Argentinas".
+4. El nombre del aeropuerto, los nombres alternativos y el país por el
+   comienzo.
+
+Un test busca la ciudad base de cada una de las 165 guías por su nombre y exige
+un aeropuerto a menos de 150 km. Siete se buscan por la isla o la ciudad,
+porque su base es un barrio o una zona: Singapur, Hong Kong, Macao, Bali,
+Mauricio, Banjul y Esuatini.
+
+**Tu ciudad.** Vercel agrega a cada request la ubicación aproximada de la
+conexión: latitud, longitud, ciudad y país. No hace falta pedirle permiso al
+navegador —la política del sitio lo tiene bloqueado (`geolocation=()`) y así
+sigue—, se usa para sugerir y se descarta con la respuesta. Con una VPN o desde
+un celular puede caer en otra ciudad, y por eso la página siempre deja buscar.
+
+El más cercano no siempre es el que sirve: en el centro de Londres, London City
+queda a 13 km y Heathrow a 23, pero desde Heathrow se va a casi cualquier lado.
+La regla (`src/lib/vuelos/cercanos.ts`): de los aeropuertos a menos de 150 km,
+el grande más cercano; si no hay grandes, el mediano, y así. Si no hay ninguno
+en ese radio, el radio pasa a ser el doble de la distancia al más cercano del
+mundo: desde Tristán da Cunha, el más cercano es Santa Elena, a 2.400 km, pero
+el que sirve es Ciudad del Cabo, a 2.800. Las alternativas, hasta cuatro, van
+en el mismo orden.
+
+**"Salgo desde".** Lo que se elige se guarda en una cookie, `origen`, con el
+código de tres letras: un año, `SameSite=Lax` y `Secure` (salvo en desarrollo).
+Es la primera cookie del sitio, y corrige la nota de la sección 2:
+
+- La pone solo quien elige un aeropuerto, con un botón, y la página dice al
+  lado qué guarda y cómo se borra. "Olvidar" la saca. No identifica a nadie ni
+  sirve para rastrear: son tres letras públicas. Por eso sigue sin haber
+  banner.
+- No es `httpOnly`, a propósito: las guías son estáticas, y para mostrar "Cómo
+  llegar desde tu ciudad" la van a leer desde el navegador.
+- Se valida en cada lectura: un código que no está en la lista no es un origen,
+  y se ignora.
+
+Por qué cookie y no localStorage: el servidor tiene que saber de dónde salís
+para armar la página —las rutas, los precios— sin un segundo viaje al
+navegador.
+
+**La página.** `/vuelos` es dinámica, porque lee la cookie y la ubicación, y
+Next la manda sin caché compartida. Tiene tres estados: el origen elegido, con
+"Olvidar"; la sugerencia por la conexión, con las alternativas y sus
+distancias, y el buscador solo, cuando no hay ubicación (en local, o si Vercel
+no la informa).
+
+Anda sin JavaScript: el buscador es un formulario GET a `/vuelos?buscar=`, y
+elegir y olvidar son formularios con Server Actions, que responden con un 303.
+Con JavaScript, el buscador consulta `/api/aeropuertos?q=` mientras se escribe
+—espera 200 ms desde la última tecla y cancela el pedido anterior: escribir
+"londres" hace un solo pedido— y la URL no cambia. La API depende solo de la
+URL y la guarda la CDN de Vercel: un día fresca y una semana más mientras se
+renueva.
+
+Todavía no se indexa ni se enlaza (`noindex`, fuera del sitemap y del menú):
+hasta que la sección tenga más que el selector, no hay nada que buscar ahí.
+Lo que se escribe en el buscador sale de la URL antes de llegar a analytics,
+porque suele ser la ciudad donde vive cada uno (`redactarUrl`), y `/api/` queda
+fuera de los buscadores (`robots.ts`).
+
+### 17.4 Lo que viene
+
+Un PR por paso, cada uno usable por sí solo:
+
+1. ~~La base: los aeropuertos, tu ciudad y "Salgo desde"~~ (17.3).
+2. **En vivo.** El mapa del mundo con los aviones en el aire y el contador,
+   actualizado cada 10 a 15 segundos desde una caché que comparten todos los
+   visitantes, para no saturar la fuente gratuita. Va enseguida, aunque no sea
+   lo más útil para planear: es la parte curiosa, la que hace que alguien
+   entre. Con él, `/vuelos` se enlaza y se indexa.
+3. **Aeropuertos.** La página de cada aeropuerto, con lo que vuela ahora desde
+   y hacia él, y sus rutas.
+4. **Rutas.** El mapa de conexiones, en `/vuelos` y en cada guía.
+5. **Precios.** El calendario, el comparador y el pasaje en el presupuesto, con
+   los links de afiliado listos pero apagados. En la moneda del país de cada
+   uno cuando Travelpayouts la tiene; si no, en dólares.
+6. **Alertas por mail.** Solo el mail, con confirmación y un link para darse de
+   baja con un clic, como piden las leyes de datos personales de Argentina y
+   Europa. Es el primer dato personal que guarda el sitio: va separado de los
+   viajes, sin nada que lo una a un `edit_token`, para que el modelo de la
+   sección 3 siga en pie.
+7. **Lanzamiento,** cuando lo decida el dueño: plan Pro de Vercel, afiliados
+   encendidos y licencias confirmadas (17.2).

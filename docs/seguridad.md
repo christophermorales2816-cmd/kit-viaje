@@ -20,7 +20,7 @@ ciudad y dos listas. Lo que sí tiene valor:
 ## Modelo de acceso
 
 ```
-Navegador ──(HTML, Server Actions)──> Next.js en Vercel ──(service role)──> Supabase
+Navegador ──(HTML, Server Actions, /api)──> Next.js en Vercel ──(service role)──> Supabase
                                           │
                                           └──(anon key, solo lectura)──> Supabase
 ```
@@ -40,27 +40,31 @@ Navegador ──(HTML, Server Actions)──> Next.js en Vercel ──(service r
 
 ## Amenazas y controles
 
-| Amenaza                                                      | Control                                                                           | Dónde                                                                  |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Leer los `edit_token` de todos los viajes con la anon key    | Tablas de sesión sin políticas ni privilegios                                     | `20260826120200_rls_policies.sql`; smoke test                          |
-| Adivinar un `edit_token`                                     | 122 bits aleatorios de `gen_random_uuid()` (RNG del sistema operativo)            | `20260826120100_session_tables.sql`                                    |
-| Escribir en un viaje ajeno                                   | El `trip_id` sale del token, nunca del cliente; upsert acotado por la PK          | `src/lib/trips/mutate.ts`                                              |
-| Meter en un viaje propio un gasto de otro país               | Se valida contra los precios de la ciudad del viaje                               | `src/lib/trips/mutate.ts`; `mutate.test.ts`                            |
-| Crear viajes en masa con un script                           | Cupo por hora: 30 por conexión, 2.000 en total, contado en Postgres               | `20261008120100_cupo_de_creacion.sql`; `src/lib/trips/cupo.ts`         |
-| Clickjacking del dashboard (embeberlo en un iframe)          | `frame-ancestors 'none'` y `X-Frame-Options: DENY`                                | `src/lib/seguridad/headers.ts`                                         |
-| Inyección de scripts de otros dominios                       | CSP: scripts solo del propio dominio y de Vercel Analytics                        | `src/lib/seguridad/headers.ts`                                         |
-| Fuga del link privado por el header Referer                  | `Referrer-Policy: no-referrer` en `/viaje/*`                                      | `next.config.ts`                                                       |
-| Fuga del link privado a analytics                            | Analytics no se monta en `/viaje/*`, y `beforeSend` borra tokens de cualquier URL | `src/components/analytics.tsx`; `src/lib/seguridad/privacidad.ts`      |
-| Indexación de viajes por buscadores                          | `noindex` en la página, `X-Robots-Tag` y `Disallow: /viaje/`                      | páginas de viaje; `next.config.ts`; `src/app/robots.ts`                |
-| CSRF contra las Server Actions                               | Next compara `Origin` con `Host` en cada Server Action                            | Next.js (nativo)                                                       |
-| Texto de Postgres en pantalla (nombres de tablas y columnas) | Mensajes fijos para el usuario; el detalle va a los logs                          | `src/lib/trips/errors.ts`; `mutate.ts`                                 |
-| Una tabla nueva expuesta por olvido                          | Privilegios por defecto revocados; CI falla si una tabla de `public` no tiene RLS | `20261008120000_endurecer_permisos.sql`; smoke test                    |
-| Una función nueva expuesta como endpoint RPC                 | CI falla si `anon` puede ejecutar cualquier función de `public`                   | smoke test                                                             |
-| Fórmulas en el CSV exportado                                 | Celdas que empiezan con `= + - @`, tab o CR se neutralizan                        | `src/lib/export/csv.ts`                                                |
-| Fuente de cotizaciones colgada                               | Timeout de 5 s; la página sigue con un aviso                                      | `src/lib/quotes/fetch.ts`                                              |
-| Dependencia vulnerable                                       | Dependabot semanal; `npm audit` sin hallazgos en producción                       | `.github/dependabot.yml`                                               |
-| Action de CI comprometida                                    | Actions fijadas por SHA, CLI de Supabase con versión fija, token de solo lectura  | `.github/workflows/`                                                   |
-| Precio cargado en otra moneda (a mano, en Studio)            | Trigger que lo rechaza; chequeo de integridad en CI y mensual                     | `20261008120200_moneda_coherente.sql`; `supabase/tests/integridad.sql` |
+| Amenaza                                                      | Control                                                                              | Dónde                                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| Leer los `edit_token` de todos los viajes con la anon key    | Tablas de sesión sin políticas ni privilegios                                        | `20260826120200_rls_policies.sql`; smoke test                          |
+| Adivinar un `edit_token`                                     | 122 bits aleatorios de `gen_random_uuid()` (RNG del sistema operativo)               | `20260826120100_session_tables.sql`                                    |
+| Escribir en un viaje ajeno                                   | El `trip_id` sale del token, nunca del cliente; upsert acotado por la PK             | `src/lib/trips/mutate.ts`                                              |
+| Meter en un viaje propio un gasto de otro país               | Se valida contra los precios de la ciudad del viaje                                  | `src/lib/trips/mutate.ts`; `mutate.test.ts`                            |
+| Crear viajes en masa con un script                           | Cupo por hora: 30 por conexión, 2.000 en total, contado en Postgres                  | `20261008120100_cupo_de_creacion.sql`; `src/lib/trips/cupo.ts`         |
+| Clickjacking del dashboard (embeberlo en un iframe)          | `frame-ancestors 'none'` y `X-Frame-Options: DENY`                                   | `src/lib/seguridad/headers.ts`                                         |
+| Inyección de scripts de otros dominios                       | CSP: scripts solo del propio dominio y de Vercel Analytics                           | `src/lib/seguridad/headers.ts`                                         |
+| Fuga del link privado por el header Referer                  | `Referrer-Policy: no-referrer` en `/viaje/*`                                         | `next.config.ts`                                                       |
+| Fuga del link privado a analytics                            | Analytics no se monta en `/viaje/*`, y `beforeSend` borra tokens de cualquier URL    | `src/components/analytics.tsx`; `src/lib/seguridad/privacidad.ts`      |
+| Indexación de viajes por buscadores                          | `noindex` en la página, `X-Robots-Tag` y `Disallow: /viaje/`                         | páginas de viaje; `next.config.ts`; `src/app/robots.ts`                |
+| Guardar o filtrar dónde está cada visitante de `/vuelos`     | La ubicación se usa en la request y se descarta; la búsqueda se redacta en analytics | `src/lib/vuelos/ubicacion.ts`; `src/lib/seguridad/privacidad.ts`       |
+| Encabezados de ubicación falsificados                        | En Vercel los pone la plataforma; igual se validan rango y forma                     | `src/lib/vuelos/ubicacion.ts`; `ubicacion.test.ts`                     |
+| Una cookie `origen` adulterada                               | Se valida contra la lista en cada lectura; lo que no es un aeropuerto se ignora      | `src/lib/vuelos/origen.ts`; `actions.ts`                               |
+| Saturar la búsqueda de aeropuertos                           | Consulta recortada a 60 caracteres, en memoria y sin base; respuestas en la CDN      | `src/lib/vuelos/buscar.ts`; `src/app/api/aeropuertos/route.ts`         |
+| CSRF contra las Server Actions                               | Next compara `Origin` con `Host` en cada Server Action                               | Next.js (nativo)                                                       |
+| Texto de Postgres en pantalla (nombres de tablas y columnas) | Mensajes fijos para el usuario; el detalle va a los logs                             | `src/lib/trips/errors.ts`; `mutate.ts`                                 |
+| Una tabla nueva expuesta por olvido                          | Privilegios por defecto revocados; CI falla si una tabla de `public` no tiene RLS    | `20261008120000_endurecer_permisos.sql`; smoke test                    |
+| Una función nueva expuesta como endpoint RPC                 | CI falla si `anon` puede ejecutar cualquier función de `public`                      | smoke test                                                             |
+| Fórmulas en el CSV exportado                                 | Celdas que empiezan con `= + - @`, tab o CR se neutralizan                           | `src/lib/export/csv.ts`                                                |
+| Fuente de cotizaciones colgada                               | Timeout de 5 s; la página sigue con un aviso                                         | `src/lib/quotes/fetch.ts`                                              |
+| Dependencia vulnerable                                       | Dependabot semanal; `npm audit` sin hallazgos en producción                          | `.github/dependabot.yml`                                               |
+| Action de CI comprometida                                    | Actions fijadas por SHA, CLI de Supabase con versión fija, token de solo lectura     | `.github/workflows/`                                                   |
+| Precio cargado en otra moneda (a mano, en Studio)            | Trigger que lo rechaza; chequeo de integridad en CI y mensual                        | `20261008120200_moneda_coherente.sql`; `supabase/tests/integridad.sql` |
 
 ## Auditoría del 2026-10-08
 
@@ -87,6 +91,9 @@ Lo que se encontró y cómo quedó:
   escriba el usuario en ninguna parte de la app.
 - **El link es la llave.** Quien recibe el link privado de un viaje puede
   editarlo; es el diseño (sin cuentas). La app lo dice al lado del link.
+- **La cookie `origen` no es `httpOnly`.** A propósito: las guías son
+  estáticas y la van a leer desde el navegador (spec, 17.3). Guarda tres
+  letras públicas, "EZE": un script que la leyera no se llevaría nada.
 - **El cupo cuenta por IP.** Una red grande detrás de una sola IP (una
   universidad) comparte el cupo de 30 por hora. Los topes se ajustan en
   `src/lib/trips/cupo.ts` sin migración.

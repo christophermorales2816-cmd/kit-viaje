@@ -89,6 +89,18 @@ export function formatWeight(grams: number): string {
 }
 
 /**
+ * Una distancia, en kilómetros enteros: "28 km", "2.805 km".
+ *
+ * Las distancias del sitio salen de la ubicación aproximada de la conexión
+ * (src/lib/vuelos/ubicacion.ts): un decimal prometería una precisión que no hay.
+ */
+export function formatDistance(km: number): string {
+  if (km < 1) return "menos de 1 km";
+
+  return `${new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(km)} km`;
+}
+
+/**
  * Las monedas cuyos precios se muestran con centavos.
  *
  * La regla: **una moneda lleva centavos si su unidad vale más de medio dólar.**

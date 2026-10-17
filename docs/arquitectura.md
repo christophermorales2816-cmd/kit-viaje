@@ -21,6 +21,7 @@ vuelve a ellos por un link con un token.
 | Datos                     | Supabase (Postgres 17), RLS                                                                     | `supabase/migrations`                                                    |
 | Contenido                 | Guías en TypeScript, validadas por tests                                                        | `src/content/guias`                                                      |
 | Cotizaciones              | dolarapi.com (Argentina y Brasil); el resto sin fuente todavía                                  | `src/lib/quotes/corridors.ts`                                            |
+| Aeropuertos               | OurAirports, en un JSON del repo, solo del servidor                                             | `src/lib/vuelos`, `herramientas/aeropuertos`                             |
 | CI                        | GitHub Actions: lint, tests, build, typecheck; migraciones + RLS + integridad sobre Postgres 16 | `.github/workflows/ci.yml`                                               |
 | Migraciones en producción | GitHub Actions con el CLI de Supabase, al mergear                                               | `.github/workflows/migraciones.yml`                                      |
 
@@ -34,10 +35,13 @@ vuelve a ellos por un link con un token.
 | `/guia/[slug]/planificar`     | El formulario del viaje                     | Dinámica                                                                             | Sí, con caché de 1 h |
 | `/viaje/[editToken]`          | Dashboard privado                           | Dinámica, sin caché                                                                  | Sí                   |
 | `/viaje/ver/[shareSlug]`      | Vista compartida, solo lectura              | Dinámica, sin caché                                                                  | Sí                   |
+| `/vuelos`                     | "Salgo desde": el aeropuerto de salida      | Dinámica, sin caché (lee la cookie y la ubicación)                                   | No                   |
+| `/api/aeropuertos?q=`         | La búsqueda del selector, en JSON           | Dinámica; la CDN la guarda un día                                                    | No                   |
 | `/robots.txt`, `/sitemap.xml` | Para buscadores                             | Estáticos                                                                            | No                   |
 
 Las páginas de guía no dependen de la base a propósito: si Supabase se cae, la
-portada y las 165 guías siguen funcionando.
+portada y las 165 guías siguen funcionando. La sección de vuelos tampoco la
+usa.
 
 ## Flujos
 
@@ -56,6 +60,15 @@ No se guarda ningún ítem: las listas se generan al leer.
 ciudad, su clima, los umbrales, el catálogo y los precios (de la caché), y los
 ítems guardados (sin caché). Los motores generan las dos listas completas y lo
 guardado se superpone encima.
+
+**Elegir el aeropuerto de salida** (`src/lib/vuelos/`, spec 17.3):
+
+1. `/vuelos` sugiere uno con la ubicación aproximada que agrega Vercel a la
+   request (`ubicacion.ts`, `cercanos.ts`), o deja buscar: con JavaScript, en
+   `/api/aeropuertos`; sin JavaScript, con `?buscar=`.
+2. Elegir es un formulario con `elegirOrigenAction`, que valida el código
+   contra la lista y lo guarda en la cookie `origen` (`origen.ts`). "Olvidar"
+   la borra. Los dos redirigen a `/vuelos`.
 
 **Editar** (`mutate.ts`): cada tilde o cantidad es una Server Action que
 resuelve el token contra la base, verifica que el ítem o el gasto pertenezca al
@@ -95,6 +108,7 @@ optimista (`useOptimistic`) y se revierte si la acción falla.
 | La seguridad                | [`seguridad.md`](seguridad.md)                                           |
 | Operar el sitio             | [`administrar.md`](administrar.md)                                       |
 | Sumar un país               | [`agregar-un-pais.md`](agregar-un-pais.md)                               |
+| La sección de vuelos        | Spec, sección 17, y `src/lib/vuelos/`                                    |
 | Configurar Supabase de cero | [`configurar-supabase.md`](configurar-supabase.md)                       |
 
 ## Cómo se prueba
@@ -121,5 +135,7 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/integridad.sql    # datos maestros
 - **Monitoreo de errores.** Hoy los errores quedan en los logs de Vercel; un
   servicio de reporte (con la misma redacción de tokens que analytics) daría
   alertas.
+- **La sección de vuelos** va por pasos: en vivo, aeropuertos, rutas, precios
+  y alertas, uno por PR (spec, 17.4).
 - **Retención de viajes.** No vencen solos; `purgar_viajes_terminados` existe
   para cuando haga falta.

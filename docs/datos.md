@@ -124,6 +124,40 @@ Nadie las lee desde afuera: solo la app, con la service role key.
 Un ítem con cantidad cero no tiene fila: la lista completa se genera al leer el
 viaje y lo guardado se superpone encima (`src/lib/trips/read.ts`).
 
+## Aeropuertos (fuera de la base)
+
+La sección de vuelos (spec, 17) no usa Supabase. Los aeropuertos son un
+archivo del repo, `src/lib/vuelos/aeropuertos.json`, generado desde OurAirports
+—de dominio público— por `herramientas/aeropuertos/generar.py`. No están en la
+base porque solo cambian con un deploy y se recorren en cada búsqueda: en
+memoria, una búsqueda es una pasada sobre cuatro mil filas, sin consultas.
+
+Hoy: **4.079 aeropuertos en 233 países y territorios**, bajados el 2026-10-16.
+Entran los que tienen código IATA y vuelos regulares.
+
+| Campo        | Significado                                                                                                                                 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `iata`       | Código IATA de tres letras, único                                                                                                           |
+| `icao`       | Código OACI de cuatro caracteres, o vacío                                                                                                   |
+| `nombre`     | Como lo escribe OurAirports, en inglés o en el idioma local                                                                                 |
+| `ciudad`     | El municipio de OurAirports. A veces es el del aeropuerto y no el de la ciudad (Atenas figura como "Spata-Artemida"); unos pocos van vacíos |
+| `pais`       | Código ISO 3166-1 de dos letras                                                                                                             |
+| `lat`, `lon` | Grados decimales, con cuatro decimales                                                                                                      |
+| `tipo`       | `grande`, `mediano`, `chico` o `hidroaeropuerto`                                                                                            |
+| `claves`     | Los nombres alternativos de OurAirports, para la búsqueda                                                                                   |
+
+Lo que OurAirports no tiene se suma en código, con tests:
+
+- Los nombres en castellano de las ciudades que se buscan con otro nombre
+  —Londres, Nueva York, Pekín—, en `src/lib/vuelos/nombres-en-castellano.ts`.
+- Los nombres de país que las guías escriben distinto que Intl ("Rumania",
+  "Costa de Marfil"), en `src/lib/vuelos/aeropuertos.ts`.
+
+El JSON no se edita a mano: se regenera (ver
+[`administrar.md`](administrar.md#3-la-rutina)). Y el aeropuerto que cada uno
+elige como origen tampoco está en la base: vive en una cookie de su navegador
+(spec, 17.3).
+
 ## Las reglas y dónde se hacen cumplir
 
 | Regla                                                                     | Dónde                                            |
