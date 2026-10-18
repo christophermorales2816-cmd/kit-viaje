@@ -22,6 +22,7 @@ vuelve a ellos por un link con un token.
 | Contenido                 | Guías en TypeScript, validadas por tests                                                        | `src/content/guias`                                                      |
 | Cotizaciones              | dolarapi.com (Argentina y Brasil); el resto sin fuente todavía                                  | `src/lib/quotes/corridors.ts`                                            |
 | Aeropuertos               | OurAirports, en un JSON del repo, solo del servidor                                             | `src/lib/vuelos`, `herramientas/aeropuertos`                             |
+| Aviones en vivo           | adsb.lol, desde el servidor; el mapa es MapLibre con mosaicos de OpenFreeMap                    | `src/lib/vuelos/adsb.ts`, `src/components/vuelos/radar.tsx`              |
 | CI                        | GitHub Actions: lint, tests, build, typecheck; migraciones + RLS + integridad sobre Postgres 16 | `.github/workflows/ci.yml`                                               |
 | Migraciones en producción | GitHub Actions con el CLI de Supabase, al mergear                                               | `.github/workflows/migraciones.yml`                                      |
 
@@ -35,8 +36,9 @@ vuelve a ellos por un link con un token.
 | `/guia/[slug]/planificar`     | El formulario del viaje                     | Dinámica                                                                             | Sí, con caché de 1 h |
 | `/viaje/[editToken]`          | Dashboard privado                           | Dinámica, sin caché                                                                  | Sí                   |
 | `/viaje/ver/[shareSlug]`      | Vista compartida, solo lectura              | Dinámica, sin caché                                                                  | Sí                   |
-| `/vuelos`                     | "Salgo desde": el aeropuerto de salida      | Dinámica, sin caché (lee la cookie y la ubicación)                                   | No                   |
+| `/vuelos`                     | El radar en vivo y "Salgo desde"            | Dinámica, sin caché (lee la cookie y la ubicación); el radar, en `<Suspense>`        | No                   |
 | `/api/aeropuertos?q=`         | La búsqueda del selector, en JSON           | Dinámica; la CDN la guarda un día                                                    | No                   |
+| `/api/vuelos/en-vivo`         | Los aviones de una zona del radar, en JSON  | Dinámica; la CDN la guarda 15 segundos                                               | No                   |
 | `/robots.txt`, `/sitemap.xml` | Para buscadores                             | Estáticos                                                                            | No                   |
 
 Las páginas de guía no dependen de la base a propósito: si Supabase se cae, la
@@ -69,6 +71,13 @@ guardado se superpone encima.
 2. Elegir es un formulario con `elegirOrigenAction`, que valida el código
    contra la lista y lo guarda en la cookie `origen` (`origen.ts`). "Olvidar"
    la borra. Los dos redirigen a `/vuelos`.
+
+**El radar** (`src/components/vuelos/radar.tsx`, spec 17.5): el servidor
+trae la primera zona —la del aeropuerto de quien mira— con `traerZona`
+(`src/lib/vuelos/adsb.ts`) y la manda con la página. Después, el navegador pide
+`/api/vuelos/en-vivo` cada 15 segundos con la pestaña a la vista, y otra zona
+cuando el mapa se mueve lejos. Las zonas son puntos de una grilla de un grado
+(`zona.ts`), para que la caché las comparta.
 
 **Editar** (`mutate.ts`): cada tilde o cantidad es una Server Action que
 resuelve el token contra la base, verifica que el ítem o el gasto pertenezca al
@@ -135,7 +144,7 @@ psql -v ON_ERROR_STOP=1 -f supabase/tests/integridad.sql    # datos maestros
 - **Monitoreo de errores.** Hoy los errores quedan en los logs de Vercel; un
   servicio de reporte (con la misma redacción de tokens que analytics) daría
   alertas.
-- **La sección de vuelos** va por pasos: en vivo, aeropuertos, rutas, precios
-  y alertas, uno por PR (spec, 17.4).
+- **La sección de vuelos** sigue por pasos: aeropuertos, rutas, precios y
+  alertas, uno por PR (spec, 17.4).
 - **Retención de viajes.** No vencen solos; `purgar_viajes_terminados` existe
   para cuando haga falta.

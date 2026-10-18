@@ -5,7 +5,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatAge,
+  formatAltitude,
   formatCategory,
+  formatCount,
   formatDate,
   formatDateRange,
   formatDistance,
@@ -13,6 +15,7 @@ import {
   formatMoney,
   formatQuote,
   formatRate,
+  formatSpeed,
   formatTripType,
   formatWeight,
   MONEDAS_CON_CENTAVOS,
@@ -93,6 +96,15 @@ describe("formatDistance", () => {
 
   it("no muestra cero kilómetros", () => {
     expect(formatDistance(0.3)).toBe("menos de 1 km");
+  });
+});
+
+describe("formatCount, formatAltitude y formatSpeed", () => {
+  it("separan los miles con punto y no muestran decimales", () => {
+    expect(formatCount(5963)).toBe("5.963");
+    expect(formatCount(42)).toBe("42");
+    expect(formatAltitude(10670)).toBe("10.670 m");
+    expect(formatSpeed(833.4)).toBe("833 km/h");
   });
 });
 

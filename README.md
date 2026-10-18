@@ -85,9 +85,14 @@ experimento, con los links de afiliado de la sección de vuelos.
 
 Una sección nueva, `/vuelos`, para planear desde la ciudad de cada uno: qué está
 volando, a dónde se llega y cuánto cuesta (spec, sección 17). Va por pasos, un
-PR cada uno. El primero ya está: los aeropuertos del mundo, la sugerencia del
-tuyo según tu conexión y el selector "Salgo desde". La página todavía no se
-enlaza ni se indexa.
+PR cada uno. Ya están:
+
+- los aeropuertos del mundo, la sugerencia del tuyo según tu conexión y el
+  selector "Salgo desde";
+- el radar en vivo: los aviones alrededor de tu aeropuerto, que se actualizan
+  cada 15 segundos, y el total del mundo, con datos de adsb.lol.
+
+Se enlaza desde la portada.
 
 ## Stack
 
@@ -99,6 +104,8 @@ enlaza ni se indexa.
 - **cobe** para el globo interactivo de la landing y **Leaflet** para el mapa
   de destinos — los dos se cargan solo en el cliente, y Leaflet además dentro
   del efecto: lee `window` al evaluarse y rompe el prerender si se importa arriba
+- **MapLibre** con los mosaicos de **OpenFreeMap** para el radar de vuelos —
+  también dentro del efecto, y con su worker servido por el bundler
 - **react-day-picker** para el calendario y **date-fns** para las fechas
 - **Vercel Web Analytics**, sin cookies
 - **Vitest** para los tests de los motores y unos pocos de componentes
@@ -331,14 +338,16 @@ src/
 │   ├── viaje/
 │   │   ├── [editToken]/     # dashboard privado
 │   │   └── ver/[shareSlug]/ # vista compartida, solo lectura
-│   ├── vuelos/          # "Salgo desde": el aeropuerto de salida (sección 17)
-│   └── api/aeropuertos/ # la búsqueda del selector, cacheada en la CDN
+│   ├── vuelos/          # el radar en vivo y "Salgo desde" (sección 17)
+│   └── api/
+│       ├── aeropuertos/     # la búsqueda del selector, cacheada en la CDN
+│       └── vuelos/en-vivo/  # los aviones de una zona del radar
 ├── components/
 │   ├── landing/         # globo y formulario de viaje nuevo
 │   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
 │   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
 │   ├── trip/            # listas, totales, controles de compartir
-│   ├── vuelos/          # buscador y opciones de aeropuerto
+│   ├── vuelos/          # el radar, el buscador y las opciones de aeropuerto
 │   ├── analytics.tsx    # Vercel Analytics sin los links privados
 │   └── ui/              # componentes de Shadcn
 ├── content/guias/       # contenido editorial de las guías (sección 8.2)
@@ -355,7 +364,7 @@ src/
     ├── prepare/         # el año climático de la página 3 (sección 9)
     ├── quotes/          # dolarapi: fetch, mapeo y spread
     ├── trips/           # Server Actions, validación, lectura, escrituras y cupo
-    ├── vuelos/          # aeropuertos, búsqueda, cercanía, ubicación y la cookie de origen
+    ├── vuelos/          # aeropuertos, búsqueda, cercanía, ubicación, cookie y aviones en vivo
     ├── supabase/        # clientes, lectura de referencia y su caché
     ├── seguridad/       # headers HTTP y redacción de URLs
     ├── sitio/           # dominio público, para robots y sitemap

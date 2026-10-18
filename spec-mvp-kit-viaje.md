@@ -2282,9 +2282,10 @@ condiciones del dueño: presupuesto cero por ahora, afiliados como experimento
 
 - **Una tabla con todos los vuelos del mundo no le sirve a nadie.** En el aire
   hay entre 10.000 y 20.000 aviones a la vez: una tabla así no se puede leer ni
-  buscar, y en el celular no entra. En su lugar, un mapa en vivo con todos los
-  aviones, unos pocos números globales y tablas acotadas: lo que vuela desde un
-  aeropuerto, o en una ruta.
+  buscar, y en el celular no entra. En su lugar, un mapa en vivo con los
+  aviones —que terminó siendo un radar por zonas, porque la fuente gratuita no
+  da todos a la vez (17.5)—, unos pocos números globales y tablas acotadas: lo
+  que vuela desde un aeropuerto, o en una ruta.
 - **El comparador no vende pasajes: deriva.** Muestra precios de referencia,
   con su antigüedad —como las cotizaciones—, y manda a comprar a otro sitio por
   un link de afiliado.
@@ -2294,11 +2295,11 @@ condiciones del dueño: presupuesto cero por ahora, afiliados como experimento
 
 Tres capas, cada una responde una pregunta, como el resto del sitio:
 
-| Capa        | Pregunta                 | Qué tiene                                                                                   |
-| ----------- | ------------------------ | ------------------------------------------------------------------------------------------- |
-| **En vivo** | ¿Qué está pasando ahora? | El mapa del mundo con los aviones en el aire, un contador y lo que vuela en cada aeropuerto |
-| **Rutas**   | ¿Cómo llego?             | Las conexiones desde tu aeropuerto: directo o con una escala                                |
-| **Precios** | ¿Cuánto sale?            | El calendario de precios por fecha, la comparación entre rutas y aerolíneas, y las alertas  |
+| Capa        | Pregunta                 | Qué tiene                                                                                                 |
+| ----------- | ------------------------ | --------------------------------------------------------------------------------------------------------- |
+| **En vivo** | ¿Qué está pasando ahora? | Un radar con los aviones alrededor de tu aeropuerto, el total del mundo y lo que vuela en cada aeropuerto |
+| **Rutas**   | ¿Cómo llego?             | Las conexiones desde tu aeropuerto: directo o con una escala                                              |
+| **Precios** | ¿Cuánto sale?            | El calendario de precios por fecha, la comparación entre rutas y aerolíneas, y las alertas                |
 
 Y dónde vive cada cosa: la sección `/vuelos`; en cada guía, un bloque "Cómo
 llegar desde tu ciudad", con la ruta y el precio hasta la ciudad base, y en el
@@ -2307,15 +2308,15 @@ gasto más grande del viaje.
 
 ### 17.2 Fuentes, licencias y costos
 
-| Para qué        | Fuente                                                   | Hoy                | Al lanzar                                                                      |
-| --------------- | -------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
-| Aeropuertos     | OurAirports, de dominio público                          | Gratis             | Gratis                                                                         |
-| Tu ciudad       | La ubicación aproximada que agrega Vercel a cada request | Gratis             | Incluido                                                                       |
-| Mapas           | MapLibre con OpenFreeMap, sin clave y con uso comercial  | Gratis             | Gratis                                                                         |
-| Aviones en vivo | adsb.lol, y la ruta de cada vuelo por su número          | Gratis             | Hay que confirmar que la licencia admite uso comercial; si no, una fuente paga |
-| Rutas y precios | Travelpayouts, la red de afiliados de Aviasales          | Gratis, con cuenta | Gratis; paga comisión                                                          |
-| Mails           | Un servicio con plan gratuito                            | Gratis             | Gratis hasta varios miles por mes                                              |
-| Hosting         | Vercel                                                   | Plan Hobby         | Plan Pro, unos 20 dólares por mes                                              |
+| Para qué        | Fuente                                                   | Hoy                | Al lanzar                                                                |
+| --------------- | -------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------ |
+| Aeropuertos     | OurAirports, de dominio público                          | Gratis             | Gratis                                                                   |
+| Tu ciudad       | La ubicación aproximada que agrega Vercel a cada request | Gratis             | Incluido                                                                 |
+| Mapas           | MapLibre con OpenFreeMap, sin clave y con uso comercial  | Gratis             | Gratis                                                                   |
+| Aviones en vivo | adsb.lol, y la ruta de cada vuelo por su número          | Gratis             | Gratis: su licencia, ODbL, admite uso comercial citando la fuente (17.5) |
+| Rutas y precios | Travelpayouts, la red de afiliados de Aviasales          | Gratis, con cuenta | Gratis; paga comisión                                                    |
+| Mails           | Un servicio con plan gratuito                            | Gratis             | Gratis hasta varios miles por mes                                        |
+| Hosting         | Vercel                                                   | Plan Hobby         | Plan Pro, unos 20 dólares por mes                                        |
 
 Lo que no existe gratis, y qué se hace en su lugar:
 
@@ -2331,7 +2332,8 @@ Lo que no existe gratis, y qué se hace en su lugar:
 
 Dos condiciones para encender los afiliados (17.4): el plan Hobby de Vercel es
 para uso personal y no comercial, así que un sitio con links de afiliado pasa
-al plan Pro, y la licencia de adsb.lol tiene que estar confirmada. La cuenta de
+al plan Pro, y adsb.lol tiene que saber que lo usamos: su licencia lo permite,
+pero pide que le avisen quién lo usa en producción (17.5). La cuenta de
 Travelpayouts la crea el dueño, y su clave va a las variables de entorno de
 Vercel, nunca a un chat ni al repo. Hasta entonces se construye con datos de
 prueba.
@@ -2432,6 +2434,7 @@ renueva.
 
 Todavía no se indexa ni se enlaza (`noindex`, fuera del sitemap y del menú):
 hasta que la sección tenga más que el selector, no hay nada que buscar ahí.
+(Desde el radar, sí: 17.5.)
 Lo que se escribe en el buscador sale de la URL antes de llegar a analytics,
 porque suele ser la ciudad donde vive cada uno (`redactarUrl`), y `/api/` queda
 fuera de los buscadores (`robots.ts`).
@@ -2441,11 +2444,9 @@ fuera de los buscadores (`robots.ts`).
 Un PR por paso, cada uno usable por sí solo:
 
 1. ~~La base: los aeropuertos, tu ciudad y "Salgo desde"~~ (17.3).
-2. **En vivo.** El mapa del mundo con los aviones en el aire y el contador,
-   actualizado cada 10 a 15 segundos desde una caché que comparten todos los
-   visitantes, para no saturar la fuente gratuita. Va enseguida, aunque no sea
-   lo más útil para planear: es la parte curiosa, la que hace que alguien
-   entre. Con él, `/vuelos` se enlaza y se indexa.
+2. ~~En vivo~~: el radar por zonas, con el total del mundo (17.5). Fue
+   enseguida, aunque no sea lo más útil para planear: es la parte curiosa, la
+   que hace que alguien entre. Con él, `/vuelos` se enlaza y se indexa.
 3. **Aeropuertos.** La página de cada aeropuerto, con lo que vuela ahora desde
    y hacia él, y sus rutas.
 4. **Rutas.** El mapa de conexiones, en `/vuelos` y en cada guía.
@@ -2459,3 +2460,92 @@ Un PR por paso, cada uno usable por sí solo:
    sección 3 siga en pie.
 7. **Lanzamiento,** cuando lo decida el dueño: plan Pro de Vercel, afiliados
    encendidos y licencias confirmadas (17.2).
+
+### 17.5 En vivo: el radar por zonas
+
+**Lo que dio la fuente.** La API pública de adsb.lol no da todos los aviones
+del mundo a la vez. Da los que están a menos de 250 millas náuticas —463 km— de
+un punto, y el total que ve en el mundo (`/0/me`: unos seis mil, de madrugada
+en América). La lista global completa queda para quien le aporta datos con una
+antena propia, y avisa que más adelante va a pedir una clave que se consigue
+así. Su licencia es ODbL, la de OpenStreetMap: se puede usar con fines
+comerciales citando la fuente, y con eso se cerró la duda de 17.2. Pide,
+además, que le avisen quién la usa en producción.
+
+Con eso, el "mapa del mundo con todos los aviones" de 17.1 no se podía hacer
+gratis. Entre un radar por zonas, una antena propia y una fuente paga, el dueño
+eligió el radar: es gratis hoy, y si más adelante se quiere el mapa completo, la
+antena —una Raspberry Pi con un receptor y una antena— lo habilita sin tocar el
+resto.
+
+**Las zonas.** El radar arranca en el aeropuerto de quien mira —el elegido, el
+sugerido por la conexión o, sin ninguno, Ezeiza— y muestra los aviones de su
+zona: un círculo de 463 km con el centro en una grilla de un grado
+(`src/lib/vuelos/zona.ts`). Al mover el mapa, carga la zona de la grilla más
+cercana al centro. La grilla está por la caché: todos los que miran Buenos
+Aires piden la misma URL, y adsb.lol recibe un pedido por zona, no uno por
+visitante. Por eso la API solo acepta centros de la grilla escritos de una sola
+forma: cualquier variante sería otra URL que la caché no puede ahorrar.
+
+**La caché, y el límite.** En las pruebas, ocho pedidos en siete segundos
+alcanzaron para que adsb.lol contestara 429. Hay tres capas:
+
+- `/api/vuelos/en-vivo` se guarda en la CDN de Vercel 15 segundos, y 30 más
+  mientras se renueva.
+- Detrás, el `fetch` a adsb.lol se guarda en la caché de datos de Next el mismo
+  tiempo, y el total del mundo, un minuto, compartido entre todas las zonas.
+  Next solo guarda las respuestas 200: un 429 no pisa los datos que había.
+- Si adsb.lol igual pide esperar, la API contesta 503 con `Retry-After: 60`, la
+  CDN lo guarda ese minuto y el radar se frena: todos los que miran esa zona
+  esperan juntos.
+
+El radar pide cada 15 segundos, y solo con la pestaña a la vista.
+
+**Qué se muestra.** Los aviones en vuelo con una posición de menos de un
+minuto. Los que están en tierra no, y tampoco los que pidieron no aparecer —la
+lista LADD de EE.UU. y las direcciones PIA—, aunque adsb.lol los publique. La
+altitud va en metros y la velocidad en km/h, como el resto del sitio, y los
+textos que vienen de los transpondedores se aceptan solo con forma de vuelo,
+modelo o matrícula. Cada avión se dibuja girado hacia su rumbo; al tocarlo, una
+ficha dice su vuelo, matrícula, modelo, altitud, velocidad y hacia dónde va.
+
+**El mapa.** MapLibre 6 con el estilo "positron" de OpenFreeMap, que encaja con
+el tema claro del sitio:
+
+- Las etiquetas salen en castellano cuando OpenStreetMap las tiene
+  (`name:es`): "Alemania", "Londres".
+- El norte queda siempre arriba —no gira ni se inclina—, y los gestos son
+  cooperativos: la página baja con la rueda o con un dedo, y el mapa se mueve
+  con Ctrl o con dos dedos.
+- Su worker no se encuentra solo cuando Next empaqueta la librería: se lo da
+  `setWorkerUrl`, con la dirección que arma el bundler con `new URL`, como en
+  la guía de Next.
+- La CSP suma `tiles.openfreemap.org` en `connect-src` e `img-src`. Los aviones
+  no: el navegador los pide al propio sitio.
+
+Si un arrastre se suelta afuera del mapa, MapLibre lo cierra recién cuando el
+mouse vuelve a pasar por encima, y recién ahí carga la zona nueva. Es de la
+librería, no se traba, y no se tocó.
+
+**La zona lleva el nombre de un aeropuerto.** "Zona: hasta 463 km alrededor de
+London Gatwick Airport (LGW)", y no el de su ciudad: OurAirports pone el
+municipio, que a veces no dice nada —el aeropuerto de Kassel figura en
+"Calden"— y a veces está en inglés.
+
+**Accesibilidad.** Debajo del mapa, la lista de los 50 aviones más cercanos al
+centro, con un botón para verlos en el mapa. Lo que cambia —la zona,
+"buscando"— se anuncia; el refresco de cada 15 segundos no cambia el texto y no
+interrumpe.
+
+**Sin JavaScript.** El primer pedido lo hace el servidor, así que los números
+y la lista llegan con la página. Pero llegan por el streaming de React, que
+necesita JavaScript para mostrarse: sin JavaScript, la página dice que el radar
+lo necesita, y "Salgo desde" anda igual.
+
+**Enlazado.** `/vuelos` deja de ser `noindex`, entra al sitemap y se enlaza
+desde la portada, abajo del botón de los destinos: como enlace y no como un
+segundo botón, porque el hero sigue invitando a una sola cosa.
+
+**Lo que queda.** Escribirle a adsb.lol que el sitio usa su API, como pide: lo
+hace el dueño ([`docs/administrar.md`](docs/administrar.md)). Y si un día se
+quiere el mapa del mundo completo, la antena.

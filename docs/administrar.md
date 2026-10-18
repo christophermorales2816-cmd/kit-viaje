@@ -83,6 +83,16 @@ Una tarde, en este orden. Cada punto cierra una puerta concreta.
 - [ ] **Advisors → Security Advisor**: correrlo. Tiene que dar cero errores.
 - [ ] **Organization → Members**: solo quien lo necesita.
 
+### adsb.lol (los aviones del radar)
+
+- [ ] **Avisarle que el sitio usa su API**, como pide su documentación
+      ([api.adsb.lol/docs](https://api.adsb.lol/docs)), por el contacto que
+      figura en [adsb.lol](https://adsb.lol). Alcanza con un mensaje corto: qué
+      es el sitio y su dirección, qué pide (`/v2/point` y `/0/me`), cada cuánto
+      (un pedido por zona cada 15 segundos como mucho, con caché) y que la
+      página cita la fuente. Si algo les molesta, saben a quién escribirle antes
+      de cortarnos el acceso.
+
 > Las pantallas de estos servicios cambian de nombre con el tiempo. Si un
 > nombre no coincide, buscá la sección por lo que hace: el concepto es el
 > mismo.
@@ -187,6 +197,14 @@ reactiva desde el dashboard.
 
 En la duda, rotá: no cuesta nada y cierra la puerta aunque no estés seguro de
 que estuviera abierta.
+
+**El radar de vuelos dice que no puede traer los aviones.**
+El resto de la página sigue andando: solo el radar depende de adsb.lol. Si
+[api.adsb.lol/docs](https://api.adsb.lol/docs) no carga, adsb.lol está caído y
+vuelve solo. Si carga, puede que haya pedido una pausa (429): el radar se frena
+un minuto y sigue, sin hacer nada. Si pasa todo el tiempo, adsb.lol empezó a
+limitar más o a pedir clave, que se consigue aportando datos con una antena
+(spec, 17.5): es un cambio en `src/lib/vuelos/adsb.ts`, por PR.
 
 **Alguien está creando viajes en masa.**
 La app ya lo frena: 30 viajes por hora por conexión y 2.000 por hora en total

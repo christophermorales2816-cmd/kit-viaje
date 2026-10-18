@@ -153,6 +153,10 @@ Lo que OurAirports no tiene se suma en código, con tests:
 - Los nombres de país que las guías escriben distinto que Intl ("Rumania",
   "Costa de Marfil"), en `src/lib/vuelos/aeropuertos.ts`.
 
+Los aviones del radar no se guardan en ningún lado: vienen de adsb.lol en cada
+pedido y solo pasan por cachés de segundos (spec, 17.5). Lo que llega al
+navegador de cada uno está en `AvionEnVuelo`, en `src/lib/vuelos/tipos.ts`.
+
 El JSON no se edita a mano: se regenera (ver
 [`administrar.md`](administrar.md#3-la-rutina)). Y el aeropuerto que cada uno
 elige como origen tampoco está en la base: vive en una cookie de su navegador

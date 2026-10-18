@@ -1,6 +1,7 @@
 import "server-only";
 
 import { AEROPUERTOS, ORDEN_POR_TIPO, type Aeropuerto } from "./aeropuertos";
+import { distanciaKm } from "./geo";
 
 /**
  * Qué aeropuerto le sugerimos a alguien según dónde está (spec, 17.3).
@@ -28,9 +29,6 @@ export const RADIO_KM = 150;
 /** Cuántas alternativas se ofrecen, además de la sugerida. */
 export const ALTERNATIVAS = 4;
 
-const RADIO_DE_LA_TIERRA_KM = 6371;
-const RAD = Math.PI / 180;
-
 export interface AeropuertoCercano {
   aeropuerto: Aeropuerto;
   distanciaKm: number;
@@ -39,25 +37,6 @@ export interface AeropuertoCercano {
 export interface Sugerencia {
   sugerido: AeropuertoCercano;
   otros: AeropuertoCercano[];
-}
-
-/**
- * Distancia sobre la esfera, en kilómetros (fórmula del haversine).
- *
- * La Tierra no es una esfera, pero para elegir aeropuerto el error —menos del
- * medio por ciento— no cambia nada.
- */
-export function distanciaKm(
-  [lat1, lon1]: readonly [number, number],
-  [lat2, lon2]: readonly [number, number],
-): number {
-  const dLat = (lat2 - lat1) * RAD;
-  const dLon = (lon2 - lon1) * RAD;
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(lat1 * RAD) * Math.cos(lat2 * RAD) * Math.sin(dLon / 2) ** 2;
-
-  return 2 * RADIO_DE_LA_TIERRA_KM * Math.asin(Math.min(1, Math.sqrt(a)));
 }
 
 /** Todos los aeropuertos a menos de `radioKm`, del más cercano al más lejano. */

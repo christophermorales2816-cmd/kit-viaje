@@ -5,12 +5,10 @@ import {
   ALTERNATIVAS,
   RADIO_KM,
   aeropuertosCercanos,
-  distanciaKm,
   sugerirOrigen,
 } from "./cercanos";
 
 const BUENOS_AIRES: [number, number] = [-34.6037, -58.3816];
-const MADRID: [number, number] = [40.4168, -3.7038];
 const LONDRES: [number, number] = [51.5074, -0.1278];
 const TRISTAN_DA_CUNHA: [number, number] = [-37.1, -12.3];
 
@@ -18,25 +16,6 @@ const TRISTAN_DA_CUNHA: [number, number] = [-37.1, -12.3];
 function codigos(lista: { aeropuerto: { iata: string } }[]): string[] {
   return lista.map(({ aeropuerto }) => aeropuerto.iata);
 }
-
-describe("distanciaKm", () => {
-  it("mide Buenos Aires–Madrid como el resto del mundo", () => {
-    expect(distanciaKm(BUENOS_AIRES, MADRID)).toBeCloseTo(10_045, -1);
-  });
-
-  it("es cero de un punto a sí mismo y no depende del sentido", () => {
-    expect(distanciaKm(MADRID, MADRID)).toBe(0);
-    expect(distanciaKm(MADRID, BUENOS_AIRES)).toBeCloseTo(
-      distanciaKm(BUENOS_AIRES, MADRID),
-    );
-  });
-
-  it("cruza el antimeridiano por el camino corto", () => {
-    // Funafuti y Apia, a cada lado de la línea: unos mil kilómetros, no la
-    // vuelta al mundo.
-    expect(distanciaKm([-8.52, 179.2], [-13.83, -171.76])).toBeLessThan(1_200);
-  });
-});
 
 describe("aeropuertosCercanos", () => {
   it("trae los del radio, del más cercano al más lejano", () => {

@@ -246,13 +246,26 @@ export default function Home() {
               blanco sobre slate en vez de usar el naranja del marcador — ese
               naranja significa "acá hay un destino" en el globo.
             */}
-            <Button
-              asChild
-              size="lg"
-              className="bg-white text-slate-950 hover:bg-slate-200"
-            >
-              <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
-            </Button>
+            <div className="flex flex-col items-center gap-3 md:items-start">
+              <Button
+                asChild
+                size="lg"
+                className="bg-white text-slate-950 hover:bg-slate-200"
+              >
+                <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
+              </Button>
+
+              {/*
+                El radar de vuelos, como enlace y no como un segundo botón: el
+                hero sigue invitando a una sola cosa, elegir un destino.
+              */}
+              <Link
+                href="/vuelos"
+                className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
+              >
+                O mirá qué está volando ahora cerca tuyo
+              </Link>
+            </div>
           </div>
 
           <div className="flex w-full max-w-[460px] flex-col gap-2">

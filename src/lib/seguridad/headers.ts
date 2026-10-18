@@ -34,6 +34,14 @@ interface Header {
 const MOSAICOS_DEL_MAPA = "https://*.basemaps.cartocdn.com";
 
 /**
+ * El mapa del radar de vuelos (src/components/vuelos/radar.tsx): MapLibre
+ * pide el estilo, los mosaicos, las fuentes y los íconos con fetch, y algunos
+ * los dibuja como imágenes. Los aviones no salen de acá: el navegador los pide
+ * a /api/vuelos/en-vivo, en el mismo dominio.
+ */
+const MAPA_DEL_RADAR = "https://tiles.openfreemap.org";
+
+/**
  * Vercel Web Analytics carga su script desde el mismo dominio en producción
  * (`/_vercel/insights/script.js`); el de depuración viene de acá.
  */
@@ -82,14 +90,19 @@ export function contentSecurityPolicy(entorno: Entorno): string {
         "data:",
         "blob:",
         MOSAICOS_DEL_MAPA,
+        MAPA_DEL_RADAR,
         ...extra(BARRA_DE_PREVIEW.img),
       ],
     ],
     // next/font sirve las fuentes desde el propio dominio.
     ["font-src", ["'self'", ...extra(BARRA_DE_PREVIEW.font)]],
-    // Las Server Actions y analytics van al mismo dominio; Supabase y las
-    // cotizaciones se consultan desde el servidor, nunca desde el navegador.
-    ["connect-src", ["'self'", ...extra(BARRA_DE_PREVIEW.connect)]],
+    // Las Server Actions y analytics van al mismo dominio; Supabase, las
+    // cotizaciones y adsb.lol se consultan desde el servidor, nunca desde el
+    // navegador. Lo único de afuera es el mapa del radar.
+    [
+      "connect-src",
+      ["'self'", MAPA_DEL_RADAR, ...extra(BARRA_DE_PREVIEW.connect)],
+    ],
     ["frame-src", preview ? BARRA_DE_PREVIEW.frame : ["'none'"]],
     ["worker-src", ["'self'", "blob:"]],
     ["object-src", ["'none'"]],
