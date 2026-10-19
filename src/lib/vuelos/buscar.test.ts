@@ -8,7 +8,8 @@ import {
   buscarAeropuertos,
   normalizar,
 } from "./buscar";
-import { RADIO_KM, distanciaKm } from "./cercanos";
+import { RADIO_KM } from "./cercanos";
+import { distanciaKm } from "./geo";
 import { NOMBRES_EN_CASTELLANO } from "./nombres-en-castellano";
 
 /** Los códigos que devuelve una búsqueda, en orden. */

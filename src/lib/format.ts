@@ -100,6 +100,28 @@ export function formatDistance(km: number): string {
   return `${new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(km)} km`;
 }
 
+/** Una cantidad, con separador de miles: "5.963". */
+export function formatCount(cantidad: number): string {
+  return new Intl.NumberFormat(LOCALE, { maximumFractionDigits: 0 }).format(
+    cantidad,
+  );
+}
+
+/**
+ * La altitud de un avión, en metros: "10.670 m".
+ *
+ * Las fuentes la dan en pies, como la aviación; el sitio usa metros, como el
+ * resto de sus medidas (src/lib/vuelos/adsb.ts hace el cambio).
+ */
+export function formatAltitude(metros: number): string {
+  return `${formatCount(metros)} m`;
+}
+
+/** Una velocidad en km/h: "833 km/h". */
+export function formatSpeed(kmPorHora: number): string {
+  return `${formatCount(kmPorHora)} km/h`;
+}
+
 /**
  * Las monedas cuyos precios se muestran con centavos.
  *

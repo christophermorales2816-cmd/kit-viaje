@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 
@@ -7,9 +8,16 @@ import {
   FichaDeAeropuerto,
   OpcionDeAeropuerto,
 } from "@/components/vuelos/opcion-de-aeropuerto";
+import { Radar, type Foco } from "@/components/vuelos/radar";
 import { formatDate } from "@/lib/format";
 import { olvidarOrigenAction } from "@/lib/vuelos/actions";
-import { AEROPUERTOS_DESCARGADOS, resumir } from "@/lib/vuelos/aeropuertos";
+import { traerZona } from "@/lib/vuelos/adsb";
+import {
+  AEROPUERTOS_DESCARGADOS,
+  aeropuertoPorIata,
+  resumir,
+  type Aeropuerto,
+} from "@/lib/vuelos/aeropuertos";
 import {
   LARGO_MAXIMO_DE_BUSQUEDA,
   buscarAeropuertos,
@@ -18,29 +26,39 @@ import { sugerirOrigen, type Sugerencia } from "@/lib/vuelos/cercanos";
 import { COOKIE_DE_ORIGEN, origenGuardado } from "@/lib/vuelos/origen";
 import type { AeropuertoResumido } from "@/lib/vuelos/tipos";
 import { ubicacionAproximada } from "@/lib/vuelos/ubicacion";
+import { centroDeZona } from "@/lib/vuelos/zona";
 
 /**
- * Vuelos, por ahora con una sola pieza: "Salgo desde" (spec, 17.3).
+ * Vuelos: el radar en vivo y "Salgo desde" (spec, 17.3 y 17.5).
  *
- * Es la base de la sección. Lo que viene —qué está volando, las rutas, los
- * precios (17.4)— sale del aeropuerto que se elige acá, así que esta página
- * resuelve primero eso: sugiere uno según la conexión, ofrece los de
- * alrededor y deja buscar cualquier otro.
+ * Arriba, lo que vuela ahora alrededor del aeropuerto de quien mira: es lo
+ * curioso, lo que hace que alguien entre. Abajo, la elección de ese
+ * aeropuerto, que es la base de lo que viene —las rutas, los precios (17.4)—:
+ * se sugiere uno según la conexión, se ofrecen los de alrededor y se puede
+ * buscar cualquier otro.
  *
  * Es dinámica: lee la cookie del origen y la ubicación de la request, así que
- * se arma en cada visita y Next la manda sin caché compartida. Lo que se
- * escribe en el buscador va por /api/aeropuertos, que sí se cachea.
- *
- * No se indexa ni se enlaza todavía: hasta que la sección tenga más que el
- * selector, no hay nada que un buscador o el menú vengan a buscar acá.
+ * se arma en cada visita y Next la manda sin caché compartida. El radar va en
+ * un `<Suspense>`: la página sale sin esperar a adsb.lol, y los aviones
+ * llegan atrás. Lo que se escribe en el buscador va por /api/aeropuertos, y lo
+ * que pide el radar después, por /api/vuelos/en-vivo; los dos se cachean.
  */
 
 export const metadata: Metadata = {
-  title: "Vuelos desde tu ciudad",
+  title: "Vuelos en vivo desde tu ciudad",
   description:
-    "Elegí el aeropuerto del que salís: lo sugerimos según tu conexión y podés buscar cualquiera del mundo.",
-  robots: { index: false, follow: false },
+    "Los aviones que vuelan ahora cerca tuyo, en un mapa que se actualiza cada 15 segundos, y el aeropuerto del que salís.",
 };
+
+/**
+ * Dónde arranca el radar si no hay ni origen elegido ni ubicación —en local,
+ * o si Vercel no la informa—: Buenos Aires, donde nació el sitio.
+ */
+const FOCO_POR_DEFECTO = "EZE";
+
+function foco(aeropuerto: Aeropuerto): Foco {
+  return { lat: aeropuerto.lat, lon: aeropuerto.lon, iata: aeropuerto.iata };
+}
 
 export default async function VuelosPage({
   searchParams,
@@ -64,6 +82,11 @@ export default async function VuelosPage({
     resumir(aeropuerto),
   );
 
+  const enfocado =
+    origen ??
+    sugerencia?.sugerido.aeropuerto ??
+    aeropuertoPorIata(FOCO_POR_DEFECTO)!;
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10 px-6 py-12">
       <header className="flex flex-col gap-2">
@@ -72,10 +95,27 @@ export default async function VuelosPage({
         </h1>
 
         <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-          Elegí el aeropuerto del que salís. Desde ahí, esta sección te va a
-          mostrar qué está volando, a dónde llegás y cuánto cuesta.
+          Lo que vuela ahora cerca tuyo y el aeropuerto del que salís. Pronto,
+          también a dónde llegás desde ahí y cuánto cuesta.
         </p>
       </header>
+
+      <section aria-labelledby="en-vivo" className="flex flex-col gap-4">
+        <h2 id="en-vivo" className="text-lg font-semibold">
+          En vivo
+        </h2>
+
+        <Suspense fallback={<RadarCargando />}>
+          <EnVivo foco={foco(enfocado)} />
+        </Suspense>
+
+        <p className="text-muted-foreground text-xs text-pretty">
+          Los aviones salen de adsb.lol, una red de antenas de voluntarios:
+          cubre muy bien Europa, Estados Unidos y Japón, y con huecos
+          Sudamérica, África y los océanos. Para ver otra zona, mové el mapa. No
+          mostramos los aviones que pidieron no aparecer.
+        </p>
+      </section>
 
       <section aria-labelledby="salgo-desde" className="flex flex-col gap-6">
         <h2 id="salgo-desde" className="text-lg font-semibold">
@@ -112,10 +152,6 @@ export default async function VuelosPage({
 
         <ul className="text-muted-foreground flex flex-col gap-2 text-sm text-pretty">
           <li>
-            <strong className="text-foreground font-medium">En vivo.</strong>{" "}
-            Los aviones que están volando ahora, en un mapa del mundo.
-          </li>
-          <li>
             <strong className="text-foreground font-medium">
               Tu aeropuerto.
             </strong>{" "}
@@ -151,10 +187,67 @@ export default async function VuelosPage({
             OurAirports
           </a>
           , de dominio público, actualizados el{" "}
-          {formatDate(AEROPUERTOS_DESCARGADOS)}.
+          {formatDate(AEROPUERTOS_DESCARGADOS)}. Aviones:{" "}
+          <a
+            href="https://adsb.lol"
+            className="hover:text-foreground underline underline-offset-2"
+          >
+            adsb.lol
+          </a>
+          , con licencia{" "}
+          <a
+            href="https://opendatacommons.org/licenses/odbl/"
+            className="hover:text-foreground underline underline-offset-2"
+          >
+            ODbL
+          </a>
+          . Mapa:{" "}
+          <a
+            href="https://openfreemap.org"
+            className="hover:text-foreground underline underline-offset-2"
+          >
+            OpenFreeMap
+          </a>
+          , con datos de OpenStreetMap.
         </p>
       </div>
     </main>
+  );
+}
+
+/** El primer pedido a adsb.lol, hecho en el servidor: anda sin JavaScript. */
+async function EnVivo({ foco }: { foco: Foco }) {
+  const centro = centroDeZona(foco.lat, foco.lon);
+  const resultado = await traerZona(centro);
+
+  return (
+    <Radar
+      inicial={resultado.ok ? resultado.zona : null}
+      centroInicial={centro}
+      foco={foco}
+    />
+  );
+}
+
+/**
+ * Mientras llega adsb.lol: el mismo alto que el radar, para que nada salte.
+ *
+ * Sin JavaScript, esto es lo único que se ve del radar: lo que trae el
+ * servidor llega por streaming, y mostrarlo necesita JavaScript.
+ */
+function RadarCargando() {
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-muted-foreground text-sm">
+        Buscando los aviones de la zona…
+      </p>
+      <div className="bg-muted text-muted-foreground flex h-[380px] w-full items-center justify-center rounded-xl border p-6 text-center text-sm sm:h-[480px]">
+        <noscript>
+          El radar en vivo necesita JavaScript. Elegir el aeropuerto del que
+          salís, más abajo, anda igual.
+        </noscript>
+      </div>
+    </div>
   );
 }
 

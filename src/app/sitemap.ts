@@ -8,13 +8,15 @@ import { urlDelSitio } from "@/lib/sitio/url";
  *
  * Sale del índice de guías, el mismo que genera las rutas: un país nuevo entra
  * al sitemap sin tocar este archivo. El planificador no entra —es un
- * formulario, no contenido— y los viajes tampoco (ver robots.ts).
+ * formulario, no contenido— y los viajes tampoco (ver robots.ts). Vuelos sí:
+ * el radar cambia todo el día (spec, 17.5).
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const sitio = urlDelSitio() ?? "";
 
   return [
     { url: `${sitio}/`, changeFrequency: "weekly", priority: 1 },
+    { url: `${sitio}/vuelos`, changeFrequency: "daily", priority: 0.7 },
     ...allGuides().flatMap((guia) => [
       {
         url: `${sitio}/guia/${guia.slug}`,

@@ -59,6 +59,20 @@ describe("contentSecurityPolicy", () => {
     );
   });
 
+  it("deja que el radar pida el mapa a OpenFreeMap, y nada más de afuera", () => {
+    const csp = contentSecurityPolicy("production");
+
+    expect(directiva(csp, "connect-src")).toEqual([
+      "'self'",
+      "https://tiles.openfreemap.org",
+    ]);
+    expect(directiva(csp, "img-src")).toContain(
+      "https://tiles.openfreemap.org",
+    );
+    // MapLibre arma su worker desde un blob.
+    expect(directiva(csp, "worker-src")).toContain("blob:");
+  });
+
   it("no manda formularios ni la base de URLs a otro dominio", () => {
     const csp = contentSecurityPolicy("production");
 
