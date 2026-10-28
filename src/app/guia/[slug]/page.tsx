@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { FactsBoard } from "@/components/guia/facts-board";
 import { GuideHighlights } from "@/components/guia/guide-highlights";
@@ -10,6 +10,7 @@ import { PlacesGrid } from "@/components/guia/places-grid";
 import { PlacesMap } from "@/components/guia/places-map";
 import { ScoreBars } from "@/components/guia/score-bars";
 import { Button } from "@/components/ui/button";
+import { getCatalogo } from "@/content/comidas";
 import { allGuides, getGuide } from "@/content/guias";
 
 /**
@@ -56,6 +57,9 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
 
   if (!guia) notFound();
 
+  // "Qué comer" se suma de a tandas (spec, 18): el link, solo si ya está.
+  const comida = getCatalogo(guia.slug);
+
   return (
     <main className="flex flex-1 flex-col items-center gap-16 px-6 py-12 md:gap-24 md:py-16">
       <header className="flex w-full max-w-5xl flex-col gap-8">
@@ -96,6 +100,30 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
       <PlacesGrid places={guia.places} guideSlug={guia.slug} />
 
       <PlacesMap country={guia.country} places={guia.places} />
+
+      {comida && (
+        <Link
+          href={`/que-comer/${guia.slug}`}
+          className="group flex w-full max-w-5xl items-center justify-between gap-6 rounded-2xl border bg-amber-50/60 p-6 transition-colors hover:bg-amber-50 md:p-8"
+        >
+          <span className="flex flex-col gap-1">
+            <span className="text-sm font-medium text-orange-700">
+              Qué comer y beber
+            </span>
+            <span className="text-xl font-semibold tracking-tight text-balance md:text-2xl">
+              Los {comida.platos.length} platos y bebidas de {guia.country}, y
+              dónde los sirven hoy
+            </span>
+            <span className="text-muted-foreground text-sm text-pretty">
+              Qué lleva cada uno, a qué sabe, cuánto sale y si es para tu dieta.
+            </span>
+          </span>
+          <ArrowRight
+            className="size-6 shrink-0 transition-transform group-hover:translate-x-1"
+            aria-hidden="true"
+          />
+        </Link>
+      )}
 
       <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-balance">

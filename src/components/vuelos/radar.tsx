@@ -6,13 +6,17 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { GeoJSONSource, Map as MapaDeMapLibre } from "maplibre-gl";
 
 import {
+  cargarMapLibre,
+  ponerEtiquetasEnCastellano,
+} from "@/components/mapa/maplibre";
+import {
   formatAltitude,
   formatCount,
   formatDistance,
   formatSpeed,
 } from "@/lib/format";
+import { ESTILO_DEL_MAPA, textosDelMapa } from "@/lib/mapa/estilo";
 import {
-  etiquetaEnCastellano,
   geojsonDeAviones,
   geojsonDeZona,
   limitesDeZona,
@@ -34,13 +38,8 @@ import { RADIO_DE_ZONA_KM, centroDeZona, rutaDeZona } from "@/lib/vuelos/zona";
  * CADA_MS mientras la pestaña está a la vista. Al mover el mapa lejos del
  * centro, carga la zona de ahí (src/lib/vuelos/zona.ts).
  *
- * MAPLIBRE SE IMPORTA ADENTRO DEL EFECTO
- *
- * Por lo mismo que Leaflet en el mapa de las guías: lee `window` al evaluarse
- * y un componente de cliente también se renderiza en el servidor. Y su worker,
- * que dibuja los mosaicos, no lo encuentra solo cuando Next empaqueta la
- * librería: busca un archivo al lado de sí misma, y ese archivo no está. Se lo
- * da `setWorkerUrl` con la dirección que arma el bundler con `new URL`.
+ * MapLibre se carga adentro del efecto, por lo mismo que Leaflet en el mapa de
+ * las guías: lee `window` al evaluarse (src/components/mapa/maplibre.ts).
  *
  * EL PRIMER PEDIDO LO HACE EL SERVIDOR
  *
@@ -49,9 +48,6 @@ import { RADIO_DE_ZONA_KM, centroDeZona, rutaDeZona } from "@/lib/vuelos/zona";
  * JavaScript para mostrarse: sin JavaScript, la página dice que el radar lo
  * necesita (src/app/vuelos/page.tsx), y "Salgo desde" sigue andando.
  */
-
-/** OpenFreeMap: mosaicos de OpenStreetMap, gratis y con uso comercial. */
-const ESTILO = "https://tiles.openfreemap.org/styles/positron";
 
 const CADA_MS = 15_000;
 const REINTENTO_MS = 30_000;
@@ -66,21 +62,10 @@ const COLOR_ELEGIDO = "#f97316";
 const SILUETA =
   "M12 2c.8 0 1.3.7 1.3 1.6v5.6l7.7 4.4v2l-7.7-2.4v5.2l2.3 1.8v1.6L12 20.8l-3.6 1v-1.6l2.3-1.8v-5.2L3 15.6v-2l7.7-4.4V3.6C10.7 2.7 11.2 2 12 2z";
 
-/** Los textos de los controles de MapLibre, en castellano. */
-const TEXTOS = {
-  // MapLibre se lo pone al canvas del mapa, para los lectores de pantalla.
-  "Map.Title":
-    "Mapa de los aviones en el aire. La lista de abajo tiene los mismos datos.",
-  "NavigationControl.ZoomIn": "Acercar",
-  "NavigationControl.ZoomOut": "Alejar",
-  "AttributionControl.ToggleAttribution": "Ver las fuentes del mapa",
-  "CooperativeGesturesHandler.WindowsHelpText":
-    "Usá Ctrl y la rueda del mouse para acercar o alejar el mapa",
-  "CooperativeGesturesHandler.MacHelpText":
-    "Usá ⌘ y la rueda del mouse para acercar o alejar el mapa",
-  "CooperativeGesturesHandler.MobileHelpText":
-    "Usá dos dedos para mover el mapa",
-};
+/** MapLibre se lo pone al canvas del mapa, para los lectores de pantalla. */
+const TEXTOS = textosDelMapa(
+  "Mapa de los aviones en el aire. La lista de abajo tiene los mismos datos.",
+);
 
 /** El aeropuerto en el que arranca el mapa. */
 export interface Foco {
@@ -169,21 +154,16 @@ export function Radar({
     let cancelado = false;
 
     void (async () => {
-      const maplibregl = await import("maplibre-gl");
+      const maplibregl = await cargarMapLibre();
 
       if (cancelado) return;
-
-      maplibregl.setWorkerUrl(
-        new URL("maplibre-gl/dist/maplibre-gl-worker.mjs", import.meta.url)
-          .href,
-      );
 
       let instancia: MapaDeMapLibre;
 
       try {
         instancia = new maplibregl.Map({
           container: nodo,
-          style: ESTILO,
+          style: ESTILO_DEL_MAPA,
           bounds: limitesDeZona(centroInicial, RADIO_DE_ZONA_KM),
           fitBoundsOptions: { padding: 16 },
           minZoom: 3,
@@ -214,16 +194,7 @@ export function Radar({
       );
 
       instancia.on("load", () => {
-        for (const capa of instancia.getStyle().layers) {
-          if (capa.type !== "symbol") continue;
-
-          const campo = instancia.getLayoutProperty(capa.id, "text-field");
-          const enCastellano = etiquetaEnCastellano(campo);
-
-          if (enCastellano !== campo) {
-            instancia.setLayoutProperty(capa.id, "text-field", enCastellano);
-          }
-        }
+        ponerEtiquetasEnCastellano(instancia);
 
         instancia.addImage("avion", icono(COLOR), { pixelRatio: 2 });
         instancia.addImage("avion-elegido", icono(COLOR_ELEGIDO), {

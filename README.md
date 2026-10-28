@@ -94,6 +94,16 @@ PR cada uno. Ya están:
 
 Se enlaza desde la portada.
 
+### Qué comer y beber, de a tandas
+
+Una sección nueva, `/que-comer` (spec, sección 18): en cada país, sus platos y
+bebidas con filtros por dieta, picante, precio, momento, lugar y región; la
+ficha de cada uno como un menú, y un mapa de los lugares que lo sirven, que sale
+de OpenStreetMap y se renueva cada doce horas. Las menciones de honor se
+esconden solas si el lugar cierra. Ya están Japón, México y la Argentina; los
+demás países se suman de a tandas. Se enlaza desde la portada y desde la guía
+de cada país.
+
 ## Stack
 
 - **Next.js 16** (App Router, Server Components) sobre Vercel
@@ -104,8 +114,9 @@ Se enlaza desde la portada.
 - **cobe** para el globo interactivo de la landing y **Leaflet** para el mapa
   de destinos — los dos se cargan solo en el cliente, y Leaflet además dentro
   del efecto: lee `window` al evaluarse y rompe el prerender si se importa arriba
-- **MapLibre** con los mosaicos de **OpenFreeMap** para el radar de vuelos —
-  también dentro del efecto, y con su worker servido por el bundler
+- **MapLibre** con los mosaicos de **OpenFreeMap** para el radar de vuelos y el
+  mapa de lugares de "Qué comer" — también dentro del efecto, y con su worker
+  servido por el bundler; los lugares, de **OpenStreetMap** por **Overpass**
 - **react-day-picker** para el calendario y **date-fns** para las fechas
 - **Vercel Web Analytics**, sin cookies
 - **Vitest** para los tests de los motores y unos pocos de componentes
@@ -316,7 +327,8 @@ npm run build       # build de producción
 docs/                    # administración, arquitectura, datos, seguridad
 herramientas/
 ├── corredor/            # generador de las migraciones de cada país
-└── aeropuertos/         # generador de la lista de aeropuertos (OurAirports)
+├── aeropuertos/         # generador de la lista de aeropuertos (OurAirports)
+└── comidas/             # las fotos de los platos, de Wikimedia Commons
 supabase/
 ├── migrations/          # historial versionado del esquema y los datos
 └── tests/
@@ -330,7 +342,7 @@ src/
 │   ├── not-found.tsx    # 404 propio
 │   ├── page.tsx         # 1 · landing: el globo
 │   ├── robots.ts        # todo indexable menos /viaje/ y /api/
-│   ├── sitemap.ts       # las guías, desde el índice de contenido
+│   ├── sitemap.ts       # las guías y los platos, desde el índice de contenido
 │   ├── guia/[slug]/
 │   │   ├── page.tsx     # 2 · guía del país
 │   │   ├── preparar/    # 3 · condiciones actuales
@@ -339,18 +351,26 @@ src/
 │   │   ├── [editToken]/     # dashboard privado
 │   │   └── ver/[shareSlug]/ # vista compartida, solo lectura
 │   ├── vuelos/          # el radar en vivo y "Salgo desde" (sección 17)
+│   ├── que-comer/       # qué comer y beber (sección 18)
+│   │   └── [slug]/          # el catálogo del país; [plato], su ficha,
+│   │                        # y @ficha, la misma ficha en una ventana
 │   └── api/
 │       ├── aeropuertos/     # la búsqueda del selector, cacheada en la CDN
-│       └── vuelos/en-vivo/  # los aviones de una zona del radar
+│       ├── vuelos/en-vivo/  # los aviones de una zona del radar
+│       └── que-comer/lugares/ # los lugares de una celda del mapa
 ├── components/
 │   ├── landing/         # globo y formulario de viaje nuevo
 │   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
 │   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
 │   ├── trip/            # listas, totales, controles de compartir
 │   ├── vuelos/          # el radar, el buscador y las opciones de aeropuerto
+│   ├── comer/           # catálogo, filtros, ficha, mapa de lugares y menciones
+│   ├── mapa/            # la carga de MapLibre, común a los dos mapas
 │   ├── analytics.tsx    # Vercel Analytics sin los links privados
 │   └── ui/              # componentes de Shadcn
-├── content/guias/       # contenido editorial de las guías (sección 8.2)
+├── content/
+│   ├── guias/           # contenido editorial de las guías (sección 8.2)
+│   └── comidas/         # los catálogos de "Qué comer" y sus fotos (sección 18)
 └── lib/
     ├── packing/         # motor de packing (sección 4)
     │   ├── dates.ts     # meses cubiertos y duración, todo en UTC
@@ -365,6 +385,9 @@ src/
     ├── quotes/          # dolarapi: fetch, mapeo y spread
     ├── trips/           # Server Actions, validación, lectura, escrituras y cupo
     ├── vuelos/          # aeropuertos, búsqueda, cercanía, ubicación, cookie y aviones en vivo
+    ├── comidas/         # filtros, grilla del mapa, Overpass, menciones y horarios
+    ├── mapa/            # el estilo y los textos de los mapas de MapLibre
+    ├── geo.ts           # distancias y círculos sobre la esfera
     ├── supabase/        # clientes, lectura de referencia y su caché
     ├── seguridad/       # headers HTTP y redacción de URLs
     ├── sitio/           # dominio público, para robots y sitemap

@@ -1,9 +1,10 @@
 /**
- * Geometría sobre la esfera, sin datos (spec, 17).
+ * Geometría sobre la esfera, sin datos (spec, 17 y 18).
  *
  * Vive aparte para que la use también el navegador: el radar decide en el
  * cliente cuándo el mapa se movió a otra zona y dibuja su borde, y
- * cercanos.ts —que carga la lista de aeropuertos— es solo del servidor.
+ * cercanos.ts —que carga la lista de aeropuertos— es solo del servidor. El
+ * mapa de "Qué comer" la usa para saber si una zona queda dentro del país.
  */
 
 const RADIO_DE_LA_TIERRA_KM = 6371;

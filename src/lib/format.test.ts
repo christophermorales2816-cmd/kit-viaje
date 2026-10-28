@@ -9,6 +9,7 @@ import {
   formatCategory,
   formatCount,
   formatDate,
+  formatMonthYear,
   formatDateRange,
   formatDistance,
   formatDuration,
@@ -255,5 +256,14 @@ describe("formatTripType / formatCategory", () => {
   it("no esconde una categoría nueva agregada desde Studio", () => {
     expect(formatCategory("mascotas")).toBe("Mascotas");
     expect(formatTripType("gastronomico")).toBe("gastronomico");
+  });
+});
+
+describe("formatMonthYear", () => {
+  it("da el mes y el año, con o sin día", () => {
+    expect(formatMonthYear("2025-08-30")).toBe("agosto de 2025");
+    expect(formatMonthYear("2025-08")).toBe("agosto de 2025");
+    // Enero en UTC no se corre a diciembre del año anterior.
+    expect(formatMonthYear("2026-01")).toBe("enero de 2026");
   });
 });

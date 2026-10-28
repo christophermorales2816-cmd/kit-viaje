@@ -9,7 +9,7 @@ import {
   normalizar,
 } from "./buscar";
 import { RADIO_KM } from "./cercanos";
-import { distanciaKm } from "./geo";
+import { distanciaKm } from "@/lib/geo";
 import { NOMBRES_EN_CASTELLANO } from "./nombres-en-castellano";
 
 /** Los códigos que devuelve una búsqueda, en orden. */
