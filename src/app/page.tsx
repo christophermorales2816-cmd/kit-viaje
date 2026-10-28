@@ -256,14 +256,21 @@ export default function Home() {
               </Button>
 
               {/*
-                El radar de vuelos, como enlace y no como un segundo botón: el
-                hero sigue invitando a una sola cosa, elegir un destino.
+                El radar de vuelos y "Qué comer", como enlaces y no como más
+                botones: el hero sigue invitando a una sola cosa, elegir un
+                destino.
               */}
               <Link
                 href="/vuelos"
                 className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
               >
                 O mirá qué está volando ahora cerca tuyo
+              </Link>
+              <Link
+                href="/que-comer"
+                className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
+              >
+                O qué comer y beber en cada país
               </Link>
             </div>
           </div>

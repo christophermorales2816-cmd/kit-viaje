@@ -29,6 +29,13 @@ Si hubo que tocar otra cosa, o es un bug del motor o el país está pidiendo alg
 que el modelo todavía no sabe expresar. Las dos merecen una conversación, no un
 parche.
 
+"Qué comer y beber" (spec, 18) es aparte y se puede sumar después: un archivo
+`src/content/comidas/<pais>.ts`, con el mismo slug que la guía, y su línea en
+`src/content/comidas/index.ts`. Sin catálogo, el país simplemente no aparece en
+`/que-comer`, y su guía no lo enlaza. Las reglas de cada campo están en
+`src/content/comidas/types.ts`, y `comidas.test.ts` caza lo que más fácil se
+escribe mal: un plato con huevo que el filtro mostraría como vegano.
+
 ## 2. La guía (`src/content/guias/<pais>.ts`)
 
 Copiar la forma de `brasil.ts`, que es la más limpia. Los tamaños no son
@@ -263,4 +270,5 @@ migración no se aplicó.**
 - [ ] Migraciones sobre base virgen + smoke de RLS e integridad en verde
 - [ ] La app mirada en el navegador: dos ciudades opuestas, listas opuestas
 - [ ] Spec actualizado
+- [ ] Si tiene catálogo de comida: `src/content/comidas/<pais>.ts`, su línea en `index.ts`, las fotos regeneradas y el mapa de un plato mirado con datos reales
 - [ ] **Post-merge: la corrida de Migraciones en verde**

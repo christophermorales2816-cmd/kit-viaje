@@ -1,4 +1,4 @@
-import { circulo, distanciaKm, longitudCercaDe } from "./geo";
+import { circulo, distanciaKm, longitudCercaDe } from "@/lib/geo";
 import type { AvionEnVuelo, CentroDeZona } from "./tipos";
 
 /**
@@ -20,7 +20,7 @@ interface PropiedadesDeAvion {
  * Los aviones como GeoJSON, con el elegido marcado.
  *
  * Las longitudes se acercan al centro de la zona: sobre el antimeridiano, un
- * avión en -179° quedaría en la otra punta del mapa (geo.ts).
+ * avión en -179° quedaría en la otra punta del mapa (src/lib/geo.ts).
  */
 export function geojsonDeAviones(
   aviones: readonly AvionEnVuelo[],
@@ -99,23 +99,6 @@ export function porCercania(
       ),
     }))
     .sort((a, b) => a.distanciaKm - b.distanciaKm);
-}
-
-/**
- * La etiqueta de un lugar del mapa en castellano, si OpenStreetMap la tiene:
- * "Londres" y no "London", "Alemania" y no "Germany". Si no la tiene, queda la
- * del estilo.
- *
- * Solo se tocan las etiquetas que muestran nombres, que en el estilo son
- * expresiones: las patentes de las rutas (`ref`) quedan como están.
- */
-export function etiquetaEnCastellano<Campo>(campo: Campo): Campo {
-  if (!Array.isArray(campo) || !JSON.stringify(campo).includes('"name')) {
-    return campo;
-  }
-
-  // Sigue siendo una expresión de texto, como la que entró.
-  return ["coalesce", ["get", "name:es"], campo] as unknown as Campo;
 }
 
 const PUNTOS_CARDINALES = [
