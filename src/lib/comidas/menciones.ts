@@ -3,9 +3,9 @@ import "server-only";
 import { unstable_cache } from "next/cache";
 
 import type { Mencion } from "@/content/comidas/types";
-import { urlDelSitio } from "@/lib/sitio/url";
 
 import { ETIQUETAS, cerrado } from "./osm";
+import { pedirAOverpass } from "./overpass";
 
 /**
  * Las menciones de honor que siguen abiertas (spec, 18.5).
@@ -18,10 +18,10 @@ import { ETIQUETAS, cerrado } from "./osm";
  * hasta que un PR la saque, y el test lo recuerda.
  *
  * Si Overpass no contesta, se muestran todas: se verificaron al cargarlas, y
- * esconderlas por una falla de la red sería peor que un día de atraso.
+ * esconderlas por una falla de la red sería peor que un día de atraso. El
+ * pedido sale igual que el de los lugares, con la misma presentación y la
+ * misma pausa (src/lib/comidas/overpass.ts).
  */
-
-const API = "https://overpass-api.de/api/interpreter";
 
 const ESPERA_MAXIMA_MS = 10_000;
 
@@ -87,22 +87,10 @@ export function abiertasDeLaRespuesta(
 }
 
 async function consultar(ids: string[]): Promise<string[]> {
-  const sitio = urlDelSitio();
-  const respuesta = await fetch(API, {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "content-type": "application/x-www-form-urlencoded",
-      "user-agent": sitio ? `kit-viaje (+${sitio}/que-comer)` : "kit-viaje",
-    },
-    body: new URLSearchParams({ data: consultaDeMenciones(ids) }),
-    cache: "no-store",
-    signal: AbortSignal.timeout(ESPERA_MAXIMA_MS),
-  });
-
-  if (!respuesta.ok) throw new Error(`Overpass respondió ${respuesta.status}.`);
-
-  const abiertas = abiertasDeLaRespuesta(await respuesta.json(), new Date());
+  const abiertas = abiertasDeLaRespuesta(
+    await pedirAOverpass(consultaDeMenciones(ids), ESPERA_MAXIMA_MS),
+    new Date(),
+  );
   if (!abiertas)
     throw new Error("Overpass contestó algo que no se puede leer.");
 

@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getCatalogo } from "@/content/comidas";
 import { celdaDeClave, celdaDelPais } from "@/lib/comidas/celdas";
 import { VIGENCIA_S } from "@/lib/comidas/lugares";
-import { SEGUNDOS_DE_PAUSA, traerLugares } from "@/lib/comidas/overpass";
+import { traerLugares } from "@/lib/comidas/overpass";
 
 /**
  * Dónde sirven un plato, en una celda del mapa (spec, 18.4).
@@ -62,16 +62,18 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   const resultado = await traerLugares(plato.buscar, celda);
 
-  if (!resultado.ok && resultado.saturado) {
-    // Como en el radar: la CDN guarda el 503 ese rato, para que todos los que
-    // miran la celda esperen juntos en vez de insistir cada uno por su lado.
+  if (!resultado.ok && resultado.esperaS !== null) {
+    // Overpass frenó al sitio: un minuto si pidió pausa, más si lo rechazó
+    // (src/lib/comidas/overpass.ts). Como en el radar, la CDN guarda el 503
+    // ese rato, para que todos los que miran la celda esperen juntos en vez
+    // de insistir cada uno por su lado.
     return Response.json(
       { error: resultado.motivo },
       {
         status: 503,
         headers: {
-          "Cache-Control": `public, max-age=0, s-maxage=${SEGUNDOS_DE_PAUSA}`,
-          "Retry-After": String(SEGUNDOS_DE_PAUSA),
+          "Cache-Control": `public, max-age=0, s-maxage=${resultado.esperaS}`,
+          "Retry-After": String(resultado.esperaS),
         },
       },
     );

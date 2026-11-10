@@ -2685,9 +2685,19 @@ y la API solo acepta celdas a menos de 300 km de una ciudad del catálogo: es
 
 **El límite de Overpass.** Pide no pasar de diez mil consultas por día. Con doce
 horas por celda, solo las celdas que alguien mira y la CDN adelante, el sitio
-queda lejos. Si igual pide esperar (429 o 504), la API contesta 503 con
-`Retry-After: 60`, la CDN guarda ese minuto y el mapa se frena, como el radar
-con adsb.lol (17.5).
+queda lejos. Si igual pide esperar (429) o no da abasto (504), el servidor no le
+pregunta nada durante un minuto: la API contesta 503 con `Retry-After: 60`, la
+CDN guarda ese minuto y el mapa se frena, como el radar con adsb.lol (17.5).
+
+**Cómo se presenta.** FOSSGIS, que opera Overpass, exige un user-agent que
+identifique a la aplicación, y en 2026 contesta 406 a lo que parece un script
+anónimo. El sitio se presenta con nombre, versión y dirección
+(`kit-viaje/1.0 (+https://…/que-comer)`), la página como Referer, un Accept
+amplio y el idioma del sitio; nunca con el user-agent de otro programa. Si
+igual lo rechaza (403 o 406), deja de preguntarle quince minutos por vez, lo
+deja en el log y el mapa dice cuánto falta: insistir con pedidos rechazados es
+lo que lleva a que bloqueen la IP. Qué hacer en ese caso está en
+`docs/administrar.md`.
 
 **El mapa.** El mismo MapLibre con OpenFreeMap del radar, con lo común en
 `src/lib/mapa/` y `src/components/mapa/`. Arranca en la ciudad de la región del

@@ -243,6 +243,23 @@ donde sabés que los hay, la búsqueda de ese plato está mal escrita —una coc
 que OpenStreetMap no usa, una palabra que no aparece en los nombres—: se
 corrige en su catálogo, por PR.
 
+Si dice que OpenStreetMap "no está atendiendo nuestros pedidos", Overpass
+rechazó al sitio (403 o 406), y en los logs de Vercel aparece "Overpass
+respondió 406. Rechazó al sitio". Eso no se arregla esperando. El sitio deja de
+preguntarle quince minutos por vez para no empeorarlo, y vos:
+
+1. Fijate que `encabezadosParaOverpass` (`src/lib/comidas/overpass.ts`) siga
+   mandando el nombre del sitio con su dirección, el Referer y un Accept amplio:
+   Overpass rechaza así a lo que parece un script anónimo, y el test de ese
+   archivo lo cuida.
+2. Si eso está bien y sigue, el bloqueo lo puso una persona: escribiles a los que
+   operan Overpass en el foro de OpenStreetMap (community.openstreetmap.org,
+   "Help and support", etiqueta `overpass`) con la dirección del sitio, qué
+   consulta y cada cuánto (spec, 18.4).
+3. Nunca lo esquives cambiando el user-agent ni haciéndote pasar por otro
+   programa: es lo que termina en un bloqueo por IP, y en Vercel esa IP la
+   comparten todos los pedidos del sitio.
+
 **Alguien está creando viajes en masa.**
 La app ya lo frena: 30 viajes por hora por conexión y 2.000 por hora en total
 (`src/lib/trips/cupo.ts`). Si igual molesta, Vercel → Firewall → _Attack

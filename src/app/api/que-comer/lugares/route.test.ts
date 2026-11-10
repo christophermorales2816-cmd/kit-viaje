@@ -6,7 +6,6 @@ import type { ResultadoDeLugares } from "@/lib/comidas/overpass";
 const traerLugares = vi.fn<() => Promise<ResultadoDeLugares>>();
 
 vi.mock("@/lib/comidas/overpass", () => ({
-  SEGUNDOS_DE_PAUSA: 60,
   traerLugares: (...args: unknown[]) => traerLugares(...(args as [])),
 }));
 
@@ -90,8 +89,8 @@ describe("GET /api/que-comer/lugares", () => {
   it("cuando Overpass pide esperar, contesta 503 con Retry-After", async () => {
     traerLugares.mockResolvedValue({
       ok: false,
-      saturado: true,
       motivo: "Overpass respondió 429.",
+      esperaS: 60,
     });
 
     const respuesta = await pedir(BIEN);
@@ -101,11 +100,25 @@ describe("GET /api/que-comer/lugares", () => {
     expect(respuesta.headers.get("cache-control")).toContain("s-maxage=60");
   });
 
+  it("si Overpass rechazó al sitio, pide esperar lo que falta de la pausa", async () => {
+    traerLugares.mockResolvedValue({
+      ok: false,
+      motivo: "Overpass respondió 406.",
+      esperaS: 845,
+    });
+
+    const respuesta = await pedir(BIEN);
+
+    expect(respuesta.status).toBe(503);
+    expect(respuesta.headers.get("retry-after")).toBe("845");
+    expect(respuesta.headers.get("cache-control")).toContain("s-maxage=845");
+  });
+
   it("otra falla no se guarda en ningún lado", async () => {
     traerLugares.mockResolvedValue({
       ok: false,
-      saturado: false,
       motivo: "Overpass respondió 500.",
+      esperaS: null,
     });
 
     const respuesta = await pedir(BIEN);

@@ -11,6 +11,7 @@ import {
   consultaDeMenciones,
   mencionesVigentes,
 } from "./menciones";
+import { olvidarLaPausa, pedirAOverpass } from "./overpass";
 
 const HOY = new Date("2026-10-28T12:00:00Z");
 
@@ -30,6 +31,8 @@ function mencion(id: string, osm: string): Mencion {
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
+  // Un 504 o un 406 de un test frenarían a los que siguen.
+  olvidarLaPausa();
 });
 
 describe("consultaDeMenciones", () => {
@@ -94,6 +97,22 @@ describe("mencionesVigentes", () => {
       "taro",
       "cerro",
     ]);
+  });
+
+  it("respeta la pausa de los lugares: si Overpass rechazó al sitio, ni pregunta", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const falso = vi.fn(
+      async () => new Response("Not Acceptable", { status: 406 }),
+    );
+    vi.stubGlobal("fetch", falso);
+
+    await expect(pedirAOverpass("[out:json];", 1000)).rejects.toThrow("406");
+
+    expect((await mencionesVigentes(menciones)).map((m) => m.id)).toEqual([
+      "taro",
+      "cerro",
+    ]);
+    expect(falso).toHaveBeenCalledTimes(1);
   });
 
   it("sin menciones no pregunta nada", async () => {
