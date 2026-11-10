@@ -23,27 +23,33 @@ vuelve a ellos por un link con un token.
 | Cotizaciones              | dolarapi.com (Argentina y Brasil); el resto sin fuente todavía                                  | `src/lib/quotes/corridors.ts`                                            |
 | Aeropuertos               | OurAirports, en un JSON del repo, solo del servidor                                             | `src/lib/vuelos`, `herramientas/aeropuertos`                             |
 | Aviones en vivo           | adsb.lol, desde el servidor; el mapa es MapLibre con mosaicos de OpenFreeMap                    | `src/lib/vuelos/adsb.ts`, `src/components/vuelos/radar.tsx`              |
+| Qué comer                 | Catálogos en TypeScript; los lugares, de OpenStreetMap por Overpass; las fotos, de Commons      | `src/content/comidas`, `src/lib/comidas`, `src/components/comer`         |
+| Mapas de MapLibre         | Lo común al radar y al mapa de lugares: el estilo, los textos y la carga de la librería         | `src/lib/mapa`, `src/components/mapa`                                    |
 | CI                        | GitHub Actions: lint, tests, build, typecheck; migraciones + RLS + integridad sobre Postgres 16 | `.github/workflows/ci.yml`                                               |
 | Migraciones en producción | GitHub Actions con el CLI de Supabase, al mergear                                               | `.github/workflows/migraciones.yml`                                      |
 
 ## Rutas y cómo se renderiza cada una
 
-| Ruta                          | Qué es                                      | Render                                                                               | Lee de Supabase      |
-| ----------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------ | -------------------- |
-| `/`                           | Portada con el globo                        | Estática                                                                             | No                   |
-| `/guia/[slug]`                | Guía del país                               | Estática (165, por `generateStaticParams`) + cotizaciones en `<Suspense>` cada 10 min | No                   |
-| `/guia/[slug]/preparar`       | El año climático de una ciudad (`?ciudad=`) | Dinámica                                                                             | Sí, con caché de 1 h |
-| `/guia/[slug]/planificar`     | El formulario del viaje                     | Dinámica                                                                             | Sí, con caché de 1 h |
-| `/viaje/[editToken]`          | Dashboard privado                           | Dinámica, sin caché                                                                  | Sí                   |
-| `/viaje/ver/[shareSlug]`      | Vista compartida, solo lectura              | Dinámica, sin caché                                                                  | Sí                   |
-| `/vuelos`                     | El radar en vivo y "Salgo desde"            | Dinámica, sin caché (lee la cookie y la ubicación); el radar, en `<Suspense>`        | No                   |
-| `/api/aeropuertos?q=`         | La búsqueda del selector, en JSON           | Dinámica; la CDN la guarda un día                                                    | No                   |
-| `/api/vuelos/en-vivo`         | Los aviones de una zona del radar, en JSON  | Dinámica; la CDN la guarda 15 segundos                                               | No                   |
-| `/robots.txt`, `/sitemap.xml` | Para buscadores                             | Estáticos                                                                            | No                   |
+| Ruta                          | Qué es                                                                     | Render                                                                                | Lee de Supabase      |
+| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------- |
+| `/`                           | Portada con el globo                                                       | Estática                                                                              | No                   |
+| `/guia/[slug]`                | Guía del país                                                              | Estática (165, por `generateStaticParams`) + cotizaciones en `<Suspense>` cada 10 min | No                   |
+| `/guia/[slug]/preparar`       | El año climático de una ciudad (`?ciudad=`)                                | Dinámica                                                                              | Sí, con caché de 1 h |
+| `/guia/[slug]/planificar`     | El formulario del viaje                                                    | Dinámica                                                                              | Sí, con caché de 1 h |
+| `/viaje/[editToken]`          | Dashboard privado                                                          | Dinámica, sin caché                                                                   | Sí                   |
+| `/viaje/ver/[shareSlug]`      | Vista compartida, solo lectura                                             | Dinámica, sin caché                                                                   | Sí                   |
+| `/vuelos`                     | El radar en vivo y "Salgo desde"                                           | Dinámica, sin caché (lee la cookie y la ubicación); el radar, en `<Suspense>`         | No                   |
+| `/api/aeropuertos?q=`         | La búsqueda del selector, en JSON                                          | Dinámica; la CDN la guarda un día                                                     | No                   |
+| `/api/vuelos/en-vivo`         | Los aviones de una zona del radar, en JSON                                 | Dinámica; la CDN la guarda 15 segundos                                                | No                   |
+| `/que-comer`                  | Los países con catálogo de comida                                          | Estática                                                                              | No                   |
+| `/que-comer/[slug]`           | El catálogo de un país, con sus filtros                                    | Estática; se regenera una vez por día (las menciones de honor)                        | No                   |
+| `/que-comer/[slug]/[plato]`   | La ficha de un plato; desde el catálogo, se abre en una ventana (`@ficha`) | Estática; se regenera una vez por día                                                 | No                   |
+| `/api/que-comer/lugares`      | Los lugares de una celda del mapa, en JSON                                 | Dinámica; caché de 12 h en Next y 10 minutos en la CDN                                | No                   |
+| `/robots.txt`, `/sitemap.xml` | Para buscadores                                                            | Estáticos                                                                             | No                   |
 
 Las páginas de guía no dependen de la base a propósito: si Supabase se cae, la
-portada y las 165 guías siguen funcionando. La sección de vuelos tampoco la
-usa.
+portada y las 165 guías siguen funcionando. Las secciones de vuelos y de comida
+tampoco la usan.
 
 ## Flujos
 
@@ -78,6 +84,14 @@ trae la primera zona —la del aeropuerto de quien mira— con `traerZona`
 `/api/vuelos/en-vivo` cada 15 segundos con la pestaña a la vista, y otra zona
 cuando el mapa se mueve lejos. Las zonas son puntos de una grilla de un grado
 (`zona.ts`), para que la caché las comparta.
+
+**Dónde comer un plato** (`src/components/comer/mapa-de-lugares.tsx`, spec
+18.4): al tocar "Buscá restaurantes", el navegador baja MapLibre y pide
+`/api/que-comer/lugares` por cada celda de una décima de grado que se ve
+(`src/lib/comidas/celdas.ts`). La API valida el plato y la celda, arma la
+consulta a Overpass con la búsqueda del contenido (`osm.ts`) y la guarda doce
+horas (`overpass.ts`); lo que tiene más de un día sale sin CDN, avisando, y el
+mapa lo vuelve a pedir cuando ya se renovó.
 
 **Editar** (`mutate.ts`): cada tilde o cantidad es una Server Action que
 resuelve el token contra la base, verifica que el ítem o el gasto pertenezca al
@@ -118,6 +132,7 @@ optimista (`useOptimistic`) y se revierte si la acción falla.
 | Operar el sitio             | [`administrar.md`](administrar.md)                                       |
 | Sumar un país               | [`agregar-un-pais.md`](agregar-un-pais.md)                               |
 | La sección de vuelos        | Spec, sección 17, y `src/lib/vuelos/`                                    |
+| Qué comer y beber           | Spec, sección 18, `src/content/comidas/types.ts` y `src/lib/comidas/`    |
 | Configurar Supabase de cero | [`configurar-supabase.md`](configurar-supabase.md)                       |
 
 ## Cómo se prueba

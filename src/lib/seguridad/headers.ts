@@ -42,6 +42,12 @@ const MOSAICOS_DEL_MAPA = "https://*.basemaps.cartocdn.com";
 const MAPA_DEL_RADAR = "https://tiles.openfreemap.org";
 
 /**
+ * Las fotos de "Qué comer" (src/content/comidas/fotos.ts): miniaturas de
+ * Wikimedia Commons servidas por su CDN. Solo imágenes; nada de scripts.
+ */
+const FOTOS_DE_COMMONS = "https://upload.wikimedia.org";
+
+/**
  * Vercel Web Analytics carga su script desde el mismo dominio en producción
  * (`/_vercel/insights/script.js`); el de depuración viene de acá.
  */
@@ -91,6 +97,7 @@ export function contentSecurityPolicy(entorno: Entorno): string {
         "blob:",
         MOSAICOS_DEL_MAPA,
         MAPA_DEL_RADAR,
+        FOTOS_DE_COMMONS,
         ...extra(BARRA_DE_PREVIEW.img),
       ],
     ],

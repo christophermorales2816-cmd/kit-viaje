@@ -162,6 +162,40 @@ El JSON no se edita a mano: se regenera (ver
 elige como origen tampoco está en la base: vive en una cookie de su navegador
 (spec, 17.3).
 
+## Qué comer (fuera de la base)
+
+La sección "Qué comer y beber" (spec, 18) tampoco usa Supabase. Cada catálogo
+es un archivo de `src/content/comidas/`, con el slug de la guía del país, y se
+cambia por PR como las guías. Hoy: **3 países y 97 platos y bebidas** (Japón,
+México y la Argentina).
+
+| Campo                 | Significado                                                                                                                                   |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                  | El plato en la URL (`/que-comer/japon/ramen`). Único dentro del país                                                                          |
+| `nombre`, `local`     | En castellano, y como se escribe allá ("ラーメン")                                                                                            |
+| `contiene`            | Lo que lleva la receta de siempre: carne, cerdo, pescado, mariscos, insectos, huevo, lácteos, miel, alcohol y alérgenos. La dieta sale de acá |
+| `picante`             | De 0 a 3                                                                                                                                      |
+| `precio`              | De 1 ($, menos de 5 USD) a 4 ($$$$, más de 40), por porción                                                                                   |
+| `momentos`, `lugares` | Cuándo se come y dónde se consigue, en listas comunes a todos los países                                                                      |
+| `aventura`            | `para-todos`, `para-animarse` o `gusto-adquirido`                                                                                             |
+| `regiones`            | De qué regiones del país es típico; vacío es todo el país                                                                                     |
+| `buscar` o `sinMapa`  | Cómo encontrar en OpenStreetMap dónde lo sirven, o por qué no hay mapa. Exactamente uno de los dos                                            |
+| `foto`                | Un archivo de Wikimedia Commons, o `null`                                                                                                     |
+
+Lo que lo protege, en `src/content/comidas/comidas.test.ts`: cada catálogo
+tiene su guía; los ids sirven de URL; los ingredientes y `contiene` dicen lo
+mismo ("panceta" obliga a marcar cerdo); no más de un tercio es imperdible; las
+búsquedas usan valores que OpenStreetMap entiende; las menciones tienen su
+ficha de OpenStreetMap y están cerca de su ciudad; toda foto nombrada pasó por
+`herramientas/comidas/fotos.py`, y el catálogo se revisó hace menos de un año.
+
+Los lugares de cada plato no se guardan en la base ni en el repo: vienen de
+OpenStreetMap por Overpass y pasan por la caché de Next doce horas (spec,
+18.4). Lo que llega al navegador está en `LugarDeComida`, en
+`src/lib/comidas/lugares.ts`. Son datos de OpenStreetMap, con su licencia
+(ODbL), y la página lo dice. Las fotos están en `src/content/comidas/fotos.json`,
+que no se edita a mano: lo regenera el script.
+
 ## Las reglas y dónde se hacen cumplir
 
 | Regla                                                                     | Dónde                                            |

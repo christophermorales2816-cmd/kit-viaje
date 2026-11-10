@@ -66,6 +66,20 @@ export function formatDateRange(startIso: string, endIso: string): string {
   return `${formatDate(startIso)} al ${formatDate(endIso)}`;
 }
 
+/**
+ * "agosto de 2025", de una fecha de OpenStreetMap que puede venir sin el día
+ * ("2025-08"). Como fecha de calendario, en UTC, por lo mismo que el resto.
+ */
+export function formatMonthYear(iso: string): string {
+  const [year, month] = iso.split("-").map(Number);
+
+  return new Intl.DateTimeFormat(LOCALE, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, 1)));
+}
+
 /** "7 días" / "1 día". */
 export function formatDuration(days: number): string {
   return `${days} ${days === 1 ? "día" : "días"}`;

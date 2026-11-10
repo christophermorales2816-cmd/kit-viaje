@@ -2549,3 +2549,213 @@ segundo botón, porque el hero sigue invitando a una sola cosa.
 **Lo que queda.** Escribirle a adsb.lol que el sitio usa su API, como pide: lo
 hace el dueño ([`docs/administrar.md`](docs/administrar.md)). Y si un día se
 quiere el mapa del mundo completo, la antena.
+
+## 18. Qué comer y beber
+
+Una sección nueva, `/que-comer`, con lo que se come y se toma en cada país: un
+catálogo de platos con filtros, la ficha de cada uno como la página de un menú
+y, al final de la ficha, un mapa de los lugares que lo sirven. El pedido venía
+con los filtros de un sitio de referencia y tres condiciones del dueño: que los
+lugares estén al día sin cargarlos a mano, que no cueste plata —su pilar de
+"eficiencia compartida": gastar solo lo que genera valor— y que haya lugar para
+los negocios locales, de los puestitos a la alta cocina.
+
+### 18.1 Qué es, y lo que se corrigió del pedido
+
+- **Los lugares salen de OpenStreetMap, no de un scraper.** Scrapear Google
+  Maps o TripAdvisor viola sus condiciones, y se cae cada vez que cambian la
+  página. Google sabe antes que nadie de un restaurante nuevo, pero cobra por
+  consulta y no deja mostrar sus datos en otro mapa que el suyo.
+  OpenStreetMap es gratis, admite uso comercial citando la fuente y Overpass
+  lo sirve al minuto: lo que alguien carga hoy, la consulta lo ve hoy (18.4).
+- **"Mañana mismo" tiene una condición.** Un lugar que abre mañana aparece
+  mañana si alguien lo carga en OpenStreetMap, y en una ciudad grande eso pasa
+  rápido; en un pueblo, puede tardar. Ninguna fuente gratuita promete más. Para
+  acortarlo, la página invita a los negocios a cargarse ellos mismos (18.5).
+- **"Halal only" pasa a "Sin cerdo ni alcohol".** No podemos certificar que algo
+  sea halal: también depende de cómo se faenó la carne. Lo que sí se puede decir
+  es qué lleva.
+- **Los filtros cambian por país.** La lista del pedido era la de Japón: la
+  izakaya y las regiones de Japón no tienen sentido en México. Los tipos de
+  lugar son los mismos en todos los países, con su nombre local —en Japón el bar
+  es una izakaya; en México, la cantina—, y cada país tiene sus regiones. Un
+  filtro que no dejaría ningún plato no se muestra.
+- **Los precios, en dólares.** "$$" tiene que querer decir lo mismo en Japón
+  que en la Argentina: la página es para comparar entre países.
+- **Las menciones de honor no se compran.** Son lugares elegidos y se dice. Si
+  algún día se venden lugares destacados, van con la palabra "pago" al lado: lo
+  exige la ley de publicidad, y el plan Hobby de Vercel no admite uso comercial
+  (17.2).
+- **Las dos opciones del final de la ficha** son "Buscá restaurantes con esta
+  comida", que abre el mapa, y "Compartir". Las menciones de honor del plato van
+  arriba de los botones, cuando hay.
+
+### 18.2 Las páginas
+
+| Ruta                        | Qué es                                                                   | Cómo se renderiza                                              |
+| --------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------- |
+| `/que-comer`                | Los países con catálogo, por zona                                        | Estática                                                       |
+| `/que-comer/{pais}`         | El encabezado, la introducción, la despensa, el catálogo y las menciones | Estática; se regenera una vez por día por las menciones (18.5) |
+| `/que-comer/{pais}/{plato}` | La ficha del plato, entera                                               | Estática, igual                                                |
+| `/api/que-comer/lugares`    | Los lugares de una celda del mapa                                        | Dinámica; caché de doce horas y diez minutos en la CDN (18.4)  |
+
+Al tocar un plato del catálogo, su ficha se abre en una ventana encima
+(`@ficha/(.)[plato]`, una ruta paralela que intercepta la navegación) y la URL
+pasa a ser la del plato: se puede copiar y compartir, y el botón de volver la
+cierra. Con un link directo o al recargar no hay ventana: se ve la página del
+plato, que es también la que encuentra un buscador ("qué es el takoyaki").
+
+Solo aparecen los países que tienen catálogo. La guía de cada uno enlaza a su
+catálogo, y la portada a `/que-comer`, como enlace y no como un botón más.
+
+### 18.3 El catálogo, los filtros y la ficha
+
+Cada catálogo es un archivo en `src/content/comidas/`, como las guías. Un plato
+dice qué es, a qué sabe, qué lleva, cuánto sale y dónde y cuándo se come
+(`types.ts`). Lo que decide si alguien lo puede comer no se marca a mano: se
+deriva de `contiene`, la lista de lo que lleva la versión de siempre.
+"Vegetariano" escrito al lado de un plato con caldo de pescado es el error más
+fácil de cometer, y el que más le importa a quien lo lee; con la lista, no se
+puede escribir. Un test revisa además que los ingredientes y `contiene` digan lo
+mismo: si un ingrediente es "panceta", el plato lleva cerdo.
+
+Los filtros son los del pedido, en castellano:
+
+- **Para destacar:** solo los imperdibles, para comer solo.
+- **Dieta:** vegetariano, vegano, con carne, con pescado o mariscos, y sin cerdo
+  ni alcohol, con la aclaración de que no es lo mismo que halal.
+- **Picante, dónde se consigue, momento del día, qué tan aventurero, precio** y
+  **de dónde es típico**: una región muestra lo típico de ahí, no todo lo que se
+  consigue ahí.
+
+Dentro de un grupo se suman (vegano o vegetariano) y entre grupos se cruzan
+(vegano y barato). Cada opción dice cuántos platos dejaría, y la que no dejaría
+ninguno se apaga. Los filtros van en la URL, para compartir "comida vegana y
+barata en Japón" como un link; se leen recién en el navegador, porque el HTML
+del servidor tiene el catálogo entero, que es lo que lee un buscador. En el
+teléfono el panel se abre desde un botón "Filtros (2)".
+
+La ficha es la página de un menú: el nombre en grande y como se escribe allá,
+el precio con su rango, la descripción, el sabor, los ingredientes, dónde y
+cuándo se come, de qué región es y qué lleva para tu dieta, con la advertencia
+de que cada lugar lo hace a su manera. Si el plato no se busca en un mapa —el
+onigiri lo tiene cualquier konbini, el mate se toma en casa—, la ficha lo dice
+en vez de mostrar un botón que no lleva a nada.
+
+### 18.4 El mapa de lugares: la regla de la frescura
+
+**Qué se busca.** OpenStreetMap no sabe qué platos sirve cada lugar: sabe qué
+tipo de cocina tiene y cómo se llama. Cada plato dice cómo encontrarlo
+(`buscar`): en qué tipos de lugar, con qué cocinas (`cuisine=ramen`) o con qué
+palabras en el nombre ("taquería", "ラーメン"). La búsqueda sale del contenido,
+nunca del navegador: la API no deja preguntarle a OpenStreetMap cualquier cosa
+en nombre del sitio.
+
+**Por celdas.** El mapa no pide "lo que hay alrededor de donde miro": pide
+celdas fijas de una décima de grado, unos 11 km de lado, como un mapa pide
+mosaicos (`src/lib/comidas/celdas.ts`). Todos los que miran el centro de Tokio
+piden las mismas URLs y comparten la caché, y al mover el mapa solo se piden las
+celdas nuevas. Más alejado que el zoom 12 no se carga nada —no se distinguiría—,
+y la API solo acepta celdas a menos de 300 km de una ciudad del catálogo: es
+"dónde comer esto en Japón".
+
+**La regla.**
+
+1. Cada celda y cada búsqueda se le preguntan a Overpass como mucho una vez
+   cada doce horas, y solo si alguien las mira. La respuesta se guarda en la
+   caché de Next con la búsqueda en la clave: si un PR cambia cómo se busca un
+   plato, la caché vieja no se usa.
+2. Pasadas las doce horas, el primero que mira recibe lo guardado y dispara la
+   actualización por detrás. Si Overpass falla, queda lo anterior: un mapa con
+   los datos de ayer es mejor que uno vacío, siempre que diga de cuándo son.
+3. Lo que tiene menos de un día se sirve con diez minutos de CDN. Lo que tiene
+   más —una celda que nadie miró en días— sale igual, sin CDN y avisando:
+   "Estamos actualizando los datos, que son del 25 de octubre". El mapa lo
+   vuelve a pedir a los ocho segundos, cuando la caché ya se renovó. Nadie ve
+   datos de más de un día sin que la página se lo diga.
+4. No se muestra lo que OpenStreetMap ya marca como cerrado, de cualquiera de
+   las formas en que se marca (`disused`, un horario "closed", una fecha de
+   cierre pasada, "(cerrado)" en el nombre).
+5. Cada lugar dice cuán al día está: "Alguien confirmó que sigue abierto en
+   agosto de 2025", o, si nadie lo tocó en cuatro años, "puede haber cerrado",
+   y se dibuja apagado. No se esconde: en muchas ciudades serían la mayoría.
+6. Cualquiera lo corrige. Cada lugar tiene "¿Cerró o está mal? Avisá", que deja
+   una nota en OpenStreetMap en ese punto, sin cuenta; cuando un voluntario la
+   resuelve, acá se ve en un día.
+
+**El límite de Overpass.** Pide no pasar de diez mil consultas por día. Con doce
+horas por celda, solo las celdas que alguien mira y la CDN adelante, el sitio
+queda lejos. Si igual pide esperar (429 o 504), la API contesta 503 con
+`Retry-After: 60`, la CDN guarda ese minuto y el mapa se frena, como el radar
+con adsb.lol (17.5).
+
+**El mapa.** El mismo MapLibre con OpenFreeMap del radar, con lo común en
+`src/lib/mapa/` y `src/components/mapa/`. Arranca en la ciudad de la región del
+plato —el okonomiyaki, en Osaka— y tiene botones para saltar a las otras. Los
+lugares se agrupan cuando son muchos, y al tocar uno sale su ficha: dirección,
+horario en castellano ("Lu-Vi 11:00-15:00"), teléfono, web, cómo llegar —un link
+común a Google Maps con las coordenadas, que no tiene costo— y su ficha en
+OpenStreetMap. Debajo, la lista de los treinta más cercanos al centro, para
+quien no ve el mapa. MapLibre se baja recién al tocar "Buscá restaurantes": pesa
+más que todo el catálogo.
+
+Lo que viene de OpenStreetMap lo escribió cualquiera: los nombres se muestran
+como texto, la web solo entra si es http o https, y quién editó cada lugar no
+sale del servidor.
+
+### 18.5 Menciones de honor y negocios
+
+Una mención es un lugar elegido a mano —un puestito de barrio, un lugar con
+historia, una mesa de alta cocina, un mercado— con por qué ir y los platos por
+los que se lo menciona. Lo elegido a mano es lo que más rápido queda viejo, así
+que cada una va atada a su ficha de OpenStreetMap y una vez por día se pregunta
+por todas juntas, en un solo pedido (`src/lib/comidas/menciones.ts`): la que ya
+no está o está marcada como cerrada deja de mostrarse sola. Si Overpass no
+contesta, se muestran todas: se verificaron al cargarlas. Aparecen en la página
+del país, en la ficha de sus platos y en el mapa, en dorado.
+
+Para los negocios, la página explica cómo aparecer gratis: cargarse en
+OpenStreetMap con su tipo de cocina. Al día siguiente están en el mapa de cada
+plato que sirven, acá y en todas las apps que usan OpenStreetMap. Es la otra
+mitad de la frescura: el que más rápido puede cargar un lugar nuevo es su dueño.
+
+### 18.6 Las fotos
+
+De Wikimedia Commons, con licencia libre que admite uso comercial —dominio
+público, CC0, CC BY o CC BY-SA— y el autor y la licencia al lado de cada una. El
+catálogo nombra solo el archivo; `herramientas/comidas/fotos.py` le pregunta a
+Commons las miniaturas, el autor y la licencia, rechaza lo que no sirve y lo
+deja en `fotos.json`, y un test exige que toda foto nombrada haya pasado por
+ahí. Las miniaturas se sirven desde `upload.wikimedia.org`, la CDN de
+Wikimedia: gratis, y sin gastar las optimizaciones de imágenes de Vercel. La
+CSP suma ese dominio solo en `img-src`.
+
+Sin foto, la tarjeta muestra el nombre como se escribe allá —"ラーメン"—, que
+ayuda a reconocerlo en un menú, en vez de una foto de stock que nadie se acuerda
+de cambiar.
+
+### 18.7 Fuentes, licencias y costos
+
+| Para qué    | Fuente                                    | Costo                                 |
+| ----------- | ----------------------------------------- | ------------------------------------- |
+| Platos      | Escritos a mano, en el repo               | —                                     |
+| Lugares     | OpenStreetMap, por Overpass               | Gratis; ODbL: se cita la fuente       |
+| Mapa        | MapLibre con OpenFreeMap, como el radar   | Gratis                                |
+| Fotos       | Wikimedia Commons                         | Gratis; cada licencia pide su crédito |
+| Cómo llegar | Un link a Google Maps con las coordenadas | Gratis: es un link, no la API         |
+
+### 18.8 Primera tanda: Japón, México y la Argentina
+
+Japón porque es el ejemplo del pedido, México por los tacos al pastor, y la
+Argentina por la casa: 41, 32 y 24 platos y bebidas, con su despensa, sus
+regiones y sus ciudades. Quedaron para cuando el entorno llegue a Overpass y a
+Commons: comprobar con datos reales que cada búsqueda encuentra los lugares que
+tiene que encontrar, las fotos y las menciones de honor, que se verifican en
+OpenStreetMap antes de escribirlas. El mapa se probó con respuestas simuladas.
+
+### 18.9 Lo que viene
+
+Los demás países con guía, de a tandas, por continente, como las guías. Cuando
+haya cuentas, los platos que alguien guarda para su viaje. Y si un día el mapa
+necesita más de lo que da OpenStreetMap en una ciudad, una fuente paga se suma
+para esa ciudad, no para todas.

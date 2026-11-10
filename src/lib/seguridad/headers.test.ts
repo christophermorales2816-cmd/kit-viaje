@@ -73,6 +73,18 @@ describe("contentSecurityPolicy", () => {
     expect(directiva(csp, "worker-src")).toContain("blob:");
   });
 
+  it("deja ver las fotos de Wikimedia Commons, solo como imágenes", () => {
+    const csp = contentSecurityPolicy("production");
+
+    expect(directiva(csp, "img-src")).toContain("https://upload.wikimedia.org");
+    expect(directiva(csp, "script-src")).not.toContain(
+      "https://upload.wikimedia.org",
+    );
+    expect(directiva(csp, "connect-src")).not.toContain(
+      "https://upload.wikimedia.org",
+    );
+  });
+
   it("no manda formularios ni la base de URLs a otro dominio", () => {
     const csp = contentSecurityPolicy("production");
 

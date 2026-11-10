@@ -93,6 +93,14 @@ Una tarde, en este orden. Cada punto cierra una puerta concreta.
       página cita la fuente. Si algo les molesta, saben a quién escribirle antes
       de cortarnos el acceso.
 
+### Overpass (los lugares de "Qué comer")
+
+No hace falta cuenta ni aviso: la instancia pública de Overpass,
+[overpass-api.de](https://overpass-api.de), pide solo no pasar de diez mil
+consultas por día y que cada cliente se presente, cosa que el sitio hace con su
+nombre y su dirección (`src/lib/comidas/overpass.ts`). Con la caché de doce
+horas por celda, el sitio queda lejos de ese límite.
+
 > Las pantallas de estos servicios cambian de nombre con el tiempo. Si un
 > nombre no coincide, buscá la sección por lo que hace: el concepto es el
 > mismo.
@@ -136,6 +144,24 @@ script falla, no escribe nada: dice qué encontró raro. Si un test falla porque
 una ciudad de las guías dejó de encontrarse, el arreglo suele ser una línea en
 `src/lib/vuelos/nombres-en-castellano.ts`. Va por PR, como todo.
 
+**Cada año (por país, una hora).** Revisar el catálogo de "Qué comer" de cada
+país: los precios cambian, y algún plato o mención puede haber quedado viejo.
+Al terminar se actualiza `revisado`; un test falla si un catálogo pasa un año
+sin revisar, como las guías. Las menciones de honor que cerraron ya no se ven
+—se esconden solas—, pero siguen en el archivo hasta que un PR las saque.
+
+**Cuando se suma o se cambia una foto de un plato**, se regenera
+`src/content/comidas/fotos.json`, que no se edita a mano:
+
+```bash
+python3 -I herramientas/comidas/fotos.py src/content/comidas src/content/comidas/fotos.json
+npm test
+```
+
+El script rechaza las fotos sin una licencia libre que admita uso comercial y
+dice cuáles cambiar. Para encontrar una, `--buscar "takoyaki"` muestra la que
+tiene asignada en Wikidata.
+
 **Cuando termina un trabajo con alguien** (una persona, una agencia, una
 herramienta): sacarle el acceso el mismo día, y si tuvo acceso a una clave,
 rotarla (sección 6).
@@ -150,6 +176,8 @@ Siempre por un PR a `main`:
 | Datos (precios, ciudades, clima) | Una **migración nueva** en `supabase/migrations/`. Al mergear, el workflow _Migraciones_ la aplica sola. |
 | Un país nuevo                    | [`docs/agregar-un-pais.md`](agregar-un-pais.md)                                                          |
 | Los aeropuertos                  | Se regeneran con el script de la sección 3; el JSON no se edita a mano.                                  |
+| Un plato, un país en "Qué comer" | El archivo del país en `src/content/comidas/`, por PR; un país nuevo, además, una línea en su `index.ts` |
+| Una mención de honor             | Igual, con su ficha de OpenStreetMap (`node/123`): sin ficha que la respalde, no entra                   |
 | Volver atrás                     | GitHub → el PR → _Revert_. Si urge, Vercel → Deployments → el deploy anterior → _Instant Rollback_.      |
 
 **No edites datos a mano en Supabase Studio.** Lo que se cambia ahí no queda en
@@ -205,6 +233,15 @@ vuelve solo. Si carga, puede que haya pedido una pausa (429): el radar se frena
 un minuto y sigue, sin hacer nada. Si pasa todo el tiempo, adsb.lol empezó a
 limitar más o a pedir clave, que se consigue aportando datos con una antena
 (spec, 17.5): es un cambio en `src/lib/vuelos/adsb.ts`, por PR.
+
+**El mapa de un plato no muestra lugares, o dice que no puede traerlos.**
+La ficha del plato sigue andando: solo el mapa depende de Overpass. Si dice
+"pidió una pausa", se frena un minuto y sigue solo. Si dice que no puede
+traerlos, Overpass está caído o lento: el mapa muestra lo último que tenía, con
+su fecha, hasta que vuelva. Si nunca hay lugares para un plato en una ciudad
+donde sabés que los hay, la búsqueda de ese plato está mal escrita —una cocina
+que OpenStreetMap no usa, una palabra que no aparece en los nombres—: se
+corrige en su catálogo, por PR.
 
 **Alguien está creando viajes en masa.**
 La app ya lo frena: 30 viajes por hora por conexión y 2.000 por hora en total

@@ -1,7 +1,7 @@
 import "server-only";
 
 import { AEROPUERTOS, ORDEN_POR_TIPO, type Aeropuerto } from "./aeropuertos";
-import { distanciaKm } from "./geo";
+import { distanciaKm } from "@/lib/geo";
 
 /**
  * Qué aeropuerto le sugerimos a alguien según dónde está (spec, 17.3).

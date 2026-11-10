@@ -17,6 +17,7 @@ ciudad y dos listas. Lo que sí tiene valor:
 | La disponibilidad y el costo        | La base es gratuita/limitada: llenarla o saturarla tiene costo               |
 | La integridad de los datos maestros | Un precio en la moneda equivocada da un presupuesto falso sin error          |
 | El acceso a adsb.lol                | Es gratis y con límite: si el sitio lo satura, nos corta y el radar se apaga |
+| El acceso a Overpass                | Igual, para el mapa de lugares de "Qué comer"                                |
 
 ## Modelo de acceso
 
@@ -29,9 +30,11 @@ Navegador ──(HTML, Server Actions, /api)──> Next.js en Vercel ──(ser
 - **El navegador nunca habla con Supabase.** Ni la URL ni la anon key llegan
   al bundle del cliente (verificado en el build). Toda lectura y escritura pasa
   por el servidor.
-- **Los mapas son lo único que el navegador pide afuera**: los mosaicos de las
-  guías a CARTO y los del radar a OpenFreeMap. Ven la IP de quien mira, como
-  cualquier mapa en la web, y nada más. A adsb.lol le pide solo el servidor.
+- **Los mapas y las fotos son lo único que el navegador pide afuera**: los
+  mosaicos de las guías a CARTO, los del radar y de "Qué comer" a OpenFreeMap,
+  y las fotos de los platos a Wikimedia Commons. Ven la IP de quien mira, como
+  cualquier mapa o imagen en la web, y nada más. A adsb.lol y a Overpass les
+  pide solo el servidor.
 - **Tablas de referencia** (destinos, clima, precios, catálogo): RLS con
   `select using (true)` y **solo** el privilegio SELECT para `anon` y
   `authenticated`.
@@ -44,34 +47,39 @@ Navegador ──(HTML, Server Actions, /api)──> Next.js en Vercel ──(ser
 
 ## Amenazas y controles
 
-| Amenaza                                                      | Control                                                                                    | Dónde                                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
-| Leer los `edit_token` de todos los viajes con la anon key    | Tablas de sesión sin políticas ni privilegios                                              | `20260826120200_rls_policies.sql`; smoke test                              |
-| Adivinar un `edit_token`                                     | 122 bits aleatorios de `gen_random_uuid()` (RNG del sistema operativo)                     | `20260826120100_session_tables.sql`                                        |
-| Escribir en un viaje ajeno                                   | El `trip_id` sale del token, nunca del cliente; upsert acotado por la PK                   | `src/lib/trips/mutate.ts`                                                  |
-| Meter en un viaje propio un gasto de otro país               | Se valida contra los precios de la ciudad del viaje                                        | `src/lib/trips/mutate.ts`; `mutate.test.ts`                                |
-| Crear viajes en masa con un script                           | Cupo por hora: 30 por conexión, 2.000 en total, contado en Postgres                        | `20261008120100_cupo_de_creacion.sql`; `src/lib/trips/cupo.ts`             |
-| Clickjacking del dashboard (embeberlo en un iframe)          | `frame-ancestors 'none'` y `X-Frame-Options: DENY`                                         | `src/lib/seguridad/headers.ts`                                             |
-| Inyección de scripts de otros dominios                       | CSP: scripts solo del propio dominio y de Vercel Analytics                                 | `src/lib/seguridad/headers.ts`                                             |
-| Fuga del link privado por el header Referer                  | `Referrer-Policy: no-referrer` en `/viaje/*`                                               | `next.config.ts`                                                           |
-| Fuga del link privado a analytics                            | Analytics no se monta en `/viaje/*`, y `beforeSend` borra tokens de cualquier URL          | `src/components/analytics.tsx`; `src/lib/seguridad/privacidad.ts`          |
-| Indexación de viajes por buscadores                          | `noindex` en la página, `X-Robots-Tag` y `Disallow: /viaje/`                               | páginas de viaje; `next.config.ts`; `src/app/robots.ts`                    |
-| Guardar o filtrar dónde está cada visitante de `/vuelos`     | La ubicación se usa en la request y se descarta; la búsqueda se redacta en analytics       | `src/lib/vuelos/ubicacion.ts`; `src/lib/seguridad/privacidad.ts`           |
-| Encabezados de ubicación falsificados                        | En Vercel los pone la plataforma; igual se validan rango y forma                           | `src/lib/vuelos/ubicacion.ts`; `ubicacion.test.ts`                         |
-| Una cookie `origen` adulterada                               | Se valida contra la lista en cada lectura; lo que no es un aeropuerto se ignora            | `src/lib/vuelos/origen.ts`; `actions.ts`                                   |
-| Usar el sitio para saturar a adsb.lol                        | Zonas solo de la grilla; CDN de 15 s y caché de datos; con un 429, todos esperan un minuto | `src/lib/vuelos/zona.ts`; `adsb.ts`; `src/app/api/vuelos/en-vivo/route.ts` |
-| Mostrar aviones que pidieron no aparecer                     | Se filtran los de la lista LADD y las direcciones PIA                                      | `src/lib/vuelos/adsb.ts`; `adsb.test.ts`                                   |
-| Texto raro en un transpondedor (un "vuelo" `<script>`)       | Solo se aceptan vuelos, modelos y matrículas con su forma; se muestran como texto          | `src/lib/vuelos/adsb.ts`                                                   |
-| Saturar la búsqueda de aeropuertos                           | Consulta recortada a 60 caracteres, en memoria y sin base; respuestas en la CDN            | `src/lib/vuelos/buscar.ts`; `src/app/api/aeropuertos/route.ts`             |
-| CSRF contra las Server Actions                               | Next compara `Origin` con `Host` en cada Server Action                                     | Next.js (nativo)                                                           |
-| Texto de Postgres en pantalla (nombres de tablas y columnas) | Mensajes fijos para el usuario; el detalle va a los logs                                   | `src/lib/trips/errors.ts`; `mutate.ts`                                     |
-| Una tabla nueva expuesta por olvido                          | Privilegios por defecto revocados; CI falla si una tabla de `public` no tiene RLS          | `20261008120000_endurecer_permisos.sql`; smoke test                        |
-| Una función nueva expuesta como endpoint RPC                 | CI falla si `anon` puede ejecutar cualquier función de `public`                            | smoke test                                                                 |
-| Fórmulas en el CSV exportado                                 | Celdas que empiezan con `= + - @`, tab o CR se neutralizan                                 | `src/lib/export/csv.ts`                                                    |
-| Fuente de cotizaciones colgada                               | Timeout de 5 s; la página sigue con un aviso                                               | `src/lib/quotes/fetch.ts`                                                  |
-| Dependencia vulnerable                                       | Dependabot semanal; `npm audit` sin hallazgos en producción                                | `.github/dependabot.yml`                                                   |
-| Action de CI comprometida                                    | Actions fijadas por SHA, CLI de Supabase con versión fija, token de solo lectura           | `.github/workflows/`                                                       |
-| Precio cargado en otra moneda (a mano, en Studio)            | Trigger que lo rechaza; chequeo de integridad en CI y mensual                              | `20261008120200_moneda_coherente.sql`; `supabase/tests/integridad.sql`     |
+| Amenaza                                                                          | Control                                                                                                                   | Dónde                                                                           |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Leer los `edit_token` de todos los viajes con la anon key                        | Tablas de sesión sin políticas ni privilegios                                                                             | `20260826120200_rls_policies.sql`; smoke test                                   |
+| Adivinar un `edit_token`                                                         | 122 bits aleatorios de `gen_random_uuid()` (RNG del sistema operativo)                                                    | `20260826120100_session_tables.sql`                                             |
+| Escribir en un viaje ajeno                                                       | El `trip_id` sale del token, nunca del cliente; upsert acotado por la PK                                                  | `src/lib/trips/mutate.ts`                                                       |
+| Meter en un viaje propio un gasto de otro país                                   | Se valida contra los precios de la ciudad del viaje                                                                       | `src/lib/trips/mutate.ts`; `mutate.test.ts`                                     |
+| Crear viajes en masa con un script                                               | Cupo por hora: 30 por conexión, 2.000 en total, contado en Postgres                                                       | `20261008120100_cupo_de_creacion.sql`; `src/lib/trips/cupo.ts`                  |
+| Clickjacking del dashboard (embeberlo en un iframe)                              | `frame-ancestors 'none'` y `X-Frame-Options: DENY`                                                                        | `src/lib/seguridad/headers.ts`                                                  |
+| Inyección de scripts de otros dominios                                           | CSP: scripts solo del propio dominio y de Vercel Analytics                                                                | `src/lib/seguridad/headers.ts`                                                  |
+| Fuga del link privado por el header Referer                                      | `Referrer-Policy: no-referrer` en `/viaje/*`                                                                              | `next.config.ts`                                                                |
+| Fuga del link privado a analytics                                                | Analytics no se monta en `/viaje/*`, y `beforeSend` borra tokens de cualquier URL                                         | `src/components/analytics.tsx`; `src/lib/seguridad/privacidad.ts`               |
+| Indexación de viajes por buscadores                                              | `noindex` en la página, `X-Robots-Tag` y `Disallow: /viaje/`                                                              | páginas de viaje; `next.config.ts`; `src/app/robots.ts`                         |
+| Guardar o filtrar dónde está cada visitante de `/vuelos`                         | La ubicación se usa en la request y se descarta; la búsqueda se redacta en analytics                                      | `src/lib/vuelos/ubicacion.ts`; `src/lib/seguridad/privacidad.ts`                |
+| Encabezados de ubicación falsificados                                            | En Vercel los pone la plataforma; igual se validan rango y forma                                                          | `src/lib/vuelos/ubicacion.ts`; `ubicacion.test.ts`                              |
+| Una cookie `origen` adulterada                                                   | Se valida contra la lista en cada lectura; lo que no es un aeropuerto se ignora                                           | `src/lib/vuelos/origen.ts`; `actions.ts`                                        |
+| Usar el sitio para saturar a adsb.lol                                            | Zonas solo de la grilla; CDN de 15 s y caché de datos; con un 429, todos esperan un minuto                                | `src/lib/vuelos/zona.ts`; `adsb.ts`; `src/app/api/vuelos/en-vivo/route.ts`      |
+| Mostrar aviones que pidieron no aparecer                                         | Se filtran los de la lista LADD y las direcciones PIA                                                                     | `src/lib/vuelos/adsb.ts`; `adsb.test.ts`                                        |
+| Texto raro en un transpondedor (un "vuelo" `<script>`)                           | Solo se aceptan vuelos, modelos y matrículas con su forma; se muestran como texto                                         | `src/lib/vuelos/adsb.ts`                                                        |
+| Usar el sitio para hacerle a Overpass cualquier consulta                         | La consulta sale del contenido del repo; la URL solo elige un plato del catálogo y una celda de la grilla dentro del país | `src/lib/comidas/osm.ts`; `celdas.ts`; `src/app/api/que-comer/lugares/route.ts` |
+| Usar el sitio para saturar a Overpass                                            | Celdas fijas; doce horas de caché por celda y búsqueda; CDN; con un 429, todos esperan un minuto                          | `src/lib/comidas/overpass.ts`; `route.ts`                                       |
+| Un lugar de OpenStreetMap con un `<script>` en el nombre o una web `javascript:` | Los nombres se muestran como texto; la web solo pasa si es http o https, con `rel="nofollow ugc"`                         | `src/lib/comidas/osm.ts` (`webSegura`); `mapa-de-lugares.tsx`                   |
+| Exponer quién editó cada lugar en OpenStreetMap                                  | De lo que trae Overpass solo sale lo que el mapa muestra; el usuario que editó no                                         | `src/lib/comidas/osm.ts`; `osm.test.ts`                                         |
+| Una foto con una licencia que no permite el uso                                  | El script de fotos solo acepta dominio público, CC0, CC BY y CC BY-SA; un test exige que toda foto haya pasado por él     | `herramientas/comidas/fotos.py`; `comidas.test.ts`                              |
+| Saturar la búsqueda de aeropuertos                                               | Consulta recortada a 60 caracteres, en memoria y sin base; respuestas en la CDN                                           | `src/lib/vuelos/buscar.ts`; `src/app/api/aeropuertos/route.ts`                  |
+| CSRF contra las Server Actions                                                   | Next compara `Origin` con `Host` en cada Server Action                                                                    | Next.js (nativo)                                                                |
+| Texto de Postgres en pantalla (nombres de tablas y columnas)                     | Mensajes fijos para el usuario; el detalle va a los logs                                                                  | `src/lib/trips/errors.ts`; `mutate.ts`                                          |
+| Una tabla nueva expuesta por olvido                                              | Privilegios por defecto revocados; CI falla si una tabla de `public` no tiene RLS                                         | `20261008120000_endurecer_permisos.sql`; smoke test                             |
+| Una función nueva expuesta como endpoint RPC                                     | CI falla si `anon` puede ejecutar cualquier función de `public`                                                           | smoke test                                                                      |
+| Fórmulas en el CSV exportado                                                     | Celdas que empiezan con `= + - @`, tab o CR se neutralizan                                                                | `src/lib/export/csv.ts`                                                         |
+| Fuente de cotizaciones colgada                                                   | Timeout de 5 s; la página sigue con un aviso                                                                              | `src/lib/quotes/fetch.ts`                                                       |
+| Dependencia vulnerable                                                           | Dependabot semanal; `npm audit` sin hallazgos en producción                                                               | `.github/dependabot.yml`                                                        |
+| Action de CI comprometida                                                        | Actions fijadas por SHA, CLI de Supabase con versión fija, token de solo lectura                                          | `.github/workflows/`                                                            |
+| Precio cargado en otra moneda (a mano, en Studio)                                | Trigger que lo rechaza; chequeo de integridad en CI y mensual                                                             | `20261008120200_moneda_coherente.sql`; `supabase/tests/integridad.sql`          |
 
 ## Auditoría del 2026-10-08
 
@@ -104,6 +112,15 @@ Lo que se encontró y cómo quedó:
 - **adsb.lol es un servicio gratuito de voluntarios, sin acuerdo.** Puede
   limitar más, pedir clave o caerse. El radar lo dice y el resto de la página
   sigue; la salida de fondo es aportarle datos con una antena (spec, 17.5).
+- **Overpass también es de voluntarios.** La instancia pública pide no pasar
+  de diez mil consultas por día y no tiene acuerdo de servicio. Si limita o se
+  cae, el mapa muestra lo último que tenía, con su fecha, y la ficha del plato
+  sigue entera. No hay un cupo propio contado en la base: las celdas fijas y
+  la caché acotan cuánto se le pide, y si algún día alguien las recorre a
+  propósito, el freno que falta es un cupo como el de los viajes.
+- **Los lugares los carga cualquiera.** Un lugar mal cargado en OpenStreetMap
+  aparece mal en el mapa hasta que alguien lo corrige; cada uno tiene un link
+  para avisar (spec, 18.4).
 - **El cupo cuenta por IP.** Una red grande detrás de una sola IP (una
   universidad) comparte el cupo de 30 por hora. Los topes se ajustan en
   `src/lib/trips/cupo.ts` sin migración.
