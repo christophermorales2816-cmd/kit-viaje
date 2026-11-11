@@ -4,6 +4,7 @@ import {
   MAXIMO_POR_CELDA,
   cerrado,
   consultaDeOverpass,
+  datosDelServidor,
   lugaresDeLaRespuesta,
   webSegura,
 } from "./osm";
@@ -191,5 +192,24 @@ describe("lugaresDeLaRespuesta", () => {
     ).toBeNull();
     expect(lugaresDeLaRespuesta({ nada: true }, HOY)).toBeNull();
     expect(lugaresDeLaRespuesta(null, HOY)).toBeNull();
+  });
+});
+
+describe("datosDelServidor", () => {
+  it("lee hasta cuándo llegan los datos del servidor", () => {
+    expect(
+      datosDelServidor({
+        osm3s: { timestamp_osm_base: "2026-11-08T14:02:00Z" },
+        elements: [],
+      }),
+    ).toBe("2026-11-08T14:02:00.000Z");
+  });
+
+  it("si no lo dice, o dice cualquier cosa, no inventa una fecha", () => {
+    expect(datosDelServidor({ elements: [] })).toBeNull();
+    expect(
+      datosDelServidor({ osm3s: { timestamp_osm_base: "ayer" } }),
+    ).toBeNull();
+    expect(datosDelServidor(null)).toBeNull();
   });
 });

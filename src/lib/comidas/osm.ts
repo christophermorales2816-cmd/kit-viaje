@@ -321,6 +321,24 @@ function lugarDe(crudo: ElementoCrudo, hoy: Date): LugarDeComida | null {
 }
 
 /**
+ * Hasta cuándo llegan los datos que tiene el servidor de Overpass
+ * (`osm3s.timestamp_osm_base`), en ISO, o null si no lo dice.
+ *
+ * No es la hora de la consulta: un servidor atrasado contesta hoy con datos
+ * de hace días, y el mapa tiene que decir de cuándo son los datos.
+ */
+export function datosDelServidor(datos: unknown): string | null {
+  const base = (datos as { osm3s?: { timestamp_osm_base?: unknown } } | null)
+    ?.osm3s?.timestamp_osm_base;
+
+  if (typeof base !== "string") return null;
+
+  const fecha = new Date(base);
+
+  return Number.isNaN(fecha.getTime()) ? null : fecha.toISOString();
+}
+
+/**
  * Los lugares de una respuesta de Overpass, o null si la respuesta no sirve.
  *
  * Overpass a veces contesta 200 con un error adentro (`remark`: "runtime
@@ -330,7 +348,11 @@ function lugarDe(crudo: ElementoCrudo, hoy: Date): LugarDeComida | null {
 export function lugaresDeLaRespuesta(
   datos: unknown,
   hoy: Date,
-): { lugares: LugarDeComida[]; recortado: boolean } | null {
+): {
+  lugares: LugarDeComida[];
+  recortado: boolean;
+  datosDel: string | null;
+} | null {
   if (typeof datos !== "object" || datos === null) return null;
 
   const { elements, remark } = datos as {
@@ -346,5 +368,9 @@ export function lugaresDeLaRespuesta(
     .map((crudo) => lugarDe(crudo as ElementoCrudo, hoy))
     .filter((lugar): lugar is LugarDeComida => lugar !== null);
 
-  return { lugares, recortado: elements.length > MAXIMO_POR_CELDA };
+  return {
+    lugares,
+    recortado: elements.length > MAXIMO_POR_CELDA,
+    datosDel: datosDelServidor(datos),
+  };
 }

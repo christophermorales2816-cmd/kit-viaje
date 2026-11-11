@@ -536,7 +536,11 @@ export function MapaDeLugares({
     celda?.estado === "pausa" ? [celda.segundos] : [],
   );
   const fechas = listas.map((datos) => datos.actualizado).sort();
-  const masVieja = fechas[0] ?? null;
+  // La que se muestra es la de los datos del servidor, no la de la consulta:
+  // un servidor atrasado contesta hoy con datos de hace días.
+  const masVieja =
+    listas.map((datos) => datos.datosDel ?? datos.actualizado).sort()[0] ??
+    null;
   // La fecha de referencia para "hace años que nadie lo toca" es la de los
   // datos, no la del reloj: así el render no depende de cuándo corre.
   const hoy = new Date(fechas.at(-1) ?? masVieja ?? 0);
