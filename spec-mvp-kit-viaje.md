@@ -2683,21 +2683,40 @@ y la API solo acepta celdas a menos de 300 km de una ciudad del catálogo: es
    una nota en OpenStreetMap en ese punto, sin cuenta; cuando un voluntario la
    resuelve, acá se ve en un día.
 
-**El límite de Overpass.** Pide no pasar de diez mil consultas por día. Con doce
-horas por celda, solo las celdas que alguien mira y la CDN adelante, el sitio
-queda lejos. Si igual pide esperar (429) o no da abasto (504), el servidor no le
-pregunta nada durante un minuto: la API contesta 503 con `Retry-After: 60`, la
-CDN guarda ese minuto y el mapa se frena, como el radar con adsb.lol (17.5).
+**El servidor.** Overpass es un programa que corren varios servidores públicos,
+cada uno con sus reglas. El sitio usaba overpass-api.de, el de FOSSGIS, hasta
+que en noviembre de 2026 le contestó 406 a todo lo que salía de Vercel, aun
+presentándose como pide. Según sus operadores, eso es un bloqueo puesto a mano,
+y piden no esquivarlo repartiendo los pedidos entre otros servidores o nubes.
+Desde entonces se usa el de Private.coffee, una asociación austríaca sin fines
+de lucro: gratis, sin registro y con uso comercial permitido, a cambio de
+consultas medidas y pocos pedidos a la vez; a los proyectos comerciales les
+sugiere una donación. Es un puente: un servidor ajeno no garantiza nada, y el
+paso siguiente es tener los lugares con datos propios, sacados de los extractos
+diarios de OpenStreetMap.
 
-**Cómo se presenta.** FOSSGIS, que opera Overpass, exige un user-agent que
-identifique a la aplicación, y en 2026 contesta 406 a lo que parece un script
-anónimo. El sitio se presenta con nombre, versión y dirección
+**El límite.** Los servidores públicos piden no pasar de diez mil consultas por
+día. Con doce horas por celda, solo las celdas que alguien mira y la CDN
+adelante, el sitio queda lejos. Cada instancia del servidor del sitio manda como
+mucho dos pedidos a la vez, y los demás esperan turno. Si igual pide esperar
+(429) o no da abasto (504), el servidor no le pregunta nada durante un minuto:
+la API contesta 503 con `Retry-After: 60`, la CDN guarda ese minuto y el mapa se
+frena, como el radar con adsb.lol (17.5).
+
+**Cómo se presenta.** Los servidores públicos exigen un user-agent que
+identifique a la aplicación, y en 2026 overpass-api.de contesta 406 a lo que
+parece un script anónimo. El sitio se presenta con nombre, versión y dirección
 (`kit-viaje/1.0 (+https://…/que-comer)`), la página como Referer, un Accept
 amplio y el idioma del sitio; nunca con el user-agent de otro programa. Si
 igual lo rechaza (403 o 406), deja de preguntarle quince minutos por vez, lo
 deja en el log y el mapa dice cuánto falta: insistir con pedidos rechazados es
 lo que lleva a que bloqueen la IP. Qué hacer en ese caso está en
 `docs/administrar.md`.
+
+**De cuándo son los datos.** Cada respuesta dice hasta cuándo llegan los datos
+que tiene el servidor, y esa es la fecha que muestra el mapa: un servidor
+atrasado contesta hoy con datos de hace días. La hora de la consulta solo decide
+si la caché sigue al día.
 
 **El mapa.** El mismo MapLibre con OpenFreeMap del radar, con lo común en
 `src/lib/mapa/` y `src/components/mapa/`. Arranca en la ciudad de la región del

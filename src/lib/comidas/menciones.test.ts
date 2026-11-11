@@ -11,7 +11,7 @@ import {
   consultaDeMenciones,
   mencionesVigentes,
 } from "./menciones";
-import { olvidarLaPausa, pedirAOverpass } from "./overpass";
+import { arrancarDeCero, pedirAOverpass } from "./overpass";
 
 const HOY = new Date("2026-10-28T12:00:00Z");
 
@@ -32,7 +32,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
   // Un 504 o un 406 de un test frenarían a los que siguen.
-  olvidarLaPausa();
+  arrancarDeCero();
 });
 
 describe("consultaDeMenciones", () => {

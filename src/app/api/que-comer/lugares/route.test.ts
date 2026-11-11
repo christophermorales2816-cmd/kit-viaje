@@ -26,6 +26,7 @@ function datos(actualizado: Date) {
     datos: {
       celda: "356_1397",
       actualizado: actualizado.toISOString(),
+      datosDel: actualizado.toISOString(),
       lugares: [],
       recortado: false,
     },

@@ -6,10 +6,13 @@ vi.mock("next/cache", () => ({
 }));
 
 import {
+  A_LA_VEZ,
+  FallaDeOverpass,
   SEGUNDOS_DE_PAUSA,
   SEGUNDOS_DE_PAUSA_POR_RECHAZO,
   encabezadosParaOverpass,
-  olvidarLaPausa,
+  arrancarDeCero,
+  pedirAOverpass,
   traerLugares,
 } from "./overpass";
 
@@ -26,7 +29,7 @@ afterEach(() => {
   vi.unstubAllEnvs();
   vi.useRealTimers();
   vi.restoreAllMocks();
-  olvidarLaPausa();
+  arrancarDeCero();
 });
 
 const CELDA = { fila: 356, columna: 1397 };
@@ -36,6 +39,7 @@ describe("traerLugares", () => {
   it("le pregunta a Overpass la consulta de la celda y devuelve los lugares", async () => {
     const falso = conFetch(async () =>
       Response.json({
+        osm3s: { timestamp_osm_base: "2026-11-08T14:02:00Z" },
         elements: [
           {
             type: "node",
@@ -57,9 +61,13 @@ describe("traerLugares", () => {
     expect(resultado.datos.lugares.map((lugar) => lugar.nombre)).toEqual([
       "Taro",
     ]);
+    // La fecha de los datos es la del servidor, no la de la consulta.
+    expect(resultado.datos.datosDel).toBe("2026-11-08T14:02:00.000Z");
+    expect(resultado.datos.actualizado).not.toBe(resultado.datos.datosDel);
 
     const [url, opciones] = falso.mock.calls[0];
-    expect(url).toBe("https://overpass-api.de/api/interpreter");
+    // No overpass-api.de: bloqueó al sitio (QUÉ SERVIDOR, en overpass.ts).
+    expect(url).toBe("https://overpass.private.coffee/api/interpreter");
     expect(opciones.method).toBe("POST");
 
     const consulta = new URLSearchParams(String(opciones.body)).get("data");
@@ -175,5 +183,79 @@ describe("traerLugares", () => {
 
     expect(resultado).toMatchObject({ ok: false, esperaS: null });
     if (!resultado.ok) expect(resultado.motivo).toContain("fetch failed");
+  });
+});
+
+describe("pedirAOverpass", () => {
+  /** Un Overpass falso que contesta cuando el test quiere. */
+  function overpassALaEspera() {
+    const pendientes: ((respuesta: Response) => void)[] = [];
+    let enCurso = 0;
+    let maximo = 0;
+
+    const falso = conFetch(
+      () =>
+        new Promise<Response>((responder) => {
+          enCurso += 1;
+          maximo = Math.max(maximo, enCurso);
+          pendientes.push((respuesta) => {
+            enCurso -= 1;
+            responder(respuesta);
+          });
+        }),
+    );
+
+    return { falso, pendientes, maximo: () => maximo };
+  }
+
+  const unRato = () => new Promise((listo) => setTimeout(listo, 0));
+
+  it("manda de a A_LA_VEZ pedidos, y los demás esperan su turno", async () => {
+    const { pendientes, maximo } = overpassALaEspera();
+    let terminados = 0;
+
+    const pedidos = Array.from({ length: 5 }, () =>
+      pedirAOverpass("[out:json];", 1000).then((datos) => {
+        terminados += 1;
+        return datos;
+      }),
+    );
+
+    // Overpass contesta de a uno; cada uno que termina le pasa el turno al
+    // siguiente.
+    for (let vuelta = 0; vuelta < 50 && terminados < 5; vuelta++) {
+      await unRato();
+      pendientes.shift()?.(Response.json({ elements: [] }));
+    }
+
+    expect(terminados).toBe(5);
+    expect(maximo()).toBe(A_LA_VEZ);
+    await Promise.all(pedidos);
+  });
+
+  it("si mientras esperaba turno empezó una pausa, ni pregunta", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const { falso, pendientes } = overpassALaEspera();
+
+    // Dos ocupan los turnos; el tercero espera.
+    const primero = pedirAOverpass("[out:json];", 1000);
+    const segundo = pedirAOverpass("[out:json];", 1000);
+    const tercero = pedirAOverpass("[out:json];", 1000).catch(
+      (error: unknown) => error,
+    );
+    await unRato();
+    expect(falso).toHaveBeenCalledTimes(2);
+
+    // El primero vuelve rechazado: empieza la pausa y le pasa el turno.
+    pendientes[0](new Response("Not Acceptable", { status: 406 }));
+    await expect(primero).rejects.toThrow("406");
+
+    const falla = await tercero;
+    expect(falla).toBeInstanceOf(FallaDeOverpass);
+    expect((falla as FallaDeOverpass).esperaS).toBeGreaterThan(0);
+    expect(falso).toHaveBeenCalledTimes(2);
+
+    pendientes[1](Response.json({ elements: [] }));
+    await segundo;
   });
 });

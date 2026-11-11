@@ -95,11 +95,17 @@ Una tarde, en este orden. Cada punto cierra una puerta concreta.
 
 ### Overpass (los lugares de "Qué comer")
 
-No hace falta cuenta ni aviso: la instancia pública de Overpass,
-[overpass-api.de](https://overpass-api.de), pide solo no pasar de diez mil
-consultas por día y que cada cliente se presente, cosa que el sitio hace con su
-nombre y su dirección (`src/lib/comidas/overpass.ts`). Con la caché de doce
-horas por celda, el sitio queda lejos de ese límite.
+No hace falta cuenta ni aviso. El sitio usa el servidor público de Overpass de
+[Private.coffee](https://private.coffee), una asociación austríaca sin fines de
+lucro: es gratis, permite uso comercial y pide consultas medidas y pocos pedidos
+a la vez, cosa que el sitio cumple con la caché de doce horas por celda y dos
+pedidos a la vez por instancia (`src/lib/comidas/overpass.ts`). A los proyectos
+comerciales les sugiere una donación o hacerse socio: es opcional, y decidirlo
+es tuyo. Su contacto es support@private.coffee.
+
+El de [overpass-api.de](https://overpass-api.de), el servidor más conocido, no
+se usa: en noviembre de 2026 bloqueó a mano los pedidos del sitio desde Vercel,
+y sus operadores piden no esquivarlo (spec, 18.4).
 
 > Las pantallas de estos servicios cambian de nombre con el tiempo. Si un
 > nombre no coincide, buscá la sección por lo que hace: el concepto es el
@@ -250,15 +256,15 @@ preguntarle quince minutos por vez para no empeorarlo, y vos:
 
 1. Fijate que `encabezadosParaOverpass` (`src/lib/comidas/overpass.ts`) siga
    mandando el nombre del sitio con su dirección, el Referer y un Accept amplio:
-   Overpass rechaza así a lo que parece un script anónimo, y el test de ese
-   archivo lo cuida.
-2. Si eso está bien y sigue, el bloqueo lo puso una persona: escribiles a los que
-   operan Overpass en el foro de OpenStreetMap (community.openstreetmap.org,
-   "Help and support", etiqueta `overpass`) con la dirección del sitio, qué
-   consulta y cada cuánto (spec, 18.4).
+   los servidores rechazan así a lo que parece un script anónimo, y el test de
+   ese archivo lo cuida.
+2. Si eso está bien y sigue, escribile a quien opera el servidor que usa el
+   sitio (hoy Private.coffee: support@private.coffee) con la dirección del
+   sitio, qué consulta y cada cuánto (spec, 18.4).
 3. Nunca lo esquives cambiando el user-agent ni haciéndote pasar por otro
    programa: es lo que termina en un bloqueo por IP, y en Vercel esa IP la
-   comparten todos los pedidos del sitio.
+   comparten todos los pedidos del sitio. Cambiar de servidor es una decisión
+   aparte, que se toma leyendo sus condiciones, como se hizo con Private.coffee.
 
 **Alguien está creando viajes en masa.**
 La app ya lo frena: 30 viajes por hora por conexión y 2.000 por hora en total

@@ -20,6 +20,20 @@ import { consultaDeOverpass, lugaresDeLaRespuesta } from "./osm";
  * consulta y no deja mostrar sus datos en otro mapa que el suyo. Scrapear
  * Google o TripAdvisor está prohibido por sus condiciones.
  *
+ * QUÉ SERVIDOR
+ *
+ * Overpass es un programa, y lo corren varios servidores públicos, cada uno
+ * con sus reglas. El sitio usaba overpass-api.de, el de FOSSGIS, hasta que en
+ * noviembre de 2026 empezó a contestarle 406 a todo lo que salía de Vercel,
+ * aun presentándose como pide: según sus operadores, eso es un bloqueo puesto
+ * a mano, y piden no esquivarlo repartiendo los pedidos entre otros servidores
+ * o nubes. Desde entonces se usa el de Private.coffee, una asociación
+ * austríaca sin fines de lucro: gratis, sin registro y con uso comercial
+ * permitido, a cambio de consultas medidas y pocos pedidos a la vez; a los
+ * proyectos comerciales les sugiere una donación. Es un puente: un servidor
+ * ajeno no garantiza nada, y el paso siguiente es tener los lugares con datos
+ * propios (spec, 18.4).
+ *
  * CADA CUÁNTO SE PREGUNTA
  *
  * Cada celda y cada búsqueda se guardan SEGUNDOS_EN_CACHE —doce horas— en la
@@ -29,21 +43,31 @@ import { consultaDeOverpass, lugaresDeLaRespuesta } from "./osm";
  * queda lo anterior: un mapa con datos de ayer es mejor que uno vacío, siempre
  * que diga de cuándo son. Eso lo decide la API (src/app/api/que-comer/lugares).
  *
- * Overpass pide no pasar de diez mil consultas por día. Con doce horas por
- * celda, solo las celdas que alguien mira y la CDN adelante, el sitio queda
- * lejos de eso.
+ * Los servidores públicos piden no pasar de diez mil consultas por día. Con
+ * doce horas por celda, solo las celdas que alguien mira y la CDN adelante, el
+ * sitio queda lejos de eso.
+ *
+ * DE A POCO
+ *
+ * Cada instancia del servidor del sitio manda como mucho A_LA_VEZ pedidos
+ * juntos, y los demás esperan su turno: un mapa recién abierto pide varias
+ * celdas a la vez, y sin esto cada una sería un pedido simultáneo.
  *
  * CÓMO SE PRESENTA
  *
- * FOSSGIS, que opera overpass-api.de, pide un user-agent que identifique a la
- * aplicación: el que trae cada biblioteca no alcanza. En 2026, además, contesta
- * 406 a lo que parece un script anónimo, y lo que se reporta como señal es un
- * user-agent de biblioteca, un Accept que solo admite application/json o el
- * Accept-Language "*" que Node manda solo. El sitio mandaba ese Accept, y en
- * noviembre de 2026 todos sus pedidos volvían con 406. Por eso va un Accept
- * amplio, como el de un navegador, el idioma del sitio, el nombre con versión
- * y la dirección de la página, y la página como Referer (encabezadosParaOverpass).
- * Nunca el user-agent de otro programa: eso termina en un bloqueo.
+ * Los servidores públicos piden un user-agent que identifique a la aplicación
+ * —el que trae cada biblioteca no alcanza—, y en 2026 overpass-api.de contesta
+ * 406 a lo que parece un script anónimo. Por eso va un Accept amplio, como el
+ * de un navegador, el idioma del sitio, el nombre con versión y la dirección
+ * de la página, y la página como Referer (encabezadosParaOverpass). Nunca el
+ * user-agent de otro programa: eso termina en un bloqueo.
+ *
+ * DE CUÁNDO SON LOS DATOS
+ *
+ * Cada respuesta dice hasta cuándo llegan los datos que tiene el servidor
+ * (`datosDel`), y esa es la fecha que muestra el mapa: un servidor atrasado
+ * contesta hoy con datos de hace días. La hora de la consulta (`actualizado`)
+ * solo decide si la caché sigue al día.
  *
  * SI OVERPASS FRENA
  *
@@ -56,7 +80,7 @@ import { consultaDeOverpass, lugaresDeLaRespuesta } from "./osm";
  * no es exacta, pero cada instancia pregunta una sola vez por pausa.
  */
 
-const API = "https://overpass-api.de/api/interpreter";
+const API = "https://overpass.private.coffee/api/interpreter";
 
 /** La consulta tiene 20 segundos en Overpass; se espera un poco más por la red. */
 export const ESPERA_MAXIMA_MS = 25_000;
@@ -111,28 +135,75 @@ export function encabezadosParaOverpass(
 /** Hasta cuándo nadie le pregunta nada a Overpass, y por qué. */
 let pausa: { hasta: number; motivo: string } | null = null;
 
-/** Para los tests: cada uno arranca sin pausa. */
-export function olvidarLaPausa(): void {
+/** Si hay una pausa, la falla que corresponde; si no, nada. */
+function revisarLaPausa(): void {
+  const ahora = Date.now();
+
+  if (pausa && pausa.hasta > ahora) {
+    throw new FallaDeOverpass(
+      pausa.motivo,
+      Math.ceil((pausa.hasta - ahora) / 1000),
+    );
+  }
+}
+
+/** Cuántos pedidos manda juntos cada instancia (DE A POCO, arriba). */
+export const A_LA_VEZ = 2;
+
+let enCurso = 0;
+const enEspera: (() => void)[] = [];
+
+async function esperarTurno(): Promise<void> {
+  if (enCurso < A_LA_VEZ) {
+    enCurso += 1;
+    return;
+  }
+
+  // El turno lo pasa directamente el pedido que termina (liberarTurno): así
+  // nadie se cuela entre que uno sale y el que esperaba entra.
+  await new Promise<void>((entrar) => enEspera.push(entrar));
+}
+
+function liberarTurno(): void {
+  const siguiente = enEspera.shift();
+
+  if (siguiente) siguiente();
+  else enCurso -= 1;
+}
+
+/** Para los tests: cada uno arranca sin pausa y sin pedidos en curso. */
+export function arrancarDeCero(): void {
   pausa = null;
+  enCurso = 0;
+  enEspera.length = 0;
 }
 
 /**
  * Le manda una consulta a Overpass y devuelve lo que contestó, ya leído.
- * Durante una pausa no pregunta nada. Tira FallaDeOverpass si no se puede.
+ * Durante una pausa no pregunta nada, y espera turno si ya hay A_LA_VEZ
+ * pedidos en curso. Tira FallaDeOverpass si no se puede.
  */
 export async function pedirAOverpass(
   consulta: string,
   esperaMaximaMs: number,
 ): Promise<unknown> {
-  const antes = Date.now();
+  revisarLaPausa();
+  await esperarTurno();
 
-  if (pausa && pausa.hasta > antes) {
-    throw new FallaDeOverpass(
-      pausa.motivo,
-      Math.ceil((pausa.hasta - antes) / 1000),
-    );
+  try {
+    // Mientras esperaba turno, otro pedido pudo encontrarse con un freno.
+    revisarLaPausa();
+
+    return await preguntar(consulta, esperaMaximaMs);
+  } finally {
+    liberarTurno();
   }
+}
 
+async function preguntar(
+  consulta: string,
+  esperaMaximaMs: number,
+): Promise<unknown> {
   let respuesta: Response;
 
   try {
@@ -213,7 +284,8 @@ export async function consultarCelda(
 
 const enCache = unstable_cache(
   (busqueda: BusquedaEnElMapa, celda: Celda) => consultarCelda(busqueda, celda),
-  ["comidas-lugares", "v1"],
+  // v2: cambió el servidor y la respuesta suma `datosDel`.
+  ["comidas-lugares", "v2"],
   { revalidate: SEGUNDOS_EN_CACHE, tags: ["comidas-lugares"] },
 );
 

@@ -32,8 +32,14 @@ export interface LugarDeComida {
 /** Los lugares de una celda, con la hora en que se le preguntaron a OpenStreetMap. */
 export interface LugaresDeLaCelda {
   celda: string;
-  /** ISO. */
+  /** Cuándo se le preguntó a Overpass, en ISO: decide si la caché sigue al día. */
   actualizado: string;
+  /**
+   * Hasta cuándo llegan los datos de OpenStreetMap que tenía el servidor, en
+   * ISO, o null si no lo dijo. Es la fecha que se muestra: un servidor
+   * atrasado contesta hoy con datos de hace días.
+   */
+  datosDel: string | null;
   lugares: LugarDeComida[];
   /** Si había más de los que se traen por celda: el mapa lo avisa. */
   recortado: boolean;
