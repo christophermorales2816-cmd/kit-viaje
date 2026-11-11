@@ -2691,9 +2691,9 @@ y piden no esquivarlo repartiendo los pedidos entre otros servidores o nubes.
 Desde entonces se usa el de Private.coffee, una asociación austríaca sin fines
 de lucro: gratis, sin registro y con uso comercial permitido, a cambio de
 consultas medidas y pocos pedidos a la vez; a los proyectos comerciales les
-sugiere una donación. Es un puente: un servidor ajeno no garantiza nada, y el
-paso siguiente es tener los lugares con datos propios, sacados de los extractos
-diarios de OpenStreetMap.
+sugiere una donación. Es un puente: un servidor ajeno no garantiza nada. Desde
+que hay datos propios (18.10), Overpass queda solo para un país que todavía no
+los tiene, o para cuando la base falla.
 
 **El límite.** Los servidores públicos piden no pasar de diez mil consultas por
 día. Con doce horas por celda, solo las celdas que alguien mira y la CDN
@@ -2768,7 +2768,9 @@ de cambiar.
 | Para qué    | Fuente                                    | Costo                                 |
 | ----------- | ----------------------------------------- | ------------------------------------- |
 | Platos      | Escritos a mano, en el repo               | —                                     |
-| Lugares     | OpenStreetMap, por Overpass               | Gratis; ODbL: se cita la fuente       |
+| Lugares     | OpenStreetMap: extractos de Geofabrik     | Gratis; ODbL: se cita la fuente       |
+| Respaldo    | OpenStreetMap, por Overpass               | Gratis                                |
+| Proceso     | GitHub Actions, una vez por día           | Gratis en un repo público             |
 | Mapa        | MapLibre con OpenFreeMap, como el radar   | Gratis                                |
 | Fotos       | Wikimedia Commons                         | Gratis; cada licencia pide su crédito |
 | Cómo llegar | Un link a Google Maps con las coordenadas | Gratis: es un link, no la API         |
@@ -2788,3 +2790,58 @@ Los demás países con guía, de a tandas, por continente, como las guías. Cuan
 haya cuentas, los platos que alguien guarda para su viaje. Y si un día el mapa
 necesita más de lo que da OpenStreetMap en una ciudad, una fuente paga se suma
 para esa ciudad, no para todas.
+
+### 18.10 Los lugares, con datos propios
+
+El mapa no le pregunta a nadie en cada visita: lee de una base propia que se
+renueva una vez por día con los datos de OpenStreetMap. Depender de un servidor
+ajeno para cada visita resultó frágil —overpass-api.de bloqueó al sitio en
+noviembre de 2026—, y para un plato basta con saber hoy lo que abrió ayer.
+
+**El proceso.** Un workflow de GitHub Actions (`.github/workflows/lugares.yml`)
+corre todos los días a las 07:23 UTC. Por cada país con catálogo baja su
+extracto de OpenStreetMap de Geofabrik (el campo `extracto` del catálogo: a
+Japón le corresponde `asia/japan`), se queda con los lugares de comida
+(`osmium tags-filter`, con las mismas etiquetas que busca el mapa), los exporta
+a GeoJSON y los carga en Supabase: una fila por plato y por lugar, con la celda
+de la grilla donde cae (`herramientas/lugares/`). Es gratis: GitHub Actions no
+cobra en un repo público, y Geofabrik tampoco.
+
+**La misma regla que con Overpass.** Qué lugares busca cada plato lo decide la
+misma búsqueda del catálogo, leída por `coincide` (`src/lib/comidas/coincide.ts`),
+y un test la compara con la consulta de Overpass en más de mil casos armados con
+todos los platos. Cada lugar sale de la misma función que con Overpass
+(`lugarDelElemento`): las mismas reglas de cerrados, horarios, webs y
+teléfonos.
+
+**La carga.** Sube las filas de a tandas con la corrida del día y recién al
+final borra lo de corridas anteriores —lo que cerró o ya no está—, así el mapa
+nunca queda vacío a mitad de camino. Si un país trae menos de la mitad de los
+lugares de la vez anterior, se toma como un extracto roto: no se toca nada, el
+workflow falla y GitHub avisa por mail. Si la baja es a propósito —un PR sacó
+platos—, se corre a mano aceptando menos lugares. Si un país falla, los demás
+se cargan igual.
+
+**La API.** Primero busca en la base (`src/lib/comidas/base.ts`), con la anon
+key: son datos públicos, con RLS de solo lectura. Las respuestas van una hora a
+la CDN, porque los datos cambian una vez por día. Si el país todavía no tiene
+datos propios, o la base falla, le pregunta a Overpass, como antes (18.4).
+
+**De cuándo son.** La fecha que muestra el mapa es la del extracto —hasta cuándo
+llegan sus datos—, no la de la carga. Un día que el workflow falla, el mapa
+sigue con lo anterior y lo dice con su fecha; no hay "estamos actualizando",
+porque pedir de nuevo no trae nada más nuevo hasta la próxima corrida.
+
+**La única configuración.** El workflow escribe con la service role key, que
+va como secret de GitHub (`SUPABASE_SERVICE_ROLE_KEY`, el mismo valor que en
+Vercel), cargado por la interfaz de GitHub. Corre solo desde main, por horario
+o a mano; nunca en un PR. Hasta que el secret esté, el workflow avisa qué falta
+y el mapa sigue con Overpass.
+
+**Lo que crece.** Tres países son unos 3,5 GB por día de extractos y unos
+minutos de proceso. Con todos los países con guía sería el planeta entero, unos
+80 GB por día: antes de llegar ahí hay que repartirlo —los países grandes cada
+dos o tres días, o por regiones— y vigilar el tamaño de la base, que en el plan
+gratis de Supabase es de 500 MB. Las menciones de honor (18.5) siguen
+verificándose con Overpass, una vez por día; pasarlas a los extractos es el
+paso siguiente.

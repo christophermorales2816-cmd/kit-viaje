@@ -31,27 +31,27 @@ de dependencias.
 **MVP completo contra el spec.** Las siete secciones implementadas y los siete
 criterios de aceptación de la sección 7 cumplidos.
 
-| Sección | Qué es | Estado |
-|---|---|---|
-| 3 | Modelo de datos + RLS | ✅ |
-| 4 | Motor de packing | ✅ |
-| 5 | Motor de presupuesto | ✅ |
-| 6 | Flujo de usuario y persistencia | ✅ |
-| 7 | Stack, testing, deploy | ✅ |
-| 8 | Guía de destino | ✅ |
-| 9 | Página de preparación | ✅ |
+| Sección | Qué es                          | Estado |
+| ------- | ------------------------------- | ------ |
+| 3       | Modelo de datos + RLS           | ✅     |
+| 4       | Motor de packing                | ✅     |
+| 5       | Motor de presupuesto            | ✅     |
+| 6       | Flujo de usuario y persistencia | ✅     |
+| 7       | Stack, testing, deploy          | ✅     |
+| 8       | Guía de destino                 | ✅     |
+| 9       | Página de preparación           | ✅     |
 
 ### El flujo
 
 Cuatro páginas, en este orden. Cada una responde una pregunta y recién después
 pide la siguiente decisión.
 
-| # | Ruta | Qué responde | Cómo se renderiza |
-|---|---|---|---|
-| 1 | `/` | *¿Adónde?* — el globo, sin hablar del país | Estática |
-| 2 | `/guia/[slug]` | *¿Qué me espera?* — números, cotizaciones en vivo, tablero, puntajes, destinos y mapa | Estática + `<Suspense>` para las cotizaciones |
-| 3 | `/guia/[slug]/preparar` | *¿Cuándo conviene ir y qué llevo?* — el año climático, mes a mes, y la checklist | Dinámica; las lecturas de la base, en caché 1 h |
-| 4 | `/guia/[slug]/planificar` | *¿Qué necesito para MIS fechas?* — el generador | Dinámica; las ciudades, en caché 1 h. El viaje se crea en la Server Action |
+| #   | Ruta                      | Qué responde                                                                          | Cómo se renderiza                                                          |
+| --- | ------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 1   | `/`                       | _¿Adónde?_ — el globo, sin hablar del país                                            | Estática                                                                   |
+| 2   | `/guia/[slug]`            | _¿Qué me espera?_ — números, cotizaciones en vivo, tablero, puntajes, destinos y mapa | Estática + `<Suspense>` para las cotizaciones                              |
+| 3   | `/guia/[slug]/preparar`   | _¿Cuándo conviene ir y qué llevo?_ — el año climático, mes a mes, y la checklist      | Dinámica; las lecturas de la base, en caché 1 h                            |
+| 4   | `/guia/[slug]/planificar` | _¿Qué necesito para MIS fechas?_ — el generador                                       | Dinámica; las ciudades, en caché 1 h. El viaje se crea en la Server Action |
 
 Las páginas 3 y 4 son dinámicas y no prerenderizadas a propósito: leen
 Supabase, y con `generateStaticParams` un hipo de la base durante el build no
@@ -60,15 +60,15 @@ lecturas (`src/lib/supabase/cached.ts`): una hora, y por deploy.
 
 ### Criterios de aceptación
 
-| # | Criterio | Cómo se verifica |
-|---|---|---|
-| 1 | Crear un viaje sin cuenta y llegar a las dos listas, **con todo en cero** | `src/lib/trips/item-write.test.ts` y el flujo en `src/lib/trips/` |
-| 2 | El presupuesto se recalcula con las 4 cotizaciones | `src/lib/quotes/map.test.ts` |
-| 3 | El `share_slug` abre en solo lectura | Ruta `/viaje/ver/[shareSlug]` con `isReadOnly` |
-| 4 | Exportar a PDF y CSV | `src/lib/export/csv.test.ts` y CSS de impresión |
-| 5 | El dashboard privado avisa que el link es la única forma de volver | `src/components/trip/share-controls.tsx` |
-| 6 | Los tests de los motores pasan en CI | Job `web` del [workflow](./.github/workflows/ci.yml) |
-| 7 | Ninguna escritura sin `edit_token` válido | Job `database`: 38 aserciones en `supabase/tests/rls_smoke.sql` |
+| #   | Criterio                                                                  | Cómo se verifica                                                  |
+| --- | ------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| 1   | Crear un viaje sin cuenta y llegar a las dos listas, **con todo en cero** | `src/lib/trips/item-write.test.ts` y el flujo en `src/lib/trips/` |
+| 2   | El presupuesto se recalcula con las 4 cotizaciones                        | `src/lib/quotes/map.test.ts`                                      |
+| 3   | El `share_slug` abre en solo lectura                                      | Ruta `/viaje/ver/[shareSlug]` con `isReadOnly`                    |
+| 4   | Exportar a PDF y CSV                                                      | `src/lib/export/csv.test.ts` y CSS de impresión                   |
+| 5   | El dashboard privado avisa que el link es la única forma de volver        | `src/components/trip/share-controls.tsx`                          |
+| 6   | Los tests de los motores pasan en CI                                      | Job `web` del [workflow](./.github/workflows/ci.yml)              |
+| 7   | Ninguna escritura sin `edit_token` válido                                 | Job `database`: 38 aserciones en `supabase/tests/rls_smoke.sql`   |
 
 El criterio 5 reemplaza al original, que pedía un historial de "viajes
 recientes" en `localStorage`. Esa función se eliminó entera —módulo, efecto y
@@ -116,7 +116,9 @@ de cada país.
   del efecto: lee `window` al evaluarse y rompe el prerender si se importa arriba
 - **MapLibre** con los mosaicos de **OpenFreeMap** para el radar de vuelos y el
   mapa de lugares de "Qué comer" — también dentro del efecto, y con su worker
-  servido por el bundler; los lugares, de **OpenStreetMap** por **Overpass**
+  servido por el bundler; los lugares, de **OpenStreetMap**: los extractos de
+  **Geofabrik**, procesados una vez por día con **osmium**, y **Overpass** de
+  respaldo
 - **react-day-picker** para el calendario y **date-fns** para las fechas
 - **Vercel Web Analytics**, sin cookies
 - **Vitest** para los tests de los motores y unos pocos de componentes
@@ -133,21 +135,21 @@ Las de nombre `_corredor_<pais>` siembran un país cada una (ciudades, clima y
 precios) y se generan con `herramientas/corredor/generar.py`. Las demás son
 estructurales:
 
-| Migración | Contenido |
-|---|---|
-| `20260826120000_reference_tables.sql` | `destinations`, `climate_profiles`, `climate_thresholds`, `products`, `packing_catalog` |
-| `20260826120100_session_tables.sql` | `trips`, `trip_packing_items`, `trip_budget_items` |
-| `20260826120200_rls_policies.sql` | RLS de los dos grupos de tablas |
-| `20260826120300_seed_climate_thresholds.sql` | Buckets de clima iniciales |
-| `20260826140000_precip_probability_scale.sql` | `precip_probability` acotada a 0-100 |
-| `20260827100000_seed_reference_data.sql` | Destino, clima, catálogo y precios de Buenos Aires |
-| `20260831040000_ezeiza_por_tramo.sql` | El traslado del aeropuerto se cobra por tramo, no por día |
-| `20260902060000_qty_desde_cero.sql` | `qty >= 0` y default 0 en las tablas de sesión |
-| `20260910100000_destinos_por_ciudad.sql` | Varias ciudades por corredor, una base |
-| `20260910140000_slug_de_ciudad.sql` | La ciudad en la URL |
-| `20261008120000_endurecer_permisos.sql` | Solo SELECT para anon; lo nuevo nace cerrado |
-| `20261008120100_cupo_de_creacion.sql` | Fecha de alta, cupo de creación de viajes y purga manual |
-| `20261008120200_moneda_coherente.sql` | Precios siempre en la moneda de su ciudad |
+| Migración                                     | Contenido                                                                               |
+| --------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `20260826120000_reference_tables.sql`         | `destinations`, `climate_profiles`, `climate_thresholds`, `products`, `packing_catalog` |
+| `20260826120100_session_tables.sql`           | `trips`, `trip_packing_items`, `trip_budget_items`                                      |
+| `20260826120200_rls_policies.sql`             | RLS de los dos grupos de tablas                                                         |
+| `20260826120300_seed_climate_thresholds.sql`  | Buckets de clima iniciales                                                              |
+| `20260826140000_precip_probability_scale.sql` | `precip_probability` acotada a 0-100                                                    |
+| `20260827100000_seed_reference_data.sql`      | Destino, clima, catálogo y precios de Buenos Aires                                      |
+| `20260831040000_ezeiza_por_tramo.sql`         | El traslado del aeropuerto se cobra por tramo, no por día                               |
+| `20260902060000_qty_desde_cero.sql`           | `qty >= 0` y default 0 en las tablas de sesión                                          |
+| `20260910100000_destinos_por_ciudad.sql`      | Varias ciudades por corredor, una base                                                  |
+| `20260910140000_slug_de_ciudad.sql`           | La ciudad en la URL                                                                     |
+| `20261008120000_endurecer_permisos.sql`       | Solo SELECT para anon; lo nuevo nace cerrado                                            |
+| `20261008120100_cupo_de_creacion.sql`         | Fecha de alta, cupo de creación de viajes y purga manual                                |
+| `20261008120200_moneda_coherente.sql`         | Precios siempre en la moneda de su ciudad                                               |
 
 Aplicarlas:
 
@@ -212,8 +214,8 @@ explicación.
 ```ts
 import { calculateBudget, generateBudgetList, selectQuote } from "@/lib/budget";
 
-const lineas = generateBudgetList(trip, products);            // una vez, al crear el viaje
-const totales = calculateBudget(lineas, selectQuote(quotes, "blue"));  // en cada render
+const lineas = generateBudgetList(trip, products); // una vez, al crear el viaje
+const totales = calculateBudget(lineas, selectQuote(quotes, "blue")); // en cada render
 ```
 
 Las cotizaciones entran **como dato**, no las va a buscar el motor: así el
@@ -236,10 +238,10 @@ hipo de la base cae en la pantalla por defecto de Next —"Application error: a
 server-side exception has occurred"—, en inglés y sin salida. Hay tres
 archivos para eso:
 
-| Archivo | Cuándo aparece |
-|---|---|
-| `src/app/not-found.tsx` | Un slug que no existe. Lo llaman las tres rutas de guía |
-| `src/app/error.tsx` | Falla el render de una ruta: Supabase caído, una lectura que revienta |
+| Archivo                    | Cuándo aparece                                                                                                        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `src/app/not-found.tsx`    | Un slug que no existe. Lo llaman las tres rutas de guía                                                               |
+| `src/app/error.tsx`        | Falla el render de una ruta: Supabase caído, una lectura que revienta                                                 |
 | `src/app/global-error.tsx` | Falla el layout raíz. Reemplaza el `<html>` entero, así que no puede usar nada del layout — de ahí los estilos inline |
 
 **No se muestra `error.message`.** En producción Next ya lo reemplaza por uno
@@ -284,8 +286,8 @@ imprime cuáles, así que el log del run lo dice sin que haya que adivinar.
 
 Se cargan en Settings → Secrets and variables → Actions, en la pestaña
 **Secrets** y como **Repository secrets**. Los tres errores habituales son
-cargarlas en la pestaña "Variables" de al lado, cargarlas como *Environment
-secrets* de un environment que el workflow no declara, o un typo en el nombre.
+cargarlas en la pestaña "Variables" de al lado, cargarlas como _Environment
+secrets_ de un environment que el workflow no declara, o un typo en el nombre.
 
 Mientras tanto la base se puede poner al día desde una terminal, sin GitHub de
 por medio:
@@ -328,7 +330,8 @@ docs/                    # administración, arquitectura, datos, seguridad
 herramientas/
 ├── corredor/            # generador de las migraciones de cada país
 ├── aeropuertos/         # generador de la lista de aeropuertos (OurAirports)
-└── comidas/             # las fotos de los platos, de Wikimedia Commons
+├── comidas/             # las fotos de los platos, de Wikimedia Commons
+└── lugares/             # la carga diaria de los lugares de cada plato (OpenStreetMap)
 supabase/
 ├── migrations/          # historial versionado del esquema y los datos
 └── tests/
@@ -385,7 +388,7 @@ src/
     ├── quotes/          # dolarapi: fetch, mapeo y spread
     ├── trips/           # Server Actions, validación, lectura, escrituras y cupo
     ├── vuelos/          # aeropuertos, búsqueda, cercanía, ubicación, cookie y aviones en vivo
-    ├── comidas/         # filtros, grilla del mapa, Overpass, menciones y horarios
+    ├── comidas/         # filtros, grilla del mapa, lugares (base propia y Overpass), menciones y horarios
     ├── mapa/            # el estilo y los textos de los mapas de MapLibre
     ├── geo.ts           # distancias y círculos sobre la esfera
     ├── supabase/        # clientes, lectura de referencia y su caché

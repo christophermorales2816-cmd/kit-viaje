@@ -1,12 +1,18 @@
 import { NextRequest } from "next/server";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import type { LugaresDeLaCelda } from "@/lib/comidas/lugares";
 import type { ResultadoDeLugares } from "@/lib/comidas/overpass";
 
 const traerLugares = vi.fn<() => Promise<ResultadoDeLugares>>();
+const lugaresPropios = vi.fn<() => Promise<LugaresDeLaCelda | null>>();
 
 vi.mock("@/lib/comidas/overpass", () => ({
   traerLugares: (...args: unknown[]) => traerLugares(...(args as [])),
+}));
+
+vi.mock("@/lib/comidas/base", () => ({
+  lugaresPropios: (...args: unknown[]) => lugaresPropios(...(args as [])),
 }));
 
 import { GET } from "./route";
@@ -33,22 +39,63 @@ function datos(actualizado: Date) {
   };
 }
 
+beforeEach(() => {
+  // Por defecto, el país todavía no tiene datos propios: va a Overpass.
+  lugaresPropios.mockResolvedValue(null);
+});
+
 afterEach(() => {
   traerLugares.mockReset();
+  lugaresPropios.mockReset();
+  vi.restoreAllMocks();
 });
 
 describe("GET /api/que-comer/lugares", () => {
-  it("responde con caché en la CDN lo que está al día", async () => {
+  it("con datos propios, los sirve con una hora de CDN y sin preguntarle a Overpass", async () => {
+    lugaresPropios.mockResolvedValue({
+      ...datos(new Date(Date.now() - 2 * 86_400_000)).datos,
+      datosDel: "2026-11-10T20:21:02.000Z",
+    });
+
+    const respuesta = await pedir(BIEN);
+    const cuerpo = await respuesta.json();
+
+    expect(respuesta.status).toBe(200);
+    expect(respuesta.headers.get("cache-control")).toContain("s-maxage=3600");
+    // Pedirlos de nuevo no trae nada más nuevo: no se están renovando.
+    expect(cuerpo.renovando).toBe(false);
+    expect(cuerpo.datosDel).toBe("2026-11-10T20:21:02.000Z");
+    expect(lugaresPropios).toHaveBeenCalledWith("japon", "ramen", {
+      fila: 356,
+      columna: 1397,
+    });
+    expect(traerLugares).not.toHaveBeenCalled();
+  });
+
+  it("si la base falla, vuelve a Overpass", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    lugaresPropios.mockRejectedValue(new Error("connection refused"));
     traerLugares.mockResolvedValue(datos(new Date()));
 
     const respuesta = await pedir(BIEN);
 
     expect(respuesta.status).toBe(200);
-    expect(respuesta.headers.get("cache-control")).toContain("s-maxage=600");
-    expect((await respuesta.json()).celda).toBe("356_1397");
+    expect(traerLugares).toHaveBeenCalledTimes(1);
   });
 
-  it("lo que tiene más de un día sale igual, pero sin caché", async () => {
+  it("responde con caché en la CDN lo que está al día", async () => {
+    traerLugares.mockResolvedValue(datos(new Date()));
+
+    const respuesta = await pedir(BIEN);
+    const cuerpo = await respuesta.json();
+
+    expect(respuesta.status).toBe(200);
+    expect(respuesta.headers.get("cache-control")).toContain("s-maxage=600");
+    expect(cuerpo.celda).toBe("356_1397");
+    expect(cuerpo.renovando).toBe(false);
+  });
+
+  it("lo que tiene más de un día sale igual, pero sin caché y avisando que se renueva", async () => {
     traerLugares.mockResolvedValue(
       datos(new Date(Date.now() - 2 * 86_400_000)),
     );
@@ -57,6 +104,7 @@ describe("GET /api/que-comer/lugares", () => {
 
     expect(respuesta.status).toBe(200);
     expect(respuesta.headers.get("cache-control")).toBe("no-store");
+    expect((await respuesta.json()).renovando).toBe(true);
   });
 
   it("no acepta un plato que no está en el catálogo, ni uno sin mapa", async () => {

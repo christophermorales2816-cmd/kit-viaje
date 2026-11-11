@@ -189,9 +189,13 @@ búsquedas usan valores que OpenStreetMap entiende; las menciones tienen su
 ficha de OpenStreetMap y están cerca de su ciudad; toda foto nombrada pasó por
 `herramientas/comidas/fotos.py`, y el catálogo se revisó hace menos de un año.
 
-Los lugares de cada plato no se guardan en la base ni en el repo: vienen de
-OpenStreetMap por Overpass y pasan por la caché de Next doce horas (spec,
-18.4). Lo que llega al navegador está en `LugarDeComida`, en
+Los lugares de cada plato están en `lugares_de_comida`: una fila por plato y
+por lugar, con la celda del mapa donde cae y el lugar ya armado (`lugar`, un
+JSON). `extractos_de_comida` dice, por país, de cuándo son los datos y cuándo se
+cargaron. Las llena una vez por día el workflow de lugares, con el extracto de
+OpenStreetMap de cada país (spec, 18.10); nadie las edita a mano. Un país que
+todavía no tiene fila en `extractos_de_comida` usa Overpass, con la caché de
+Next de doce horas (spec, 18.4). Lo que llega al navegador está en `LugarDeComida`, en
 `src/lib/comidas/lugares.ts`. Son datos de OpenStreetMap, con su licencia
 (ODbL), y la página lo dice. Las fotos están en `src/content/comidas/fotos.json`,
 que no se edita a mano: lo regenera el script.

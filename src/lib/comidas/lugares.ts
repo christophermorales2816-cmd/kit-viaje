@@ -45,6 +45,17 @@ export interface LugaresDeLaCelda {
   recortado: boolean;
 }
 
+/** Lo que contesta la API del mapa por cada celda (src/app/api/que-comer/lugares). */
+export interface RespuestaDeLugares extends LugaresDeLaCelda {
+  /**
+   * Si los datos tienen más de VIGENCIA_S y ya se están pidiendo de nuevo por
+   * detrás: el mapa lo avisa y vuelve a pedir la celda en unos segundos. Solo
+   * pasa con Overpass; los datos propios se renuevan una vez por día y
+   * pedirlos de nuevo no trae nada más nuevo (spec, 18.10).
+   */
+  renovando: boolean;
+}
+
 /**
  * Hasta qué edad los lugares de una celda se consideran al día: un día.
  *

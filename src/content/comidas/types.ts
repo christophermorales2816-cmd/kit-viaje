@@ -261,6 +261,12 @@ export interface CatalogoDeComida {
   regiones: Region[];
   /** La primera es la del mapa cuando el plato no es de una región. */
   ciudades: CiudadDelMapa[];
+  /**
+   * El extracto diario de OpenStreetMap del país en Geofabrik, sin el final:
+   * "asia/japan" es download.geofabrik.de/asia/japan-latest.osm.pbf. De ahí
+   * salen los lugares del mapa (spec, 18.10).
+   */
+  extracto: string;
   /** Cómo se llama cada tipo de lugar en este país, si no es el nombre común. */
   nombresDeLugares?: Partial<Record<Lugar, string>>;
   platos: Plato[];

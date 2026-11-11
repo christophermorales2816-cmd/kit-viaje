@@ -2,7 +2,8 @@ import type { NextRequest } from "next/server";
 
 import { getCatalogo } from "@/content/comidas";
 import { celdaDeClave, celdaDelPais } from "@/lib/comidas/celdas";
-import { VIGENCIA_S } from "@/lib/comidas/lugares";
+import { lugaresPropios } from "@/lib/comidas/base";
+import { type RespuestaDeLugares, VIGENCIA_S } from "@/lib/comidas/lugares";
 import { traerLugares } from "@/lib/comidas/overpass";
 
 /**
@@ -27,6 +28,13 @@ import { traerLugares } from "@/lib/comidas/overpass";
 
 /** Diez minutos en la CDN, y una hora más mientras la renueva. */
 const CACHE = "public, max-age=0, s-maxage=600, stale-while-revalidate=3600";
+
+/**
+ * Los datos propios cambian una vez por día (spec, 18.10): una hora en la CDN,
+ * y un día más mientras la renueva.
+ */
+const CACHE_PROPIOS =
+  "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400";
 
 function error(status: number, mensaje: string): Response {
   return Response.json(
@@ -60,6 +68,23 @@ export async function GET(request: NextRequest): Promise<Response> {
     return error(400, "Esa celda queda fuera del país.");
   }
 
+  // Primero, los datos propios (spec, 18.10). Si el país todavía no los tiene,
+  // o la base falla, Overpass, como antes.
+  const propios = await lugaresPropios(catalogo.slug, plato.id, celda).catch(
+    (falla: unknown) => {
+      console.error("lugaresPropios", falla);
+      return null;
+    },
+  );
+
+  if (propios) {
+    const respuesta: RespuestaDeLugares = { ...propios, renovando: false };
+
+    return Response.json(respuesta, {
+      headers: { "Cache-Control": CACHE_PROPIOS },
+    });
+  }
+
   const resultado = await traerLugares(plato.buscar, celda);
 
   if (!resultado.ok && resultado.esperaS !== null) {
@@ -82,8 +107,13 @@ export async function GET(request: NextRequest): Promise<Response> {
   if (!resultado.ok) return error(502, resultado.motivo);
 
   const edadS = (Date.now() - Date.parse(resultado.datos.actualizado)) / 1000;
+  const respuesta: RespuestaDeLugares = {
+    ...resultado.datos,
+    // Más viejos que VIGENCIA_S, la caché de Next ya los está renovando.
+    renovando: edadS >= VIGENCIA_S,
+  };
 
-  return Response.json(resultado.datos, {
-    headers: { "Cache-Control": edadS < VIGENCIA_S ? CACHE : "no-store" },
+  return Response.json(respuesta, {
+    headers: { "Cache-Control": respuesta.renovando ? "no-store" : CACHE },
   });
 }

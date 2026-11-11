@@ -69,6 +69,7 @@ export const mexico: CatalogoDeComida = {
     { id: "sureste", nombre: "Península de Yucatán" },
   ],
 
+  extracto: "north-america/mexico",
   ciudades: [
     {
       id: "cdmx",

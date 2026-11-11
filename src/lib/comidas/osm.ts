@@ -118,7 +118,8 @@ export function consultaDeOverpass(
   );
 }
 
-interface ElementoCrudo {
+/** Un elemento de OpenStreetMap con la forma en que lo da Overpass. */
+export interface ElementoCrudo {
   type?: unknown;
   id?: unknown;
   lat?: unknown;
@@ -274,7 +275,15 @@ function numero(valor: unknown): number | null {
   return typeof valor === "number" && Number.isFinite(valor) ? valor : null;
 }
 
-function lugarDe(crudo: ElementoCrudo, hoy: Date): LugarDeComida | null {
+/**
+ * Un elemento de OpenStreetMap, como lugar del mapa; null si no es un lugar de
+ * comida o está cerrado. Lo usan las respuestas de Overpass y los extractos
+ * diarios (extracto.ts): los dos caminos dan el mismo lugar.
+ */
+export function lugarDelElemento(
+  crudo: ElementoCrudo,
+  hoy: Date,
+): LugarDeComida | null {
   const tipoOsm = crudo.type;
   const id = numero(crudo.id);
 
@@ -365,7 +374,7 @@ export function lugaresDeLaRespuesta(
 
   const lugares = elements
     .slice(0, MAXIMO_POR_CELDA)
-    .map((crudo) => lugarDe(crudo as ElementoCrudo, hoy))
+    .map((crudo) => lugarDelElemento(crudo as ElementoCrudo, hoy))
     .filter((lugar): lugar is LugarDeComida => lugar !== null);
 
   return {
