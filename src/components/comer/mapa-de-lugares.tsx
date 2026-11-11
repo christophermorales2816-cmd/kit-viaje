@@ -38,6 +38,7 @@ import {
 import {
   geojsonDeLugares,
   juntarLugares,
+  mensajeDePausa,
   porCercania,
 } from "@/lib/comidas/mapa";
 import {
@@ -94,7 +95,8 @@ type Celdas = Record<
   | { estado: "cargando" }
   /** `vieja`: con más de un día, se está renovando (ver arriba). */
   | { estado: "lista"; datos: LugaresDeLaCelda; vieja: boolean }
-  | { estado: "pausa" }
+  /** `segundos`: lo que pidió esperar el servidor antes de volver a preguntar. */
+  | { estado: "pausa"; segundos: number }
   | { estado: "fallo" }
 >;
 
@@ -453,7 +455,12 @@ export function MapaDeLugares({
         if (respuesta.status === 503) {
           const segundos = Number(respuesta.headers.get("retry-after")) || 60;
 
-          setCeldas((antes) => ({ ...antes, [clave]: { estado: "pausa" } }));
+          // Como con una falla: si ya había datos de esta celda, se quedan.
+          setCeldas((antes) =>
+            antes[clave]?.estado === "lista"
+              ? antes
+              : { ...antes, [clave]: { estado: "pausa", segundos } },
+          );
           esperar(segundos * 1000, () => void pedir(clave));
           return;
         }
@@ -525,6 +532,9 @@ export function MapaDeLugares({
   const listas = estados.flatMap((celda) =>
     celda?.estado === "lista" ? [celda.datos] : [],
   );
+  const pausas = estados.flatMap((celda) =>
+    celda?.estado === "pausa" ? [celda.segundos] : [],
+  );
   const fechas = listas.map((datos) => datos.actualizado).sort();
   const masVieja = fechas[0] ?? null;
   // La fecha de referencia para "hace años que nadie lo toca" es la de los
@@ -552,9 +562,8 @@ export function MapaDeLugares({
     mensaje = `Esta parte del mapa queda fuera de ${nombreDelPais}.`;
   } else if (estados.some((celda) => !celda || celda.estado === "cargando")) {
     mensaje = "Buscando lugares en OpenStreetMap…";
-  } else if (estados.some((celda) => celda?.estado === "pausa")) {
-    mensaje =
-      "OpenStreetMap pidió una pausa: volvemos a buscar en un minuto. Mientras, quedan los últimos datos.";
+  } else if (pausas.length > 0) {
+    mensaje = mensajeDePausa(Math.max(...pausas));
   } else if (estados.some((celda) => celda?.estado === "fallo")) {
     mensaje = "No pudimos traer los lugares de una parte del mapa.";
   } else if (enLaZona === 0) {

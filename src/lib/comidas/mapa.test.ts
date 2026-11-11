@@ -6,6 +6,7 @@ import {
   ciudadInicial,
   geojsonDeLugares,
   juntarLugares,
+  mensajeDePausa,
   porCercania,
 } from "./mapa";
 
@@ -115,6 +116,17 @@ describe("los links de cada lugar", () => {
     );
     expect(urlParaLlegar(35.68, 139.76)).toBe(
       "https://www.google.com/maps/dir/?api=1&destination=35.680000,139.760000",
+    );
+  });
+});
+
+describe("mensajeDePausa", () => {
+  it("dice cuánto falta, en minutos", () => {
+    expect(mensajeDePausa(60)).toContain("pidió una pausa");
+    expect(mensajeDePausa(60)).toContain("en un minuto");
+    expect(mensajeDePausa(61)).toContain("en 2 minutos");
+    expect(mensajeDePausa(900)).toContain(
+      "no está atendiendo nuestros pedidos: volvemos a buscar en 15 minutos.",
     );
   });
 });
