@@ -622,4 +622,66 @@ begin
   end;
 end $$;
 
+-- ---------------------------------------------------------------------------
+-- Los lugares de "Qué comer" (20261111120000): se leen, no se escriben
+-- ---------------------------------------------------------------------------
+
+insert into extractos_de_comida (pais, datos_del, procesado, lugares)
+values ('pais-de-prueba', '2026-11-10T20:00:00Z', '2026-11-11T06:30:00Z', 1);
+
+insert into lugares_de_comida (pais, plato, osm, celda, lugar, corrida)
+values ('pais-de-prueba', 'ramen', 'node/1', '356_1397',
+        '{"id": "node/1", "nombre": "Taro"}', '2026-11-11T06:30:00Z');
+
+do $$
+declare
+  n int;
+begin
+  set local role anon;
+  select count(*) into n from lugares_de_comida where pais = 'pais-de-prueba';
+  if n <> 1 then
+    raise exception 'FALLO: anon no pudo leer lugares_de_comida';
+  end if;
+  select count(*) into n from extractos_de_comida where pais = 'pais-de-prueba';
+  if n <> 1 then
+    raise exception 'FALLO: anon no pudo leer extractos_de_comida';
+  end if;
+  raise notice 'OK  anon lee los lugares de comida';
+end $$;
+reset role;
+
+do $$
+begin
+  set local role anon;
+  delete from lugares_de_comida;
+  raise exception 'FALLO: anon pudo borrar lugares de comida';
+exception
+  when insufficient_privilege then
+    raise notice 'OK  anon no puede borrar lugares de comida';
+end $$;
+reset role;
+
+do $$
+begin
+  set local role anon;
+  insert into extractos_de_comida (pais, datos_del, procesado, lugares)
+  values ('otro-pais', now(), now(), 0);
+  raise exception 'FALLO: anon pudo cargar un extracto';
+exception
+  when insufficient_privilege then
+    raise notice 'OK  anon no puede cargar extractos';
+end $$;
+reset role;
+
+do $$
+begin
+  begin
+    insert into lugares_de_comida (pais, plato, osm, celda, lugar, corrida)
+    values ('pais-de-prueba', 'ramen', 'cualquier cosa', '356_1397', '{}', now());
+    raise exception 'FALLA  se aceptó un id de OpenStreetMap sin forma';
+  exception when check_violation then
+    raise notice 'OK  se rechaza un id de OpenStreetMap sin forma';
+  end;
+end $$;
+
 rollback;

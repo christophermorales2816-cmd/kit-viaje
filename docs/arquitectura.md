@@ -13,20 +13,21 @@ vuelve a ellos por un link con un token.
 
 ## Piezas
 
-| Capa                      | Tecnología                                                                                      | Dónde                                                                    |
-| ------------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Hosting                   | Vercel (deploy por push a `main`)                                                               | —                                                                        |
-| Web                       | Next.js 16 App Router, React 19, Server Components y Server Actions                             | `src/app`, `src/components`                                              |
-| Lógica                    | Funciones puras en TypeScript, sin I/O                                                          | `src/lib/packing`, `src/lib/budget`, `src/lib/prepare`, `src/lib/quotes` |
-| Datos                     | Supabase (Postgres 17), RLS                                                                     | `supabase/migrations`                                                    |
-| Contenido                 | Guías en TypeScript, validadas por tests                                                        | `src/content/guias`                                                      |
-| Cotizaciones              | dolarapi.com (Argentina y Brasil); el resto sin fuente todavía                                  | `src/lib/quotes/corridors.ts`                                            |
-| Aeropuertos               | OurAirports, en un JSON del repo, solo del servidor                                             | `src/lib/vuelos`, `herramientas/aeropuertos`                             |
-| Aviones en vivo           | adsb.lol, desde el servidor; el mapa es MapLibre con mosaicos de OpenFreeMap                    | `src/lib/vuelos/adsb.ts`, `src/components/vuelos/radar.tsx`              |
-| Qué comer                 | Catálogos en TypeScript; los lugares, de OpenStreetMap por Overpass; las fotos, de Commons      | `src/content/comidas`, `src/lib/comidas`, `src/components/comer`         |
-| Mapas de MapLibre         | Lo común al radar y al mapa de lugares: el estilo, los textos y la carga de la librería         | `src/lib/mapa`, `src/components/mapa`                                    |
-| CI                        | GitHub Actions: lint, tests, build, typecheck; migraciones + RLS + integridad sobre Postgres 16 | `.github/workflows/ci.yml`                                               |
-| Migraciones en producción | GitHub Actions con el CLI de Supabase, al mergear                                               | `.github/workflows/migraciones.yml`                                      |
+| Capa                      | Tecnología                                                                                                                                     | Dónde                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Hosting                   | Vercel (deploy por push a `main`)                                                                                                              | —                                                                                        |
+| Web                       | Next.js 16 App Router, React 19, Server Components y Server Actions                                                                            | `src/app`, `src/components`                                                              |
+| Lógica                    | Funciones puras en TypeScript, sin I/O                                                                                                         | `src/lib/packing`, `src/lib/budget`, `src/lib/prepare`, `src/lib/quotes`                 |
+| Datos                     | Supabase (Postgres 17), RLS                                                                                                                    | `supabase/migrations`                                                                    |
+| Contenido                 | Guías en TypeScript, validadas por tests                                                                                                       | `src/content/guias`                                                                      |
+| Cotizaciones              | dolarapi.com (Argentina y Brasil); el resto sin fuente todavía                                                                                 | `src/lib/quotes/corridors.ts`                                                            |
+| Aeropuertos               | OurAirports, en un JSON del repo, solo del servidor                                                                                            | `src/lib/vuelos`, `herramientas/aeropuertos`                                             |
+| Aviones en vivo           | adsb.lol, desde el servidor; el mapa es MapLibre con mosaicos de OpenFreeMap                                                                   | `src/lib/vuelos/adsb.ts`, `src/components/vuelos/radar.tsx`                              |
+| Qué comer                 | Catálogos en TypeScript; los lugares, de OpenStreetMap: una base propia que se renueva cada día, y Overpass de respaldo; las fotos, de Commons | `src/content/comidas`, `src/lib/comidas`, `src/components/comer`, `herramientas/lugares` |
+| Mapas de MapLibre         | Lo común al radar y al mapa de lugares: el estilo, los textos y la carga de la librería                                                        | `src/lib/mapa`, `src/components/mapa`                                                    |
+| CI                        | GitHub Actions: lint, tests, build, typecheck; migraciones + RLS + integridad sobre Postgres 16                                                | `.github/workflows/ci.yml`                                                               |
+| Lugares de comida         | GitHub Actions, una vez por día: extractos de Geofabrik, osmium y la carga en Supabase                                                         | `.github/workflows/lugares.yml`, `herramientas/lugares`                                  |
+| Migraciones en producción | GitHub Actions con el CLI de Supabase, al mergear                                                                                              | `.github/workflows/migraciones.yml`                                                      |
 
 ## Rutas y cómo se renderiza cada una
 
@@ -88,10 +89,14 @@ cuando el mapa se mueve lejos. Las zonas son puntos de una grilla de un grado
 **Dónde comer un plato** (`src/components/comer/mapa-de-lugares.tsx`, spec
 18.4): al tocar "Buscá restaurantes", el navegador baja MapLibre y pide
 `/api/que-comer/lugares` por cada celda de una décima de grado que se ve
-(`src/lib/comidas/celdas.ts`). La API valida el plato y la celda, arma la
-consulta a Overpass con la búsqueda del contenido (`osm.ts`) y la guarda doce
-horas (`overpass.ts`); lo que tiene más de un día sale sin CDN, avisando, y el
-mapa lo vuelve a pedir cuando ya se renovó.
+(`src/lib/comidas/celdas.ts`). La API valida el plato y la celda y busca los
+lugares en la base (`base.ts`), donde los carga una vez por día el workflow de
+lugares con el extracto de OpenStreetMap de cada país (spec 18.10): misma
+búsqueda que con Overpass (`coincide.ts`), mismos lugares (`extracto.ts`). Si
+el país todavía no tiene datos propios, o la base falla, arma la consulta a
+Overpass (`osm.ts`) y la guarda doce horas (`overpass.ts`); lo que tiene más de
+un día sale sin CDN, avisando, y el mapa lo vuelve a pedir cuando ya se
+renovó.
 
 **Editar** (`mutate.ts`): cada tilde o cantidad es una Server Action que
 resuelve el token contra la base, verifica que el ítem o el gasto pertenezca al

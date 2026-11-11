@@ -78,6 +78,7 @@ export const japon: CatalogoDeComida = {
     { id: "okinawa", nombre: "Okinawa" },
   ],
 
+  extracto: "asia/japan",
   ciudades: [
     {
       id: "tokio",

@@ -67,6 +67,7 @@ export const argentina: CatalogoDeComida = {
     { id: "patagonia", nombre: "Patagonia" },
   ],
 
+  extracto: "south-america/argentina",
   ciudades: [
     {
       id: "buenos-aires",

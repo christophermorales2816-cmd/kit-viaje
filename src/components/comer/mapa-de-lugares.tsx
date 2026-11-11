@@ -28,7 +28,7 @@ import { horarioEnCastellano } from "@/lib/comidas/horarios";
 import {
   type LugarDeComida,
   type LugaresDeLaCelda,
-  VIGENCIA_S,
+  type RespuestaDeLugares,
   anoDeLaUltimaNovedad,
   sinNovedades,
   urlEnOpenStreetMap,
@@ -55,15 +55,16 @@ import { ESTILO_DEL_MAPA, textosDelMapa } from "@/lib/mapa/estilo";
  * Arranca en una ciudad del país y pide los lugares de las celdas que se ven
  * (src/lib/comidas/celdas.ts), como un mapa pide mosaicos: al moverlo, solo
  * se piden las nuevas. Los lugares salen de OpenStreetMap por la API del sitio
- * (src/app/api/que-comer/lugares), que los renueva cada doce horas.
+ * (src/app/api/que-comer/lugares): de la base propia, que se renueva una vez
+ * por día, o de Overpass para un país que todavía no la tiene (spec, 18.10).
  *
  * LA FECHA SIEMPRE A LA VISTA
  *
- * Lo que se muestra dice de cuándo es. Si una celda llega con datos de más de
- * un día —nadie la miró en un tiempo—, la caché del servidor ya los está
- * renovando: el mapa los muestra, avisa y los vuelve a pedir una vez a los
- * REPEDIR_MS. Y cada lugar dice si alguien confirmó hace poco que sigue
- * abierto, o si hace años que nadie lo toca.
+ * Lo que se muestra dice de cuándo son los datos. Si la API avisa que los está
+ * renovando —con Overpass, una celda que nadie miró en más de un día—, el
+ * mapa los muestra, lo dice y los vuelve a pedir una vez a los REPEDIR_MS. Y
+ * cada lugar dice si alguien confirmó hace poco que sigue abierto, o si hace
+ * años que nadie lo toca.
  */
 
 const REPEDIR_MS = 8_000;
@@ -113,10 +114,6 @@ interface Props {
   ciudades: CiudadDelMapa[];
   ciudadInicial: string;
   menciones: Mencion[];
-}
-
-function edadS(datos: LugaresDeLaCelda): number {
-  return (Date.now() - Date.parse(datos.actualizado)) / 1000;
 }
 
 /**
@@ -467,9 +464,10 @@ export function MapaDeLugares({
 
         if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
 
-        const datos: LugaresDeLaCelda = await respuesta.json();
+        const datos: RespuestaDeLugares = await respuesta.json();
 
-        const vieja = edadS(datos) > VIGENCIA_S;
+        // Lo decide la API: solo ella sabe si hay algo más nuevo en camino.
+        const vieja = datos.renovando === true;
 
         setCeldas((antes) => ({
           ...antes,

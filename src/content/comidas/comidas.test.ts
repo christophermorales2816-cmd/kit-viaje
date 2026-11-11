@@ -100,6 +100,11 @@ describe.each(CATALOGOS.map((catalogo) => [catalogo.slug, catalogo] as const))(
       expect(dias).toBeLessThan(DIAS_SIN_REVISAR);
     });
 
+    it("dice de qué extracto de OpenStreetMap salen sus lugares", () => {
+      // Continente y país, como las rutas de download.geofabrik.de.
+      expect(catalogo.extracto).toMatch(/^[a-z-]+(\/[a-z-]+)+$/);
+    });
+
     it("tiene introducción y despensa", () => {
       expect(catalogo.intro.length).toBeGreaterThanOrEqual(1);
       expect(catalogo.despensa.ingredientes.length).toBeGreaterThanOrEqual(4);

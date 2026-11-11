@@ -62,6 +62,11 @@ Una tarde, en este orden. Cada punto cierra una puerta concreta.
 - [ ] **Secrets and variables → Actions**: los tres de Supabase
       (`SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`, `SUPABASE_DB_PASSWORD`)
       como _Repository secrets_. Ya están; no los copies a ningún otro lado.
+- [ ] **Secrets and variables → Actions**: `SUPABASE_SERVICE_ROLE_KEY`, el
+      mismo valor que en Vercel (Supabase → Settings → API), también como
+      _Repository secret_. Lo usa el workflow que carga los lugares de "Qué
+      comer" una vez por día (abajo). Hasta que esté, ese workflow falla
+      avisando qué falta y el mapa sigue con Overpass.
 
 ### Vercel (proyecto → Settings)
 
@@ -93,7 +98,23 @@ Una tarde, en este orden. Cada punto cierra una puerta concreta.
       página cita la fuente. Si algo les molesta, saben a quién escribirle antes
       de cortarnos el acceso.
 
-### Overpass (los lugares de "Qué comer")
+### Los lugares de "Qué comer"
+
+Salen de una base propia que se renueva sola una vez por día: el workflow
+**Lugares de comida** (`.github/workflows/lugares.yml`) baja a las 07:23 UTC el
+extracto de OpenStreetMap de cada país desde
+[Geofabrik](https://download.geofabrik.de), que es gratis y no pide cuenta, y
+carga en Supabase los lugares de cada plato (spec, 18.10). Lo único que
+necesita es el secret `SUPABASE_SERVICE_ROLE_KEY` en GitHub (arriba).
+
+Para correrlo a mano: GitHub → Actions → **Lugares de comida** → _Run
+workflow_. Se le puede decir qué países (separados por espacios; vacío, todos)
+y si tiene que cargar aunque traiga mucho menos que la vez anterior.
+
+Mientras un país no tiene datos propios —el workflow todavía no corrió, o le
+falta el secret—, o si la base falla, el mapa le pregunta a Overpass.
+
+#### Overpass, el respaldo
 
 No hace falta cuenta ni aviso. El sitio usa el servidor público de Overpass de
 [Private.coffee](https://private.coffee), una asociación austríaca sin fines de
@@ -241,13 +262,30 @@ limitar más o a pedir clave, que se consigue aportando datos con una antena
 (spec, 17.5): es un cambio en `src/lib/vuelos/adsb.ts`, por PR.
 
 **El mapa de un plato no muestra lugares, o dice que no puede traerlos.**
-La ficha del plato sigue andando: solo el mapa depende de Overpass. Si dice
+La ficha del plato sigue andando: solo el mapa depende de los lugares. Debajo
+del mapa dice de cuándo son los datos. Si la fecha tiene más de dos días, el
+workflow **Lugares de comida** está fallando: GitHub manda un mail cada vez, y
+en Actions está el detalle de cada corrida.
+
+- "Faltan estos secrets": falta `SUPABASE_SERVICE_ROLE_KEY` en GitHub
+  (sección 2).
+- "Parece roto": un país trajo menos de la mitad de los lugares de la vez
+  anterior, y no se tocó nada. Si fue a propósito —un PR sacó platos del
+  catálogo—, corré el workflow a mano con "cargar aunque traiga mucho menos".
+  Si no, esperá a la corrida del día siguiente: casi siempre es un extracto que
+  bajó mal.
+- Un error de `curl`: Geofabrik no respondió. Se arregla solo al día siguiente.
+
+Mientras tanto el mapa muestra lo último que se cargó, con su fecha. Si nunca
+hay lugares para un plato en una ciudad donde sabés que los hay, la búsqueda de
+ese plato está mal escrita —una cocina que OpenStreetMap no usa, una palabra que
+no aparece en los nombres—: se corrige en su catálogo, por PR, y aparece desde
+la corrida siguiente.
+
+Un país que todavía no tiene datos propios usa Overpass (spec, 18.4). Si dice
 "pidió una pausa", se frena un minuto y sigue solo. Si dice que no puede
 traerlos, Overpass está caído o lento: el mapa muestra lo último que tenía, con
-su fecha, hasta que vuelva. Si nunca hay lugares para un plato en una ciudad
-donde sabés que los hay, la búsqueda de ese plato está mal escrita —una cocina
-que OpenStreetMap no usa, una palabra que no aparece en los nombres—: se
-corrige en su catálogo, por PR.
+su fecha, hasta que vuelva.
 
 Si dice que OpenStreetMap "no está atendiendo nuestros pedidos", Overpass
 rechazó al sitio (403 o 406), y en los logs de Vercel aparece "Overpass
@@ -294,14 +332,14 @@ alguien que lo haga): así el arreglo queda escrito y no se repite.
 
 ## 7. Mapa de secretos
 
-| Variable                        | Dónde vive         | Quién la usa                                   | Qué tan grave es que se filtre                                          |
-| ------------------------------- | ------------------ | ---------------------------------------------- | ----------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Vercel             | El servidor de la app                          | Nada: es pública                                                        |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel             | El servidor, para leer datos de referencia     | Nada: es pública por diseño y solo puede leer destinos, clima y precios |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Vercel (Sensitive) | Las escrituras de viajes y el cupo de creación | **Crítico**: permite todo en la base. Rotar ya                          |
-| `SUPABASE_ACCESS_TOKEN`         | GitHub Secrets     | El workflow de migraciones                     | Alto: permite administrar tus proyectos de Supabase. Revocar ya         |
-| `SUPABASE_DB_PASSWORD`          | GitHub Secrets     | El workflow de migraciones                     | Alto: acceso directo a la base. Cambiar ya                              |
-| `SUPABASE_PROJECT_REF`          | GitHub Secrets     | El workflow de migraciones                     | Bajo: identifica el proyecto, no da acceso                              |
+| Variable                        | Dónde vive                          | Quién la usa                                                           | Qué tan grave es que se filtre                                          |
+| ------------------------------- | ----------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Vercel                              | El servidor de la app                                                  | Nada: es pública                                                        |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Vercel                              | El servidor, para leer datos de referencia                             | Nada: es pública por diseño y solo puede leer destinos, clima y precios |
+| `SUPABASE_SERVICE_ROLE_KEY`     | Vercel (Sensitive) y GitHub Secrets | Las escrituras de viajes y el cupo de creación; el workflow de lugares | **Crítico**: permite todo en la base. Rotar ya, en los dos lugares      |
+| `SUPABASE_ACCESS_TOKEN`         | GitHub Secrets                      | El workflow de migraciones                                             | Alto: permite administrar tus proyectos de Supabase. Revocar ya         |
+| `SUPABASE_DB_PASSWORD`          | GitHub Secrets                      | El workflow de migraciones                                             | Alto: acceso directo a la base. Cambiar ya                              |
+| `SUPABASE_PROJECT_REF`          | GitHub Secrets                      | El workflow de migraciones                                             | Bajo: identifica el proyecto, no da acceso                              |
 
 Ninguna va en el repo, en un archivo `.env` subido a GitHub, en un chat ni en
 una captura de pantalla. El repo es público: lo que se sube ahí lo puede leer

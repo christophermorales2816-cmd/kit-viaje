@@ -36,6 +36,13 @@ parche.
 `src/content/comidas/types.ts`, y `comidas.test.ts` caza lo que más fácil se
 escribe mal: un plato con huevo que el filtro mostraría como vegano.
 
+El catálogo dice de qué extracto de OpenStreetMap salen los lugares de su mapa
+(`extracto`: la ruta del país en download.geofabrik.de, sin el
+`-latest.osm.pbf`; a Japón le corresponde `asia/japan`). Desde que entra a
+main, el workflow de lugares lo carga en la corrida del día siguiente, o en el
+momento si lo corrés a mano (`docs/administrar.md`); hasta entonces, el mapa
+de ese país usa Overpass (spec, 18.10).
+
 ## 2. La guía (`src/content/guias/<pais>.ts`)
 
 Copiar la forma de `brasil.ts`, que es la más limpia. Los tamaños no son
@@ -270,5 +277,5 @@ migración no se aplicó.**
 - [ ] Migraciones sobre base virgen + smoke de RLS e integridad en verde
 - [ ] La app mirada en el navegador: dos ciudades opuestas, listas opuestas
 - [ ] Spec actualizado
-- [ ] Si tiene catálogo de comida: `src/content/comidas/<pais>.ts`, su línea en `index.ts`, las fotos regeneradas y el mapa de un plato mirado con datos reales
+- [ ] Si tiene catálogo de comida: `src/content/comidas/<pais>.ts` con su `extracto`, su línea en `index.ts`, las fotos regeneradas y el mapa de un plato mirado con datos reales
 - [ ] **Post-merge: la corrida de Migraciones en verde**

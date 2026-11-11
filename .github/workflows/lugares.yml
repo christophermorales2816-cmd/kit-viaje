@@ -1,0 +1,112 @@
+# Carga una vez por día los lugares del mapa de "Qué comer" (spec, 18.10).
+#
+# POR QUÉ EXISTE ESTE WORKFLOW
+#
+# El mapa de cada plato le preguntaba a un servidor público de Overpass, y en
+# noviembre de 2026 overpass-api.de bloqueó al sitio. Depender de un servidor
+# ajeno para cada visita es frágil: con esto, los lugares salen de una base
+# propia, que se renueva todos los días con el extracto de OpenStreetMap de
+# cada país (Geofabrik). Lo que abre hoy aparece mañana, sin pagar nada:
+# GitHub Actions es gratis en un repo público, y Geofabrik también.
+#
+# CONFIGURACIÓN (una vez)
+#
+# En GitHub → Settings → Secrets and variables → Actions, pestaña Secrets,
+# además de SUPABASE_PROJECT_REF (el de las migraciones), agregar:
+#
+#   SUPABASE_SERVICE_ROLE_KEY  La service role key, la misma que está en Vercel
+#                              (Supabase → Settings → API)
+#
+# Se carga en la interfaz de GitHub, nunca en el repo ni en un chat. Hasta que
+# esté, este workflow avisa qué falta y no hace nada, y el mapa sigue con
+# Overpass.
+#
+# SEGURIDAD
+#
+# Corre con una clave que puede escribir toda la base, así que solo corre
+# desde main: por horario o a mano. Nunca en un PR, donde el código todavía no
+# se revisó; un PR desde un fork, además, no recibe secrets.
+
+name: Lugares de comida
+
+on:
+  schedule:
+    # Una vez por día, cuando Geofabrik ya publicó los extractos del día
+    # anterior. Minuto 23: a la hora en punto GitHub demora los horarios.
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+    inputs:
+      paises:
+        description: "Países separados por espacios (vacío: todos)"
+        required: false
+        default: ""
+      aceptar_menos:
+        description: "Cargar aunque traiga mucho menos que la vez anterior"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+# Dos corridas a la vez se pisarían la limpieza de lo viejo.
+concurrency:
+  group: lugares-de-comida
+  cancel-in-progress: false
+
+jobs:
+  cargar:
+    name: Cargar los lugares
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Verificar que estén los secrets
+        env:
+          REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          CLAVE: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          faltan=""
+          [ -n "$REF" ]   || faltan="$faltan SUPABASE_PROJECT_REF"
+          [ -n "$CLAVE" ] || faltan="$faltan SUPABASE_SERVICE_ROLE_KEY"
+
+          if [ -n "$faltan" ]; then
+            echo "Faltan estos secrets:$faltan"
+            echo
+            echo "Van en Settings -> Secrets and variables -> Actions, pestaña"
+            echo "Secrets, botón 'New repository secret', cada uno con ese"
+            echo "nombre exacto. Mientras falten, el mapa sigue con Overpass."
+            exit 1
+          fi
+
+          # Chequeo de FORMA, no de validez, y sin imprimir ningún valor.
+          case "$REF" in
+            *[!a-z0-9]*) echo "SUPABASE_PROJECT_REF no tiene la forma de un ref."; exit 1 ;;
+          esac
+          case "$CLAVE" in
+            eyJ*|sb_secret_*) ;;
+            *) echo "SUPABASE_SERVICE_ROLE_KEY no tiene la forma de una service role key."; exit 1 ;;
+          esac
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Instalar osmium
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq osmium-tool
+          osmium --version | head -1
+
+      - name: Cargar los lugares
+        env:
+          SUPABASE_URL: https://${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          ACEPTAR_MENOS: ${{ inputs.aceptar_menos && '1' || '' }}
+          PAISES: ${{ inputs.paises }}
+        # PAISES va sin comillas a propósito: es una lista separada por espacios.
+        run: herramientas/lugares/procesar.sh $PAISES
