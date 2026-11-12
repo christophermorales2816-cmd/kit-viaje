@@ -684,4 +684,32 @@ begin
   end;
 end $$;
 
+-- ---------------------------------------------------------------------------
+-- El tamaño de la base (20261112120000): lo mide la carga, no la anon key
+-- ---------------------------------------------------------------------------
+
+do $$
+begin
+  set local role anon;
+  perform tamano_de_la_base();
+  raise exception 'FALLO: anon pudo medir la base';
+exception
+  when insufficient_privilege then
+    raise notice 'OK  anon no puede medir la base';
+end $$;
+reset role;
+
+do $$
+declare
+  bytes bigint;
+begin
+  set local role service_role;
+  bytes := tamano_de_la_base();
+  if bytes is null or bytes <= 0 then
+    raise exception 'FALLO: tamano_de_la_base devolvió %', bytes;
+  end if;
+  raise notice 'OK  service_role mide la base: % MB', bytes / 1000000;
+end $$;
+reset role;
+
 rollback;

@@ -17,10 +17,22 @@ import type { FilaDeLugar } from "./extracto";
  * sigue con los datos anteriores y su fecha. Si la baja es a propósito —un PR
  * sacó platos del catálogo—, se corre a mano aceptando menos lugares
  * (docs/administrar.md).
+ *
+ * LOS LUGARES NO LLENAN LA BASE
+ *
+ * La base es la misma de los viajes, y en el plan gratis de Supabase pasa a
+ * solo lectura cuando llega a 500 MB: no se rompería solo el mapa, dejarían de
+ * guardarse los viajes. Antes de subir un país se mide lo que ocupa la base y
+ * se le suma lo que puede agregar la carga; si pasa de TAMANO_MAXIMO, no se
+ * toca nada y la carga falla, como con un extracto roto. No hay forma de
+ * forzarla: los 100 MB que quedan son para que quien mantiene el sitio se
+ * entere y decida.
  */
 
 /** Lo que la carga necesita de la base. Así se prueba sin Supabase. */
 export interface BaseDeLugares {
+  /** Lo que ocupa hoy toda la base, en bytes. */
+  tamano(): Promise<number>;
   /** Cuántos lugares tenía el país en la última carga; null si nunca tuvo. */
   lugaresAnteriores(pais: string): Promise<number | null>;
   subir(
@@ -43,6 +55,27 @@ export const PARTE_MINIMA = 0.5;
 
 /** Filas por pedido a la base: lejos del límite de tamaño de un pedido. */
 export const FILAS_POR_TANDA = 500;
+
+export const MB = 1_000_000;
+
+/**
+ * Hasta dónde puede llegar la base con una carga: 100 MB antes de los 500 en
+ * los que el plan gratis de Supabase la pasa a solo lectura.
+ */
+export const TAMANO_MAXIMO = 400 * MB;
+
+/**
+ * Lo que puede sumar cada fila mientras se carga, contando sus índices y la
+ * versión vieja que queda hasta que Postgres la limpia. Una fila ronda la
+ * mitad: la cuenta es a propósito por arriba, mejor frenar un día antes que
+ * uno tarde.
+ */
+export const BYTES_POR_FILA = 1000;
+
+/** "123 MB", para los mensajes. */
+export function megas(bytes: number): string {
+  return `${Math.round(bytes / MB)} MB`;
+}
 
 export async function cargarLugares(
   base: BaseDeLugares,
@@ -70,6 +103,15 @@ export async function cargarLugares(
   ) {
     throw new Error(
       `${pais}: el extracto trajo ${lugares} lugares y la vez anterior había ${anteriores}. Parece roto: no se toca lo que había. Si la baja es a propósito, correlo aceptando menos lugares.`,
+    );
+  }
+
+  const ocupa = await base.tamano();
+  const puedeSumar = filas.length * BYTES_POR_FILA;
+
+  if (ocupa + puedeSumar > TAMANO_MAXIMO) {
+    throw new Error(
+      `${pais}: la base ocupa ${megas(ocupa)} y esta carga puede sumarle hasta ${megas(puedeSumar)}: pasaría de ${megas(TAMANO_MAXIMO)}, el tope para no acercarse a los 500 MB en los que el plan gratis de Supabase la pasa a solo lectura. No se toca lo que había. Qué hacer está en "La base se está llenando", en docs/administrar.md.`,
     );
   }
 

@@ -41,7 +41,9 @@ Navegador ──(HTML, Server Actions, /api)──> Next.js en Vercel ──(ser
   las tablas de referencia, solo lectura para `anon`. Los escribe únicamente el
   workflow de lugares, con la service role key, que en GitHub vive como secret
   y solo se usa en corridas desde main, por horario o a mano: nunca en un PR,
-  donde el código todavía no se revisó.
+  donde el código todavía no se revisó. Antes de cada país mide lo que ocupa la
+  base (`tamano_de_la_base()`, solo para la service role) y no la deja pasar de
+  400 MB: llenarla pasaría a solo lectura también los viajes.
 - **Tablas de referencia** (destinos, clima, precios, catálogo): RLS con
   `select using (true)` y **solo** el privilegio SELECT para `anon` y
   `authenticated`.

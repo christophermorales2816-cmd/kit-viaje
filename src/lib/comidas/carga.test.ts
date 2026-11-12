@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { type BaseDeLugares, FILAS_POR_TANDA, cargarLugares } from "./carga";
+import {
+  type BaseDeLugares,
+  BYTES_POR_FILA,
+  cargarLugares,
+  FILAS_POR_TANDA,
+  MB,
+  megas,
+  TAMANO_MAXIMO,
+} from "./carga";
 import type { FilaDeLugar } from "./extracto";
 
 function fila(plato: string, n: number): FilaDeLugar {
@@ -26,11 +34,12 @@ function fila(plato: string, n: number): FilaDeLugar {
 }
 
 /** Una base de mentira que anota lo que le piden. */
-function baseFalsa(anteriores: number | null) {
+function baseFalsa(anteriores: number | null, ocupa = 120 * MB) {
   const pasos: string[] = [];
   const subidas: number[] = [];
 
   const base: BaseDeLugares = {
+    tamano: async () => ocupa,
     lugaresAnteriores: async () => anteriores,
     subir: async (_pais, filas) => {
       pasos.push("subir");
@@ -104,5 +113,48 @@ describe("cargarLugares", () => {
       aceptarMenos: true,
     });
     expect(pasos).toContain("registrar 499 del 2026-11-10T20:21:02.000Z");
+  });
+
+  describe("el tamaño de la base", () => {
+    const muchas = Array.from({ length: 10_000 }, (_, n) =>
+      fila("ramen", n + 1),
+    );
+    const loQueSuman = muchas.length * BYTES_POR_FILA;
+
+    it("no sube un país que la llevaría más allá del tope, y dice por qué", async () => {
+      const { base, pasos } = baseFalsa(null, TAMANO_MAXIMO - loQueSuman + 1);
+
+      await expect(
+        cargarLugares(base, "brasil", muchas, FECHAS),
+      ).rejects.toThrow(
+        "brasil: la base ocupa 390 MB y esta carga puede sumarle hasta 10 MB: pasaría de 400 MB",
+      );
+      expect(pasos).toEqual([]);
+    });
+
+    it("tampoco aceptando menos lugares: no hay forma de forzarlo", async () => {
+      const { base, pasos } = baseFalsa(20_000, TAMANO_MAXIMO);
+
+      await expect(
+        cargarLugares(base, "brasil", muchas, {
+          ...FECHAS,
+          aceptarMenos: true,
+        }),
+      ).rejects.toThrow("docs/administrar.md");
+      expect(pasos).toEqual([]);
+    });
+
+    it("hasta el tope justo, carga", async () => {
+      const { base, pasos } = baseFalsa(null, TAMANO_MAXIMO - loQueSuman);
+
+      await cargarLugares(base, "brasil", muchas, FECHAS);
+
+      expect(pasos).toContain("registrar 10000 del 2026-11-10T20:21:02.000Z");
+    });
+
+    it("deja el tope lejos de los 500 MB del plan gratis de Supabase", () => {
+      expect(TAMANO_MAXIMO).toBeLessThanOrEqual(400 * MB);
+      expect(megas(123_456_789)).toBe("123 MB");
+    });
   });
 });

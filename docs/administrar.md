@@ -275,6 +275,8 @@ en Actions está el detalle de cada corrida.
   Si no, esperá a la corrida del día siguiente: casi siempre es un extracto que
   bajó mal.
 - Un error de `curl`: Geofabrik no respondió. Se arregla solo al día siguiente.
+- "La base ocupa … y esta carga puede sumarle hasta …": la base está cerca de
+  llenarse y no se tocó nada. Ver "La base se está llenando", más abajo.
 
 Mientras tanto el mapa muestra lo último que se cargó, con su fecha. Si nunca
 hay lugares para un plato en una ciudad donde sabés que los hay, la búsqueda de
@@ -325,6 +327,30 @@ un año y devuelve cuántos fueron:
 ```sql
 select purgar_viajes_terminados(365);
 ```
+
+**La base se está llenando.**
+La base es una sola, y en el plan gratis de Supabase pasa a solo lectura al
+llegar a 500 MB: dejan de guardarse los viajes, no solo el mapa. Lo que más
+ocupa son los lugares de "Qué comer", así que su carga diaria mide la base
+antes de subir cada país y se niega a subirlo si pasaría de 400 MB
+(`TAMANO_MAXIMO`, en `src/lib/comidas/carga.ts`). El workflow falla y GitHub
+avisa por mail. Mientras tanto, el mapa sigue con lo último que se cargó, y un
+país que todavía no tiene datos propios usa Overpass.
+
+Cada corrida dice al final de cada país cuánto ocupa la base ("La base ocupa
+180 MB de 400 MB"): si se acerca al tope, es momento de decidir, antes de que
+falle. Hay dos salidas, y elegir es tuyo:
+
+1. **Pasar a un plan pago de Supabase.** Es lo inmediato, y cambia el costo
+   mensual. Con más espacio, el tope se sube en un PR.
+2. **Que los lugares ocupen menos.** Hoy hay una fila por plato y por lugar
+   —un café se repite en cada plato que lo busca—, y cada carga reescribe todas
+   las filas de su país aunque no hayan cambiado, lo que deja la tabla en el
+   doble de lo que necesita. Guardar cada lugar una vez y escribir solo lo que
+   cambió es un cambio de código, por PR.
+
+No hay forma de forzar la carga, y está bien así: el tope deja 100 MB para que
+decidas con calma.
 
 **El chequeo mensual dice `FALLO`.**
 No lo arregles a mano. Abrí un PR con una migración que lo corrija (o pedile a

@@ -2841,7 +2841,15 @@ y el mapa sigue con Overpass.
 **Lo que crece.** Tres países son unos 3,5 GB por día de extractos y unos
 minutos de proceso. Con todos los países con guía sería el planeta entero, unos
 80 GB por día: antes de llegar ahí hay que repartirlo —los países grandes cada
-dos o tres días, o por regiones— y vigilar el tamaño de la base, que en el plan
-gratis de Supabase es de 500 MB. Las menciones de honor (18.5) siguen
+dos o tres días, o por regiones— y cuidar el tamaño de la base. En el plan
+gratis de Supabase pasa a solo lectura en 500 MB, y es la misma de los viajes:
+llenarla con lugares dejaría de guardar viajes. Por eso la carga mide la base
+antes de subir cada país (`tamano_de_la_base()`) y no la deja pasar de 400 MB
+(`TAMANO_MAXIMO`, `src/lib/comidas/carga.ts`), contando por arriba lo que puede
+sumar cada fila mientras se carga; si pasaría, no toca nada y falla, como con un
+extracto roto, y cada corrida dice cuánto ocupa. Hoy cada lugar se guarda una
+vez por plato que lo busca, y cada carga reescribe todas las filas del país:
+antes de sumar muchos países grandes conviene guardar cada lugar una sola vez y
+escribir solo lo que cambió. Las menciones de honor (18.5) siguen
 verificándose con Overpass, una vez por día; pasarlas a los extractos es el
 paso siguiente.
