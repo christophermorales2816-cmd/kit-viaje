@@ -5,11 +5,19 @@ import { bolivia } from "./bolivia";
 import { brasil } from "./brasil";
 import { chile } from "./chile";
 import { colombia } from "./colombia";
+import { costaRica } from "./costa-rica";
+import { cuba } from "./cuba";
 import { ecuador } from "./ecuador";
+import { elSalvador } from "./el-salvador";
+import { guatemala } from "./guatemala";
+import { honduras } from "./honduras";
 import { japon } from "./japon";
 import { mexico } from "./mexico";
+import { nicaragua } from "./nicaragua";
+import { panama } from "./panama";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
+import { republicaDominicana } from "./republica-dominicana";
 import { uruguay } from "./uruguay";
 import { venezuela } from "./venezuela";
 import type { CatalogoDeComida, Plato } from "./types";
@@ -45,11 +53,19 @@ const CATALOGOS: CatalogoDeComida[] = [
   brasil,
   chile,
   colombia,
+  costaRica,
+  cuba,
   ecuador,
+  elSalvador,
+  guatemala,
+  honduras,
   japon,
   mexico,
+  nicaragua,
+  panama,
   paraguay,
   peru,
+  republicaDominicana,
   uruguay,
   venezuela,
 ];

@@ -35,7 +35,7 @@ const TIPOS_OSM: TipoDeLugarOsm[] = [
  */
 const INGREDIENTE_OBLIGA: [RegExp, Contiene][] = [
   [
-    /\bcerdo|chancho|panceta|tocino|pernil|longaniza|jam[oó]n|chorizo|chicharr[oó]n|chashu|asiento/i,
+    /\bcerdo|chancho|panceta|tocino|pernil|longaniza|jam[oó]n|chorizo|chicharr[oó]n|chashu|asiento|salami/i,
     "cerdo",
   ],
   [
@@ -43,7 +43,7 @@ const INGREDIENTE_OBLIGA: [RegExp, Contiene][] = [
     "pescado",
   ],
   [
-    /langostino|camar[oó]n|pulpo|centolla|cangrejo|erizo|marisco|almeja|calamar|jaiba|choros?\b|machas|ostras?\b|osti[oó]n|conchas negras|\blocos\b/i,
+    /langostino|camar[oó]n|pulpo|centolla|cangrejo|erizo|marisco|almeja|calamar|jaiba|choros?\b|machas|ostras?\b|osti[oó]n|conchas negras|\blocos\b|langosta|caracol/i,
     "mariscos",
   ],
   [/\bhuevo/i, "huevo"],
@@ -55,8 +55,8 @@ const INGREDIENTE_OBLIGA: [RegExp, Contiene][] = [
   ],
   [
     // Las harinas de maíz, garbanzo, mandioca, yuca, arroz y plátano no
-    // tienen gluten.
-    /harina(?! de (maíz|garbanzo|mandioca|yuca|arroz|plátano))|trigo|\bpan\b|panko|birote|galleta|cerveza/i,
+    // tienen gluten, ni la fruta de pan, que es el fruto de un árbol.
+    /harina(?! de (maíz|garbanzo|mandioca|yuca|arroz|plátano))|trigo|(?<!fruta de )\bpan\b|panko|birote|galleta|galletita|cerveza/i,
     "gluten",
   ],
   [
@@ -68,7 +68,7 @@ const INGREDIENTE_OBLIGA: [RegExp, Contiene][] = [
   [/\bman[ií]\b|cacahuate/i, "mani"],
   [/almendra|\bnuez|nueces|casta[ñn]a/i, "frutos-secos"],
   [
-    /\bvaca\b|\bres\b|\bpollo\b|gallina|cordero|borrego|chivo|cabrito|guajolote|\blomo\b|\bllama\b|alpaca|\bcuy\b|carne(?! de cerdo)/i,
+    /\bvaca\b|\bres\b|\bpollo\b|gallina|cordero|borrego|chivo|cabrito|guajolote|\bpavo\b|chompipe|chumpe|\blomo\b|\bllama\b|alpaca|\bcuy\b|carne(?! de cerdo)/i,
     "carne",
   ],
 ];
