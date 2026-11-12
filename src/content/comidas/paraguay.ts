@@ -1,0 +1,441 @@
+import type { CatalogoDeComida } from "./types";
+
+export const paraguay: CatalogoDeComida = {
+  slug: "paraguay",
+
+  intro: [
+    "La cocina paraguaya es la del maíz, la mandioca y el queso, y casi todo lo que la define viene de la cocina guaraní: la chipa, el mbeju, la sopa paraguaya, que es la única sopa sólida del mundo.",
+    "Se desayuna cocido —yerba mate tostada con azúcar y leche— con chipa, y se almuerza fuerte, muchas veces con un asado. Entre medio, a toda hora y sobre todo con calor, el tereré: mate frío con hierbas del mercado.",
+    "El guaraní se habla en todo el país junto al castellano, y muchos platos se llaman en guaraní: vori vori, so'o josopy, mbeju, kosereva.",
+  ],
+
+  despensa: {
+    intro:
+      "Una despensa de chacra guaraní: maíz, mandioca, queso fresco y yerba.",
+    ingredientes: [
+      {
+        nombre: "Mandioca",
+        local: "Mandi'o",
+        descripcion:
+          "Hervida acompaña cualquier comida; su almidón es la base de la chipa y del mbeju.",
+      },
+      {
+        nombre: "Maíz",
+        descripcion:
+          "Harina de maíz para la sopa paraguaya y el vori vori, y choclo fresco para la chipa guasu.",
+      },
+      {
+        nombre: "Queso Paraguay",
+        descripcion:
+          "Un queso fresco y salado que se derrite en la chipa, el mbeju y la sopa.",
+      },
+      {
+        nombre: "Yerba mate y yuyos",
+        descripcion:
+          "La yerba para el tereré y el cocido, y las hierbas medicinales que se machacan en el mortero del mercado.",
+      },
+      {
+        nombre: "Pescado de río",
+        descripcion: "Surubí, pacú y bagre de los ríos Paraguay y Paraná.",
+      },
+      {
+        nombre: "Grasa de cerdo",
+        descripcion:
+          "Muchas recetas tradicionales la usan para la masa: conviene preguntar si no comés cerdo.",
+      },
+    ],
+  },
+
+  foto: null,
+
+  regiones: [
+    { id: "central", nombre: "Asunción y el centro" },
+    { id: "sur", nombre: "El sur (Encarnación y las Misiones)" },
+    { id: "este", nombre: "El este (Ciudad del Este)" },
+    { id: "chaco", nombre: "El Chaco" },
+  ],
+
+  extracto: "south-america/paraguay",
+  ciudades: [
+    {
+      id: "asuncion",
+      nombre: "Asunción",
+      coords: [-25.282, -57.635],
+      region: "central",
+    },
+    {
+      id: "san-bernardino",
+      nombre: "San Bernardino",
+      coords: [-25.307, -57.296],
+      region: "central",
+    },
+    {
+      id: "aregua",
+      nombre: "Areguá",
+      coords: [-25.312, -57.384],
+      region: "central",
+    },
+    {
+      id: "villarrica",
+      nombre: "Villarrica",
+      coords: [-25.7495, -56.4352],
+      region: "central",
+    },
+    {
+      id: "encarnacion",
+      nombre: "Encarnación",
+      coords: [-27.3306, -55.8667],
+      region: "sur",
+    },
+    {
+      id: "ciudad-del-este",
+      nombre: "Ciudad del Este",
+      coords: [-25.5097, -54.6111],
+      region: "este",
+    },
+    {
+      id: "concepcion",
+      nombre: "Concepción",
+      coords: [-23.4064, -57.4344],
+      region: "central",
+    },
+    {
+      id: "filadelfia",
+      nombre: "Filadelfia",
+      coords: [-22.35, -60.0333],
+      region: "chaco",
+    },
+  ],
+
+  nombresDeLugares: {
+    casual: "Comedor o copetín",
+    puesto: "Puesto o carrito",
+    almacen: "Despensa",
+  },
+
+  platos: [
+    {
+      id: "chipa",
+      nombre: "Chipa",
+      resumen:
+        "Rosquitas de almidón de mandioca y queso, tibias, para el cocido.",
+      descripcion:
+        "El pan de queso paraguayo, que se vende en la ruta, en las terminales y en los buses, en canastas tapadas con un mantel. Eusebio Ayala, sobre la ruta 2, es la capital de la chipa.",
+      sabor: "Densa, quesosa y con un toque de anís.",
+      ingredientes: [
+        "Almidón de mandioca",
+        "Queso Paraguay",
+        "Huevo",
+        "Grasa de cerdo o manteca",
+        "Anís",
+      ],
+      contiene: ["lacteos", "huevo", "cerdo"],
+      picante: 0,
+      precio: 1,
+      momentos: ["desayuno", "snack"],
+      lugares: ["puesto", "panaderia"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: true,
+      paraComerSolo: true,
+      nota: "No lleva harina de trigo; la grasa, en cambio, suele ser de cerdo.",
+      buscar: {
+        en: ["comida", "panaderia"],
+        nombres: ["chipa", "chipería", "chiperia"],
+      },
+      foto: null,
+    },
+    {
+      id: "sopa-paraguaya",
+      nombre: "Sopa paraguaya",
+      resumen:
+        "Un pan de maíz con queso y cebolla: la única sopa sólida del mundo.",
+      descripcion:
+        "Dice la leyenda que la cocinera del presidente Carlos Antonio López echó de más harina de maíz en una sopa, y la salvó horneándola. Es un bizcocho húmedo de maíz, queso, cebolla, leche y huevos, que acompaña el asado.",
+      sabor: "Salado, quesoso y húmedo, con el dulce de la cebolla.",
+      ingredientes: [
+        "Harina de maíz",
+        "Queso Paraguay",
+        "Cebolla",
+        "Leche y huevos",
+        "Manteca o grasa",
+      ],
+      contiene: ["lacteos", "huevo"],
+      picante: 0,
+      precio: 1,
+      momentos: ["almuerzo", "snack"],
+      lugares: ["casual", "panaderia"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: true,
+      paraComerSolo: true,
+      nota: "A veces se hace con grasa de cerdo: preguntá si no comés cerdo.",
+      buscar: {
+        cocinas: ["paraguayan", "regional"],
+        nombres: ["típic", "tipic", "copetín", "copetin"],
+      },
+      foto: null,
+    },
+    {
+      id: "chipa-guasu",
+      nombre: "Chipa guasu",
+      resumen:
+        "Como la sopa paraguaya, pero con choclo fresco en vez de harina.",
+      descripcion:
+        "Chipa guasu quiere decir 'chipa grande' en guaraní. Se hace con granos de choclo molidos, queso, leche y huevo, y queda más húmeda y más dulce que la sopa.",
+      sabor: "Dulce por el choclo, cremosa y con el queso derretido.",
+      ingredientes: [
+        "Choclo fresco molido",
+        "Queso Paraguay",
+        "Leche y huevos",
+        "Cebolla",
+      ],
+      contiene: ["lacteos", "huevo"],
+      picante: 0,
+      precio: 1,
+      momentos: ["almuerzo"],
+      lugares: ["casual"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      buscar: {
+        cocinas: ["paraguayan", "regional"],
+        nombres: ["típic", "tipic", "copetín", "copetin"],
+      },
+      foto: null,
+    },
+    {
+      id: "mbeju",
+      nombre: "Mbeju",
+      resumen:
+        "Una tortilla de almidón de mandioca y queso, hecha en la plancha.",
+      descripcion:
+        "El desayuno o la merienda de campo, con cocido. La mezcla de almidón, queso, leche y grasa se desgrana en una sartén caliente y se aprieta hasta formar una tortilla.",
+      sabor: "Elástico, salado y tostado en los bordes.",
+      ingredientes: [
+        "Almidón de mandioca",
+        "Queso Paraguay",
+        "Leche",
+        "Grasa o manteca",
+      ],
+      contiene: ["lacteos"],
+      picante: 0,
+      precio: 1,
+      momentos: ["desayuno", "snack"],
+      lugares: ["casual", "puesto"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      nota: "La grasa puede ser de cerdo: preguntá.",
+      buscar: {
+        cocinas: ["paraguayan", "regional"],
+        nombres: ["típic", "tipic", "copetín", "copetin"],
+      },
+      foto: null,
+    },
+    {
+      id: "vori-vori",
+      nombre: "Vori vori",
+      resumen: "Caldo de gallina con bolitas de harina de maíz y queso.",
+      descripcion:
+        "La sopa de los días frescos y de los enfermos. Las bolitas, hechas a mano con harina de maíz y queso, se cocinan en un caldo de gallina con verduras.",
+      sabor: "Reconfortante, suave y con el queso fundido en el caldo.",
+      ingredientes: [
+        "Gallina",
+        "Bolitas de harina de maíz y queso",
+        "Cebolla, locote y zapallo",
+      ],
+      contiene: ["carne", "lacteos"],
+      picante: 0,
+      precio: 1,
+      momentos: ["almuerzo"],
+      lugares: ["casual"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: true,
+      paraComerSolo: true,
+      buscar: {
+        cocinas: ["paraguayan", "regional"],
+        nombres: ["típic", "tipic", "copetín", "copetin"],
+      },
+      foto: null,
+    },
+    {
+      id: "so-o-josopy",
+      nombre: "So'o josopy",
+      resumen: "Sopa espesa de carne molida con arroz o fideos.",
+      descripcion:
+        "So'o josopy quiere decir 'carne molida' en guaraní: la carne se pisa en mortero y se cocina con arroz, cebolla y locote en un caldo espeso.",
+      sabor: "Carnoso, suave y abundante.",
+      ingredientes: [
+        "Carne de vaca molida",
+        "Arroz",
+        "Cebolla y locote",
+        "Tomate",
+      ],
+      contiene: ["carne"],
+      picante: 0,
+      precio: 1,
+      momentos: ["almuerzo"],
+      lugares: ["casual"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      buscar: {
+        cocinas: ["paraguayan", "regional"],
+        nombres: ["típic", "tipic", "copetín", "copetin"],
+      },
+      foto: null,
+    },
+    {
+      id: "pira-caldo",
+      nombre: "Pira caldo",
+      resumen: "Sopa de pescado de río con cebolla, locote y queso.",
+      descripcion:
+        "La sopa de los pueblos ribereños del río Paraguay. Se hace con bagre o surubí, se espesa con verduras y se termina con queso Paraguay, y dicen que levanta a cualquiera.",
+      sabor: "Suave, marino de río y cremosa por el queso.",
+      ingredientes: [
+        "Pescado de río (bagre o surubí)",
+        "Cebolla, tomate y locote",
+        "Queso Paraguay",
+        "Leche",
+      ],
+      contiene: ["pescado", "lacteos"],
+      picante: 0,
+      precio: 1,
+      momentos: ["almuerzo"],
+      lugares: ["casual"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      buscar: { cocinas: ["fish"], nombres: ["surubí", "surubi", "pescad"] },
+      foto: null,
+    },
+    {
+      id: "pastel-mandio",
+      nombre: "Pastel mandi'o",
+      resumen: "Empanadas fritas de masa de mandioca, rellenas de carne.",
+      descripcion:
+        "La masa se hace con mandioca hervida y almidón, y se rellena con carne picada, cebolla y huevo duro. Se venden en los copetines y en las paradas de bus.",
+      sabor: "Crocantes, tiernas por dentro y bien saladas.",
+      ingredientes: [
+        "Masa de mandioca y almidón",
+        "Carne de vaca picada",
+        "Cebolla",
+        "Huevo duro",
+      ],
+      contiene: ["carne", "huevo"],
+      picante: 0,
+      precio: 1,
+      momentos: ["snack", "almuerzo"],
+      lugares: ["puesto", "casual"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      buscar: {
+        cocinas: ["paraguayan", "regional"],
+        nombres: ["típic", "tipic", "copetín", "copetin"],
+      },
+      foto: null,
+    },
+    {
+      id: "lomito-arabe",
+      nombre: "Lomito árabe",
+      resumen:
+        "Carne de trompo envuelta en pan árabe, la comida de la noche en Asunción.",
+      descripcion:
+        "La inmigración libanesa y siria dejó su huella en Paraguay, y el lomito árabe —carne asada al trompo en pan fino, con verduras y salsa de ajo— es la comida rápida más pedida en Asunción y Ciudad del Este.",
+      sabor: "Jugoso, especiado y con mucho ajo.",
+      ingredientes: [
+        "Carne de vaca o pollo al trompo",
+        "Pan árabe",
+        "Repollo, tomate y cebolla",
+        "Salsa de ajo con mayonesa",
+      ],
+      contiene: ["carne", "gluten", "huevo"],
+      picante: 0,
+      precio: 1,
+      momentos: ["cena", "snack"],
+      lugares: ["puesto", "casual"],
+      aventura: "para-todos",
+      regiones: ["central", "este"],
+      imperdible: false,
+      paraComerSolo: true,
+      buscar: {
+        cocinas: ["lebanese", "arab", "kebab"],
+        nombres: ["lomito", "árabe", "arabe"],
+      },
+      foto: null,
+    },
+    {
+      id: "kosereva",
+      nombre: "Kosereva",
+      resumen: "Dulce de cáscara de naranja agria con miel de caña.",
+      descripcion:
+        "Un dulce de origen guaraní: la cáscara de la naranja agria se hierve hasta sacarle el amargor y se cocina con miel negra de caña. Se come con queso Paraguay.",
+      sabor: "Dulce, amargo y muy aromático.",
+      ingredientes: ["Cáscara de naranja agria", "Miel negra de caña"],
+      contiene: [],
+      picante: 0,
+      precio: 1,
+      momentos: ["postre"],
+      lugares: ["mercado"],
+      aventura: "para-animarse",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      buscar: { en: ["mercado"] },
+      foto: null,
+    },
+    {
+      id: "terere",
+      nombre: "Tereré",
+      resumen: "Mate frío con hierbas machacadas, la bebida nacional.",
+      descripcion:
+        "Se toma con agua helada o jugo de frutas, en una guampa de cuerno o de madera, y se comparte en ronda. Los yuyos —hierbas medicinales como menta o burrito— se machacan en el mortero del mercado. La Unesco lo declaró patrimonio de la humanidad en 2020.",
+      sabor: "Amargo, frío y herbal: muy refrescante.",
+      ingredientes: ["Yerba mate", "Agua helada", "Yuyos (hierbas)"],
+      contiene: [],
+      picante: 0,
+      precio: 1,
+      momentos: ["bebida"],
+      lugares: ["casa", "mercado"],
+      aventura: "para-animarse",
+      regiones: [],
+      imperdible: true,
+      paraComerSolo: true,
+      sinMapa:
+        "No se vende servido: se prepara en casa o en la calle, y los yuyos se compran en el mercado.",
+      foto: null,
+    },
+    {
+      id: "cocido",
+      nombre: "Cocido",
+      resumen: "Yerba quemada con azúcar sobre brasas y hervida con leche.",
+      descripcion:
+        "El café con leche paraguayo. La yerba se tuesta con azúcar sobre una brasa hasta caramelizar, se hierve con agua y se sirve con leche, para mojar la chipa.",
+      sabor: "Dulce, tostado y caliente.",
+      ingredientes: ["Yerba mate", "Azúcar caramelizada", "Leche"],
+      contiene: ["lacteos"],
+      picante: 0,
+      precio: 1,
+      momentos: ["desayuno", "bebida"],
+      lugares: ["casual", "casa"],
+      aventura: "para-todos",
+      regiones: [],
+      imperdible: false,
+      paraComerSolo: true,
+      sinMapa: "Se toma en casa y en los copetines del desayuno, con chipa.",
+      foto: null,
+    },
+  ],
+
+  menciones: [],
+
+  revisado: "2026-11-12",
+};

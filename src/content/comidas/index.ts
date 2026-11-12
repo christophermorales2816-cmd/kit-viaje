@@ -1,8 +1,13 @@
 import { allGuides, getGuide, type DestinationGuide } from "@/content/guias";
 
 import { argentina } from "./argentina";
+import { bolivia } from "./bolivia";
+import { chile } from "./chile";
 import { japon } from "./japon";
 import { mexico } from "./mexico";
+import { paraguay } from "./paraguay";
+import { peru } from "./peru";
+import { uruguay } from "./uruguay";
 import type { CatalogoDeComida, Plato } from "./types";
 
 export type {
@@ -30,7 +35,16 @@ export type {
  * aparecen en /que-comer hasta que lo tengan, en vez de mostrar una página
  * vacía. El orden no importa: se muestran en el de las guías.
  */
-const CATALOGOS: CatalogoDeComida[] = [argentina, mexico, japon];
+const CATALOGOS: CatalogoDeComida[] = [
+  argentina,
+  bolivia,
+  chile,
+  japon,
+  mexico,
+  paraguay,
+  peru,
+  uruguay,
+];
 
 const POR_SLUG = new Map(
   CATALOGOS.map((catalogo) => [catalogo.slug, catalogo]),

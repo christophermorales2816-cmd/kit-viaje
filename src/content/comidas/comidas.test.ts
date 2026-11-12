@@ -34,31 +34,41 @@ const TIPOS_OSM: TipoDeLugarOsm[] = [
  * sí, "salsa" no—, pero cubre lo que más se escribe.
  */
 const INGREDIENTE_OBLIGA: [RegExp, Contiene][] = [
-  [/\bcerdo|panceta|jam[oó]n|chorizo|chicharr[oó]n|chashu|asiento/i, "cerdo"],
   [
-    /pescado|dashi|bonito|katsuobushi|anguila|at[uú]n|salm[oó]n|huevas|abadejo|surub[ií]|huachinango|pez globo/i,
+    /\bcerdo|chancho|panceta|tocino|pernil|longaniza|jam[oó]n|chorizo|chicharr[oó]n|chashu|asiento/i,
+    "cerdo",
+  ],
+  [
+    /pescado|dashi|bonito|katsuobushi|anguila|at[uú]n|salm[oó]n|huevas|abadejo|surub[ií]|huachinango|pez globo|corvina|merluza|congrio|reineta|trucha|bacalao|paiche|tilapia|r[oó]balo|pejerrey|sardina|anchoa/i,
     "pescado",
   ],
   [
-    /langostino|camar[oó]n|pulpo|centolla|cangrejo|erizo|marisco|almeja/i,
+    /langostino|camar[oó]n|pulpo|centolla|cangrejo|erizo|marisco|almeja|calamar|jaiba|choros?\b|machas|ostras?\b|osti[oó]n|conchas negras|\blocos\b/i,
     "mariscos",
   ],
   [/\bhuevo/i, "huevo"],
   [
-    /\bleche\b|queso|\bcrema\b|manteca(?! de cerdo)|muzzarella|provolone|quesillo/i,
+    // La leche de coco no es un lácteo, ni la crema de coco, ni la leche de
+    // tigre del ceviche.
+    /\bleche\b(?! de (coco|tigre))|queso|\bcrema\b(?! de coco)|manteca(?! de (cerdo|cacao))|mantequilla|muzzarella|provolone|quesillo|cuajada/i,
     "lacteos",
   ],
   [
-    /harina(?! de (maíz|garbanzo))|trigo|\bpan\b|panko|birote|galleta|cerveza/i,
+    // Las harinas de maíz, garbanzo, mandioca, yuca, arroz y plátano no
+    // tienen gluten.
+    /harina(?! de (maíz|garbanzo|mandioca|yuca|arroz|plátano))|trigo|\bpan\b|panko|birote|galleta|cerveza/i,
     "gluten",
   ],
-  [/\bsake\b|mirin|cerveza|\bvino\b|fernet/i, "alcohol"],
+  [
+    /\bsake\b|mirin|cerveza|\bvino\b|fernet|pisco|cacha[cç]a|\bron\b|aguardiente|singani|chicha de jora/i,
+    "alcohol",
+  ],
   [/soja|\bmiso\b|tofu|natto/i, "soja"],
   [/s[eé]samo/i, "sesamo"],
   [/\bman[ií]\b|cacahuate/i, "mani"],
-  [/almendra|\bnuez|nueces/i, "frutos-secos"],
+  [/almendra|\bnuez|nueces|casta[ñn]a/i, "frutos-secos"],
   [
-    /\bvaca\b|\bres\b|\bpollo\b|cordero|borrego|chivo|cabrito|guajolote|\blomo\b|carne(?! de cerdo)/i,
+    /\bvaca\b|\bres\b|\bpollo\b|gallina|cordero|borrego|chivo|cabrito|guajolote|\blomo\b|\bllama\b|alpaca|\bcuy\b|carne(?! de cerdo)/i,
     "carne",
   ],
 ];
