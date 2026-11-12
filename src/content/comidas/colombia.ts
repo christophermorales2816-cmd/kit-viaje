@@ -167,7 +167,7 @@ export const colombia: CatalogoDeComida = {
       nota: "Es enorme: muchos lugares tienen media bandeja.",
       buscar: {
         cocinas: ["colombian", "regional"],
-        nombres: ["paisa", "antioqueñ", "típic"],
+        nombres: ["paisa", "antioqueñ", "típic", "tipic"],
       },
       foto: null,
     },
@@ -198,7 +198,7 @@ export const colombia: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["colombian", "regional"],
-        nombres: ["ajiaco", "santafereñ", "típic"],
+        nombres: ["ajiaco", "santafereñ", "típic", "tipic"],
       },
       foto: null,
     },
@@ -350,7 +350,7 @@ export const colombia: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["colombian", "regional"],
-        nombres: ["sancocho", "típic"],
+        nombres: ["sancocho", "típic", "tipic"],
       },
       foto: null,
     },
@@ -435,7 +435,7 @@ export const colombia: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["colombian", "regional"],
-        nombres: ["típic", "costeñ", "mote"],
+        nombres: ["típic", "tipic", "costeñ", "mote"],
       },
       foto: null,
     },
@@ -465,7 +465,7 @@ export const colombia: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["colombian"],
-        nombres: ["desayun", "santafereñ", "típic"],
+        nombres: ["desayun", "santafereñ", "típic", "tipic"],
       },
       foto: null,
     },

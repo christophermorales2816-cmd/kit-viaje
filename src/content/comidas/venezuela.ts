@@ -175,7 +175,7 @@ export const venezuela: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["venezuelan", "regional"],
-        nombres: ["criollo", "pabellón", "venezolan"],
+        nombres: ["criollo", "pabellón", "pabellon", "venezolan"],
       },
       foto: null,
     },

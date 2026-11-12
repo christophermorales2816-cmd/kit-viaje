@@ -241,7 +241,7 @@ export const ecuador: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["ecuadorian", "regional"],
-        nombres: ["típic", "llapingach", "criollo"],
+        nombres: ["típic", "tipic", "llapingach", "criollo"],
       },
       foto: null,
     },
@@ -269,7 +269,7 @@ export const ecuador: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["ecuadorian", "regional"],
-        nombres: ["típic", "locro", "criollo"],
+        nombres: ["típic", "tipic", "locro", "criollo"],
       },
       foto: null,
     },
@@ -326,7 +326,7 @@ export const ecuador: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["ecuadorian", "regional"],
-        nombres: ["típic", "criollo", "seco"],
+        nombres: ["típic", "tipic", "criollo", "seco"],
       },
       foto: null,
     },
@@ -382,7 +382,7 @@ export const ecuador: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["ecuadorian"],
-        nombres: ["bolón", "bolon", "desayun", "típic"],
+        nombres: ["bolón", "bolon", "desayun", "típic", "tipic"],
       },
       foto: null,
     },
@@ -410,7 +410,7 @@ export const ecuador: CatalogoDeComida = {
       paraComerSolo: true,
       buscar: {
         cocinas: ["ecuadorian"],
-        nombres: ["tigrillo", "desayun", "típic"],
+        nombres: ["tigrillo", "desayun", "típic", "tipic"],
       },
       foto: null,
     },
