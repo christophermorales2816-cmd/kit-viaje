@@ -105,6 +105,10 @@ export function nombreDeLugar(
  * Con "e" delante del sonido "i" ("soja e hinojo"), pero no delante de "hie"
  * o "hia", que suenan a "y" ("agua y hielo"); y con "u" delante del sonido "o"
  * ("bar u hostería"), como pide la gramática.
+ *
+ * Si alguna ya trae la conjunción adentro —un lugar que en México se llama
+ * "puesto o taquería"—, va una coma antes de la última, para que se lea dónde
+ * termina cada una: "puesto o taquería, o restaurante".
  */
 export function enumerar(
   palabras: readonly string[],
@@ -122,5 +126,8 @@ export function enumerar(
         ? "u"
         : "o";
 
-  return `${palabras.slice(0, -1).join(", ")} ${nexo} ${ultima}`;
+  const yaLaTrae = conjuncion === "y" ? /\s[ye]\s/i : /\s[ou]\s/i;
+  const coma = palabras.some((palabra) => yaLaTrae.test(palabra)) ? "," : "";
+
+  return `${palabras.slice(0, -1).join(", ")}${coma} ${nexo} ${ultima}`;
 }
