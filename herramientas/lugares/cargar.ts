@@ -9,7 +9,8 @@
  * Escribe en la base con SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY. Con
  * --salida archivo.json, en cambio, deja las filas en ese archivo y no toca
  * ninguna base: para probar. --aceptar-menos carga aunque traiga mucho menos
- * que la vez anterior (src/lib/comidas/carga.ts).
+ * que la vez anterior (src/lib/comidas/carga.ts). Al final dice cuánto ocupa
+ * la base, que no puede pasar de TAMANO_MAXIMO.
  */
 import { createReadStream } from "node:fs";
 import { writeFile } from "node:fs/promises";
@@ -19,7 +20,12 @@ import { parseArgs } from "node:util";
 import { createClient } from "@supabase/supabase-js";
 
 import { getCatalogo } from "@/content/comidas";
-import { type BaseDeLugares, cargarLugares } from "@/lib/comidas/carga";
+import {
+  type BaseDeLugares,
+  cargarLugares,
+  megas,
+  TAMANO_MAXIMO,
+} from "@/lib/comidas/carga";
 import { type FilaDeLugar, filasDelExtracto } from "@/lib/comidas/extracto";
 
 function baseDeSupabase(url: string, clave: string): BaseDeLugares {
@@ -31,6 +37,20 @@ function baseDeSupabase(url: string, clave: string): BaseDeLugares {
     new Error(`No se pudo ${que}: ${error.message}`);
 
   return {
+    async tamano() {
+      const { data, error } = await cliente.rpc("tamano_de_la_base");
+
+      if (error) throw fallo("medir la base", error);
+
+      const bytes = Number(data);
+      if (!Number.isFinite(bytes) || bytes <= 0) {
+        throw new Error(
+          `No se pudo medir la base: tamano_de_la_base devolvió ${JSON.stringify(data)}.`,
+        );
+      }
+      return bytes;
+    },
+
     async lugaresAnteriores(pais) {
       const { data, error } = await cliente
         .from("extractos_de_comida")
@@ -132,15 +152,21 @@ async function main(): Promise<void> {
     );
   }
 
-  const cargado = await cargarLugares(
-    baseDeSupabase(url, clave),
-    catalogo.slug,
-    filas,
-    { datosDel, corrida, aceptarMenos: values["aceptar-menos"] },
-  );
+  const base = baseDeSupabase(url, clave);
+  const cargado = await cargarLugares(base, catalogo.slug, filas, {
+    datosDel,
+    corrida,
+    aceptarMenos: values["aceptar-menos"],
+  });
+
+  // Ya se cargó: si medir falla ahora, no es motivo para dar al país por caído.
+  const ocupa = await base.tamano().catch(() => null);
 
   console.log(
-    `${catalogo.slug}: ${cargado.lugares} lugares en ${cargado.filas} filas, con datos del ${datosDel.toISOString()}.`,
+    `${catalogo.slug}: ${cargado.lugares} lugares en ${cargado.filas} filas, con datos del ${datosDel.toISOString()}.` +
+      (ocupa === null
+        ? ""
+        : ` La base ocupa ${megas(ocupa)} de ${megas(TAMANO_MAXIMO)}.`),
   );
 }
 

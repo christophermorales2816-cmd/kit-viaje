@@ -243,3 +243,4 @@ Ninguna se puede llamar desde afuera: solo la service role o el SQL Editor.
 | `exigir_moneda_del_destino()`, `exigir_moneda_de_los_precios()` | Triggers: precios en la moneda de su ciudad        |
 | `consumir_cupo_de_viaje(clave, por_clave, global)`              | Cupo de creación de viajes (la llama la app)       |
 | `purgar_viajes_terminados(dias)`                                | Limpieza manual de viajes viejos, mínimo 30 días   |
+| `tamano_de_la_base()`                                           | Lo que ocupa la base: lo mide la carga de lugares  |
