@@ -2,12 +2,16 @@ import { allGuides, getGuide, type DestinationGuide } from "@/content/guias";
 
 import { argentina } from "./argentina";
 import { bolivia } from "./bolivia";
+import { brasil } from "./brasil";
 import { chile } from "./chile";
+import { colombia } from "./colombia";
+import { ecuador } from "./ecuador";
 import { japon } from "./japon";
 import { mexico } from "./mexico";
 import { paraguay } from "./paraguay";
 import { peru } from "./peru";
 import { uruguay } from "./uruguay";
+import { venezuela } from "./venezuela";
 import type { CatalogoDeComida, Plato } from "./types";
 
 export type {
@@ -38,12 +42,16 @@ export type {
 const CATALOGOS: CatalogoDeComida[] = [
   argentina,
   bolivia,
+  brasil,
   chile,
+  colombia,
+  ecuador,
   japon,
   mexico,
   paraguay,
   peru,
   uruguay,
+  venezuela,
 ];
 
 const POR_SLUG = new Map(
