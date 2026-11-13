@@ -48,4 +48,23 @@ describe("enumerar", () => {
     );
     expect(enumerar(["bar", "hostería"], "o")).toBe("bar u hostería");
   });
+
+  it("con una coma antes de la última si alguna ya trae la conjunción", () => {
+    expect(enumerar(["puesto o taquería", "restaurante"], "o")).toBe(
+      "puesto o taquería, o restaurante",
+    );
+    expect(enumerar(["mercado", "izakaya o bar"], "o")).toBe(
+      "mercado, o izakaya o bar",
+    );
+    expect(enumerar(["comedor", "bar u hostería", "mercado"], "o")).toBe(
+      "comedor, bar u hostería, o mercado",
+    );
+    expect(enumerar(["arroz y frijoles", "carne"])).toBe(
+      "arroz y frijoles, y carne",
+    );
+    // Una "o" dentro de una palabra no cuenta.
+    expect(enumerar(["comedor", "restaurante"], "o")).toBe(
+      "comedor o restaurante",
+    );
+  });
 });
