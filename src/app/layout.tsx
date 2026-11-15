@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { Analytics } from "@/components/analytics";
-import { BUILD_ID, BUILD_URL } from "@/lib/version";
+import { Encabezado } from "@/components/sitio/encabezado";
+import { Pie } from "@/components/sitio/pie";
+import { continentesDelMenu } from "@/content/guias/continentes";
 
 import "./globals.css";
 
@@ -22,59 +24,27 @@ export const metadata: Metadata = {
     "Qué llevar y cuánto vas a gastar, con el clima de la ciudad a la que vas y la cotización que elijas. Sin registro.",
 };
 
+const CONTINENTES_DEL_MENU = continentesDelMenu();
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased motion-safe:scroll-smooth`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full scroll-pt-20 antialiased motion-safe:scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        {children}
-
         {/*
-          Aviso de una línea, sin lógica de consentimiento (spec, sección 2).
-          Vercel Web Analytics no usa cookies: identifica visitas con un hash
-          del request entrante y no guarda nada que las reidentifique. Las
-          páginas de un viaje no se miden (src/components/analytics.tsx). Sin
-          cookies no hay nada que consentir, así que un banner de "Aceptar
-          todo / Personalizar" sería resolver un problema que el proyecto no
-          tiene. Se avisa igual, porque medir sin decirlo tampoco está bien.
-
-          La única cookie del sitio es la del aeropuerto de salida
-          (src/lib/vuelos/origen.ts): la pone quien elige uno con un botón, y
-          /vuelos dice al lado qué guarda y cómo se borra (spec, 17.3).
-
-          `print:hidden` para que no salga en el PDF exportado: el spec pide
-          imprimir la lista de equipaje, no el pie de página.
+          La barra y el pie son los mismos en todas las páginas (spec, 19).
+          Los continentes salen de las guías, en el servidor: al navegador
+          llegan cinco nombres y cinco números, no las 165 guías.
         */}
-        <footer className="text-muted-foreground flex flex-col items-center gap-1 border-t px-6 py-4 text-center text-xs print:hidden">
-          <span>
-            Usamos analytics sin cookies para saber qué se usa. No vendemos
-            datos ni mostramos anuncios.
-          </span>
+        <Encabezado continentes={CONTINENTES_DEL_MENU} />
 
-          {/*
-            El commit que está corriendo. Tres veces un arreglo estuvo en main
-            y no en producción, y las tres se perdió tiempo discutiendo si el
-            problema era el código o el deploy. Con esto se compara en vez de
-            discutir.
-          */}
-          <span className="opacity-60">
-            build{" "}
-            {BUILD_URL ? (
-              <a
-                href={BUILD_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="underline underline-offset-2"
-              >
-                {BUILD_ID}
-              </a>
-            ) : (
-              BUILD_ID
-            )}
-          </span>
-        </footer>
+        <div id="contenido" className="flex flex-1 flex-col">
+          {children}
+        </div>
+
+        <Pie continentes={CONTINENTES_DEL_MENU} />
 
         <Analytics />
       </body>
