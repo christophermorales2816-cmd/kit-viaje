@@ -2853,3 +2853,73 @@ antes de sumar muchos países grandes conviene guardar cada lugar una sola vez y
 escribir solo lo que cambió. Las menciones de honor (18.5) siguen
 verificándose con Overpass, una vez por día; pasarlas a los extractos es el
 paso siguiente.
+
+## 19. La navegación y la portada
+
+En noviembre de 2026 el sitio pasó de una portada que hacía todo a un sitio con
+navegación: una barra arriba, un pie con columnas y páginas propias para los
+destinos. El pedido fue rehacer la portada como la de un sitio de viajes —
+barra clásica, globo con zoom y nombres, una foto de fondo, un panel de
+noticias y secciones para explorar— sin perder lo que ya funcionaba. Se hace
+en tres PRs: la navegación (19.1 a 19.4), el hero (19.5) y las secciones de la
+portada (19.6).
+
+### 19.1 La barra de arriba
+
+En todas las páginas, con el logo y cinco entradas:
+
+- **Destinos**: se despliega al pasar el mouse con los cinco continentes, cada
+  uno con su cantidad de destinos y una línea, y "Todos los destinos". Lleva a
+  `/destinos/{continente}` y `/destinos`.
+- **Herramientas**: el radar de vuelos y "Qué comer y beber", que antes eran
+  dos enlaces sueltos en el hero.
+- **Blog** y **Contacto**: en gris, todavía no existen. Contacto necesita
+  primero un canal (un mail del sitio o un formulario con su manejo de spam),
+  que no hay.
+- **Nosotros**: la página de 19.4.
+- **Ingresar**: un botón de otro estilo, también en gris. Las cuentas son para
+  los foros, que vienen más adelante, y cuando lleguen hay que revisar la
+  decisión de "sin registro" de la sección 2 y el modelo de seguridad de la
+  sección 3, que se apoyan en ella.
+
+Los desplegables son el `NavigationMenu` de Radix: el patrón de "disclosure"
+que WAI-ARIA recomienda para la navegación de un sitio. Se abren al pasar el
+mouse, con Enter o la flecha desde el teclado, y Escape los cierra. Lo que
+está en gris es un botón con `aria-disabled` y no un `disabled`: se puede
+enfocar, y al pasar el mouse o llegar con Tab dice "Próximamente".
+
+En la portada la barra arranca transparente sobre el hero y se vuelve sólida al
+scrollear; en el resto de las páginas es sólida desde el principio. El primer
+Tab de cualquier página es "Saltar al contenido". En pantallas de menos de
+1024 px el menú es un panel lateral, con todos los enlaces a la vista: son una
+docena, y abrir cada grupo sería un toque de más. La lista de enlaces es una
+sola para la barra, el panel y el pie (`src/lib/sitio/navegacion.ts`), y un
+test verifica que cada uno lleve a una página que existe.
+
+### 19.2 El pie
+
+Columnas como las de los sitios de viajes de referencia: Destinos (los
+continentes), Herramientas, Kit de viaje (Nosotros, Contacto, Blog, Foros) y
+Legal (Privacidad, Términos, Mapa del sitio). Lo que todavía no existe dice
+"pronto" y no tiene enlace. Abajo siguen el aviso de analytics y el commit que
+está corriendo.
+
+Privacidad es lo primero de esa columna que conviene escribir: el sitio usa
+analytics sin cookies y una cookie para el aeropuerto de salida (17.3), y hoy
+eso se explica en el pie y en /vuelos.
+
+### 19.3 Destinos: la lista se muda
+
+La lista de "Elegí tu destino", por zona, se mudó de la portada a `/destinos` y
+a una página por continente (`/destinos/america`, etc.). Las dos son estáticas.
+El orden de las zonas y a qué continente pertenece cada una se movió de la
+portada a `src/content/guias/continentes.ts`, porque ahora lo usan el menú, el
+pie, esas páginas y la portada. La vuelta de cada guía ("Destinos en Asia")
+lleva a la página de su continente.
+
+### 19.4 Nosotros
+
+Qué es el sitio, cómo se hace (sin registro, sin anuncios ni venta de datos,
+cada dato con su fecha, fuentes abiertas), los números que estaban en la
+portada y de dónde salen los datos. No hay promesas nuevas: todo lo que dice ya
+lo decía el sitio en algún lado.

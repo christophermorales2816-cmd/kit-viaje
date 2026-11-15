@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { allCatalogos } from "@/content/comidas";
 import { allGuides } from "@/content/guias";
+import { CONTINENTES } from "@/content/guias/continentes";
 import { urlDelSitio } from "@/lib/sitio/url";
 
 /**
@@ -18,6 +19,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: `${sitio}/`, changeFrequency: "weekly", priority: 1 },
+    { url: `${sitio}/destinos`, changeFrequency: "weekly", priority: 0.9 },
+    ...CONTINENTES.map((continente) => ({
+      url: `${sitio}/destinos/${continente.id}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
+    { url: `${sitio}/nosotros`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${sitio}/vuelos`, changeFrequency: "daily", priority: 0.7 },
     { url: `${sitio}/que-comer`, changeFrequency: "weekly", priority: 0.7 },
     ...allCatalogos().flatMap((catalogo) => [

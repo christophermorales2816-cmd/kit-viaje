@@ -12,6 +12,7 @@ import { ScoreBars } from "@/components/guia/score-bars";
 import { Button } from "@/components/ui/button";
 import { getCatalogo } from "@/content/comidas";
 import { allGuides, getGuide } from "@/content/guias";
+import { continenteDeLaZona } from "@/content/guias/continentes";
 
 /**
  * Página 2 — la guía del país (spec, sección 8.1).
@@ -59,16 +60,19 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
 
   // "Qué comer" se suma de a tandas (spec, 18): el link, solo si ya está.
   const comida = getCatalogo(guia.slug);
+  // La vuelta es a los destinos de su continente: la lista de la portada se
+  // mudó ahí (spec, 19.3).
+  const continente = continenteDeLaZona(guia.subregion);
 
   return (
     <main className="flex flex-1 flex-col items-center gap-16 px-6 py-12 md:gap-24 md:py-16">
       <header className="flex w-full max-w-5xl flex-col gap-8">
         <Link
-          href="/"
+          href={`/destinos/${continente.id}`}
           className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 text-sm transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Elegir otro destino
+          Destinos en {continente.nombre}
         </Link>
 
         <div className="flex flex-col gap-4">

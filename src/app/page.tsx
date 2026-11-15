@@ -2,13 +2,13 @@ import Link from "next/link";
 
 import { GlobeHero } from "@/components/landing/globe-hero";
 import { Button } from "@/components/ui/button";
+import { allGuides, type DestinationGuide } from "@/content/guias";
 import {
-  allGuides,
-  getGuide,
-  type DestinationGuide,
-  type GuideSubregion,
-} from "@/content/guias";
-import { allQuoteCorridors } from "@/lib/quotes";
+  continenteDeLaZona,
+  guiasPorZona,
+  rasgoDeLaGuia,
+} from "@/content/guias/continentes";
+import { estadisticasDelSitio } from "@/lib/sitio/estadisticas";
 
 /**
  * Página 1 — bienvenida (spec, sección 8.1).
@@ -41,78 +41,10 @@ const DESTINOS = GUIAS.map((guia) => ({
 }));
 
 /**
- * Las zonas en el orden en que se muestran: América de sur a norte, después
- * Europa, África de norte a sur, Asia de oeste a este y Oceanía, que empieza
- * por Australia y Nueva Zelanda y termina en la Polinesia. Los continentes van
- * de oeste a este (spec, 15.1 y 16.1): África, que tiene casi la misma
- * longitud que Europa, queda entre Europa y Asia, y Oceanía, al final.
- *
- * El tipo `GuideSubregion` garantiza que cada guía cae en una de estas; el
- * orden es una decisión editorial y por eso vive acá y no en el contenido. Una
- * zona del tipo que falte en esta lista dejaría a sus países fuera de la
- * portada, así que el Record de abajo la exige.
- */
-const ZONAS: GuideSubregion[] = [
-  "Sudamérica",
-  "México y Centroamérica",
-  "Caribe",
-  "Europa del Sur",
-  "Europa Occidental",
-  "Europa del Norte",
-  "Europa del Este",
-  "África del Norte",
-  "África Occidental",
-  "África Central",
-  "África Oriental",
-  "África Austral",
-  "Asia Occidental",
-  "Asia Central",
-  "Asia del Sur",
-  "Sudeste Asiático",
-  "Asia Oriental",
-  "Australia y Nueva Zelanda",
-  "Melanesia",
-  "Micronesia",
-  "Polinesia",
-];
-
-/**
- * El continente de cada zona, para la nota del contador de países.
- *
- * La nota listaba las zonas una por una ("10 en Sudamérica, 7 en México y
- * Centroamérica, 2 en el Caribe"). Con siete zonas esa frase ya no entra
- * debajo de un número; por continente sí. Un Record sobre el tipo cerrado
- * obliga a decidirlo para cada zona nueva.
- */
-const CONTINENTE: Record<GuideSubregion, string> = {
-  Sudamérica: "América",
-  "México y Centroamérica": "América",
-  Caribe: "América",
-  "Europa del Sur": "Europa",
-  "Europa Occidental": "Europa",
-  "Europa del Norte": "Europa",
-  "Europa del Este": "Europa",
-  "África del Norte": "África",
-  "África Occidental": "África",
-  "África Central": "África",
-  "África Oriental": "África",
-  "África Austral": "África",
-  "Asia Occidental": "Asia",
-  "Asia Central": "Asia",
-  "Asia del Sur": "Asia",
-  "Sudeste Asiático": "Asia",
-  "Asia Oriental": "Asia",
-  "Australia y Nueva Zelanda": "Oceanía",
-  Melanesia: "Oceanía",
-  Micronesia: "Oceanía",
-  Polinesia: "Oceanía",
-};
-
-/**
  * Adónde mira el globo al cargar, antes de empezar a girar (spec, 14.9).
  *
  * La longitud es el promedio de los países de América y Europa: cae en el
- * Atlántico, y desde ahí se ven los 58, de México a Chipre. Es también lo que
+ * Atlántico, y desde ahí se ven los dos continentes enteros. Es también lo que
  * ve quien entra sin JavaScript, para quien el globo no gira.
  *
  * La latitud no es un promedio sino el punto medio entre el marcador más al
@@ -125,7 +57,7 @@ const CONTINENTE: Record<GuideSubregion, string> = {
 const INICIO: [number, number] = (() => {
   const lats = DESTINOS.map((destino) => destino.coords[0]);
   const atlanticos = GUIAS.filter((guia) =>
-    ["América", "Europa"].includes(CONTINENTE[guia.subregion]),
+    ["america", "europa"].includes(continenteDeLaZona(guia.subregion).id),
   ).map((guia) => base(guia).coords[1]);
 
   return [
@@ -134,74 +66,9 @@ const INICIO: [number, number] = (() => {
   ];
 })();
 
-const POR_ZONA = ZONAS.map((zona) => ({
-  zona,
-  guias: GUIAS.filter((guia) => guia.subregion === zona).sort((a, b) =>
-    a.country.localeCompare(b.country, "es"),
-  ),
-})).filter(({ guias }) => guias.length > 0);
+const POR_ZONA = guiasPorZona(GUIAS);
 
-/**
- * Las cotizaciones que de verdad se traen en vivo, por país.
- *
- * Decía "5 — cuatro en Argentina, una en Brasil" escrito a mano. Era cierto, y
- * habría dejado de serlo el día que se conectara la fuente de cualquier otro
- * país sin que nadie se acordara de esta línea. Ahora se cuenta del registro de
- * corredores: solo los que tienen `source`.
- */
-const EN_VIVO = allQuoteCorridors()
-  .filter((corredor) => corredor.source !== null)
-  .map((corredor) => ({
-    pais: getGuide(corredor.corridor)?.country ?? corredor.corridor,
-    cuantas: corredor.quoteIds.length,
-  }));
-
-/** Cuántos destinos hay en cada continente, en el orden de las zonas. */
-const POR_CONTINENTE = [
-  ...ZONAS.reduce((cuenta, zona) => {
-    const cuantas = GUIAS.filter((guia) => guia.subregion === zona).length;
-    if (cuantas === 0) return cuenta;
-    const continente = CONTINENTE[zona];
-    return cuenta.set(continente, (cuenta.get(continente) ?? 0) + cuantas);
-  }, new Map<string, number>()),
-];
-
-/**
- * El número de destinos y su nota salen del contenido.
- *
- * "2 países" estuvo fijo mientras había tres. Es el mismo error que el 404 que
- * decía que el único corredor era Argentina: un dato que hay que acordarse de
- * actualizar a mano en cada país es un dato que va a quedar viejo.
- *
- * Dice "destinos" y no "países" desde que entraron Hong Kong, Macao y Taiwán
- * (spec, 14.11): tienen moneda y frontera propias, que es lo que el modelo
- * llama un corredor, pero contarlos como países habría sido decir algo que la
- * portada no tiene por qué decir.
- */
-const ESTADISTICAS = [
-  {
-    valor: String(GUIAS.length),
-    etiqueta: GUIAS.length === 1 ? "destino" : "destinos",
-    nota: POR_CONTINENTE.map(
-      ([continente, cuantas]) => `${cuantas} en ${continente}`,
-    ).join(", "),
-  },
-  { valor: "0", etiqueta: "registros", nota: "Sin cuenta y sin mail" },
-  {
-    valor: String(EN_VIVO.reduce((total, { cuantas }) => total + cuantas, 0)),
-    etiqueta: "cotizaciones en vivo",
-    nota: EN_VIVO.map(({ pais, cuantas }) => `${cuantas} en ${pais}`).join(
-      ", ",
-    ),
-  },
-  { valor: "100%", etiqueta: "gratis", nota: "Sin anuncios ni venta de datos" },
-];
-
-/** El primer número del hero de cada guía: lo que define a ese país. */
-function rasgo(guia: DestinationGuide): string {
-  const [primero] = guia.highlights;
-  return `${primero.value} ${primero.label}`;
-}
+const ESTADISTICAS = estadisticasDelSitio();
 
 export default function Home() {
   // Sin guías no hay adónde ir, y es mejor que falle al construir que en la
@@ -217,7 +84,16 @@ export default function Home() {
         los números: el hero y las estadísticas son la misma zona, no dos
         bandas apiladas con una costura en el medio.
       */}
-      <section className="flex flex-col gap-14 bg-slate-950 px-6 py-14 text-slate-100 md:gap-20 md:py-20">
+      {/*
+        `-mt-16` la sube por debajo de la barra, que en la portada arranca
+        transparente (spec, 19.1); el padding de arriba le devuelve ese lugar
+        al contenido.
+
+        `overflow-x-clip`: los nombres ocultos de los puntos del borde del
+        globo asomaban fuera de la pantalla y en el teléfono la página se
+        corría de costado, y con ella el menú.
+      */}
+      <section className="-mt-16 flex flex-col overflow-x-clip gap-14 bg-slate-950 px-6 pt-30 pb-14 text-slate-100 md:gap-20 md:pt-36 md:pb-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-12 md:flex-row md:justify-between md:gap-16">
           <div className="flex max-w-lg flex-col items-center gap-6 text-center md:items-start md:text-left">
             <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
@@ -237,6 +113,10 @@ export default function Home() {
             </p>
 
             {/*
+              El radar de vuelos y "Qué comer" estaban acá como dos enlaces;
+              ahora están en el menú "Herramientas" de la barra de arriba
+              (spec, 19.1).
+
               Un botón por país servía con dos. Con diecinueve el hero se
               convertía en una pared de botones, así que el hero invita a
               elegir y la elección se hace en la lista de abajo, agrupada.
@@ -254,24 +134,6 @@ export default function Home() {
               >
                 <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
               </Button>
-
-              {/*
-                El radar de vuelos y "Qué comer", como enlaces y no como más
-                botones: el hero sigue invitando a una sola cosa, elegir un
-                destino.
-              */}
-              <Link
-                href="/vuelos"
-                className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
-              >
-                O mirá qué está volando ahora cerca tuyo
-              </Link>
-              <Link
-                href="/que-comer"
-                className="text-sm text-slate-300 underline underline-offset-4 hover:text-white"
-              >
-                O qué comer y beber en cada país
-              </Link>
             </div>
           </div>
 
@@ -351,7 +213,7 @@ export default function Home() {
                   >
                     <span className="font-medium">{guia.country}</span>
                     <span className="text-muted-foreground text-sm text-pretty">
-                      {rasgo(guia)}
+                      {rasgoDeLaGuia(guia)}
                     </span>
                   </Link>
                 </li>
