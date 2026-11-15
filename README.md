@@ -343,7 +343,7 @@ src/
 │   ├── error.tsx        # red de contención de las rutas
 │   ├── global-error.tsx # último recurso: falla el layout raíz
 │   ├── not-found.tsx    # 404 propio
-│   ├── page.tsx         # 1 · landing: el globo
+│   ├── page.tsx         # 1 · portada: el globo y las secciones para explorar
 │   ├── robots.ts        # todo indexable menos /viaje/ y /api/
 │   ├── sitemap.ts       # las guías y los platos, desde el índice de contenido
 │   ├── guia/[slug]/
@@ -364,6 +364,7 @@ src/
 ├── assets/portada/      # la foto del hero (sección 19.5)
 ├── components/
 │   ├── landing/         # el globo, su buscador y el formulario de viaje nuevo
+│   ├── portada/         # las secciones de la portada debajo del hero (sección 19.6)
 │   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
 │   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
 │   ├── trip/            # listas, totales, controles de compartir
@@ -374,6 +375,7 @@ src/
 │   └── ui/              # componentes de Shadcn
 ├── content/
 │   ├── guias/           # contenido editorial de las guías (sección 8.2)
+│   ├── portada.ts       # textos, íconos y fotos de las tarjetas de la portada (19.6)
 │   └── comidas/         # los catálogos de "Qué comer" y sus fotos (sección 18)
 └── lib/
     ├── packing/         # motor de packing (sección 4)

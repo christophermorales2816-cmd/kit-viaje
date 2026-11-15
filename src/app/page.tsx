@@ -3,13 +3,16 @@ import Link from "next/link";
 
 import fondo from "@/assets/portada/mar.jpg";
 import { ExploradorDelGlobo } from "@/components/landing/explorador-del-globo";
+import { Imperdibles } from "@/components/portada/imperdibles";
+import { Noticias } from "@/components/portada/noticias";
+import { Ongs } from "@/components/portada/ongs";
+import { PlanificaTuViaje } from "@/components/portada/planifica-tu-viaje";
+import { PorContinente } from "@/components/portada/por-continente";
+import { PreguntasFrecuentes } from "@/components/portada/preguntas-frecuentes";
+import { TendenciasYOfertas } from "@/components/portada/tendencias-y-ofertas";
 import { Button } from "@/components/ui/button";
 import { allGuides, type DestinationGuide } from "@/content/guias";
-import {
-  continenteDeLaZona,
-  guiasPorZona,
-  rasgoDeLaGuia,
-} from "@/content/guias/continentes";
+import { continenteDeLaZona, rasgoDeLaGuia } from "@/content/guias/continentes";
 
 /**
  * Página 1 — bienvenida (spec, sección 8.1).
@@ -23,6 +26,9 @@ import {
  * y está en el repo sin metadatos. Entró detrás de la banda oscura sin rehacer
  * el layout, como estaba previsto (8.6), con un velo para que el texto blanco
  * se lea sobre el cielo, que es claro.
+ *
+ * Debajo del hero van las secciones nuevas (spec, 19.6), de las noticias a las
+ * preguntas frecuentes. La lista de destinos por zona se mudó a /destinos.
  */
 
 const GUIAS = allGuides();
@@ -70,7 +76,12 @@ const INICIO: [number, number] = (() => {
   ];
 })();
 
-const POR_ZONA = guiasPorZona(GUIAS);
+/** Los mismos destinos, cada uno con el enlace a su planificador. */
+const PLANIFICABLES = DESTINOS.map(({ label, href, zona }) => ({
+  label,
+  zona,
+  href: `${href}/planificar`,
+}));
 
 export default function Home() {
   // Sin guías no hay adónde ir, y es mejor que falle al construir que en la
@@ -145,7 +156,7 @@ export default function Home() {
               size="lg"
               className="bg-white text-slate-950 shadow-lg hover:bg-slate-200"
             >
-              <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
+              <Link href="/destinos">Elegir entre {GUIAS.length} destinos</Link>
             </Button>
           </div>
 
@@ -153,50 +164,18 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="paises"
-        aria-labelledby="paises-titulo"
-        className="mx-auto flex w-full max-w-5xl scroll-mt-8 flex-col gap-10 px-6 py-14 md:py-20"
-      >
-        <header className="flex flex-col gap-2">
-          <h2
-            id="paises-titulo"
-            className="text-3xl font-semibold tracking-tight text-balance"
-          >
-            Elegí tu destino
-          </h2>
-
-          <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-            Cada destino tiene su guía, su clima mes a mes por ciudad y su
-            presupuesto en moneda local. Al lado del nombre, lo que más cambia
-            cómo se prepara ese viaje.
-          </p>
-        </header>
-
-        {POR_ZONA.map(({ zona, guias }) => (
-          <div key={zona} className="flex flex-col gap-4">
-            <h3 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-              {zona}
-            </h3>
-
-            <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {guias.map((guia) => (
-                <li key={guia.slug}>
-                  <Link
-                    href={`/guia/${guia.slug}`}
-                    className="hover:bg-muted flex h-full flex-col gap-1 rounded-xl border p-4 transition-colors"
-                  >
-                    <span className="font-medium">{guia.country}</span>
-                    <span className="text-muted-foreground text-sm text-pretty">
-                      {rasgoDeLaGuia(guia)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </section>
+      {/*
+        Debajo del hero, en este orden (spec, 19.6): primero las noticias, que
+        reemplazan a la lista de destinos (ahora en /destinos), y después lo
+        que invita a explorar. Lo que todavía no existe dice "Próximamente".
+      */}
+      <Noticias />
+      <TendenciasYOfertas />
+      <Imperdibles />
+      <PorContinente guias={GUIAS} />
+      <PlanificaTuViaje destinos={PLANIFICABLES} />
+      <Ongs />
+      <PreguntasFrecuentes />
     </main>
   );
 }

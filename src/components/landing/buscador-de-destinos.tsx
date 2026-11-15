@@ -15,6 +15,9 @@ import { buscarDestinos } from "@/lib/globo/buscar";
  * escribe, las flechas recorren las opciones y Enter va a la guía. Mientras se
  * recorre, el globo vuela hasta la opción resaltada: es una vista previa, no
  * una elección. Elegir es ir a la guía, como en cualquier buscador.
+ *
+ * El mismo buscador abre el planificador en "Planificá tu viaje" (19.6): ahí
+ * cada destino lleva a su planificador y no hay globo que resaltar.
  */
 
 export interface DestinoBuscable {
@@ -25,11 +28,18 @@ export interface DestinoBuscable {
 
 export function BuscadorDeDestinos({
   destinos,
-  alResaltar,
+  alResaltar = () => {},
+  etiqueta = "Buscá un destino",
+  etiquetaVisible = false,
+  placeholder = "Buscá un país o un destino",
 }: {
   destinos: DestinoBuscable[];
   /** El índice del destino resaltado, o null: el globo vuela hasta él. */
-  alResaltar: (i: number | null) => void;
+  alResaltar?: (i: number | null) => void;
+  etiqueta?: string;
+  /** Sobre el globo la etiqueta es solo para el lector de pantalla. */
+  etiquetaVisible?: boolean;
+  placeholder?: string;
 }) {
   const router = useRouter();
   const id = useId();
@@ -105,70 +115,75 @@ export function BuscadorDeDestinos({
   const idDeOpcion = (posicion: number) => `${id}-opcion-${posicion}`;
 
   return (
-    <div className="relative w-full">
-      <label htmlFor={`${id}-entrada`} className="sr-only">
-        Buscá un destino
+    <div className="flex w-full flex-col gap-2">
+      <label
+        htmlFor={`${id}-entrada`}
+        className={etiquetaVisible ? "text-sm font-medium" : "sr-only"}
+      >
+        {etiqueta}
       </label>
-      <Search
-        aria-hidden
-        className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-500"
-      />
-      <input
-        id={`${id}-entrada`}
-        type="text"
-        role="combobox"
-        aria-expanded={mostrar}
-        aria-controls={idDeLaLista}
-        aria-autocomplete="list"
-        aria-activedescendant={
-          mostrar && activo >= 0 ? idDeOpcion(activo) : undefined
-        }
-        autoComplete="off"
-        spellCheck={false}
-        placeholder="Buscá un país o un destino"
-        value={consulta}
-        onChange={(e) => {
-          setConsulta(e.target.value);
-          setAbierto(true);
-          setActivo(-1);
-          alResaltar(null);
-        }}
-        onFocus={() => setAbierto(true)}
-        onBlur={cerrar}
-        onKeyDown={alTeclear}
-        className="h-12 w-full rounded-full border border-white/20 bg-white pr-4 pl-11 text-[0.95rem] text-slate-950 shadow-lg outline-none placeholder:text-slate-500 focus-visible:ring-[3px] focus-visible:ring-orange-400/70"
-      />
+      <div className="relative">
+        <Search
+          aria-hidden
+          className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-500"
+        />
+        <input
+          id={`${id}-entrada`}
+          type="text"
+          role="combobox"
+          aria-expanded={mostrar}
+          aria-controls={idDeLaLista}
+          aria-autocomplete="list"
+          aria-activedescendant={
+            mostrar && activo >= 0 ? idDeOpcion(activo) : undefined
+          }
+          autoComplete="off"
+          spellCheck={false}
+          placeholder={placeholder}
+          value={consulta}
+          onChange={(e) => {
+            setConsulta(e.target.value);
+            setAbierto(true);
+            setActivo(-1);
+            alResaltar(null);
+          }}
+          onFocus={() => setAbierto(true)}
+          onBlur={cerrar}
+          onKeyDown={alTeclear}
+          className="h-12 w-full rounded-full border border-white/20 bg-white pr-4 pl-11 text-[0.95rem] text-slate-950 shadow-lg outline-none placeholder:text-slate-500 focus-visible:ring-[3px] focus-visible:ring-orange-400/70"
+        />
 
-      {mostrar ? (
-        <div className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-xl border bg-white text-slate-950 shadow-2xl">
-          <ul id={idDeLaLista} role="listbox" aria-label="Destinos">
-            {resultados.map((destino, posicion) => (
-              <li
-                key={destino.href}
-                id={idDeOpcion(posicion)}
-                role="option"
-                aria-selected={posicion === activo}
-                // mousedown y no click: el click llegaría después del blur, que
-                // ya cerró la lista.
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  ir(posicion);
-                }}
-                onMouseEnter={() => resaltar(posicion)}
-                className="flex cursor-pointer items-baseline justify-between gap-3 px-4 py-2.5 aria-selected:bg-orange-50"
-              >
-                <span className="font-medium">{destino.label}</span>
-                <span className="text-xs text-slate-500">{destino.zona}</span>
-              </li>
-            ))}
-          </ul>
-          {resultados.length === 0 ? (
-            <p role="status" className="px-4 py-3 text-sm text-slate-600">
-              No tenemos guía de “{consulta.trim()}” todavía.
-            </p>
-          ) : null}
-        </div>
-      ) : null}
+        {mostrar ? (
+          <div className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-xl border bg-white text-slate-950 shadow-2xl">
+            <ul id={idDeLaLista} role="listbox" aria-label="Destinos">
+              {resultados.map((destino, posicion) => (
+                <li
+                  key={destino.href}
+                  id={idDeOpcion(posicion)}
+                  role="option"
+                  aria-selected={posicion === activo}
+                  // mousedown y no click: el click llegaría después del blur, que
+                  // ya cerró la lista.
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    ir(posicion);
+                  }}
+                  onMouseEnter={() => resaltar(posicion)}
+                  className="flex cursor-pointer items-baseline justify-between gap-3 px-4 py-2.5 aria-selected:bg-orange-50"
+                >
+                  <span className="font-medium">{destino.label}</span>
+                  <span className="text-xs text-slate-500">{destino.zona}</span>
+                </li>
+              ))}
+            </ul>
+            {resultados.length === 0 ? (
+              <p role="status" className="px-4 py-3 text-sm text-slate-600">
+                No tenemos guía de “{consulta.trim()}” todavía.
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
