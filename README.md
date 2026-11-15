@@ -361,8 +361,9 @@ src/
 │       ├── aeropuertos/     # la búsqueda del selector, cacheada en la CDN
 │       ├── vuelos/en-vivo/  # los aviones de una zona del radar
 │       └── que-comer/lugares/ # los lugares de una celda del mapa
+├── assets/portada/      # la foto del hero (sección 19.5)
 ├── components/
-│   ├── landing/         # globo y formulario de viaje nuevo
+│   ├── landing/         # el globo, su buscador y el formulario de viaje nuevo
 │   ├── guia/            # tablero, puntajes, cotizaciones, mosaico, mapa
 │   ├── preparar/        # tira de meses, gráficos, checklists, tabla, FAQ
 │   ├── trip/            # listas, totales, controles de compartir
@@ -391,6 +392,7 @@ src/
     ├── comidas/         # filtros, grilla del mapa, lugares (base propia y Overpass), menciones y horarios
     ├── mapa/            # el estilo y los textos de los mapas de MapLibre
     ├── geo.ts           # distancias y círculos sobre la esfera
+    ├── globo/           # la proyección, el zoom, los nombres y la búsqueda del globo (sección 19.5)
     ├── supabase/        # clientes, lectura de referencia y su caché
     ├── seguridad/       # headers HTTP y redacción de URLs
     ├── sitio/           # dominio público, para robots y sitemap
