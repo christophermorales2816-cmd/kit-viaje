@@ -82,11 +82,6 @@ export default function Home() {
   return (
     <main className="flex flex-1 flex-col">
       {/*
-        Un solo rectángulo oscuro a sangre, del borde superior hasta debajo de
-        los números: el hero y las estadísticas son la misma zona, no dos
-        bandas apiladas con una costura en el medio.
-      */}
-      {/*
         `-mt-16` sube el hero por debajo de la barra, que en la portada arranca
         transparente (spec, 19.1); el padding de arriba le devuelve ese lugar al
         contenido.
