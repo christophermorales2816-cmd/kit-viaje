@@ -1386,6 +1386,10 @@ queda con `visibility: hidden`: no se ve, no se clickea y no se llega con Tab.
 La lista de países debajo del hero sigue siendo la forma de llegar a
 cualquier país sin depender del globo.
 
+> **Revisado en la sección 19.5:** el globo ahora se acerca, muestra los
+> nombres y se elige con una tarjeta, y el buscador reemplaza a la lista como
+> camino del teclado.
+
 ### 14.10 Cuarta tanda: el Cáucaso y Asia Central
 
 Georgia, Armenia, Azerbaiyán, Uzbekistán, Kazajistán y Kirguistán. Con esta
@@ -2923,3 +2927,72 @@ Qué es el sitio, cómo se hace (sin registro, sin anuncios ni venta de datos,
 cada dato con su fecha, fuentes abiertas), los números que estaban en la
 portada y de dónde salen los datos. No hay promesas nuevas: todo lo que dice ya
 lo decía el sitio en algún lado.
+
+### 19.5 El hero: la foto y el globo
+
+**La foto.** El fondo azul oscuro se cambió por una foto del mar que dio el
+dueño del sitio, en `src/assets/portada/mar.jpg`: reducida a 1500 × 2000 y sin
+metadatos (traía la ubicación del GPS). Se importa estática, así Next genera
+los tamaños y un borroso mientras carga, y va con `priority` porque es lo
+primero que se pinta. El texto blanco cae sobre el cielo, que es claro: en
+escritorio lo oscurece un degradé que sale del lado del texto, y en el
+teléfono, un velo parejo. La barra de arriba es transparente sobre la foto
+(19.1). Los dos enlaces sueltos del hero (el radar y "Qué comer") se mudaron a
+Herramientas, y la banda de números, a Nosotros (19.4).
+
+**El globo.** La queja era "es muy difícil saber dónde clico": puntos chicos,
+amontonados y sin nombre hasta pasarles el mouse. Ahora:
+
+- **Se acerca** con los botones (acercar, alejar y ver el globo entero), con
+  Ctrl o ⌘ + rueda y el pellizco del trackpad (hacia donde apunta el mouse),
+  con doble click, y con dos dedos o doble toque en el teléfono. La rueda sola
+  sigue scrolleando la página, como en los mapas embebidos: el globo ocupa
+  medio hero y robarle la rueda a la página es de lo que más molesta. Si
+  alguien la usa sobre el globo, un cartel le dice cómo acercar. Llega hasta 4
+  veces: los puntos del mapa de cobe tienen un tamaño fijo sobre la esfera, y
+  a 6 eran manchas que ya no dibujaban costas.
+- **Tiene nombres**: los que entran sin pisarse, y más al acercar. Primero el
+  elegido, después el que está bajo el mouse, los que ya se veían (para que no
+  titilen al girar) y los más cercanos al centro. Cada nombre va del lado del
+  punto que mira al centro, entero adentro del globo y sin tapar otro punto.
+- **Se elige sin acertarle al punto**: vale el más cercano a donde tocaste,
+  hasta 16 px con el mouse y 26 con el dedo. Elegir no navega de una: el globo
+  vuela hasta el destino, lo acerca y lo deja arriba del centro, y abajo
+  aparece una tarjeta con la zona, el nombre, una línea de la guía y "Ver la
+  guía". Así se ve qué se eligió antes de ir.
+- **Muy cerca.** Hay puntos que ningún zoom separa: Zambia y Zimbabue
+  comparten las cataratas Victoria, Kinshasa y Brazzaville se miran desde las
+  dos orillas del río Congo, y Viena y Bratislava están a 55 km. Para cada
+  destino, la tarjeta ofrece los que están a menos de 1,5° (unos 160 km), y
+  con un toque se cambia.
+- **Se arrastra en las dos direcciones**, hasta 75° de latitud, para llegar al
+  norte de Europa o al sur de África con zoom. Sin zoom, en el teléfono el
+  dedo vertical sigue siendo de la página (`touch-action: pan-y`); con zoom,
+  el globo se queda con todos los gestos.
+- **Gira solo al principio**, para que se vea que es un globo, y deja de girar
+  para siempre apenas lo tocás. Con `prefers-reduced-motion` no gira ni vuela:
+  salta.
+- **Tiene un buscador** debajo, que es un combobox de ARIA 1.2: al escribir
+  aparecen los destinos, las flechas los recorren mientras el globo vuela al
+  resaltado, y Enter va a la guía. Es el camino del teclado y del lector de
+  pantalla: los puntos no están en el orden de Tab, y el buscador llega a
+  cualquier destino sin depender de qué lado del planeta se ve. Buscar cierra
+  la tarjeta de lo elegido antes.
+
+Sin JavaScript, los puntos siguen siendo enlaces en la posición inicial. La
+lógica está en `src/lib/globo/` —la geometría, los nombres y la búsqueda—,
+con tests, y el componente solo conecta los eventos.
+
+**Lo que hay que saber de cobe 2.0.1**, que costó encontrar:
+
+- La esfera ocupa 0,8 de la mitad del canvas y sus marcadores flotan 0,05 por
+  encima. Por eso los puntos medidos en el globo viejo caían a 0,85 y en el
+  borde se veían como manchas afuera del disco. Los puntos de ahora son HTML
+  sobre la superficie misma, y cobe no dibuja ninguno.
+- **El mapa admite hasta 32.767 puntos.** El shader ubica cada punto
+  descomponiendo su número en potencias de dos de 16384 para abajo. Con
+  60.000, al acercar, desaparecía todo lo que queda al sur de los 5° de
+  latitud y aparecía una raya vertical. El techo es 32.000, con un test.
+- Con zoom, los puntos del mapa crecen: tienen un tamaño fijo sobre la esfera.
+  Se suman puntos hasta el techo para que la distancia entre ellos no cambie,
+  y de ahí en más se agrandan.

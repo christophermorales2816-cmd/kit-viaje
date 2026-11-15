@@ -1,6 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 
-import { GlobeHero } from "@/components/landing/globe-hero";
+import fondo from "@/assets/portada/mar.jpg";
+import { ExploradorDelGlobo } from "@/components/landing/explorador-del-globo";
 import { Button } from "@/components/ui/button";
 import { allGuides, type DestinationGuide } from "@/content/guias";
 import {
@@ -8,7 +10,6 @@ import {
   guiasPorZona,
   rasgoDeLaGuia,
 } from "@/content/guias/continentes";
-import { estadisticasDelSitio } from "@/lib/sitio/estadisticas";
 
 /**
  * Página 1 — bienvenida (spec, sección 8.1).
@@ -18,9 +19,10 @@ import { estadisticasDelSitio } from "@/lib/sitio/estadisticas";
  * Argentina; pedirle que lea sobre un país antes de haberlo elegido invierte
  * el orden natural.
  *
- * Sin foto de fondo todavía (spec, 8.6): la banda oscura no es un placeholder
- * a la espera de una imagen, es el mismo fondo para el que cobe ilumina el
- * globo. Cuando haya foto con licencia, entra detrás sin rehacer el layout.
+ * El fondo es una foto del mar (spec, 19.5), que la provee el dueño del sitio
+ * y está en el repo sin metadatos. Entró detrás de la banda oscura sin rehacer
+ * el layout, como estaba previsto (8.6), con un velo para que el texto blanco
+ * se lea sobre el cielo, que es claro.
  */
 
 const GUIAS = allGuides();
@@ -38,6 +40,8 @@ const DESTINOS = GUIAS.map((guia) => ({
   href: `/guia/${guia.slug}`,
   label: guia.country,
   coords: base(guia).coords,
+  zona: guia.subregion,
+  detalle: rasgoDeLaGuia(guia),
 }));
 
 /**
@@ -68,8 +72,6 @@ const INICIO: [number, number] = (() => {
 
 const POR_ZONA = guiasPorZona(GUIAS);
 
-const ESTADISTICAS = estadisticasDelSitio();
-
 export default function Home() {
   // Sin guías no hay adónde ir, y es mejor que falle al construir que en la
   // cara del visitante.
@@ -80,32 +82,52 @@ export default function Home() {
   return (
     <main className="flex flex-1 flex-col">
       {/*
-        Un solo rectángulo oscuro a sangre, del borde superior hasta debajo de
-        los números: el hero y las estadísticas son la misma zona, no dos
-        bandas apiladas con una costura en el medio.
-      */}
-      {/*
-        `-mt-16` la sube por debajo de la barra, que en la portada arranca
-        transparente (spec, 19.1); el padding de arriba le devuelve ese lugar
-        al contenido.
+        `-mt-16` sube el hero por debajo de la barra, que en la portada arranca
+        transparente (spec, 19.1); el padding de arriba le devuelve ese lugar al
+        contenido.
 
-        `overflow-x-clip`: los nombres ocultos de los puntos del borde del
-        globo asomaban fuera de la pantalla y en el teléfono la página se
-        corría de costado, y con ella el menú.
+        `overflow-x-clip`: nada del globo puede correr la página de costado en
+        el teléfono.
+
+        Los números que cerraban esta banda se mudaron a /nosotros (19.4):
+        debajo del hero ahora van las noticias.
       */}
-      <section className="-mt-16 flex flex-col overflow-x-clip gap-14 bg-slate-950 px-6 pt-30 pb-14 text-slate-100 md:gap-20 md:pt-36 md:pb-20">
-        <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-12 md:flex-row md:justify-between md:gap-16">
+      <section className="relative isolate -mt-16 overflow-x-clip text-white">
+        <Image
+          src={fondo}
+          alt=""
+          fill
+          priority
+          placeholder="blur"
+          sizes="100vw"
+          className="-z-20 object-cover object-[center_42%]"
+        />
+        {/*
+          El velo: en el teléfono, parejo, porque el texto va centrado sobre el
+          cielo; en la pantalla grande, más oscuro del lado del texto y más
+          claro del lado del globo, para que se vea el mar.
+        */}
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-slate-950/60 md:bg-transparent md:bg-linear-to-r md:from-slate-950/85 md:via-slate-950/55 md:to-slate-950/25"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-x-0 bottom-0 -z-10 h-32 bg-linear-to-t from-slate-950/60 to-transparent"
+        />
+
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-6 pt-28 pb-14 md:flex-row md:items-center md:justify-between md:gap-12 md:pt-32 md:pb-20">
           <div className="flex max-w-lg flex-col items-center gap-6 text-center md:items-start md:text-left">
-            <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
+            <h1 className="text-4xl font-semibold tracking-tight text-balance drop-shadow-sm md:text-6xl">
               El mundo en tus manos
             </h1>
 
-            <p className="text-lg text-pretty text-slate-300">
+            <p className="text-lg text-pretty text-white/90">
               Elegí un destino en el globo y te decimos qué llevar y cuánto vas
               a gastar.
             </p>
 
-            <p className="text-sm text-pretty text-slate-400">
+            <p className="text-sm text-pretty text-white/75">
               Guías de cada destino con lo que hay que saber antes de reservar,
               y dos motores que arman tu equipaje según el clima de tus fechas y
               tu presupuesto en la cotización que elijas. Te llevás la planilla
@@ -113,69 +135,22 @@ export default function Home() {
             </p>
 
             {/*
-              El radar de vuelos y "Qué comer" estaban acá como dos enlaces;
-              ahora están en el menú "Herramientas" de la barra de arriba
-              (spec, 19.1).
-
-              Un botón por país servía con dos. Con diecinueve el hero se
-              convertía en una pared de botones, así que el hero invita a
-              elegir y la elección se hace en la lista de abajo, agrupada.
-
-              Sobre la banda oscura el primario por defecto es casi
-              invisible: `bg-primary` es oscuro en el tema claro. Se invierte a
-              blanco sobre slate en vez de usar el naranja del marcador — ese
-              naranja significa "acá hay un destino" en el globo.
+              Sobre la foto, el primario por defecto se perdería: `bg-primary`
+              es oscuro en el tema claro. Se invierte a blanco en vez de usar
+              el naranja del marcador, que en el globo significa "acá hay un
+              destino".
             */}
-            <div className="flex flex-col items-center gap-3 md:items-start">
-              <Button
-                asChild
-                size="lg"
-                className="bg-white text-slate-950 hover:bg-slate-200"
-              >
-                <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
-              </Button>
-            </div>
+            <Button
+              asChild
+              size="lg"
+              className="bg-white text-slate-950 shadow-lg hover:bg-slate-200"
+            >
+              <Link href="#paises">Elegir entre {GUIAS.length} destinos</Link>
+            </Button>
           </div>
 
-          <div className="flex w-full max-w-[460px] flex-col gap-2">
-            <GlobeHero destinations={DESTINOS} inicio={INICIO} />
-
-            {/*
-              Dicho de frente (spec, 8.1): el globo muestra un lado a la vez,
-              así que la lista es la forma segura de llegar a cualquier país.
-              Y que se puede arrastrar no se adivina mirándolo.
-            */}
-            <p className="text-center text-sm text-balance text-slate-400">
-              Arrastrá el globo para girarlo y tocá un punto, o elegí el destino
-              en la lista de abajo.
-            </p>
-          </div>
+          <ExploradorDelGlobo destinos={DESTINOS} inicio={INICIO} />
         </div>
-        {/*
-          Los cuatro números del reference son de cobertura ("146 países"). Los
-          nuestros empiezan por la cobertura, contada del contenido y no escrita
-          a mano, y siguen con lo que el producto sí tiene: cero fricción de
-          entrada, las cotizaciones que de verdad se traen en vivo y gratis. El
-          tercero es el que incomoda —son pocas—, y por eso está.
-        */}
-        <dl
-          aria-label="En números"
-          className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-8 border-t border-white/10 pt-12 text-center md:grid-cols-4"
-        >
-          {ESTADISTICAS.map((stat) => (
-            <div key={stat.etiqueta} className="flex flex-col gap-1">
-              <dt className="text-3xl font-semibold tracking-tight tabular-nums">
-                {stat.valor}
-              </dt>
-              <dd className="flex flex-col gap-0.5">
-                <span className="text-sm font-medium">{stat.etiqueta}</span>
-                <span className="text-xs text-pretty text-slate-400">
-                  {stat.nota}
-                </span>
-              </dd>
-            </div>
-          ))}
-        </dl>
       </section>
 
       <section
