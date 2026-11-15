@@ -2996,3 +2996,56 @@ con tests, y el componente solo conecta los eventos.
 - Con zoom, los puntos del mapa crecen: tienen un tamaño fijo sobre la esfera.
   Se suman puntos hasta el techo para que la distancia entre ellos no cambie,
   y de ahí en más se agrandan.
+
+### 19.6 Las secciones de la portada
+
+Debajo del hero ya no está "Elegí tu destino": esa lista vive en `/destinos`
+(19.3), y el botón del hero lleva ahí. En su lugar, en este orden:
+
+1. **Noticias para viajeros.** Lo primero al scrollear. Va a ser una
+   herramienta propia —requisitos de entrada, paros, alertas de clima y avisos
+   oficiales, cada uno con su fuente y su fecha—, con una lógica que se piensa
+   aparte. Por ahora es el lugar reservado y dice "Próximamente". No muestra
+   ninguna noticia de ejemplo: una noticia inventada en un sitio de viajes es
+   información falsa, aunque diga "ejemplo".
+2. **En tendencia** y **Ofertas de último momento**, lado a lado. Las dos
+   necesitan datos que todavía no hay: qué se mira más en el sitio y precios
+   de vuelos y hoteles (los afiliados de `docs/monetizacion.md`). Van juntas en
+   una franja para que la portada no abra con una fila de cosas que no están.
+3. **Imperdibles**, en dos pestañas. Cultura: edificios históricos y cascos
+   antiguos, sitios arqueológicos, espacios religiosos y sagrados, castillos y
+   fortalezas, museos, arte y espectáculos. Naturaleza: los elegidos por la
+   comunidad, paisajes, qué hacer y vacaciones, que despliega "Últimas
+   ofertas" y "Mejores hoteles". Todas dicen "Próximamente". Armarlas con lo
+   que hay sería adivinar: los 1491 lugares de las guías tienen una etiqueta
+   libre ("Ciudad maya", "Castillo en un lago") y no una categoría. El camino
+   es sumarle a cada lugar su categoría en las guías; con eso, cada tarjeta
+   lleva a su lista.
+4. **Por continente.** Funciona entera: un mosaico con los cinco continentes,
+   cuántos destinos y zonas tiene cada uno, y el enlace a su página. América va
+   grande porque es lo más cercano para quien usa el sitio.
+5. **Planificá tu viaje.** Funciona entera, y es la única franja oscura entre
+   el hero y el pie, porque es lo que el sitio hace distinto: los tres pasos
+   del planificador y un buscador que lleva al de cada destino
+   (`/guia/{slug}/planificar`). Es el mismo buscador del globo.
+6. **ONGs en cada destino**, "Próximamente", en una franja angosta.
+7. **Preguntas frecuentes**, en gris. Las preguntas las escribe el dueño del
+   sitio aparte; mientras tanto se ve la forma de la lista, sin texto, para no
+   inventar preguntas que nadie hizo.
+
+Los nombres de las secciones son traducciones de los del pedido ("On trend",
+"Top Deals", "Must-see"…): cambiarlos es cambiar un texto.
+
+**Las fotos.** Cada tarjeta tiene su lugar para una foto, que elige el dueño
+del sitio. Mientras no haya, se ve un degradé de su color con la trama de
+puntos del globo y su ícono en grande, que es un diseño terminado y no un
+hueco. Todo está en un solo archivo, `src/content/portada.ts`: para poner una
+foto se la guarda en `src/assets/portada/`, se la importa ahí y se reemplaza el
+`imagen: null` de su tarjeta. Lo mismo con los enlaces: `href: null` es
+"Próximamente", y al ponerle un enlace la tarjeta pasa a serlo; un test
+verifica que lleve a una página que existe.
+
+**Lo que todavía no existe** se ve, con el cartel "Próximamente" y sin enlace,
+como en la barra y en el pie: las tarjetas no reaccionan al mouse y no están
+en el orden de Tab. El lector de pantalla lo escucha en el título mismo, así
+quien salta de título en título también se entera.

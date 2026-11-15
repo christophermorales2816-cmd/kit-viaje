@@ -33,7 +33,7 @@ vuelve a ellos por un link con un token.
 
 | Ruta                          | Qué es                                                                     | Render                                                                                | Lee de Supabase      |
 | ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------- |
-| `/`                           | Portada con el globo                                                       | Estática                                                                              | No                   |
+| `/`                           | Portada: el globo, las noticias y las secciones para explorar              | Estática                                                                              | No                   |
 | `/destinos`                   | Todos los destinos, por continente y zona                                  | Estática                                                                              | No                   |
 | `/destinos/[continente]`      | Los destinos de un continente                                              | Estática (5, por `generateStaticParams`)                                              | No                   |
 | `/nosotros`                   | Qué es el sitio, cómo se hace y de dónde salen los datos                   | Estática                                                                              | No                   |
