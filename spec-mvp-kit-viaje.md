@@ -3049,3 +3049,36 @@ verifica que lleve a una página que existe.
 como en la barra y en el pie: las tarjetas no reaccionan al mouse y no están
 en el orden de Tab. El lector de pantalla lo escucha en el título mismo, así
 quien salta de título en título también se entera.
+
+### 19.7 El globo con la foto de la Tierra
+
+El mapa de puntos de cobe se cambió por la Tierra de verdad: la **Blue Marble
+Next Generation** de NASA, con relieve y fondo marino, de la colección de
+[Visible Earth](https://visibleearth.nasa.gov/collection/1484/blue-marble).
+Las imágenes de NASA son de dominio público; el crédito está en Nosotros.
+
+- **Se dibuja con un shader propio** (`src/components/landing/esfera.ts`) y no
+  con una librería de globos. cobe solo sabe dibujar puntos, y las librerías
+  con textura (globe.gl, sobre Three.js) pesan más de 500 KB por un globo que
+  solo tiene que girar y acercarse. El shader hace, para cada píxel, la misma
+  cuenta que `desproyectar` (19.5): por eso los puntos HTML de los destinos
+  caen sobre su lugar de la foto a cualquier zoom, sin calibrar nada.
+- **La foto llega de a dos**: 2048 × 1024 (300 KB) para el globo entero, y
+  4096 × 2048 (1 MB) recién cuando alguien acerca más de 1,3 veces. Las dos
+  están en `src/assets/globo/`, sin metadatos.
+- **El antimeridiano no tiene costura.** Ahí la longitud salta de 180 a −180,
+  y la GPU, que elige la resolución de la foto según cuánto cambia la
+  coordenada entre píxeles vecinos, pintaría una franja borrosa. El shader le
+  pasa la variación de una longitud corrida media vuelta, que ahí no salta.
+- **Luz de frente**, con el borde un poco más oscuro y un halo de atmósfera:
+  es un globo para elegir, no un simulador, así que no hay noche.
+- **Sin WebGL 2**, o sin JavaScript, se ve un disco azul liso del tamaño del
+  globo, y los destinos funcionan igual. Si el teléfono se queda sin memoria y
+  se lleva el contexto de WebGL, la esfera se rearma sola cuando vuelve.
+- Lo que se aprendió de cobe en 19.5 (el tope de 32.767 puntos) ya no aplica:
+  ese código se fue con la dependencia.
+
+La foto de esta versión salió del paquete `three-globe` de npm, que trae la
+misma Blue Marble de NASA, porque el entorno de desarrollo no llega a los
+servidores de NASA. Se puede reemplazar por el archivo bajado de Visible Earth
+sin tocar código: mismo nombre, mismo tamaño.

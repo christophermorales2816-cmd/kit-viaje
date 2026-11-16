@@ -5,20 +5,22 @@
  * Funciones puras, sin DOM: el componente (src/components/landing/globe-hero)
  * las llama en cada frame y los tests las verifican sin navegador.
  *
- * LA PROYECCIÓN ES LA DE COBE
+ * LA PROYECCIÓN
  *
- * cobe dibuja una esfera vista de frente, sin perspectiva: una proyección
- * ortográfica. En su shader la esfera ocupa `RADIO_DE_LA_ESFERA` del lado del
- * canvas (la mitad del canvas es 1) y `scale` la agranda desde el centro. Sus
- * marcadores flotan un poco sobre la superficie (`markerElevation`, 0,05), y
- * por eso los puntos medidos en el globo viejo caían a 0,85 y en el borde se
- * veían como manchas afuera del disco. Los puntos de ahora son HTML y van
- * sobre la superficie misma.
+ * La esfera se ve de frente, sin perspectiva: una proyección ortográfica.
+ * Ocupa `RADIO_DE_LA_ESFERA` de la mitad del canvas y la escala la agranda
+ * desde el centro. La Tierra la dibuja un shader con estas mismas cuentas
+ * (src/components/landing/esfera.ts), y los puntos de los destinos son HTML
+ * ubicados con `proyectar`: los dos lados usan la misma geometría, así que
+ * coinciden a cualquier zoom (spec, 19.7).
  */
 
 const RAD = Math.PI / 180;
 
-/** El radio de la esfera de cobe, en fracción de la mitad del canvas. */
+/**
+ * El radio de la esfera, en fracción de la mitad del canvas: deja lugar
+ * alrededor para el halo de la atmósfera.
+ */
 export const RADIO_DE_LA_ESFERA = 0.8;
 
 /** Hasta dónde se inclina el globo al arrastrar: más allá, los polos marean. */
@@ -27,39 +29,12 @@ export const LATITUD_MAXIMA = 75;
 export const ESCALA_MINIMA = 1;
 
 /**
- * Hasta dónde se acerca. Los puntos del mapa de cobe tienen un tamaño fijo
- * sobre la esfera, así que al acercar crecen: a 4 son de unos 12 píxeles y el
- * mapa todavía se lee; a 6 son manchas de 18 que ya no dibujan costas. A 4,
- * dos destinos a 160 km quedan a 14 píxeles en el teléfono, que el dedo
- * distingue; los que están más cerca los resuelve la tarjeta ("Muy cerca").
+ * Hasta dónde se acerca. A 4, la foto de 4096 px de la Tierra todavía se ve
+ * nítida en un globo de escritorio, y dos destinos a 160 km quedan a 14
+ * píxeles en el teléfono, que el dedo distingue; los que están más cerca los
+ * resuelve la tarjeta ("Muy cerca").
  */
 export const ESCALA_MAXIMA = 4;
-
-/**
- * Los puntos del mapa de cobe con el globo entero. Al acercar se separan, y
- * se suman más para que las costas no se deshagan.
- */
-const MUESTRAS_SIN_ZOOM = 16_000;
-
-/**
- * El techo de puntos del mapa. El shader de cobe 2.0.1 ubica el punto número
- * `j` descomponiendo `j` en potencias de dos de 16384 para abajo: sirve hasta
- * el 32767. Con más puntos, los que pasan ese número —todo lo que queda al
- * sur de los 5° de latitud con 60.000— caen en cualquier lado, y la mitad sur
- * del mapa desaparece en una línea recta.
- */
-export const MUESTRAS_MAXIMAS = 32_000;
-
-/**
- * Cuántos puntos dibuja cobe a una escala. Para que la distancia entre puntos
- * en la pantalla no cambie, crecen con el cuadrado de la escala hasta el
- * techo; de ahí en más, acercar los agranda, como a cualquier imagen. Van de
- * a 2000 para que la grilla se reacomode pocas veces durante un zoom.
- */
-export function muestrasDelMapa(escala: number): number {
-  const justas = Math.min(MUESTRAS_MAXIMAS, MUESTRAS_SIN_ZOOM * escala ** 2);
-  return Math.max(MUESTRAS_SIN_ZOOM, Math.round(justas / 2000) * 2000);
-}
 
 /** Arrastrar el ancho entero del globo, sin zoom, lo gira media vuelta. */
 const GRADOS_POR_ANCHO = 180;
@@ -84,14 +59,6 @@ export function acotar(valor: number, minimo: number, maximo: number): number {
 }
 
 /**
- * Ángulos que ponen una coordenada de frente a la cámara: es la fórmula del
- * ejemplo "focus" de cobe. phi rota el globo sobre su eje y theta lo inclina.
- */
-export function angulosDeCobe(lat: number, lon: number): [number, number] {
-  return [Math.PI - (lon * RAD - Math.PI / 2), lat * RAD];
-}
-
-/**
  * Proyección ortográfica de una coordenada, vista desde `centro`.
  *
  * `x` e `y` van de -1 a 1 sobre el radio de la esfera (y crece hacia arriba);
@@ -99,8 +66,8 @@ export function angulosDeCobe(lat: number, lon: number): [number, number] {
  * hay que dibujar nada, porque un marcador flotando sobre el océano
  * equivocado miente.
  *
- * Verificada contra los puntos que dibuja el propio cobe, comparando estas
- * posiciones con el centroide de los píxeles naranjas del canvas.
+ * El shader de la Tierra hace la cuenta inversa (`desproyectar`) para cada
+ * píxel: por eso un destino cae sobre su lugar de la foto a cualquier zoom.
  */
 export function proyectar(
   [lat, lon]: Coordenadas,

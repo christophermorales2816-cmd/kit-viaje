@@ -1,10 +1,11 @@
 "use client";
 
-import createGlobe from "cobe";
 import { ArrowRight, Minus, Plus, RotateCcw, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
+import tierraChica from "@/assets/globo/tierra-2048.jpg";
+import tierraGrande from "@/assets/globo/tierra-4096.jpg";
 import {
   colocarEtiquetas,
   masCercano,
@@ -18,11 +19,9 @@ import {
   RADIO_DE_LA_ESFERA,
   acotar,
   aPixeles,
-  angulosDeCobe,
   centroConDestinoArriba,
   centroTrasZoom,
   desproyectar,
-  muestrasDelMapa,
   normalizarLongitud,
   proyectar,
   suavizar,
@@ -32,6 +31,8 @@ import {
   type Vista,
 } from "@/lib/globo/geometria";
 import { cn } from "@/lib/utils";
+
+import { crearEsfera } from "./esfera";
 
 /**
  * El globo de la portada (spec, 14.9 y 19.5).
@@ -61,7 +62,8 @@ import { cn } from "@/lib/utils";
  *     vuela: salta.
  *
  * Los puntos son HTML encima del canvas y se reubican en cada frame con la
- * misma proyección que usa cobe (src/lib/globo/geometria.ts). Son enlaces a
+ * misma proyección con que se dibuja la Tierra (src/lib/globo/geometria.ts y
+ * ./esfera.ts). Son enlaces a
  * cada guía: sin JavaScript, funcionan igual. Con JavaScript los eventos los
  * maneja el globo entero, y por eso los puntos no reciben el mouse. Para el
  * teclado y el lector de pantalla está el buscador, que llega a cualquier
@@ -84,13 +86,15 @@ export interface GlobeDestination {
 const GRADOS_POR_MS = 360 / 60_000;
 
 /**
- * cobe 2.0.1 no tiene bucle propio: dibuja cuando se le pide, y el mapa de
- * puntos aparece recién después de varios frames. Por eso, al arrancar, una
- * ráfaga corta de frames aunque el globo esté quieto (spec, 14.9).
+ * Al arrancar, una ráfaga corta de frames aunque el globo esté quieto: los
+ * nombres se ubican con la fuente y la medida finales (spec, 14.9).
  */
 const DURACION_DE_LA_RAFAGA_MS = 1200;
 
 const DURACION_DEL_VUELO_MS = 900;
+
+/** Desde esta escala hace falta la foto grande de la Tierra. */
+const ESCALA_DE_LA_FOTO_GRANDE = 1.3;
 
 /** Cuánto acerca un click en los botones o un doble click. */
 const PASO_DE_ZOOM = 1.6;
@@ -167,30 +171,15 @@ export function GlobeHero({
     const lado = () => contenedor.clientWidth;
 
     const vista: Vista = { lat: LAT, lon: LON, escala: ESCALA_MINIMA };
-    let muestras = muestrasDelMapa(vista.escala);
-
-    const [phi0, theta0] = angulosDeCobe(LAT, LON);
-    const globe = createGlobe(canvas, {
-      devicePixelRatio: 2,
-      // Sin esto el canvas queda en blanco cuando el globo deja de dibujar: el
-      // compositor se lleva el contenido (spec, 14.9).
-      context: { preserveDrawingBuffer: true },
-      width: lado() * 2,
-      height: lado() * 2,
-      phi: phi0,
-      theta: theta0,
-      scale: vista.escala,
-      dark: 1,
-      diffuse: 1.2,
-      mapSamples: muestras,
-      mapBrightness: 6,
-      baseColor: [0.32, 0.36, 0.42],
-      markerColor: [0.99, 0.53, 0.16],
-      glowColor: [0.42, 0.5, 0.6],
-      // Los puntos de los destinos son HTML: los de cobe flotan sobre la
-      // superficie y en el borde se veían como manchas afuera del disco.
-      markers: [],
+    // La Tierra. Sin WebGL 2 queda null, y el disco liso de abajo del canvas
+    // hace de planeta: los destinos funcionan igual.
+    const esfera = crearEsfera(canvas, {
+      textura: tierraChica.src,
+      alCargar: () => repintar(),
     });
+    if (esfera) contenedor.dataset.esfera = "true";
+    esfera?.medir(lado());
+    let fotoGrande = false;
 
     // Lo que cambia mientras se usa el globo.
     let tocado = false; // deja de girar para siempre
@@ -255,16 +244,12 @@ export function GlobeHero({
       const l = lado();
       const r = l / 2;
       const centro: Coordenadas = [vista.lat, vista.lon];
-      const [phi, theta] = angulosDeCobe(vista.lat, vista.lon);
-      const nuevasMuestras = muestrasDelMapa(vista.escala);
 
-      globe.update({
-        phi,
-        theta,
-        scale: vista.escala,
-        ...(nuevasMuestras !== muestras ? { mapSamples: nuevasMuestras } : {}),
-      });
-      muestras = nuevasMuestras;
+      if (!fotoGrande && vista.escala > ESCALA_DE_LA_FOTO_GRANDE) {
+        fotoGrande = true;
+        esfera?.cambiarTextura(tierraGrande.src);
+      }
+      esfera?.dibujar(vista);
 
       // El círculo en el que se ve el globo: con zoom, lo que cae afuera no
       // se dibuja.
@@ -690,7 +675,7 @@ export function GlobeHero({
     };
 
     const medir = () => {
-      globe.update({ width: lado() * 2, height: lado() * 2 });
+      esfera?.medir(lado());
       medirEtiquetas();
       arranque = null;
       arrancar();
@@ -748,7 +733,7 @@ export function GlobeHero({
       quieto.removeEventListener("change", arrancar);
       window.removeEventListener("resize", medir);
       controlRef.current = null;
-      globe.destroy();
+      esfera?.destruir();
     };
     // Las dependencias son el punto de inicio y las coordenadas, no el array:
     // un literal nuevo en cada render recrearía el globo en cada render.
@@ -793,10 +778,18 @@ export function GlobeHero({
           El canvas se recorta en círculo: con zoom, la esfera es más grande
           que el canvas y sin el recorte se vería cortada en cuadrado.
         */}
+        {/*
+          El planeta mientras no hay WebGL, o sin JavaScript: un disco liso del
+          tamaño del globo entero.
+        */}
+        <div
+          aria-hidden
+          className="absolute inset-[10%] rounded-full bg-[radial-gradient(circle_at_35%_30%,#1e3a5f,#0b1628_70%)] shadow-[0_0_40px_rgba(115,168,255,0.25)] group-data-[esfera]/globo:hidden"
+        />
         <canvas
           ref={canvasRef}
           aria-hidden
-          className="size-full rounded-full [contain:layout_paint_size]"
+          className="relative size-full rounded-full [contain:layout_paint_size]"
         />
 
         {/*
