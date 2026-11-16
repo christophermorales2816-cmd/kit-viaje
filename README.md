@@ -111,7 +111,8 @@ de cada país.
 - **Tailwind CSS v4** + **Shadcn UI** (estilo `new-york`, base `neutral`)
 - **Supabase** (Postgres) — lecturas con RLS de solo lectura pública,
   escrituras exclusivamente vía Server Actions que validan `edit_token`
-- **cobe** para el globo interactivo de la landing y **Leaflet** para el mapa
+- **WebGL 2** con la foto Blue Marble de NASA para el globo de la portada (un
+  shader propio, `src/components/landing/esfera.ts`) y **Leaflet** para el mapa
   de destinos — los dos se cargan solo en el cliente, y Leaflet además dentro
   del efecto: lee `window` al evaluarse y rompe el prerender si se importa arriba
 - **MapLibre** con los mosaicos de **OpenFreeMap** para el radar de vuelos y el

@@ -83,6 +83,11 @@ const FUENTES: { nombre: string; href: string; para: string }[] = [
     href: "https://openfreemap.org",
     para: "Los mosaicos de los mapas",
   },
+  {
+    nombre: "NASA Visible Earth",
+    href: "https://visibleearth.nasa.gov/collection/1484/blue-marble",
+    para: "La foto de la Tierra del globo (Blue Marble)",
+  },
 ];
 
 export default function Nosotros() {

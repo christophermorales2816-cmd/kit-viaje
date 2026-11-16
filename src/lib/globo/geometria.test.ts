@@ -2,9 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   ESCALA_MAXIMA,
-  ESCALA_MINIMA,
   LATITUD_MAXIMA,
-  MUESTRAS_MAXIMAS,
   RADIO_DE_LA_ESFERA,
   aPixeles,
   centroConDestinoArriba,
@@ -12,7 +10,6 @@ import {
   desproyectar,
   distanciaAngular,
   longitudTrasArrastre,
-  muestrasDelMapa,
   normalizarLongitud,
   proyectar,
   sobreElGranCirculo,
@@ -207,7 +204,7 @@ describe("desproyectar", () => {
 });
 
 describe("aPixeles", () => {
-  it("pone el borde de la esfera donde lo dibuja cobe, y el zoom lo agranda", () => {
+  it("pone el borde de la esfera donde la dibuja el shader, y el zoom lo agranda", () => {
     expect(aPixeles(1, 0, 400, 1).px).toBeCloseTo(200 * RADIO_DE_LA_ESFERA, 10);
     expect(aPixeles(1, 0, 400, 2).px).toBeCloseTo(400 * RADIO_DE_LA_ESFERA, 10);
     // En la pantalla, y crece hacia abajo.
@@ -308,39 +305,6 @@ describe("el vuelo hacia un destino", () => {
     expect(suavizar(0.1)).toBeLessThan(0.1);
     expect(suavizar(-1)).toBe(0);
     expect(suavizar(2)).toBe(1);
-  });
-});
-
-/**
- * El shader de cobe 2.0.1 ubica cada punto del mapa con la descomposición
- * binaria de su número, de 16384 para abajo: el último que ubica bien es el
- * 32767. Con 60.000 puntos, al acercar, desaparecía todo lo que queda al sur
- * de los 5° de latitud.
- */
-describe("muestrasDelMapa", () => {
-  const escalas = Array.from(
-    { length: 101 },
-    (_, k) => ESCALA_MINIMA + ((ESCALA_MAXIMA - ESCALA_MINIMA) * k) / 100,
-  );
-
-  it("nunca pide más puntos de los que el shader de cobe sabe ubicar", () => {
-    for (const escala of [...escalas, 10, 100]) {
-      expect(muestrasDelMapa(escala)).toBeLessThanOrEqual(MUESTRAS_MAXIMAS);
-    }
-    expect(MUESTRAS_MAXIMAS).toBeLessThan(32_768);
-  });
-
-  it("sin zoom, el mapa de siempre; al acercar, más puntos y nunca menos", () => {
-    expect(muestrasDelMapa(ESCALA_MINIMA)).toBe(16_000);
-
-    let anterior = 0;
-    for (const escala of escalas) {
-      const muestras = muestrasDelMapa(escala);
-      expect(muestras).toBeGreaterThanOrEqual(anterior);
-      expect(muestras % 2000).toBe(0);
-      anterior = muestras;
-    }
-    expect(anterior).toBe(MUESTRAS_MAXIMAS);
   });
 });
 
