@@ -7,6 +7,7 @@ import {
   entornoActual,
   securityHeaders,
 } from "./src/lib/seguridad/headers";
+import { redireccionesAlDominio } from "./src/lib/sitio/url";
 
 const nextConfig: NextConfig = {
   // Que la respuesta no anuncie el framework: no frena a nadie decidido, pero
@@ -24,6 +25,11 @@ const nextConfig: NextConfig = {
      * donde está el lockfile que importa.
      */
     root: path.join(__dirname),
+  },
+
+  /** Con dominio propio, el alias de Vercel lleva a él (src/lib/sitio/url.ts). */
+  async redirects() {
+    return redireccionesAlDominio(process.env);
   },
 
   /** Ver src/lib/seguridad/headers.ts: qué hace cada uno y por qué. */
