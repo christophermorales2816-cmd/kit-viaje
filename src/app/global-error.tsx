@@ -1,5 +1,8 @@
 "use client";
 
+import { useIdioma } from "@/i18n/cliente";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
+
 /**
  * El último recurso: un error en el propio layout raíz.
  *
@@ -10,6 +13,10 @@
  *
  * En la práctica casi nunca se ve. Existe para que el caso en que se ve no sea
  * una pantalla en blanco.
+ *
+ * Tampoco tiene el proveedor del idioma, que vive en el layout: `useIdioma()`
+ * devuelve el idioma por defecto. Cuando el idioma salga de la ruta (spec, 21),
+ * acá se lee de la URL.
  */
 export default function GlobalError({
   error,
@@ -18,8 +25,11 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const idioma = useIdioma();
+  const { error: textos, errorGlobal } = TEXTOS_DEL_SITIO[idioma];
+
   return (
-    <html lang="es">
+    <html lang={idioma}>
       <body
         style={{
           margin: 0,
@@ -35,11 +45,11 @@ export default function GlobalError({
         }}
       >
         <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>
-          GlobalSunstone no pudo cargar
+          {errorGlobal.titulo}
         </h1>
 
         <p style={{ maxWidth: "28rem", color: "#555" }}>
-          Probá de nuevo. Si sigue pasando, volvé en un rato.
+          {errorGlobal.explicacion}
         </p>
 
         <button
@@ -55,12 +65,12 @@ export default function GlobalError({
             font: "inherit",
           }}
         >
-          Reintentar
+          {textos.reintentar}
         </button>
 
         {error.digest ? (
           <p style={{ fontSize: "0.75rem", color: "#777" }}>
-            Referencia: <code>{error.digest}</code>
+            {textos.referencia} <code>{error.digest}</code>
           </p>
         ) : null}
       </body>

@@ -4,6 +4,9 @@ import { TripDashboard } from "@/components/trip/trip-dashboard";
 import { resolvePriceFreshness } from "@/lib/budget";
 import { fetchQuotes } from "@/lib/quotes";
 import { getTripByEditToken } from "@/lib/trips/read";
+import type { Metadata } from "next";
+import { textos } from "@/i18n/servidor";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Dashboard privado (spec, sección 6B).
@@ -14,10 +17,12 @@ import { getTripByEditToken } from "@/lib/trips/read";
  */
 
 /** El token no es contenido público: que no se indexe ni quede en un caché. */
-export const metadata = {
-  title: "Tu kit de viaje",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: (await textos(TEXTOS_DEL_VIAJE)).metadatos.privado,
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function TripPage({
   params,

@@ -13,6 +13,8 @@ import { TendenciasYOfertas } from "@/components/portada/tendencias-y-ofertas";
 import { Button } from "@/components/ui/button";
 import { allGuides, type DestinationGuide } from "@/content/guias";
 import { continenteDeLaZona, rasgoDeLaGuia } from "@/content/guias/continentes";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Página 1 — bienvenida (spec, sección 8.1).
@@ -83,12 +85,14 @@ const PLANIFICABLES = DESTINOS.map(({ label, href, zona }) => ({
   href: `${href}/planificar`,
 }));
 
-export default function Home() {
+export default async function Home() {
   // Sin guías no hay adónde ir, y es mejor que falle al construir que en la
   // cara del visitante.
   if (GUIAS.length === 0) {
     throw new Error("No hay ninguna guía en src/content/guias.");
   }
+
+  const t = (await textos(TEXTOS_DE_LA_PORTADA)).hero;
 
   return (
     <main className="flex flex-1 flex-col">
@@ -130,20 +134,12 @@ export default function Home() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-10 px-6 pt-28 pb-14 md:flex-row md:items-center md:justify-between md:gap-12 md:pt-32 md:pb-20">
           <div className="flex max-w-lg flex-col items-center gap-6 text-center md:items-start md:text-left">
             <h1 className="text-4xl font-semibold tracking-tight text-balance drop-shadow-sm md:text-6xl">
-              El mundo en tus manos
+              {t.titulo}
             </h1>
 
-            <p className="text-lg text-pretty text-white/90">
-              Elegí un destino en el globo y te decimos qué llevar y cuánto vas
-              a gastar.
-            </p>
+            <p className="text-lg text-pretty text-white/90">{t.bajada}</p>
 
-            <p className="text-sm text-pretty text-white/75">
-              Guías de cada destino con lo que hay que saber antes de reservar,
-              y dos motores que arman tu equipaje según el clima de tus fechas y
-              tu presupuesto en la cotización que elijas. Te llevás la planilla
-              en CSV.
-            </p>
+            <p className="text-sm text-pretty text-white/75">{t.detalle}</p>
 
             {/*
               Sobre la foto, el primario por defecto se perdería: `bg-primary`
@@ -156,7 +152,7 @@ export default function Home() {
               size="lg"
               className="bg-white text-slate-950 shadow-lg hover:bg-slate-200"
             >
-              <Link href="/destinos">Elegir entre {GUIAS.length} destinos</Link>
+              <Link href="/destinos">{t.elegirEntre(GUIAS.length)}</Link>
             </Button>
           </div>
 

@@ -1,5 +1,8 @@
 import { HeartHandshake } from "lucide-react";
 
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
+
 import { Pronto, ProntoEnElTitulo } from "./pronto";
 
 /**
@@ -7,7 +10,9 @@ import { Pronto, ProntoEnElTitulo } from "./pronto";
  * una sección grande, para no ocupar con una promesa el lugar de algo que ya
  * se puede usar.
  */
-export function Ongs() {
+export async function Ongs() {
+  const t = (await textos(TEXTOS_DE_LA_PORTADA)).ongs;
+
   return (
     <section aria-labelledby="ongs-titulo" className="bg-white">
       <div className="mx-auto w-full max-w-6xl px-6 py-16 md:py-20">
@@ -21,15 +26,12 @@ export function Ongs() {
                 id="ongs-titulo"
                 className="text-2xl font-semibold tracking-tight"
               >
-                ONGs en cada destino
+                {t.titulo}
                 <ProntoEnElTitulo />
               </h2>
               <Pronto oculto />
             </div>
-            <p className="max-w-2xl text-pretty text-slate-600">
-              Organizaciones que trabajan en los lugares que visitás, para
-              conocerlas, apoyarlas o sumarte como voluntario.
-            </p>
+            <p className="max-w-2xl text-pretty text-slate-600">{t.bajada}</p>
           </div>
         </div>
       </div>

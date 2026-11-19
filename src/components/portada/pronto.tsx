@@ -1,3 +1,7 @@
+"use client";
+
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
 import { cn } from "@/lib/utils";
 
 /**
@@ -9,6 +13,10 @@ import { cn } from "@/lib/utils";
  * mismo (con `ProntoEnElTitulo`) y este cartel se le esconde: quien salta de
  * título en título no pasa por el cartel, y quien lee todo no lo escucha dos
  * veces.
+ *
+ * Es de cliente para leer su texto con `useTextos`: lo usan secciones del
+ * servidor y también Imperdibles, que es de cliente, y un componente que se
+ * usa en los dos lados no puede pedir los textos de forma asíncrona.
  */
 export function Pronto({
   sobreFoto = false,
@@ -21,6 +29,8 @@ export function Pronto({
   oculto?: boolean;
   className?: string;
 }) {
+  const t = useTextos(TEXTOS_DE_LA_PORTADA).pronto;
+
   return (
     <span
       aria-hidden={oculto || undefined}
@@ -32,12 +42,14 @@ export function Pronto({
         className,
       )}
     >
-      Próximamente
+      {t.cartel}
     </span>
   );
 }
 
 /** "Próximamente" dentro de un título, solo para el lector de pantalla. */
 export function ProntoEnElTitulo() {
-  return <span className="sr-only"> (próximamente)</span>;
+  const t = useTextos(TEXTOS_DE_LA_PORTADA).pronto;
+
+  return <span className="sr-only">{t.enElTitulo}</span>;
 }

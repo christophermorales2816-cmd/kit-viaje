@@ -32,6 +32,10 @@ import { BudgetList } from "./budget-list";
 import { ExportButtons } from "./export-buttons";
 import { PackingList } from "./packing-list";
 import { ShareControls } from "./share-controls";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
+import type { MutationResult } from "@/lib/trips/mutate";
+import { describirProblema } from "@/lib/trips/problemas";
 
 /**
  * Dashboard del viaje (spec, secciones 6B y 6D).
@@ -141,6 +145,7 @@ export function TripDashboard({
   const [quoteId, setQuoteId] = useState<QuoteId | null>(() =>
     elegirCotizacionInicial(quotes, view.destination.corridor),
   );
+  const t = useTextos(TEXTOS_DEL_VIAJE);
   const [error, setError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
@@ -166,12 +171,11 @@ export function TripDashboard({
       totals = calculateBudget(budget, quote);
     } catch (cause) {
       // Un producto en otra moneda es un error de datos, no del usuario. Se
-      // muestra en el tab del presupuesto en vez de tirar abajo la página
-      // entera: la lista de equipaje no tiene nada que ver.
-      totalsError =
-        cause instanceof Error
-          ? cause.message
-          : "No se pudo calcular el total.";
+      // avisa en el tab del presupuesto en vez de tirar abajo la página
+      // entera: la lista de equipaje no tiene nada que ver. El detalle (qué
+      // monedas) va a la consola; la pantalla lo dice en su idioma.
+      console.error(cause);
+      totalsError = t.tablero.noSePudoCalcular;
     }
   }
 
@@ -182,7 +186,7 @@ export function TripDashboard({
    */
   function mutar(
     optimista: () => void,
-    llamar: (token: string) => Promise<{ ok: boolean; error?: string }>,
+    llamar: (token: string) => Promise<MutationResult>,
   ) {
     if (editToken === null) return;
 
@@ -191,11 +195,11 @@ export function TripDashboard({
 
       const result = await llamar(editToken);
 
-      setError(result.ok ? null : (result.error ?? "No se pudo guardar."));
+      setError(result.ok ? null : describirProblema(t, result.error));
     });
   }
 
-  const nombreCsv = (what: "equipaje" | "presupuesto") =>
+  const nombreCsv = (what: string) =>
     csvFilename(destination.name, trip.startDate, what);
 
   return (
@@ -206,11 +210,13 @@ export function TripDashboard({
             <h1 className="text-2xl font-semibold tracking-tight">
               {destination.name}
             </h1>
-            <Badge variant="secondary">{formatTripType(trip.tripType)}</Badge>
+            <Badge variant="secondary">
+              {formatTripType(trip.tripType, t.tiposDeViaje)}
+            </Badge>
             {isReadOnly ? (
               <Badge variant="outline" className="gap-1">
                 <Eye className="size-3" />
-                Solo lectura
+                {t.tablero.soloLectura}
               </Badge>
             ) : null}
           </div>
@@ -238,19 +244,19 @@ export function TripDashboard({
         <TabsList className="print:hidden">
           <TabsTrigger value="equipaje">
             <Luggage className="size-4" />
-            Equipaje
+            {t.tablero.equipaje}
           </TabsTrigger>
           <TabsTrigger value="presupuesto">
             <Wallet className="size-4" />
-            Presupuesto
+            {t.tablero.presupuesto}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="equipaje" className="flex flex-col gap-4">
           <ExportButtons
-            filename={nombreCsv("equipaje")}
-            csv={() => packingCsv(packing)}
-            what="equipaje"
+            filename={nombreCsv(t.exportar.equipaje)}
+            csv={() => packingCsv(packing, t.csv)}
+            what={t.exportar.equipaje}
           />
 
           <PackingList
@@ -274,9 +280,9 @@ export function TripDashboard({
 
         <TabsContent value="presupuesto" className="flex flex-col gap-4">
           <ExportButtons
-            filename={nombreCsv("presupuesto")}
-            csv={() => budgetCsv(budget)}
-            what="presupuesto"
+            filename={nombreCsv(t.exportar.presupuesto)}
+            csv={() => budgetCsv(budget, t.csv)}
+            what={t.exportar.presupuesto}
           />
 
           <BudgetList

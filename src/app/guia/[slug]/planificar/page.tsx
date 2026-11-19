@@ -10,6 +10,8 @@ import {
   getDestinationsByCorridor,
   pickDestination,
 } from "@/lib/supabase/cached";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Página 4 — el planificador (spec, secciones 8.1 y 11).
@@ -33,9 +35,11 @@ export async function generateMetadata({
 
   if (!guia) return {};
 
+  const { metadatos } = (await textos(TEXTOS_DE_LA_GUIA)).planificar;
+
   return {
-    title: `Planificá tu viaje a ${guia.country}`,
-    description: `Equipaje y presupuesto para tu viaje a ${guia.country}, sin registro.`,
+    title: metadatos.titulo(guia.country),
+    description: metadatos.descripcion(guia.country),
   };
 }
 
@@ -57,7 +61,8 @@ export default async function PlannerPage({
     destinos,
     typeof ciudad === "string" ? ciudad : undefined,
   );
-
+  const textosDeLaGuia = await textos(TEXTOS_DE_LA_GUIA);
+  const t = textosDeLaGuia.planificar;
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-12">
       <Link
@@ -65,18 +70,16 @@ export default async function PlannerPage({
         className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 text-sm transition-colors"
       >
         <ArrowLeft className="size-4" />
-        Volver a la guía de {guia.country}
+        {textosDeLaGuia.volverALaGuia(guia.country)}
       </Link>
 
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold tracking-tight text-balance">
-          Planificá tu viaje
+          {t.titulo}
         </h1>
 
         <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-          Elegí las fechas y el tipo de viaje: armamos la lista de equipaje
-          según el clima de esos meses y el presupuesto en la cotización que
-          quieras. Sin registro, y te llevás la planilla en CSV.
+          {t.bajada}
         </p>
 
         <p className="text-muted-foreground text-xs text-pretty">
@@ -91,19 +94,15 @@ export default async function PlannerPage({
       */}
       {destinos.length === 0 ? (
         <div className="max-w-xl rounded-xl border border-dashed p-6">
-          <p className="font-medium">
-            Todavía no podemos armar listas para {guia.country}.
-          </p>
+          <p className="font-medium">{t.sinCiudades(guia.country)}</p>
 
           <p className="text-muted-foreground mt-2 text-sm text-pretty">
-            Falta cargar las ciudades de este país en nuestra base. Es un
-            problema nuestro, no del link. Mientras tanto, la guía tiene los
-            consejos de equipaje y las preguntas frecuentes.
+            {t.sinCiudadesDetalle}
           </p>
 
           <Button asChild className="mt-4" variant="outline">
             <Link href={`/guia/${guia.slug}/preparar`}>
-              Ver los consejos de {guia.country}
+              {t.verLosConsejos(guia.country)}
             </Link>
           </Button>
         </div>

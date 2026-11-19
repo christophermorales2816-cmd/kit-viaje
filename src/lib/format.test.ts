@@ -3,6 +3,8 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
+
 import {
   formatAge,
   formatAltitude,
@@ -248,14 +250,20 @@ describe("formatAge", () => {
 });
 
 describe("formatTripType / formatCategory", () => {
+  const viaje = TEXTOS_DEL_VIAJE.es;
+
   it("capitaliza los valores conocidos", () => {
-    expect(formatTripType("negocios")).toBe("Negocios");
-    expect(formatCategory("documentacion")).toBe("Documentación");
+    expect(formatTripType("negocios", viaje.tiposDeViaje)).toBe("Negocios");
+    expect(formatCategory("documentacion", viaje.categorias)).toBe(
+      "Documentación",
+    );
   });
 
   it("no esconde una categoría nueva agregada desde Studio", () => {
-    expect(formatCategory("mascotas")).toBe("Mascotas");
-    expect(formatTripType("gastronomico")).toBe("gastronomico");
+    expect(formatCategory("mascotas", viaje.categorias)).toBe("Mascotas");
+    expect(formatTripType("gastronomico", viaje.tiposDeViaje)).toBe(
+      "gastronomico",
+    );
   });
 });
 

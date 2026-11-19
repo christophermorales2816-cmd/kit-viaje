@@ -37,7 +37,7 @@ Ledger vivo, no lista cerrada de una sola vez — a medida que aparezcan decisio
 - Cuentas/login.
 - Captura de email para descargar una plantilla. Rompe "sin registro", que es lo que sostiene el modelo de seguridad de la sección 3, y no hace falta: el export CSV de la sección 6B ya es la planilla, con el viaje real del usuario adentro (sección 8.1).
 - Más de un corredor.
-- Inglés / i18n.
+- Inglés / i18n. Entró después del MVP, con el inglés como idioma principal: ver sección 21.
 - Monetización — consistente con que esto es portfolio, no producto a monetizar.
 - Notificaciones: consecuencia directa de no tener login, no una exclusión aparte — sin cuenta no hay canal (mail/push) al que notificar.
 - Tracking de gastos reales e historial de gastos por viaje (vs. el presupuesto estimado): a diferencia de los ítems anteriores, esto no es un "más adelante en este proyecto" — es scope de un proyecto de finanzas/blog aparte que ya tenés en mente. Lo registro acá para no perderlo, no para reabrirlo en este MVP.
@@ -3110,8 +3110,8 @@ SEO que después.
 
 El sitio es para toda Hispanoamérica, así que el texto que se ve pasa del
 voseo rioplatense ("elegí", "llevate") al tuteo neutro ("elige", "llévate"),
-sin modismos de un país. Se aplica página por página en el paso de los textos,
-junto con el recorte de lo largo. Los comentarios del código y esta spec no
+sin modismos de un país. Se aplica página por página en el paso de los textos
+(sección 21), junto con el recorte de lo largo. Los comentarios del código y esta spec no
 cambian: son para quien desarrolla.
 
 Queda una decisión que sale de esta: las cotizaciones del presupuesto (oficial,
@@ -3138,3 +3138,142 @@ Los originales del logo están en `src/assets/marca/`, y su `README.md` dice có
 
 El cambio del nombre en la barra, el pie y los metadatos va en la fase 1 del inglés, junto
 con los textos en diccionarios.
+
+## 21. Idiomas
+
+GlobalSunstone pasa a tener el inglés como idioma principal, para un público
+mundial, y el español como segundo idioma, en `/es`. El portugués queda para
+más adelante.
+
+**La voz de cada idioma:**
+
+- Inglés internacional con ortografía estadounidense, sin modismos ni jerga de
+  un país.
+- Español con tuteo neutro (19.9).
+
+**Las tres fases:**
+
+1. **Los textos a diccionarios, sin cambio visible.** Cada texto de la
+   interfaz sale del código a un diccionario por idioma, y al mudarse pasa del
+   voseo al tuteo neutro. Va por tandas, una por zona del sitio: la barra, el
+   pie y los errores; la portada; los destinos y las guías; el viaje; y vuelos,
+   qué comer y nosotros.
+2. **El inglés.** Incluye:
+   - los diccionarios en inglés;
+   - las guías y los platos separados en datos y texto, y traducidos por
+     tandas;
+   - las URLs en cada idioma;
+   - la conversión de monedas para todo el mundo con las tasas del BCE. Las
+     cotizaciones argentinas quedan para quien paga en pesos.
+3. **El cambio de raíz.** El inglés pasa a la raíz y el español a `/es`. Lleva:
+   - redirecciones 301 desde las URLs de hoy;
+   - `hreflang`, canonical y sitemap por idioma;
+   - un selector de idioma, con un aviso que sugiere el otro idioma sin
+     redirigir a la fuerza.
+
+### 21.1 Cómo están armados los diccionarios
+
+| Archivo | Qué tiene |
+| --- | --- |
+| `src/i18n/idiomas.ts` | Los idiomas (`IDIOMAS`), el tipo `Idioma` y `PorIdioma<T>` |
+| `src/i18n/es/<zona>.ts` | Los textos en español de una zona del sitio |
+| `src/i18n/<zona>.ts` | Los idiomas de esa zona juntos, con el tipo del español |
+| `src/i18n/servidor.ts` | `textos()`, para los Server Components |
+| `src/i18n/cliente.tsx` | `useTextos()` y el proveedor del idioma, para los Client Components |
+
+- **Cada zona es un objeto.** Las claves son el nombre de cada texto. Los
+  textos que llevan un número o un nombre adentro son funciones, como
+  `cantidadDeDestinos(n)`, que resuelven también el plural.
+- **El español define el tipo** (`TextosDelSitio = typeof es`). El inglés
+  tiene que tener las mismas claves y las mismas funciones; si le falta una, no
+  compila.
+- **En un Server Component:** `const t = await textos(TEXTOS_DEL_SITIO)`.
+- **En un Client Component:** `const t = useTextos(TEXTOS_DEL_SITIO)`.
+
+**Por qué así y no con una librería.** Son unos 800 textos en dos idiomas.
+Unos objetos con tipos cubren lo que hace falta: que no falte ninguna
+traducción, los plurales y los textos con datos adentro. Y lo hacen sin una
+dependencia más ni un formato aparte (ICU) que aprender.
+
+**Por qué cada componente importa su diccionario.** Al navegador le llegan
+solo los textos de los componentes de cliente que hay en la página, no los del
+sitio entero. Por el contexto viaja solo el código del idioma. Además, los
+diccionarios tienen funciones, y una función no puede pasar del servidor al
+cliente como prop.
+
+**Por qué `textos()` es asíncrona.** En la fase 3 el idioma sale de la ruta
+con `next/root-params`, que se lee desde cualquier Server Component y es
+asíncrona. Como la función ya lo es, ese cambio se hace en un solo lugar.
+
+**Los tests de los diccionarios** (`src/i18n/diccionarios.test.ts`) encuentran
+solos cada diccionario y revisan tres cosas:
+
+- que ningún texto esté vacío;
+- que cada idioma tenga las mismas claves;
+- que el español no tenga voseo. Es una lista con las formas que más
+  aparecían, no la conjugación entera.
+
+**Qué queda fuera de la fase 1:**
+
+- el contenido de las guías y de los platos (`src/content/guias`,
+  `src/content/comidas`);
+- los nombres de los países y de las ciudades;
+- el formato de los números y las fechas, que hoy es `es-AR`.
+
+Todo eso es de la fase 2: el contenido se separa en datos y texto, y el
+formato depende de la decisión de las monedas.
+
+### 21.2 Lo que ya está en diccionarios
+
+- **La barra, el menú del teléfono, el pie y las páginas de error**
+  (`src/i18n/es/sitio.ts`). Los enlaces del menú guardan la ruta en
+  `src/lib/sitio/navegacion.ts`, y el nombre sale del diccionario con
+  `enlacesDelSitio(t)`. El aviso del pie dejó el anglicismo: "Medimos las
+  visitas sin cookies…".
+- **La portada** (`src/i18n/es/portada.ts`): el hero, el globo y su
+  buscador, y las secciones de abajo. Las tarjetas se separaron en datos y
+  texto. `src/content/portada.ts` guarda el ícono, la foto y el enlace de cada
+  una, y su título y su descripción están en el diccionario, con el mismo id
+  (`IdDeTarjeta`). "ONGs" pasó a "ONG", que en español no lleva plural.
+- **Los destinos y la guía** (`src/i18n/es/destinos.ts` y
+  `src/i18n/es/guia.ts`). Cubren:
+  - las páginas de destinos;
+  - la guía de cada país, la de preparar el viaje y la del planificador;
+  - sus componentes: cotizaciones, puntajes, adónde ir, el mapa, el clima mes
+    a mes, los consejos, la tabla de qué no llevar y las preguntas.
+  Los nombres de los continentes, las zonas, los países y los meses son
+  contenido o formato, y quedan para la fase 2. "Adónde ir" decía "Nueve
+  destinos" fijo, y una guía tiene quince: ahora cuenta los que hay.
+- **El viaje** (`src/i18n/es/viaje.ts`). Cubre el formulario que lo crea, el
+  tablero, la lista de equipaje, el presupuesto, compartir, exportar y los
+  CSV. Lo que puede salir mal al crear o editar un viaje ya no es un texto:
+  es un `ProblemaDelViaje` (`src/lib/trips/problemas.ts`), un código con sus
+  datos (`{ codigo: "duracion", minimo, maximo, dias }`).
+  - Las Server Actions devuelven el problema, porque no pueden leer
+    `next/root-params` ni saben en qué idioma está la página.
+  - La pantalla lo cuenta en su idioma con `describirProblema`.
+  - Los tests verifican el código y no la redacción.
+  - De paso, una vuelta antes que la ida ahora dice eso, y no "fecha
+    inválida".
+- **El radar de vuelos** (`src/i18n/es/vuelos.ts`) y **los controles de los
+  mapas** (`src/i18n/es/mapa.ts`, que comparten el radar y el mapa de "Qué
+  comer"). Las fuentes del pie de /vuelos son una sola frase con un enlace
+  por fuente, dibujada con `enriquecer()`. Los puntos cardinales son claves
+  (`PuntoCardinal`) y su nombre está en el diccionario. Los nombres de los
+  aeropuertos y de las ciudades vienen de OurAirports y quedan como vienen.
+- **Los nombres de los tipos de viaje y de las categorías** también están en
+  el diccionario del viaje. `formatTripType` y `formatCategory` los reciben, y
+  una categoría nueva de la base sigue apareciendo capitalizada.
+- **Textos con partes que se dibujan aparte** (un nombre en negrita, un enlace
+  dentro de una frase). El diccionario guarda la frase entera con marcas:
+  `"Estos números son de <ciudad>${ciudad}</ciudad>."`. `enriquecer()`
+  (`src/i18n/enriquecer.tsx`) dibuja cada marca, y así cada idioma ordena la
+  frase a su manera. El test de los diccionarios revisa que cada marca se
+  cierre.
+- **Tests de componentes asíncronos.** Los que piden sus textos con
+  `textos()` se prueban con `renderizar()` (`src/test/renderizar.tsx`), que
+  espera a los componentes asíncronos. `renderToStaticMarkup` no espera.
+- **Componentes que se usan en el servidor y en el cliente.** No pueden pedir
+  los textos de forma asíncrona. Hay dos salidas:
+  - reciben el texto armado por prop, como `TarjetaDeLaPortadaVista`;
+  - son de cliente y lo leen con `useTextos`, como `Pronto`.
