@@ -1,5 +1,8 @@
 import { ChevronDown } from "lucide-react";
 
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
+
 import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
 
 /**
@@ -12,17 +15,19 @@ import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
 /** Anchos distintos, para que se lea como una lista y no como una grilla. */
 const FILAS = ["w-3/4", "w-2/3", "w-4/5", "w-1/2"];
 
-export function PreguntasFrecuentes() {
+export async function PreguntasFrecuentes() {
+  const t = (await textos(TEXTOS_DE_LA_PORTADA)).preguntas;
+
   return (
     <section aria-labelledby="preguntas-titulo" className="bg-slate-50">
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-16 md:py-20 lg:grid-cols-[1fr_1.3fr] lg:items-start lg:gap-12">
         <EncabezadoDeSeccion
           id="preguntas-titulo"
-          antetitulo="Ayuda"
-          titulo="Preguntas frecuentes"
+          antetitulo={t.antetitulo}
+          titulo={t.titulo}
           pronto
         >
-          Las dudas que más llegan, con su respuesta.
+          {t.bajada}
         </EncabezadoDeSeccion>
 
         <ul

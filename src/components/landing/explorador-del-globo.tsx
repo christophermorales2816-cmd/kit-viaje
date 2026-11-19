@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
 import type { Coordenadas } from "@/lib/globo/geometria";
 
 import { BuscadorDeDestinos } from "./buscador-de-destinos";
@@ -18,6 +20,7 @@ export function ExploradorDelGlobo({
   destinos: GlobeDestination[];
   inicio: Coordenadas;
 }) {
+  const t = useTextos(TEXTOS_DE_LA_PORTADA).globo;
   const [destacado, setDestacado] = useState<number | null>(null);
 
   return (
@@ -35,13 +38,9 @@ export function ExploradorDelGlobo({
         En el teléfono se dice con los gestos del dedo.
       */}
       <p className="text-center text-sm text-balance text-white/75">
-        <span className="pointer-coarse:hidden">
-          Arrastrá para girar, acercá con los botones o Ctrl + rueda, y tocá un
-          punto para elegirlo.
-        </span>
+        <span className="pointer-coarse:hidden">{t.instrucciones}</span>
         <span className="hidden pointer-coarse:inline">
-          Arrastrá para girar, pellizcá para acercar y tocá un punto para
-          elegirlo.
+          {t.instruccionesTactiles}
         </span>
       </p>
     </div>

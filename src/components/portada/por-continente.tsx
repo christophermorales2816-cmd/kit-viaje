@@ -4,6 +4,8 @@ import Link from "next/link";
 import { CONTINENTES, guiasDelContinente } from "@/content/guias/continentes";
 import type { DestinationGuide } from "@/content/guias";
 import { FOTOS_DE_CONTINENTES } from "@/content/portada";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
 import { cn } from "@/lib/utils";
 
 import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
@@ -19,26 +21,27 @@ import { FondoDeTarjeta } from "./tarjeta-de-la-portada";
  * cotizaciones son las del dólar allá).
  */
 
-export function PorContinente({ guias }: { guias: DestinationGuide[] }) {
+export async function PorContinente({ guias }: { guias: DestinationGuide[] }) {
+  const t = (await textos(TEXTOS_DE_LA_PORTADA)).porContinente;
+
   return (
     <section aria-labelledby="continentes-titulo" className="bg-white">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-16 md:py-20">
         <EncabezadoDeSeccion
           id="continentes-titulo"
-          antetitulo="Destinos"
-          titulo="Por continente"
+          antetitulo={t.antetitulo}
+          titulo={t.titulo}
           accion={
             <Link
               href="/destinos"
               className="inline-flex items-center gap-1.5 rounded-sm text-sm font-medium text-slate-900 underline decoration-slate-300 underline-offset-4 transition-colors outline-none hover:decoration-orange-500 focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
             >
-              Ver los {guias.length} destinos
+              {t.verTodos(guias.length)}
               <ArrowRight aria-hidden className="size-4" />
             </Link>
           }
         >
-          Cada destino con su guía, su clima mes a mes y su presupuesto en
-          moneda local.
+          {t.bajada}
         </EncabezadoDeSeccion>
 
         <ul className="grid gap-4 sm:grid-cols-2 lg:auto-rows-[15rem] lg:grid-cols-3">
@@ -71,8 +74,7 @@ export function PorContinente({ guias }: { guias: DestinationGuide[] }) {
                   />
 
                   <p className="text-xs font-semibold tracking-[0.14em] text-white/75 uppercase">
-                    {cantidad} destinos · {continente.zonas.length}{" "}
-                    {continente.zonas.length === 1 ? "zona" : "zonas"}
+                    {t.resumen(cantidad, continente.zonas.length)}
                   </p>
                   <h3
                     className={cn(

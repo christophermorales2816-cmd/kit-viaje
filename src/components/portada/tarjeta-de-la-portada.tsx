@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import type { TarjetaDeLaPortada, Tono } from "@/content/portada";
+import type { TextosDeLaPortada } from "@/i18n/portada";
 import { cn } from "@/lib/utils";
 
 import { Pronto, ProntoEnElTitulo } from "./pronto";
@@ -80,9 +81,13 @@ export function FondoDeTarjeta({
  * Una tarjeta de la portada (spec, 19.6). Con `href` es un enlace; sin él,
  * dice "Próximamente" y no responde al mouse, para que nadie la confunda con
  * algo que se puede usar.
+ *
+ * El texto llega armado (`texto`) porque la usan secciones del servidor y una
+ * de cliente: cada una lo saca del diccionario a su manera.
  */
 export function TarjetaDeLaPortadaVista({
   tarjeta,
+  texto,
   sizes,
   titulo: Titulo = "h3",
   idDelTitulo,
@@ -90,6 +95,7 @@ export function TarjetaDeLaPortadaVista({
   children,
 }: {
   tarjeta: TarjetaDeLaPortada;
+  texto: TextosDeLaPortada["tarjetas"][TarjetaDeLaPortada["id"]];
   sizes: string;
   titulo?: "h2" | "h3";
   /** Cuando la tarjeta es una sección entera, su título la nombra. */
@@ -99,7 +105,8 @@ export function TarjetaDeLaPortadaVista({
   /** Lo que va debajo de la descripción. */
   children?: ReactNode;
 }) {
-  const { titulo, descripcion, icono: Icono, href } = tarjeta;
+  const { icono: Icono, href } = tarjeta;
+  const { titulo, descripcion } = texto;
 
   const contenido = (
     <>

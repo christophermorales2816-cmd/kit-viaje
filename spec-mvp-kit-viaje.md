@@ -3230,3 +3230,12 @@ formato depende de la decisión de las monedas.
   `src/lib/sitio/navegacion.ts`, y el nombre sale del diccionario con
   `enlacesDelSitio(t)`. El aviso del pie dejó el anglicismo: "Medimos las
   visitas sin cookies…".
+- **La portada** (`src/i18n/es/portada.ts`): el hero, el globo y su
+  buscador, y las secciones de abajo. Las tarjetas se separaron en datos y
+  texto. `src/content/portada.ts` guarda el ícono, la foto y el enlace de cada
+  una, y su título y su descripción están en el diccionario, con el mismo id
+  (`IdDeTarjeta`). "ONGs" pasó a "ONG", que en español no lleva plural.
+- **Componentes que se usan en el servidor y en el cliente.** No pueden pedir
+  los textos de forma asíncrona. Hay dos salidas:
+  - reciben el texto armado por prop, como `TarjetaDeLaPortadaVista`;
+  - son de cliente y lo leen con `useTextos`, como `Pronto`.
