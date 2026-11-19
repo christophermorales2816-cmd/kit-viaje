@@ -1,6 +1,8 @@
 import { ChevronDown } from "lucide-react";
 
 import type { GuideFaq } from "@/content/guias/types";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Preguntas frecuentes (spec, sección 9.6).
@@ -11,13 +13,15 @@ import type { GuideFaq } from "@/content/guias/types";
  * La numeración sale de <ol> y de un contador CSS, no de escribir "1." en cada
  * pregunta: agregar una en el medio no obliga a renumerar todo a mano.
  */
-export function FaqList({
+export async function FaqList({
   faq,
   country,
 }: {
   faq: GuideFaq[];
   country: string;
 }) {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).preguntas;
+
   return (
     <section
       id="faq"
@@ -28,7 +32,7 @@ export function FaqList({
         id="faq-titulo"
         className="text-2xl font-semibold tracking-tight text-balance"
       >
-        Preguntas frecuentes sobre {country}
+        {t.titulo(country)}
       </h2>
 
       <ol className="flex list-none flex-col gap-2 [counter-reset:faq]">

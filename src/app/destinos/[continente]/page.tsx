@@ -8,6 +8,8 @@ import {
   guiasDelContinente,
   guiasPorZona,
 } from "@/content/guias/continentes";
+import { TEXTOS_DE_DESTINOS } from "@/i18n/destinos";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Los destinos de un continente (spec, 19.3). Es adonde lleva cada continente
@@ -28,9 +30,15 @@ export async function generateMetadata({
 
   if (!continente) return {};
 
+  const t = (await textos(TEXTOS_DE_DESTINOS)).continente;
+
   return {
-    title: `Destinos en ${continente.nombre}`,
-    description: `${continente.resumen} Los ${guiasDelContinente(continente.id).length} destinos de ${continente.nombre}, cada uno con su guía, su clima y su presupuesto.`,
+    title: t.titulo(continente.nombre),
+    description: t.descripcion(
+      continente.resumen,
+      guiasDelContinente(continente.id).length,
+      continente.nombre,
+    ),
   };
 }
 
@@ -42,6 +50,7 @@ export default async function DestinosDelContinente({
 
   if (!continente) notFound();
 
+  const t = (await textos(TEXTOS_DE_DESTINOS)).continente;
   const guias = guiasDelContinente(continente.id);
   const grupos = guiasPorZona(guias);
 
@@ -49,14 +58,14 @@ export default async function DestinosDelContinente({
     <main className="flex flex-1 flex-col">
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-          <nav aria-label="Ruta de navegación">
+          <nav aria-label={t.rutaDeNavegacion}>
             <ol className="flex items-center gap-2 text-sm text-slate-400">
               <li>
                 <Link
                   href="/destinos"
                   className="rounded-sm underline-offset-4 outline-none hover:text-white hover:underline focus-visible:ring-2 focus-visible:ring-orange-400/60"
                 >
-                  Destinos
+                  {t.destinos}
                 </Link>
               </li>
               <li aria-hidden>/</li>
@@ -75,14 +84,16 @@ export default async function DestinosDelContinente({
 
           <dl className="flex flex-wrap gap-x-10 gap-y-4 pt-2">
             <div className="flex flex-col">
-              <dt className="order-2 text-sm text-slate-400">destinos</dt>
+              <dt className="order-2 text-sm text-slate-400">
+                {t.etiquetaDeDestinos(guias.length)}
+              </dt>
               <dd className="order-1 text-3xl font-semibold tabular-nums">
                 {guias.length}
               </dd>
             </div>
             <div className="flex flex-col">
               <dt className="order-2 text-sm text-slate-400">
-                {grupos.length === 1 ? "zona" : "zonas"}
+                {t.etiquetaDeZonas(grupos.length)}
               </dt>
               <dd className="order-1 text-3xl font-semibold tabular-nums">
                 {grupos.length}
@@ -93,18 +104,18 @@ export default async function DestinosDelContinente({
       </header>
 
       <section
-        aria-label={`Destinos en ${continente.nombre}`}
+        aria-label={t.titulo(continente.nombre)}
         className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-14"
       >
         <ListaDeDestinos grupos={grupos} nivel={2} />
       </section>
 
       <nav
-        aria-label="Otros continentes"
+        aria-label={t.otrosContinentes}
         className="mx-auto flex w-full max-w-5xl flex-col gap-4 border-t px-6 py-10"
       >
         <h2 className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-          Otros continentes
+          {t.otrosContinentes}
         </h2>
         <ul className="flex flex-wrap gap-2">
           {CONTINENTES.filter((otro) => otro.id !== continente.id).map(
@@ -127,7 +138,7 @@ export default async function DestinosDelContinente({
               href="/destinos"
               className="hover:bg-muted focus-visible:ring-ring/50 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors outline-none focus-visible:ring-[3px]"
             >
-              Todos
+              {t.todos}
             </Link>
           </li>
         </ul>

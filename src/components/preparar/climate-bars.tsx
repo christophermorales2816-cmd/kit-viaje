@@ -1,4 +1,6 @@
 import type { MonthClimate } from "@/lib/prepare/climate-year";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Los dos gráficos del año: temperatura y probabilidad de lluvia.
@@ -26,6 +28,7 @@ function Barras({
   valor,
   formato,
   clase,
+  sinDatos,
 }: {
   titulo: string;
   descripcion: string;
@@ -33,6 +36,8 @@ function Barras({
   valor: (mes: MonthClimate) => number | null;
   formato: (v: number) => string;
   clase: string;
+  /** "Sin datos", para el mes que no tiene el valor. */
+  sinDatos: string;
 }) {
   const valores = meses.map(valor).filter((v): v is number => v !== null);
 
@@ -62,9 +67,7 @@ function Barras({
             <li
               key={mes.month}
               className="flex h-full flex-1 flex-col justify-end"
-              title={
-                v === null ? "Sin datos" : `${mes.longName}: ${formato(v)}`
-              }
+              title={v === null ? sinDatos : `${mes.longName}: ${formato(v)}`}
             >
               <span
                 aria-hidden
@@ -72,7 +75,7 @@ function Barras({
                 style={{ height: `${alto * 100}%` }}
               />
               <span className="sr-only">
-                {mes.longName}: {v === null ? "sin datos" : formato(v)}
+                {mes.longName}: {v === null ? sinDatos : formato(v)}
               </span>
             </li>
           );
@@ -90,7 +93,9 @@ function Barras({
   );
 }
 
-export function ClimateBars({ months }: { months: MonthClimate[] }) {
+export async function ClimateBars({ months }: { months: MonthClimate[] }) {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).graficos;
+
   return (
     <section
       aria-labelledby="graficos-clima"
@@ -100,13 +105,14 @@ export function ClimateBars({ months }: { months: MonthClimate[] }) {
         id="graficos-clima"
         className="text-2xl font-semibold tracking-tight text-balance"
       >
-        Clima mes a mes
+        {t.titulo}
       </h2>
 
       <div className="grid gap-10 md:grid-cols-2">
         <Barras
-          titulo="Temperatura máxima"
-          descripcion="Promedio histórico de la máxima diaria. La escala arranca en el mes más fresco del año, no en cero."
+          titulo={t.maxima.titulo}
+          descripcion={t.maxima.descripcion}
+          sinDatos={t.sinDatos}
           meses={months}
           valor={(mes) => mes.tempMax}
           formato={(v) => `${Math.round(v)} °C`}
@@ -114,8 +120,9 @@ export function ClimateBars({ months }: { months: MonthClimate[] }) {
         />
 
         <Barras
-          titulo="Probabilidad de lluvia"
-          descripcion="Qué tan probable es que llueva en un día cualquiera del mes. Es probabilidad, no milímetros: es el dato que hay."
+          titulo={t.lluvia.titulo}
+          descripcion={t.lluvia.descripcion}
+          sinDatos={t.sinDatos}
           meses={months}
           valor={(mes) => mes.precipProbability}
           formato={(v) => `${Math.round(v)} %`}

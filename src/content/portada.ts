@@ -21,7 +21,8 @@ import type { ContinenteId } from "@/content/guias/continentes";
 
 /**
  * Las tarjetas de las secciones de la portada, debajo del hero (spec, 19.6):
- * el texto, el ícono y la foto de cada una.
+ * el ícono, la foto y el enlace de cada una. El título y la descripción están
+ * en el diccionario de la portada (src/i18n/es/portada.ts), con el mismo id.
  *
  * LAS FOTOS
  *
@@ -29,10 +30,10 @@ import type { ContinenteId } from "@/content/guias/continentes";
  * degradé de su tono y su ícono, que es un diseño terminado y no un hueco.
  * Para poner una:
  *
- *   1. Guardala en src/assets/portada/, en JPG, de unos 1600 px de ancho y
+ *   1. Guárdala en src/assets/portada/, en JPG, de unos 1600 px de ancho y
  *      sin metadatos (las fotos de un teléfono traen la ubicación).
- *   2. Importala acá arriba: `import castillos from "@/assets/portada/castillos.jpg";`
- *   3. En su tarjeta, cambiá `imagen: null` por `imagen: castillos`.
+ *   2. Impórtala aquí arriba: `import castillos from "@/assets/portada/castillos.jpg";`
+ *   3. En su tarjeta, cambia `imagen: null` por `imagen: castillos`.
  *
  * Next genera los tamaños y el borroso mientras carga. La foto va debajo del
  * texto con un velo oscuro, así que cualquier foto se lee.
@@ -58,10 +59,26 @@ export type Tono =
   | "mar"
   | "naranja";
 
+/** Las tarjetas. Cada una tiene su título y su descripción en el diccionario. */
+export type IdDeTarjeta =
+  | "en-tendencia"
+  | "ofertas"
+  | "edificios-historicos"
+  | "sitios-arqueologicos"
+  | "espacios-sagrados"
+  | "castillos"
+  | "museos"
+  | "arte-y-espectaculos"
+  | "elegidos-por-la-comunidad"
+  | "paisajes"
+  | "que-hacer"
+  | "vacaciones";
+
+/** Las opciones que despliega una tarjeta, con su nombre en el diccionario. */
+export type IdDeOpcion = "ultimas-ofertas" | "mejores-hoteles";
+
 export interface TarjetaDeLaPortada {
-  id: string;
-  titulo: string;
-  descripcion: string;
+  id: IdDeTarjeta;
   icono: LucideIcon;
   tono: Tono;
   imagen: StaticImageData | null;
@@ -70,8 +87,7 @@ export interface TarjetaDeLaPortada {
 }
 
 export interface OpcionDeLaPortada {
-  id: string;
-  titulo: string;
+  id: IdDeOpcion;
   icono: LucideIcon;
   href: string | null;
 }
@@ -85,9 +101,6 @@ export interface TarjetaConOpciones extends Omit<TarjetaDeLaPortada, "href"> {
 
 export const EN_TENDENCIA: TarjetaDeLaPortada = {
   id: "en-tendencia",
-  titulo: "En tendencia",
-  descripcion:
-    "Los destinos que más se están mirando en el sitio, semana a semana.",
   icono: TrendingUp,
   tono: "naranja",
   imagen: null,
@@ -96,9 +109,6 @@ export const EN_TENDENCIA: TarjetaDeLaPortada = {
 
 export const OFERTAS: TarjetaDeLaPortada = {
   id: "ofertas",
-  titulo: "Ofertas de último momento",
-  descripcion:
-    "Las mejores tarifas de vuelos y hoteles para salir pronto, con el precio y la hora en que se vio.",
   icono: TicketsPlane,
   tono: "mar",
   imagen: null,
@@ -110,8 +120,6 @@ export const OFERTAS: TarjetaDeLaPortada = {
 export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
   {
     id: "edificios-historicos",
-    titulo: "Edificios históricos y cascos antiguos",
-    descripcion: "Plazas, palacios y calles que cuentan la historia del lugar.",
     icono: Landmark,
     tono: "ambar",
     imagen: null,
@@ -119,9 +127,6 @@ export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
   },
   {
     id: "sitios-arqueologicos",
-    titulo: "Sitios arqueológicos",
-    descripcion:
-      "Ciudades mayas e incas, templos romanos y ruinas frente al mar.",
     icono: Pyramid,
     tono: "arena",
     imagen: null,
@@ -129,8 +134,6 @@ export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
   },
   {
     id: "espacios-sagrados",
-    titulo: "Espacios religiosos y sagrados",
-    descripcion: "Catedrales, mezquitas, templos y monasterios.",
     icono: Dome,
     tono: "violeta",
     imagen: null,
@@ -138,8 +141,6 @@ export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
   },
   {
     id: "castillos",
-    titulo: "Castillos y fortalezas",
-    descripcion: "Murallas, ciudadelas y castillos sobre lagos y colinas.",
     icono: Castle,
     tono: "pizarra",
     imagen: null,
@@ -147,8 +148,6 @@ export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
   },
   {
     id: "museos",
-    titulo: "Museos",
-    descripcion: "Los que justifican el viaje por sí solos.",
     icono: Amphora,
     tono: "rosa",
     imagen: null,
@@ -156,8 +155,6 @@ export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
   },
   {
     id: "arte-y-espectaculos",
-    titulo: "Arte y espectáculos",
-    descripcion: "Teatros, salas de música y festivales.",
     icono: Drama,
     tono: "fucsia",
     imagen: null,
@@ -168,8 +165,6 @@ export const IMPERDIBLES_DE_CULTURA: TarjetaDeLaPortada[] = [
 export const IMPERDIBLES_DE_NATURALEZA: TarjetaDeLaPortada[] = [
   {
     id: "elegidos-por-la-comunidad",
-    titulo: "Los elegidos por la comunidad",
-    descripcion: "Los lugares que más recomiendan quienes ya fueron.",
     icono: Award,
     tono: "esmeralda",
     imagen: null,
@@ -177,8 +172,6 @@ export const IMPERDIBLES_DE_NATURALEZA: TarjetaDeLaPortada[] = [
   },
   {
     id: "paisajes",
-    titulo: "Paisajes",
-    descripcion: "Glaciares, desiertos, fiordos y volcanes.",
     icono: MountainSnow,
     tono: "cielo",
     imagen: null,
@@ -186,9 +179,6 @@ export const IMPERDIBLES_DE_NATURALEZA: TarjetaDeLaPortada[] = [
   },
   {
     id: "que-hacer",
-    titulo: "Qué hacer",
-    descripcion:
-      "Caminatas, buceo, safaris y todo lo que se hace al aire libre.",
     icono: Compass,
     tono: "verde",
     imagen: null,
@@ -198,21 +188,17 @@ export const IMPERDIBLES_DE_NATURALEZA: TarjetaDeLaPortada[] = [
 
 export const VACACIONES: TarjetaConOpciones = {
   id: "vacaciones",
-  titulo: "Vacaciones",
-  descripcion: "Playas, islas y lugares para no hacer nada.",
   icono: TreePalm,
   tono: "mar",
   imagen: null,
   opciones: [
     {
       id: "ultimas-ofertas",
-      titulo: "Últimas ofertas",
       icono: TicketPercent,
       href: null,
     },
     {
       id: "mejores-hoteles",
-      titulo: "Mejores hoteles",
       icono: Hotel,
       href: null,
     },

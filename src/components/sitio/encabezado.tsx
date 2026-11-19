@@ -23,20 +23,18 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { ContinenteDelMenu } from "@/content/guias/continentes";
+import { Logo } from "@/components/sitio/logo";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 import {
-  BLOG,
-  CONTACTO,
-  HERRAMIENTAS,
-  INGRESAR,
-  NOSOTROS,
+  enlacesDelSitio,
   estaEn,
   seccionActiva,
   type EnlacePronto,
   type SeccionDelSitio,
 } from "@/lib/sitio/navegacion";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/sitio/logo";
-import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * La barra de arriba, en todas las páginas (spec, 19.1).
@@ -82,6 +80,9 @@ export function Encabezado({
 }: {
   continentes: ContinenteDelMenu[];
 }) {
+  const t = useTextos(TEXTOS_DEL_SITIO);
+  const { herramientas, blog, nosotros, contacto, ingresar } =
+    enlacesDelSitio(t);
   const pathname = usePathname();
   const arriba = useArribaDeTodo();
   const transparente = pathname === "/" && arriba;
@@ -103,7 +104,7 @@ export function Encabezado({
           href="#contenido"
           className="sr-only rounded-md bg-white px-3 py-2 text-sm font-medium text-slate-950 shadow-lg focus:not-sr-only focus:absolute focus:top-3 focus:left-4 focus:z-[60]"
         >
-          Saltar al contenido
+          {t.barra.saltarAlContenido}
         </a>
 
         {/*
@@ -126,7 +127,7 @@ export function Encabezado({
           </Link>
 
           <NavigationMenu.Root
-            aria-label="Principal"
+            aria-label={t.barra.navegacionPrincipal}
             className="relative ml-4 hidden lg:block"
           >
             <NavigationMenu.List className="flex items-center gap-1">
@@ -134,7 +135,7 @@ export function Encabezado({
                 <NavigationMenu.Trigger
                   className={estiloDeItem(seccion === "destinos")}
                 >
-                  Destinos
+                  {t.barra.destinos}
                   <ChevronDown
                     aria-hidden
                     className="size-4 transition-transform duration-200 group-data-[state=open]:rotate-180"
@@ -156,7 +157,7 @@ export function Encabezado({
                               {continente.nombre}
                             </span>
                             <span className="text-muted-foreground text-xs tabular-nums">
-                              {continente.cantidad} destinos
+                              {t.barra.cantidadDeDestinos(continente.cantidad)}
                             </span>
                           </span>
                           <span className="text-muted-foreground text-sm text-pretty">
@@ -172,11 +173,11 @@ export function Encabezado({
                         className="bg-muted/60 h-full justify-center"
                       >
                         <span className="flex items-center gap-1.5 font-medium">
-                          Todos los destinos
+                          {t.barra.todosLosDestinos}
                           <ArrowRight aria-hidden className="size-4" />
                         </span>
                         <span className="text-muted-foreground text-sm">
-                          Los {total}, por continente y zona.
+                          {t.barra.todosPorContinente(total)}
                         </span>
                       </EnlaceDelMenu>
                     </li>
@@ -188,7 +189,7 @@ export function Encabezado({
                 <NavigationMenu.Trigger
                   className={estiloDeItem(seccion === "herramientas")}
                 >
-                  Herramientas
+                  {t.barra.herramientas}
                   <ChevronDown
                     aria-hidden
                     className="size-4 transition-transform duration-200 group-data-[state=open]:rotate-180"
@@ -196,7 +197,7 @@ export function Encabezado({
                 </NavigationMenu.Trigger>
                 <Desplegable ancho="w-[22rem]">
                   <ul className="flex flex-col gap-1">
-                    {HERRAMIENTAS.map((herramienta) => {
+                    {herramientas.map((herramienta) => {
                       const Icono = ICONOS[herramienta.id];
 
                       return (
@@ -228,32 +229,32 @@ export function Encabezado({
               </NavigationMenu.Item>
 
               <NavigationMenu.Item>
-                <ItemPronto item={BLOG} className={ESTILO_DE_ITEM_PRONTO} />
+                <ItemPronto item={blog} className={ESTILO_DE_ITEM_PRONTO} />
               </NavigationMenu.Item>
 
               <NavigationMenu.Item>
                 <NavigationMenu.Link
                   asChild
-                  active={estaEn(pathname, NOSOTROS.href)}
+                  active={estaEn(pathname, nosotros.href)}
                 >
                   <Link
-                    href={NOSOTROS.href}
+                    href={nosotros.href}
                     className={estiloDeItem(seccion === "nosotros")}
                   >
-                    {NOSOTROS.nombre}
+                    {nosotros.nombre}
                   </Link>
                 </NavigationMenu.Link>
               </NavigationMenu.Item>
 
               <NavigationMenu.Item>
-                <ItemPronto item={CONTACTO} className={ESTILO_DE_ITEM_PRONTO} />
+                <ItemPronto item={contacto} className={ESTILO_DE_ITEM_PRONTO} />
               </NavigationMenu.Item>
             </NavigationMenu.List>
           </NavigationMenu.Root>
 
           <div className="ml-auto flex items-center gap-2">
             <ItemPronto
-              item={INGRESAR}
+              item={ingresar}
               className={cn(
                 "hidden h-9 items-center gap-2 rounded-full border px-4 text-sm font-medium lg:inline-flex",
                 transparente
@@ -401,6 +402,9 @@ function MenuDelTelefono({
   pathname: string;
   transparente: boolean;
 }) {
+  const t = useTextos(TEXTOS_DEL_SITIO);
+  const { herramientas, blog, nosotros, contacto, ingresar } =
+    enlacesDelSitio(t);
   const [abierto, setAbierto] = useState(false);
   const cerrar = () => setAbierto(false);
 
@@ -413,7 +417,7 @@ function MenuDelTelefono({
         )}
       >
         <Menu aria-hidden className="size-5" />
-        <span className="sr-only">Abrir el menú</span>
+        <span className="sr-only">{t.barra.abrirElMenu}</span>
       </SheetTrigger>
 
       <SheetContent side="right" className="w-[22rem] gap-0 overflow-y-auto">
@@ -422,12 +426,15 @@ function MenuDelTelefono({
             <Logo className="h-6" />
           </SheetTitle>
           <SheetDescription className="sr-only">
-            Destinos, herramientas y secciones del sitio.
+            {t.barra.descripcionDelMenu}
           </SheetDescription>
         </SheetHeader>
 
-        <nav aria-label="Principal" className="flex flex-col gap-6 p-4">
-          <GrupoDelTelefono titulo="Destinos">
+        <nav
+          aria-label={t.barra.navegacionPrincipal}
+          className="flex flex-col gap-6 p-4"
+        >
+          <GrupoDelTelefono titulo={t.barra.destinos}>
             {continentes.map((continente) => (
               <EnlaceDelTelefono
                 key={continente.id}
@@ -445,12 +452,12 @@ function MenuDelTelefono({
               alCerrar={cerrar}
               detalle={`${total}`}
             >
-              Todos los destinos
+              {t.barra.todosLosDestinos}
             </EnlaceDelTelefono>
           </GrupoDelTelefono>
 
-          <GrupoDelTelefono titulo="Herramientas">
-            {HERRAMIENTAS.map((herramienta) => (
+          <GrupoDelTelefono titulo={t.barra.herramientas}>
+            {herramientas.map((herramienta) => (
               <EnlaceDelTelefono
                 key={herramienta.id}
                 href={herramienta.href}
@@ -464,22 +471,22 @@ function MenuDelTelefono({
 
           <GrupoDelTelefono titulo={NOMBRE_DEL_SITIO}>
             <EnlaceDelTelefono
-              href={NOSOTROS.href}
-              actual={estaEn(pathname, NOSOTROS.href)}
+              href={nosotros.href}
+              actual={estaEn(pathname, nosotros.href)}
               alCerrar={cerrar}
             >
-              {NOSOTROS.nombre}
+              {nosotros.nombre}
             </EnlaceDelTelefono>
-            <ProntoDelTelefono item={BLOG} />
-            <ProntoDelTelefono item={CONTACTO} />
+            <ProntoDelTelefono item={blog} />
+            <ProntoDelTelefono item={contacto} />
           </GrupoDelTelefono>
 
           <p className="text-muted-foreground flex items-center justify-between gap-2 rounded-full border px-4 py-2.5 text-sm">
             <span className="flex items-center gap-2 font-medium">
               <CircleUser aria-hidden className="size-4" />
-              {INGRESAR.nombre}
+              {ingresar.nombre}
             </span>
-            <span className="text-xs">Próximamente</span>
+            <span className="text-xs">{t.barra.proximamente}</span>
           </p>
         </nav>
       </SheetContent>
@@ -543,7 +550,7 @@ function ProntoDelTelefono({ item }: { item: EnlacePronto }) {
   return (
     <li className="text-muted-foreground flex min-h-11 items-center justify-between gap-3 px-3 text-[0.95rem]">
       <span className="opacity-70">{item.nombre}</span>
-      <span className="text-xs">Próximamente</span>
+      <span className="text-xs">{item.pronto}</span>
     </li>
   );
 }

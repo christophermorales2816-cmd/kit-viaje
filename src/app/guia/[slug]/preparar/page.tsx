@@ -21,6 +21,8 @@ import {
   getPrecipThresholds,
   pickDestination,
 } from "@/lib/supabase/cached";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Página 3 — "Condiciones actuales" (spec, sección 9).
@@ -63,8 +65,10 @@ export async function generateMetadata({
     typeof ciudad === "string" ? ciudad : undefined,
   );
 
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).preparar;
+
   return {
-    title: `${destino?.name ?? guia.country}: condiciones actuales`,
+    title: t.titulo(destino?.name ?? guia.country),
     description: guia.preparation.quickAnswer,
   };
 }
@@ -111,7 +115,8 @@ export default async function PrepararPage({
 
   const meses = resolveClimateYear(perfiles, umbrales, umbralesDeLluvia);
   const resumen = summarizeYear(meses);
-
+  const textosDeLaGuia = await textos(TEXTOS_DE_LA_GUIA);
+  const t = textosDeLaGuia.preparar;
   return (
     <main className="flex flex-1 flex-col items-center gap-14 px-6 py-12 md:gap-20 md:py-16">
       <header className="flex w-full max-w-5xl flex-col gap-8">
@@ -120,11 +125,11 @@ export default async function PrepararPage({
           className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 text-sm transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Volver a la guía de {guia.country}
+          {textosDeLaGuia.volverALaGuia(guia.country)}
         </Link>
 
         <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-5xl">
-          {destino?.name ?? guia.country}: condiciones actuales
+          {t.titulo(destino?.name ?? guia.country)}
         </h1>
 
         {destino !== undefined && (
@@ -145,11 +150,14 @@ export default async function PrepararPage({
         {hayCiudad ? (
           <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-border md:grid-cols-4">
             <Dato
-              termino="Rango del año"
+              termino={t.rangoDelAno}
               valor={
                 resumen.tempMin === null || resumen.tempMax === null
-                  ? "s/d"
-                  : `${Math.round(resumen.tempMin)}° a ${Math.round(resumen.tempMax)}°`
+                  ? t.sinDato
+                  : t.rango(
+                      Math.round(resumen.tempMin),
+                      Math.round(resumen.tempMax),
+                    )
               }
             />
             {/*
@@ -162,17 +170,20 @@ export default async function PrepararPage({
             justo abajo para que el lector decida con los números a la vista.
           */}
             <Dato
-              termino="Mejor mes"
+              termino={t.mejorMes}
               valor={
                 resumen.bestMonth?.longName ??
-                (resumen.hasData ? "Ninguno ideal" : "s/d")
+                (resumen.hasData ? t.ningunoIdeal : t.sinDato)
               }
             />
-            <Dato termino="Meses ideales" valor={String(resumen.idealCount)} />
-            <Dato termino="Enchufe" valor={guia.preparation.plug.types} />
+            <Dato termino={t.mesesIdeales} valor={String(resumen.idealCount)} />
+            <Dato termino={t.enchufe} valor={guia.preparation.plug.types} />
           </dl>
         ) : (
-          <DatosQueFaltan pais={guia.country} />
+          <DatosQueFaltan
+            titulo={t.faltaElClima(guia.country)}
+            detalle={t.faltaElClimaDetalle}
+          />
         )}
       </header>
 
@@ -181,7 +192,7 @@ export default async function PrepararPage({
         className="flex w-full max-w-5xl flex-col gap-4"
       >
         <h2 id="claves" className="text-2xl font-semibold tracking-tight">
-          Lo que cambia cómo armás la valija
+          {t.claves}
         </h2>
 
         <ul className="flex flex-col gap-3">
@@ -225,13 +236,11 @@ export default async function PrepararPage({
       {destino !== undefined && (
         <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
           <h2 className="text-2xl font-semibold tracking-tight text-balance">
-            Creá tu lista para {destino.name}
+            {t.creaTuLista(destino.name)}
           </h2>
 
           <p className="text-muted-foreground max-w-xl text-sm text-pretty">
-            Ya sabés qué mes te conviene. Poné las fechas y el tipo de viaje, y
-            armamos la lista de equipaje y el presupuesto sobre el clima de{" "}
-            {destino.name} en esos días concretos.
+            {t.yaSabes(destino.name)}
           </p>
 
           {/*
@@ -240,7 +249,7 @@ export default async function PrepararPage({
         */}
           <Button asChild size="lg">
             <Link href={`/guia/${guia.slug}/planificar?ciudad=${destino.slug}`}>
-              Iniciar generador de lista
+              {t.iniciarGenerador}
             </Link>
           </Button>
 
@@ -266,22 +275,22 @@ function Dato({ termino, valor }: { termino: string; valor: string }) {
  * Lo que se muestra cuando el país está publicado pero su clima no está en la
  * base todavía.
  *
- * Dice qué falta y de quién es el problema. No ofrece "reintentá" ni "volvé más
- * tarde": no hay nada que el lector pueda hacer, y fingir que sí lo hay le hace
- * perder el tiempo.
+ * Dice qué falta y de quién es el problema. No ofrece "reintentar" ni "volver
+ * más tarde": no hay nada que el lector pueda hacer, y fingir que sí lo hay le
+ * hace perder el tiempo.
  */
-function DatosQueFaltan({ pais }: { pais: string }) {
+function DatosQueFaltan({
+  titulo,
+  detalle,
+}: {
+  titulo: string;
+  detalle: string;
+}) {
   return (
     <div className="rounded-xl border border-dashed p-6">
-      <p className="font-medium">
-        Todavía no cargamos el clima de {pais} en nuestra base.
-      </p>
-
+      <p className="font-medium">{titulo}</p>
       <p className="text-muted-foreground mt-2 text-sm text-pretty">
-        Los consejos, las checklists y las preguntas de acá abajo son del país y
-        siguen valiendo. Lo que falta es el detalle mes a mes y el generador de
-        listas, que se calculan con datos de cada ciudad. Es un problema nuestro
-        y lo estamos resolviendo.
+        {detalle}
       </p>
     </div>
   );

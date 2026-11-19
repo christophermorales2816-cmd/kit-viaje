@@ -1,6 +1,8 @@
 import { Check, X } from "lucide-react";
 
 import type { GuideTip } from "@/content/guias/types";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Consejos de empaque en dos columnas (spec, sección 9.6).
@@ -45,7 +47,7 @@ function Columna({
   );
 }
 
-export function PackingTips({
+export async function PackingTips({
   dos,
   donts,
   country,
@@ -54,6 +56,8 @@ export function PackingTips({
   donts: GuideTip[];
   country: string;
 }) {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).consejos;
+
   return (
     <section
       id="consejos"
@@ -64,18 +68,18 @@ export function PackingTips({
         id="consejos-titulo"
         className="text-2xl font-semibold tracking-tight text-balance"
       >
-        Consejos de empaque para {country}
+        {t.titulo(country)}
       </h2>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Columna
-          titulo="Sí"
+          titulo={t.si}
           tips={dos}
           icono={Check}
           clase="text-emerald-700 dark:text-emerald-400"
         />
         <Columna
-          titulo="No"
+          titulo={t.no}
           tips={donts}
           icono={X}
           clase="text-rose-700 dark:text-rose-400"

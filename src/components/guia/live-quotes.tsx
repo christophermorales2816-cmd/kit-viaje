@@ -6,6 +6,8 @@ import {
   resolveQuoteSpreads,
 } from "@/lib/quotes";
 import { formatQuote } from "@/lib/format";
+import { TEXTOS_DE_LA_GUIA, type TextosDeLaGuia } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Cotizaciones en vivo (spec, sección 8.7).
@@ -84,29 +86,23 @@ function columnas(cuantas: number): string {
   return "grid-cols-2 md:grid-cols-4";
 }
 
-function encabezado(cuantas: number | null): {
+function encabezado(
+  t: TextosDeLaGuia["cotizaciones"],
+  cuantas: number | null,
+): {
   titulo: string;
   bajada: string;
 } {
-  if (cuantas === 1) {
-    return {
-      titulo: "La cotización, ahora",
-      bajada:
-        "Acá hay un solo tipo de cambio, así que no hay que elegir. Esto es lo único de esta página que está en vivo.",
-    };
-  }
+  if (cuantas === 1) return t.una;
 
   return {
     titulo:
-      cuantas === null
-        ? "Las cotizaciones, ahora"
-        : `Las ${cuantas} cotizaciones, ahora`,
-    bajada:
-      "El mismo gasto cambia de tamaño según cuál mires. Esto es lo único de esta página que está en vivo.",
+      cuantas === null ? t.varias.titulo : t.varias.tituloConCantidad(cuantas),
+    bajada: t.varias.bajada,
   };
 }
 
-function Marco({
+async function Marco({
   children,
   cuantas,
 }: {
@@ -114,7 +110,8 @@ function Marco({
   /** Cotizaciones que se van a mostrar. `null` mientras no se sabe. */
   cuantas: number | null;
 }) {
-  const { titulo, bajada } = encabezado(cuantas);
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).cotizaciones;
+  const { titulo, bajada } = encabezado(t, cuantas);
 
   return (
     <section
@@ -148,7 +145,9 @@ function Marco({
  * continente, y conviene decirlo como una ventaja. Lo único que cambia el costo
  * para quien llega con dólares es lo que cobre su banco por usarlos afuera.
  */
-function SinConversion() {
+async function SinConversion() {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).cotizaciones.dolarizado;
+
   return (
     <section
       id="guia"
@@ -160,21 +159,13 @@ function SinConversion() {
           id="cotizaciones-titulo"
           className="text-3xl font-semibold tracking-tight text-balance"
         >
-          Acá se paga en dólares
+          {t.titulo}
         </h2>
 
-        <p className="text-muted-foreground text-sm text-pretty">
-          La moneda que circula es el dólar estadounidense, así que no hay tipo
-          de cambio que seguir ni brecha que medir. Los precios del planificador
-          ya están en dólares.
-        </p>
+        <p className="text-muted-foreground text-sm text-pretty">{t.bajada}</p>
       </header>
 
-      <p className="rounded-xl border p-6 text-sm text-pretty">
-        Lo único que cambia el costo es lo que cobre tu banco por usar la
-        tarjeta afuera. Si llevás efectivo, que sean billetes chicos y en buen
-        estado: los de cien suelen rechazarse en comercios chicos.
-      </p>
+      <p className="rounded-xl border p-6 text-sm text-pretty">{t.consejo}</p>
     </section>
   );
 }
@@ -185,7 +176,7 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
   if (config !== undefined && isDollarized(config)) return <SinConversion />;
 
   const resultado = await fetchQuotes(corridor);
-
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).cotizaciones;
   if (!resultado.ok) {
     // Se dice que falló, no se muestra un cero ni se rompe la página. Es la
     // misma decisión de la sección 5, aplicada acá.
@@ -198,8 +189,8 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
     // recargar la página esperando un número que no va a aparecer.
     const mensaje =
       config !== undefined && config.source === null
-        ? `Todavía no tenemos una fuente de cotizaciones en vivo para ${config.baseCurrency}. El resto de la guía sigue disponible más abajo.`
-        : `No pudimos traer las cotizaciones ahora. ${resultado.reason} El resto de la guía sigue disponible más abajo.`;
+        ? t.sinFuente(config.baseCurrency)
+        : t.noPudimos(resultado.reason);
 
     return (
       <Marco cuantas={config?.quoteIds.length ?? null}>
@@ -237,8 +228,8 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
               </span>
               <span className="text-muted-foreground text-xs">
                 {premiumPercent === null
-                  ? "referencia"
-                  : `${formatoBrecha.format(premiumPercent)}% vs. ${referencia}`}
+                  ? t.referencia
+                  : t.brecha(formatoBrecha.format(premiumPercent), referencia)}
               </span>
             </dd>
           </div>
@@ -247,9 +238,9 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
 
       {ultima === null ? null : (
         <p className="text-muted-foreground text-xs">
-          Valor de venta.{" "}
+          {t.valorDeVenta}{" "}
           <time dateTime={ultima}>
-            Actualizado{" "}
+            {t.actualizado}{" "}
             {formatoHora(resultado.corridor.clock.timeZone).format(
               new Date(ultima),
             )}{" "}
@@ -263,7 +254,7 @@ export async function LiveQuotes({ corridor }: { corridor: string }) {
 }
 
 /** Fallback del <Suspense>: mismo alto, para que el layout no salte. */
-export function LiveQuotesSkeleton({ corridor }: { corridor?: string }) {
+export async function LiveQuotesSkeleton({ corridor }: { corridor?: string }) {
   // Un país dolarizado no consulta nada, así que no tiene qué esperar: se
   // muestra directo lo mismo que va a quedar.
   const config =
@@ -290,7 +281,9 @@ export function LiveQuotesSkeleton({ corridor }: { corridor?: string }) {
         ))}
       </div>
 
-      <p className="text-muted-foreground text-xs">Consultando cotizaciones…</p>
+      <p className="text-muted-foreground text-xs">
+        {(await textos(TEXTOS_DE_LA_GUIA)).cotizaciones.consultando}
+      </p>
     </Marco>
   );
 }
