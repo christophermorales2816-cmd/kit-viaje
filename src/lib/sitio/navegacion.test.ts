@@ -3,27 +3,30 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { IDIOMAS } from "@/i18n/idiomas";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
+
 import {
-  BLOG,
-  COLUMNAS_DEL_PIE,
-  CONTACTO,
-  HERRAMIENTAS,
-  INGRESAR,
-  NOSOTROS,
+  enlacesDelSitio,
   esPronto,
   estaEn,
   seccionActiva,
   type ItemDelSitio,
 } from "./navegacion";
 
-const TODOS: ItemDelSitio[] = [
-  ...HERRAMIENTAS,
-  BLOG,
-  NOSOTROS,
-  CONTACTO,
-  INGRESAR,
-  ...COLUMNAS_DEL_PIE.flatMap((columna) => columna.items),
-];
+/** Todos los enlaces del menú y del pie, en cada idioma. */
+const TODOS: ItemDelSitio[] = IDIOMAS.flatMap((idioma) => {
+  const enlaces = enlacesDelSitio(TEXTOS_DEL_SITIO[idioma]);
+
+  return [
+    ...enlaces.herramientas,
+    enlaces.blog,
+    enlaces.nosotros,
+    enlaces.contacto,
+    enlaces.ingresar,
+    ...enlaces.columnasDelPie.flatMap((columna) => columna.items),
+  ];
+});
 
 /** La página de Next que atiende una ruta sin parámetros. */
 function paginaDe(href: string): string {
@@ -46,9 +49,13 @@ describe("navegación del sitio", () => {
   });
 
   it("no repite ids dentro de una columna del pie", () => {
-    for (const { titulo, items } of COLUMNAS_DEL_PIE) {
-      const ids = items.map((item) => item.id);
-      expect(new Set(ids).size, titulo).toBe(ids.length);
+    for (const idioma of IDIOMAS) {
+      const { columnasDelPie } = enlacesDelSitio(TEXTOS_DEL_SITIO[idioma]);
+
+      for (const { titulo, items } of columnasDelPie) {
+        const ids = items.map((item) => item.id);
+        expect(new Set(ids).size, `${idioma}: ${titulo}`).toBe(ids.length);
+      }
     }
   });
 
