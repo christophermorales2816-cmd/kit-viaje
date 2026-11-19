@@ -13,8 +13,7 @@ trazos, así que no hace falta la fuente. Albert Sans tiene licencia SIL OFL 1.1
 | --- | --- |
 | `horizontal.svg` | La firma principal: el símbolo a la izquierda y el nombre |
 | `apilado.svg` | El símbolo arriba del nombre, para formatos cuadrados |
-| `simbolo.svg` | El símbolo solo, de 24 px para arriba |
-| `simbolo-chico.svg` | El corte para tamaños chicos (menos de 24 px): un solo sol redondo |
+| `simbolo.svg` | El símbolo solo: es el mismo en todos los tamaños, también en el favicon |
 | `nombre.svg` | El nombre solo |
 | `*-blanco.svg` | Las mismas firmas en blanco, para fondos oscuros |
 
@@ -27,4 +26,4 @@ de la tinta (`#0F172A`). El símbolo no lleva degradés ni sombras.
 con un espacio, o poner la piedra a la derecha.
 
 Los íconos del navegador viven en `src/app/`. `icon.svg` cambia a blanco cuando la pestaña es
-oscura. `favicon.ico` y `apple-icon.png` van sobre un cuadrado de tinta.
+oscura. `favicon.ico` y `apple-icon.png` llevan la piedra blanca sobre un cuadrado de tinta.

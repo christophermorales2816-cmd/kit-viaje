@@ -3127,8 +3127,8 @@ nublado. Junta la idea de orientarse con la de ir a cualquier parte del mundo.
 Los originales del logo están en `src/assets/marca/`, y su `README.md` dice cómo se usan:
 
 - **Símbolo "Eclipse Stone":** la piedra en negro, en romboide a 75°, con un eclipse calado.
-  Para menos de 24 px hay un corte simplificado con un solo sol redondo, porque la media luna
-  del eclipse se cierra.
+  Es el mismo en todos los tamaños: a 16 px la media luna del eclipse todavía se lee, así
+  que el favicon no necesita una versión simplificada.
 - **Nombre:** Albert Sans (OFL), "Global" en Regular y "Sunstone" en SemiBold, convertido
   a trazos.
 - **Firmas:** horizontal (el símbolo a la izquierda) y apilada, en negro y en blanco.
