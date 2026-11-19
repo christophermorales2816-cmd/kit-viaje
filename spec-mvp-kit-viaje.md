@@ -3255,6 +3255,12 @@ formato depende de la decisión de las monedas.
   - Los tests verifican el código y no la redacción.
   - De paso, una vuelta antes que la ida ahora dice eso, y no "fecha
     inválida".
+- **El radar de vuelos** (`src/i18n/es/vuelos.ts`) y **los controles de los
+  mapas** (`src/i18n/es/mapa.ts`, que comparten el radar y el mapa de "Qué
+  comer"). Las fuentes del pie de /vuelos son una sola frase con un enlace
+  por fuente, dibujada con `enriquecer()`. Los puntos cardinales son claves
+  (`PuntoCardinal`) y su nombre está en el diccionario. Los nombres de los
+  aeropuertos y de las ciudades vienen de OurAirports y quedan como vienen.
 - **Los nombres de los tipos de viaje y de las categorías** también están en
   el diccionario del viaje. `formatTripType` y `formatCategory` los reciben, y
   una categoría nueva de la base sigue apareciendo capitalizada.

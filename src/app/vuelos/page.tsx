@@ -27,6 +27,9 @@ import { COOKIE_DE_ORIGEN, origenGuardado } from "@/lib/vuelos/origen";
 import type { AeropuertoResumido } from "@/lib/vuelos/tipos";
 import { ubicacionAproximada } from "@/lib/vuelos/ubicacion";
 import { centroDeZona } from "@/lib/vuelos/zona";
+import { enriquecer } from "@/i18n/enriquecer";
+import { textos } from "@/i18n/servidor";
+import { TEXTOS_DE_VUELOS } from "@/i18n/vuelos";
 
 /**
  * Vuelos: el radar en vivo y "Salgo desde" (spec, 17.3 y 17.5).
@@ -44,11 +47,27 @@ import { centroDeZona } from "@/lib/vuelos/zona";
  * que pide el radar después, por /api/vuelos/en-vivo; los dos se cachean.
  */
 
-export const metadata: Metadata = {
-  title: "Vuelos en vivo desde tu ciudad",
-  description:
-    "Los aviones que vuelan ahora cerca tuyo, en un mapa que se actualiza cada 15 segundos, y el aeropuerto del que salís.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = (await textos(TEXTOS_DE_VUELOS)).metadatos;
+
+  return { title: t.titulo, description: t.descripcion };
+}
+
+/** Un enlace a una fuente, en la línea de las fuentes del pie de la página. */
+function fuente(href: string) {
+  function EnlaceALaFuente(texto: string) {
+    return (
+      <a
+        href={href}
+        className="hover:text-foreground underline underline-offset-2"
+      >
+        {texto}
+      </a>
+    );
+  }
+
+  return EnlaceALaFuente;
+}
 
 /**
  * Dónde arranca el radar si no hay ni origen elegido ni ubicación —en local,
@@ -82,6 +101,8 @@ export default async function VuelosPage({
     resumir(aeropuerto),
   );
 
+  const textosDeVuelos = await textos(TEXTOS_DE_VUELOS);
+  const t = textosDeVuelos.pagina;
   const enfocado =
     origen ??
     sugerencia?.sugerido.aeropuerto ??
@@ -91,18 +112,17 @@ export default async function VuelosPage({
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10 px-6 py-12">
       <header className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold tracking-tight text-balance">
-          Vuelos desde tu ciudad
+          {t.titulo}
         </h1>
 
         <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-          Lo que vuela ahora cerca tuyo y el aeropuerto del que salís. Pronto,
-          también a dónde llegás desde ahí y cuánto cuesta.
+          {t.bajada}
         </p>
       </header>
 
       <section aria-labelledby="en-vivo" className="flex flex-col gap-4">
         <h2 id="en-vivo" className="text-lg font-semibold">
-          En vivo
+          {t.enVivo}
         </h2>
 
         <Suspense fallback={<RadarCargando />}>
@@ -110,16 +130,13 @@ export default async function VuelosPage({
         </Suspense>
 
         <p className="text-muted-foreground text-xs text-pretty">
-          Los aviones salen de adsb.lol, una red de antenas de voluntarios:
-          cubre muy bien Europa, Estados Unidos y Japón, y con huecos
-          Sudamérica, África y los océanos. Para ver otra zona, mové el mapa. No
-          mostramos los aviones que pidieron no aparecer.
+          {t.cobertura}
         </p>
       </section>
 
       <section aria-labelledby="salgo-desde" className="flex flex-col gap-6">
         <h2 id="salgo-desde" className="text-lg font-semibold">
-          Salgo desde
+          {t.salgoDesde}
         </h2>
 
         {origen ? (
@@ -134,10 +151,10 @@ export default async function VuelosPage({
         <BuscadorDeOrigen
           titulo={
             origen
-              ? "¿Salís de otro lado?"
+              ? textosDeVuelos.origen.otroLado
               : sugerencia
-                ? "¿No es tu ciudad? Buscala"
-                : "Buscá tu ciudad o tu aeropuerto"
+                ? textosDeVuelos.origen.noEsTuCiudad
+                : textosDeVuelos.origen.buscaTuCiudad
           }
           busquedaInicial={busqueda}
         >
@@ -147,68 +164,34 @@ export default async function VuelosPage({
 
       <section aria-labelledby="lo-que-viene" className="flex flex-col gap-3">
         <h2 id="lo-que-viene" className="text-lg font-semibold">
-          Lo que viene
+          {t.loQueViene}
         </h2>
 
         <ul className="text-muted-foreground flex flex-col gap-2 text-sm text-pretty">
-          <li>
-            <strong className="text-foreground font-medium">
-              Tu aeropuerto.
-            </strong>{" "}
-            Qué está saliendo y llegando en este momento, y a dónde vuela.
-          </li>
-          <li>
-            <strong className="text-foreground font-medium">Rutas.</strong> A
-            dónde llegás desde tu ciudad, directo o con escala, también desde
-            cada guía.
-          </li>
-          <li>
-            <strong className="text-foreground font-medium">Precios.</strong>{" "}
-            Cuánto cuesta cada ruta según la fecha y la aerolínea, con un aviso
-            por mail cuando baja.
-          </li>
+          {t.proximamente.map((texto) => (
+            <li key={texto}>
+              {enriquecer(texto, {
+                fuerte: (titulo) => (
+                  <strong className="text-foreground font-medium">
+                    {titulo}
+                  </strong>
+                ),
+              })}
+            </li>
+          ))}
         </ul>
       </section>
 
       <div className="text-muted-foreground flex flex-col gap-2 border-t pt-6 text-xs text-pretty">
-        <p>
-          La ubicación sale de tu conexión y es aproximada: la usamos para
-          sugerirte un aeropuerto y no la guardamos. El que elegís queda en una
-          cookie de este navegador, con su código de tres letras, hasta que
-          toques «Olvidar».
-        </p>
+        <p>{t.privacidad}</p>
 
         <p>
-          Aeropuertos:{" "}
-          <a
-            href="https://ourairports.com/data/"
-            className="hover:text-foreground underline underline-offset-2"
-          >
-            OurAirports
-          </a>
-          , de dominio público, actualizados el{" "}
-          {formatDate(AEROPUERTOS_DESCARGADOS)}. Aviones:{" "}
-          <a
-            href="https://adsb.lol"
-            className="hover:text-foreground underline underline-offset-2"
-          >
-            adsb.lol
-          </a>
-          , con licencia{" "}
-          <a
-            href="https://opendatacommons.org/licenses/odbl/"
-            className="hover:text-foreground underline underline-offset-2"
-          >
-            ODbL
-          </a>
-          . Mapa:{" "}
-          <a
-            href="https://openfreemap.org"
-            className="hover:text-foreground underline underline-offset-2"
-          >
-            OpenFreeMap
-          </a>
-          , con datos de OpenStreetMap.
+          {enriquecer(t.fuentes(formatDate(AEROPUERTOS_DESCARGADOS)), {
+            ourairports: fuente("https://ourairports.com/data/"),
+            adsb: fuente("https://adsb.lol"),
+            odbl: fuente("https://opendatacommons.org/licenses/odbl/"),
+            openfreemap: fuente("https://openfreemap.org"),
+          })}
         </p>
       </div>
     </main>
@@ -235,41 +218,45 @@ async function EnVivo({ foco }: { foco: Foco }) {
  * Sin JavaScript, esto es lo único que se ve del radar: lo que trae el
  * servidor llega por streaming, y mostrarlo necesita JavaScript.
  */
-function RadarCargando() {
+async function RadarCargando() {
+  const t = (await textos(TEXTOS_DE_VUELOS)).origen;
+
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-muted-foreground text-sm">
-        Buscando los aviones de la zona…
-      </p>
+      <p className="text-muted-foreground text-sm">{t.buscandoAviones}</p>
       <div className="bg-muted text-muted-foreground flex h-[380px] w-full items-center justify-center rounded-xl border p-6 text-center text-sm sm:h-[480px]">
-        <noscript>
-          El radar en vivo necesita JavaScript. Elegir el aeropuerto del que
-          salís, más abajo, anda igual.
-        </noscript>
+        <noscript>{t.sinJavaScript}</noscript>
       </div>
     </div>
   );
 }
 
-function OrigenElegido({ aeropuerto }: { aeropuerto: AeropuertoResumido }) {
+async function OrigenElegido({
+  aeropuerto,
+}: {
+  aeropuerto: AeropuertoResumido;
+}) {
+  const textosDeVuelos = await textos(TEXTOS_DE_VUELOS);
+  const t = textosDeVuelos.origen;
+
   return (
     <div className="flex flex-col gap-3">
       <div className="border-foreground flex flex-wrap items-center justify-between gap-3 rounded-xl border p-4">
-        <FichaDeAeropuerto aeropuerto={aeropuerto} />
-
+        <FichaDeAeropuerto
+          aeropuerto={aeropuerto}
+          textos={textosDeVuelos.aeropuerto}
+        />
         <form action={olvidarOrigenAction}>
-          <BotonDeEnviar>Olvidar</BotonDeEnviar>
+          <BotonDeEnviar>{t.olvidar}</BotonDeEnviar>
         </form>
       </div>
 
-      <p className="text-muted-foreground text-sm text-pretty">
-        Listo: lo que venga en esta sección va a salir desde acá.
-      </p>
+      <p className="text-muted-foreground text-sm text-pretty">{t.listo}</p>
     </div>
   );
 }
 
-function Sugerido({
+async function Sugerido({
   sugerencia,
   ciudad,
 }: {
@@ -278,30 +265,32 @@ function Sugerido({
   ciudad: string | null;
 }) {
   const { sugerido, otros } = sugerencia;
+  const textosDeVuelos = await textos(TEXTOS_DE_VUELOS);
+  const t = textosDeVuelos.origen;
 
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm text-pretty">
-        {ciudad
-          ? `Por tu conexión, parece que estás cerca de ${ciudad}.`
-          : "Por tu conexión, este parece ser el aeropuerto que te sirve."}
+        {ciudad ? t.cercaDe(ciudad) : t.sugerido}
       </p>
 
       <OpcionDeAeropuerto
         aeropuerto={resumir(sugerido.aeropuerto, sugerido.distanciaKm)}
-        etiqueta="Salgo desde acá"
+        textos={textosDeVuelos.aeropuerto}
+        etiqueta={t.salgoDesdeAqui}
         destacada
       />
 
       {otros.length > 0 ? (
         <>
-          <p className="text-muted-foreground text-sm">También cerca:</p>
+          <p className="text-muted-foreground text-sm">{t.tambienCerca}</p>
 
           <ul className="flex flex-col gap-2">
             {otros.map(({ aeropuerto, distanciaKm }) => (
               <li key={aeropuerto.iata}>
                 <OpcionDeAeropuerto
                   aeropuerto={resumir(aeropuerto, distanciaKm)}
+                  textos={textosDeVuelos.aeropuerto}
                 />
               </li>
             ))}
@@ -313,7 +302,7 @@ function Sugerido({
 }
 
 /** Los resultados de `?buscar=`, para quien busca sin JavaScript. */
-function ResultadosDelServidor({
+async function ResultadosDelServidor({
   busqueda,
   resultados,
 }: {
@@ -322,11 +311,11 @@ function ResultadosDelServidor({
 }) {
   if (busqueda === "") return null;
 
+  const textosDeVuelos = await textos(TEXTOS_DE_VUELOS);
   if (resultados.length === 0) {
     return (
       <p className="text-muted-foreground text-sm text-pretty">
-        Ningún aeropuerto coincide con «{busqueda}». Probá con el código de tres
-        letras o con el nombre en otro idioma.
+        {textosDeVuelos.buscador.sinResultados(busqueda)}
       </p>
     );
   }
@@ -335,7 +324,10 @@ function ResultadosDelServidor({
     <ul className="flex flex-col gap-2">
       {resultados.map((aeropuerto) => (
         <li key={aeropuerto.iata}>
-          <OpcionDeAeropuerto aeropuerto={aeropuerto} />
+          <OpcionDeAeropuerto
+            aeropuerto={aeropuerto}
+            textos={textosDeVuelos.aeropuerto}
+          />
         </li>
       ))}
     </ul>

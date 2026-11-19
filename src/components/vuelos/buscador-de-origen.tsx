@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import type { AeropuertoResumido } from "@/lib/vuelos/tipos";
 
 import { OpcionDeAeropuerto } from "./opcion-de-aeropuerto";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_VUELOS, type TextosDeVuelos } from "@/i18n/vuelos";
 
 /**
  * El buscador de "Salgo desde" (spec, 17.3).
@@ -42,19 +44,17 @@ type Estado =
   | { tipo: "listo"; consulta: string; resultados: AeropuertoResumido[] }
   | { tipo: "fallo" };
 
-function mensaje(estado: Estado): string {
+function mensaje(t: TextosDeVuelos["buscador"], estado: Estado): string {
   switch (estado.tipo) {
     case "buscando":
-      return "Buscando…";
+      return t.buscando;
     case "fallo":
-      return "No pudimos buscar. Probá de nuevo en un momento.";
+      return t.fallo;
     case "listo":
       if (estado.resultados.length === 0) {
-        return `Ningún aeropuerto coincide con «${estado.consulta}». Probá con el código de tres letras o con el nombre en otro idioma.`;
+        return t.sinResultados(estado.consulta);
       }
-      return estado.resultados.length === 1
-        ? "Un aeropuerto."
-        : `${estado.resultados.length} aeropuertos.`;
+      return t.resultados(estado.resultados.length);
     default:
       return "";
   }
@@ -71,6 +71,8 @@ export function BuscadorDeOrigen({
   /** Los resultados que trajo el servidor para `busquedaInicial`. */
   children?: ReactNode;
 }) {
+  const textosDeVuelos = useTextos(TEXTOS_DE_VUELOS);
+  const t = textosDeVuelos.buscador;
   const [texto, setTexto] = useState(busquedaInicial);
   const [estado, setEstado] = useState<Estado>({ tipo: "servidor" });
 
@@ -164,7 +166,7 @@ export function BuscadorDeOrigen({
               setTexto(evento.target.value);
               buscar(evento.target.value, ESPERA_MS);
             }}
-            placeholder="Ciudad, aeropuerto o código: Rosario, Ezeiza, EZE"
+            placeholder={t.placeholder}
             autoComplete="off"
             spellCheck={false}
             enterKeyHint="search"
@@ -177,13 +179,13 @@ export function BuscadorDeOrigen({
             ) : (
               <Search />
             )}
-            Buscar
+            {t.buscar}
           </Button>
         </div>
       </form>
 
       <p aria-live="polite" className="text-muted-foreground text-sm">
-        {mensaje(estado)}
+        {mensaje(t, estado)}
       </p>
 
       {estado.tipo === "servidor" ? (
@@ -192,7 +194,10 @@ export function BuscadorDeOrigen({
         <ul className="flex flex-col gap-2">
           {resultados.map((aeropuerto) => (
             <li key={aeropuerto.iata}>
-              <OpcionDeAeropuerto aeropuerto={aeropuerto} />
+              <OpcionDeAeropuerto
+                aeropuerto={aeropuerto}
+                textos={textosDeVuelos.aeropuerto}
+              />
             </li>
           ))}
         </ul>

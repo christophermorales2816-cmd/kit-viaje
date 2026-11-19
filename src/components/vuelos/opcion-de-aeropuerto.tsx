@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import { elegirOrigenAction } from "@/lib/vuelos/actions";
 import type { AeropuertoResumido } from "@/lib/vuelos/tipos";
 
+import type { TextosDeVuelos } from "@/i18n/vuelos";
+
 import { BotonDeEnviar } from "./boton-de-enviar";
 
 /**
@@ -10,12 +12,16 @@ import { BotonDeEnviar } from "./boton-de-enviar";
  *
  * Sin "use client", a propósito. En la página son componentes de servidor y
  * el formulario anda antes de que cargue el JavaScript; en los resultados del
- * buscador, que solo existen con JavaScript, los usa el cliente.
+ * buscador, que solo existen con JavaScript, los usa el cliente. Por eso los
+ * textos llegan por props (`textos`): cada lado los saca del diccionario a su
+ * manera.
  */
 export function FichaDeAeropuerto({
   aeropuerto,
+  textos,
 }: {
   aeropuerto: AeropuertoResumido;
+  textos: TextosDeVuelos["aeropuerto"];
 }) {
   // Unos pocos aeropuertos no tienen ciudad en OurAirports: va el nombre.
   const lugar = `${aeropuerto.ciudad || aeropuerto.nombre}, ${aeropuerto.pais}`;
@@ -31,7 +37,7 @@ export function FichaDeAeropuerto({
           {aeropuerto.nombre}
           {aeropuerto.distanciaKm === undefined
             ? null
-            : ` · a ${formatDistance(aeropuerto.distanciaKm)}`}
+            : ` · ${textos.aDistancia(formatDistance(aeropuerto.distanciaKm))}`}
         </span>
       </div>
     </div>
@@ -48,10 +54,13 @@ export function FichaDeAeropuerto({
  */
 export function OpcionDeAeropuerto({
   aeropuerto,
-  etiqueta = "Elegir",
+  textos,
+  etiqueta = textos.elegir,
   destacada = false,
 }: {
   aeropuerto: AeropuertoResumido;
+  textos: TextosDeVuelos["aeropuerto"];
+  /** Por defecto, "Elegir". */
   etiqueta?: string;
   /** La sugerida: con borde marcado y el botón principal. */
   destacada?: boolean;
@@ -66,11 +75,10 @@ export function OpcionDeAeropuerto({
     >
       <input type="hidden" name="iata" value={aeropuerto.iata} />
 
-      <FichaDeAeropuerto aeropuerto={aeropuerto} />
-
+      <FichaDeAeropuerto aeropuerto={aeropuerto} textos={textos} />
       <BotonDeEnviar
         variant={destacada ? "default" : "outline"}
-        aria-label={`${etiqueta}: ${aeropuerto.nombre}`}
+        aria-label={textos.elegirEste(etiqueta, aeropuerto.nombre)}
       >
         {etiqueta}
       </BotonDeEnviar>

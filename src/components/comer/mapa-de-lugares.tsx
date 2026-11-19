@@ -48,6 +48,8 @@ import {
   formatTimestamp,
 } from "@/lib/format";
 import { ESTILO_DEL_MAPA, textosDelMapa } from "@/lib/mapa/estilo";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
 
 /**
  * Dónde sirven un plato, en un mapa (spec, 18.4).
@@ -140,6 +142,7 @@ export function MapaDeLugares({
   ciudadInicial,
   menciones,
 }: Props) {
+  const textosDelMapaDeLaPagina = useTextos(TEXTOS_DEL_MAPA);
   const contenedor = useRef<HTMLDivElement>(null);
   const mapa = useRef<MapaDeMapLibre | null>(null);
   // Lo pedido y lo vuelto a pedir, fuera del estado: dos movimientos seguidos
@@ -200,6 +203,7 @@ export function MapaDeLugares({
           attributionControl: { compact: true },
           locale: textosDelMapa(
             `Mapa de los lugares que sirven ${plato.nombre}. La lista de abajo tiene los mismos datos.`,
+            textosDelMapaDeLaPagina,
           ),
         });
       } catch {

@@ -101,6 +101,12 @@ export function porCercania(
     .sort((a, b) => a.distanciaKm - b.distanciaKm);
 }
 
+/**
+ * Los ocho puntos, de a 45°. Son claves: su nombre en cada idioma está en el
+ * diccionario de vuelos (src/i18n/es/vuelos.ts).
+ */
+export type PuntoCardinal = (typeof PUNTOS_CARDINALES)[number];
+
 const PUNTOS_CARDINALES = [
   "norte",
   "noreste",
@@ -110,10 +116,10 @@ const PUNTOS_CARDINALES = [
   "suroeste",
   "oeste",
   "noroeste",
-];
+] as const;
 
 /** Hacia dónde apunta un rumbo, en palabras: 141° es "sureste". */
-export function puntoCardinal(grados: number): string {
+export function puntoCardinal(grados: number): PuntoCardinal {
   const octavo = Math.round((((grados % 360) + 360) % 360) / 45) % 8;
 
   return PUNTOS_CARDINALES[octavo];
