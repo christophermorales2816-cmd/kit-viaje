@@ -3117,3 +3117,24 @@ cambian: son para quien desarrolla.
 Queda una decisión que sale de esta: las cotizaciones del presupuesto (oficial,
 MEP, tarjeta, blue) son las del dólar en Argentina. Para el resto de
 Hispanoamérica hace falta otra respuesta, que se decide aparte.
+
+## 20. La marca: GlobalSunstone
+
+El sitio pasa a llamarse GlobalSunstone, con el dominio `globalsunstone.com` (19.8). El nombre
+sale de la *sólarsteinn* de las sagas: la piedra con la que se buscaba el sol con el cielo
+nublado. Junta la idea de orientarse con la de ir a cualquier parte del mundo.
+
+Los originales del logo están en `src/assets/marca/`, y su `README.md` dice cómo se usan:
+
+- **Símbolo "Eclipse Stone":** la piedra en negro, en romboide a 75°, con un eclipse calado.
+  Es el mismo en todos los tamaños: a 16 px la media luna del eclipse todavía se lee, así
+  que el favicon no necesita una versión simplificada.
+- **Nombre:** Albert Sans (OFL), "Global" en Regular y "Sunstone" en SemiBold, convertido
+  a trazos.
+- **Firmas:** horizontal (el símbolo a la izquierda) y apilada, en negro y en blanco.
+- **Íconos:** `src/app/icon.svg` (pasa a blanco en pestañas oscuras), `favicon.ico` (16,
+  32 y 48 px, sobre tinta) y `apple-icon.png` (180 px, sobre tinta). Next.js los publica
+  solo.
+
+El cambio del nombre en la barra, el pie y los metadatos va en la fase 1 del inglés, junto
+con los textos en diccionarios.
