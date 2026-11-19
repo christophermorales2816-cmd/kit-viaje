@@ -20,9 +20,9 @@ import { estadisticasDelSitio } from "@/lib/sitio/estadisticas";
  */
 
 export const metadata: Metadata = {
-  title: "Nosotros — Kit de viaje",
+  title: "Nosotros",
   description:
-    "Qué es Kit de viaje, cómo se hace y de dónde salen sus datos: sin registro, sin anuncios y con fuentes abiertas.",
+    "Qué es GlobalSunstone, cómo se hace y de dónde salen sus datos: sin registro, sin anuncios y con fuentes abiertas.",
 };
 
 const PRINCIPIOS: { icono: LucideIcon; titulo: string; texto: string }[] = [
@@ -98,14 +98,14 @@ export default function Nosotros() {
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-            Kit de viaje
+            GlobalSunstone
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
             Nosotros
           </h1>
           <p className="max-w-2xl text-lg text-pretty text-slate-300">
-            Kit de viaje es una guía para preparar el viaje: elegís un destino y
-            te decimos qué llevar según el clima de tus fechas, cuánto vas a
+            GlobalSunstone es una guía para preparar el viaje: elegís un destino
+            y te decimos qué llevar según el clima de tus fechas, cuánto vas a
             gastar en la moneda de allá y qué comer cuando llegues.
           </p>
         </div>

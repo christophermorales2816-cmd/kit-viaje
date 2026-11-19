@@ -1,3 +1,4 @@
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 /**
  * Los enlaces del menú y del pie (spec, sección 19).
  *
@@ -86,7 +87,7 @@ export const COLUMNAS_DEL_PIE: { titulo: string; items: ItemDelSitio[] }[] = [
     ],
   },
   {
-    titulo: "Kit de viaje",
+    titulo: NOMBRE_DEL_SITIO,
     items: [
       NOSOTROS,
       CONTACTO,

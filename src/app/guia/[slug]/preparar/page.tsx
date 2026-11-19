@@ -64,7 +64,7 @@ export async function generateMetadata({
   );
 
   return {
-    title: `${destino?.name ?? guia.country}: condiciones actuales — Kit de viaje`,
+    title: `${destino?.name ?? guia.country}: condiciones actuales`,
     description: guia.preparation.quickAnswer,
   };
 }

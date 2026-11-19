@@ -1,4 +1,3 @@
-import { Earth } from "lucide-react";
 import Link from "next/link";
 
 import type { ContinenteDelMenu } from "@/content/guias/continentes";
@@ -8,6 +7,8 @@ import {
   type ItemDelSitio,
 } from "@/lib/sitio/navegacion";
 import { BUILD_ID, BUILD_URL } from "@/lib/version";
+import { Logo } from "@/components/sitio/logo";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * El pie de todas las páginas (spec, 19.2).
@@ -43,10 +44,9 @@ export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
         <div className="flex max-w-xs flex-col gap-4">
           <Link
             href="/"
-            className="flex items-center gap-2 self-start rounded-md font-semibold tracking-tight text-white outline-none focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
+            className="self-start rounded-md text-white outline-none focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
           >
-            <Earth aria-hidden className="size-6 text-orange-500" />
-            Kit de viaje
+            <Logo className="h-7" />
           </Link>
           <p className="text-sm text-pretty text-slate-400">
             Qué llevar, cuánto vas a gastar y qué comer, con el clima de tus
@@ -115,7 +115,7 @@ export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
             discutir.
           */}
           <p className="shrink-0">
-            © {new Date().getFullYear()} Kit de viaje · build{" "}
+            © {new Date().getFullYear()} {NOMBRE_DEL_SITIO} · build{" "}
             {BUILD_URL ? (
               <a
                 href={BUILD_URL}

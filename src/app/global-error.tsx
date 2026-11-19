@@ -35,7 +35,7 @@ export default function GlobalError({
         }}
       >
         <h1 style={{ fontSize: "1.5rem", fontWeight: 600 }}>
-          Kit de viaje no pudo cargar
+          GlobalSunstone no pudo cargar
         </h1>
 
         <p style={{ maxWidth: "28rem", color: "#555" }}>

@@ -29,7 +29,7 @@ export async function generateMetadata({
   if (!continente) return {};
 
   return {
-    title: `Destinos en ${continente.nombre} — Kit de viaje`,
+    title: `Destinos en ${continente.nombre}`,
     description: `${continente.resumen} Los ${guiasDelContinente(continente.id).length} destinos de ${continente.nombre}, cada uno con su guía, su clima y su presupuesto.`,
   };
 }

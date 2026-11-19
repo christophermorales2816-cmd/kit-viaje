@@ -8,6 +8,7 @@ import { continentesDelMenu } from "@/content/guias/continentes";
 import { urlDelSitio } from "@/lib/sitio/url";
 
 import "./globals.css";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +26,9 @@ export const metadata: Metadata = {
   // La base de las URLs absolutas de la metadata (Open Graph, canonical): el
   // dominio de producción, el propio cuando lo haya.
   ...(SITIO ? { metadataBase: new URL(SITIO) } : {}),
-  title: "Kit de viaje",
+  // Cada página da su título y la plantilla le agrega el nombre del sitio.
+  title: { default: NOMBRE_DEL_SITIO, template: `%s — ${NOMBRE_DEL_SITIO}` },
+  applicationName: NOMBRE_DEL_SITIO,
   description:
     "Qué llevar y cuánto vas a gastar, con el clima de la ciudad a la que vas y la cotización que elijas. Sin registro.",
 };

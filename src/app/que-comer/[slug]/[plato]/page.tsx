@@ -35,7 +35,7 @@ export async function generateMetadata({
   const { country } = guiaDelCatalogo(catalogo);
 
   return {
-    title: `${plato.nombre}: qué es y dónde comerlo en ${country} — Kit de viaje`,
+    title: `${plato.nombre}: qué es y dónde comerlo en ${country}`,
     description: plato.resumen,
   };
 }
