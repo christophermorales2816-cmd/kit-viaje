@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { allGuides } from "@/content/guias";
+import { idiomaActual, textos } from "@/i18n/servidor";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
 
 /**
  * 404 propio (spec, sección 7).
@@ -17,35 +19,34 @@ import { allGuides } from "@/content/guias";
  * peor que no decir nada, porque el lector la cree y se va. Un dato que hay que
  * acordarse de actualizar en cada país es un dato que va a quedar viejo.
  */
-/**
- * Las guías por nombre, como un índice: con más de cien destinos, el orden en
- * que se sumaron no le sirve a nadie para encontrar el suyo.
- */
-const GUIAS_POR_NOMBRE = [...allGuides()].sort((a, b) =>
-  a.country.localeCompare(b.country, "es"),
-);
+export default async function NotFound() {
+  const idioma = await idiomaActual();
+  const { noEncontrada: t, error } = await textos(TEXTOS_DEL_SITIO);
 
-export default function NotFound() {
+  // Las guías por nombre, como un índice: con más de cien destinos, el orden
+  // en que se sumaron no le sirve a nadie para encontrar el suyo. El orden
+  // alfabético es el del idioma de la página.
+  const guiasPorNombre = [...allGuides()].sort((a, b) =>
+    a.country.localeCompare(b.country, idioma),
+  );
+
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-24 text-center">
-      <p className="text-muted-foreground text-sm font-medium">Error 404</p>
+      <p className="text-muted-foreground text-sm font-medium">{t.codigo}</p>
 
       <h1 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">
-        Esta página no existe
+        {t.titulo}
       </h1>
 
       <p className="text-muted-foreground max-w-md text-pretty">
-        Puede que el link esté mal escrito, o que apunte a un destino que
-        todavía no cubrimos.
+        {t.explicacion}
       </p>
 
-      <nav aria-label="Guías disponibles" className="flex flex-col gap-3">
-        <p className="text-muted-foreground text-sm">
-          Estas son las guías que sí tenemos:
-        </p>
+      <nav aria-label={t.guiasDisponibles} className="flex flex-col gap-3">
+        <p className="text-muted-foreground text-sm">{t.estasSonLasGuias}</p>
 
         <ul className="flex flex-wrap justify-center gap-2">
-          {GUIAS_POR_NOMBRE.map((guia) => (
+          {guiasPorNombre.map((guia) => (
             <li key={guia.slug}>
               <Link
                 href={`/guia/${guia.slug}`}
@@ -59,7 +60,7 @@ export default function NotFound() {
       </nav>
 
       <Button asChild size="lg">
-        <Link href="/">Volver al inicio</Link>
+        <Link href="/">{error.volverAlInicio}</Link>
       </Button>
     </main>
   );

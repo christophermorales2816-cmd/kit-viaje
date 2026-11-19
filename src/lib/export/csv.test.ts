@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import type { BudgetLineItem } from "@/lib/budget";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 import { budgetCsv, csvFilename, packingCsv, toCsv } from "@/lib/export/csv";
+
+const CSV = TEXTOS_DEL_VIAJE.es.csv;
 import type { TripPackingEntry } from "@/lib/trips/types";
 
 describe("toCsv", () => {
@@ -73,13 +76,13 @@ describe("packingCsv", () => {
   ];
 
   it("abre con la fila de encabezados", () => {
-    expect(packingCsv(entries).split("\r\n")[0]).toBe(
+    expect(packingCsv(entries, CSV).split("\r\n")[0]).toBe(
       "Categoría,Ítem,Cantidad,Peso unitario (g),Peso total (g),Listo",
     );
   });
 
   it("escribe una fila por ítem, con el tildado en castellano", () => {
-    const filas = packingCsv(entries).split("\r\n");
+    const filas = packingCsv(entries, CSV).split("\r\n");
 
     expect(filas).toHaveLength(3);
     expect(filas[1]).toBe("ropa,Remera de algodón,4,150,600,sí");
@@ -87,7 +90,7 @@ describe("packingCsv", () => {
   });
 
   it("con la lista vacía deja solo los encabezados", () => {
-    expect(packingCsv([]).split("\r\n")).toHaveLength(1);
+    expect(packingCsv([], CSV).split("\r\n")).toHaveLength(1);
   });
 });
 
@@ -112,7 +115,7 @@ describe("budgetCsv", () => {
   ];
 
   it("escribe precio unitario, subtotal y moneda", () => {
-    const filas = budgetCsv(items).split("\r\n");
+    const filas = budgetCsv(items, CSV).split("\r\n");
 
     expect(filas[0]).toBe(
       "Categoría,Gasto,Cantidad,Precio unitario,Subtotal,Moneda",
@@ -121,7 +124,7 @@ describe("budgetCsv", () => {
   });
 
   it("no incluye el total convertido: depende de una cotización que no se persiste", () => {
-    expect(budgetCsv(items)).not.toMatch(/USD/);
+    expect(budgetCsv(items, CSV)).not.toMatch(/USD/);
   });
 });
 

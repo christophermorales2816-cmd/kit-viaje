@@ -5,10 +5,13 @@ import { Analytics } from "@/components/analytics";
 import { Encabezado } from "@/components/sitio/encabezado";
 import { Pie } from "@/components/sitio/pie";
 import { continentesDelMenu } from "@/content/guias/continentes";
+import { ProveedorDeIdioma } from "@/i18n/cliente";
+import { idiomaActual, textos } from "@/i18n/servidor";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 import { urlDelSitio } from "@/lib/sitio/url";
 
 import "./globals.css";
-import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,40 +25,51 @@ const geistMono = Geist_Mono({
 
 const SITIO = urlDelSitio();
 
-export const metadata: Metadata = {
-  // La base de las URLs absolutas de la metadata (Open Graph, canonical): el
-  // dominio de producción, el propio cuando lo haya.
-  ...(SITIO ? { metadataBase: new URL(SITIO) } : {}),
-  // Cada página da su título y la plantilla le agrega el nombre del sitio.
-  title: { default: NOMBRE_DEL_SITIO, template: `%s — ${NOMBRE_DEL_SITIO}` },
-  applicationName: NOMBRE_DEL_SITIO,
-  description:
-    "Qué llevar y cuánto vas a gastar, con el clima de la ciudad a la que vas y la cotización que elijas. Sin registro.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await textos(TEXTOS_DEL_SITIO);
+
+  return {
+    // La base de las URLs absolutas de la metadata (Open Graph, canonical): el
+    // dominio de producción, el propio cuando lo haya.
+    ...(SITIO ? { metadataBase: new URL(SITIO) } : {}),
+    // Cada página da su título y la plantilla le agrega el nombre del sitio.
+    title: { default: NOMBRE_DEL_SITIO, template: `%s — ${NOMBRE_DEL_SITIO}` },
+    applicationName: NOMBRE_DEL_SITIO,
+    description: t.metadatos.descripcion,
+  };
+}
 
 const CONTINENTES_DEL_MENU = continentesDelMenu();
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const idioma = await idiomaActual();
+
   return (
     <html
-      lang="es"
+      lang={idioma}
       className={`${geistSans.variable} ${geistMono.variable} h-full scroll-pt-20 antialiased motion-safe:scroll-smooth`}
     >
       <body className="min-h-full flex flex-col font-sans">
         {/*
-          La barra y el pie son los mismos en todas las páginas (spec, 19).
-          Los continentes salen de las guías, en el servidor: al navegador
-          llegan cinco nombres y cinco números, no las 165 guías.
+          El idioma llega a los Client Components por contexto; los textos
+          los importa cada uno (src/i18n/cliente.tsx).
         */}
-        <Encabezado continentes={CONTINENTES_DEL_MENU} />
+        <ProveedorDeIdioma idioma={idioma}>
+          {/*
+            La barra y el pie son los mismos en todas las páginas (spec, 19).
+            Los continentes salen de las guías, en el servidor: al navegador
+            llegan cinco nombres y cinco números, no las 165 guías.
+          */}
+          <Encabezado continentes={CONTINENTES_DEL_MENU} />
 
-        <div id="contenido" className="flex flex-1 flex-col">
-          {children}
-        </div>
+          <div id="contenido" className="flex flex-1 flex-col">
+            {children}
+          </div>
 
-        <Pie continentes={CONTINENTES_DEL_MENU} />
+          <Pie continentes={CONTINENTES_DEL_MENU} />
 
-        <Analytics />
+          <Analytics />
+        </ProveedorDeIdioma>
       </body>
     </html>
   );

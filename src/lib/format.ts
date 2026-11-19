@@ -268,38 +268,28 @@ export function formatTimestamp(iso: string): string {
   }).format(parsed);
 }
 
-const TIPO_DE_VIAJE: Record<string, string> = {
-  playa: "Playa",
-  urbano: "Urbano",
-  aventura: "Aventura",
-  negocios: "Negocios",
-};
-
-export function formatTripType(tripType: string): string {
-  return TIPO_DE_VIAJE[tripType] ?? tripType;
+/**
+ * El nombre de un tipo de viaje. Los nombres están en el diccionario del viaje
+ * (src/i18n/es/viaje.ts); uno que no esté se muestra como viene.
+ */
+export function formatTripType(
+  tripType: string,
+  nombres: Readonly<Record<string, string>>,
+): string {
+  return nombres[tripType] ?? tripType;
 }
 
 /**
  * Las categorías se guardan en minúscula y sin acento (son claves, no texto).
- * La pantalla las muestra como títulos.
+ * La pantalla las muestra con su nombre, que está en el diccionario del viaje
+ * (src/i18n/es/viaje.ts).
  */
-const CATEGORIA: Record<string, string> = {
-  documentacion: "Documentación",
-  tecnologia: "Tecnología",
-  ropa: "Ropa",
-  calzado: "Calzado",
-  higiene: "Higiene",
-  salud: "Salud",
-  accesorios: "Accesorios",
-  comida: "Comida",
-  transporte: "Transporte",
-  alojamiento: "Alojamiento",
-  entretenimiento: "Entretenimiento",
-};
-
-export function formatCategory(category: string): string {
+export function formatCategory(
+  category: string,
+  nombres: Readonly<Record<string, string>>,
+): string {
   return (
-    CATEGORIA[category] ??
+    nombres[category] ??
     // Una categoría agregada desde Studio sin pasar por acá se muestra igual,
     // capitalizada, en vez de desaparecer de la pantalla.
     category.charAt(0).toUpperCase() + category.slice(1)

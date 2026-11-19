@@ -4,6 +4,9 @@ import { TripDashboard } from "@/components/trip/trip-dashboard";
 import { resolvePriceFreshness } from "@/lib/budget";
 import { fetchQuotes } from "@/lib/quotes";
 import { getTripByShareSlug } from "@/lib/trips/read";
+import type { Metadata } from "next";
+import { textos } from "@/i18n/servidor";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Vista compartida, solo lectura (spec, sección 6D).
@@ -16,10 +19,12 @@ import { getTripByShareSlug } from "@/lib/trips/read";
  * y Next resuelve el segmento estático "ver" antes que el dinámico.
  */
 
-export const metadata = {
-  title: "Kit de viaje compartido",
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: (await textos(TEXTOS_DEL_VIAJE)).metadatos.compartido,
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function SharedTripPage({
   params,

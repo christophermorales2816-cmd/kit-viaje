@@ -96,7 +96,7 @@ export async function createTrip(input: TripInput): Promise<TripRecord> {
 
   if (error || !data) {
     // El detalle de Postgres queda en el error para los logs; a la pantalla
-    // llega solo el código (ver messageForTripWriteFailure).
+    // llega solo el código (ver problemaDeEscritura).
     throw new TripWriteError(
       `No se pudo crear el viaje: ${error?.message ?? "la base no devolvió la fila."}`,
       error?.code ?? null,

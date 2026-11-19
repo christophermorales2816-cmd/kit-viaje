@@ -1,4 +1,6 @@
 import type { GuideAvoidRow } from "@/content/guias/types";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * "Estos no los lleves" (spec, sección 9.6).
@@ -10,13 +12,15 @@ import type { GuideAvoidRow } from "@/content/guias/types";
  * En móvil scrollea horizontal dentro de su contenedor. Apilar cada fila en
  * tres bloques rompería justamente la comparación que hace útil la tabla.
  */
-export function AvoidTable({
+export async function AvoidTable({
   rows,
   country,
 }: {
   rows: GuideAvoidRow[];
   country: string;
 }) {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).evitar;
+
   return (
     <section
       id="no-lleves"
@@ -27,25 +31,23 @@ export function AvoidTable({
         id="no-lleves-titulo"
         className="text-2xl font-semibold tracking-tight text-balance"
       >
-        Lo que ocupa lugar y no vale la pena en {country}
+        {t.titulo(country)}
       </h2>
 
-      <p className="text-muted-foreground text-pretty">
-        Empacá para el viaje que vas a hacer, no para el que imaginás.
-      </p>
+      <p className="text-muted-foreground text-pretty">{t.bajada}</p>
 
       <div className="overflow-x-auto rounded-xl border">
         <table className="w-full min-w-[42rem] border-collapse text-sm">
           <thead>
             <tr className="bg-muted/60 text-left">
               <th scope="col" className="p-4 font-medium">
-                Dejalo en casa
+                {t.dejaloEnCasa}
               </th>
               <th scope="col" className="p-4 font-medium">
-                Por qué
+                {t.porQue}
               </th>
               <th scope="col" className="p-4 font-medium">
-                En su lugar
+                {t.enSuLugar}
               </th>
             </tr>
           </thead>

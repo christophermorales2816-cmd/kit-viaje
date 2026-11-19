@@ -1,5 +1,6 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+
+import { renderizar } from "@/test/renderizar";
 
 import { argentina } from "@/content/guias/argentina";
 
@@ -24,8 +25,8 @@ import { PackingTips } from "./packing-tips";
 const prep = argentina.preparation;
 
 describe("secciones de preparación", () => {
-  it("pone en el HTML los consejos de las dos columnas", () => {
-    const html = renderToStaticMarkup(
+  it("pone en el HTML los consejos de las dos columnas", async () => {
+    const html = await renderizar(
       <PackingTips
         dos={prep.tips.dos}
         donts={prep.tips.donts}
@@ -40,8 +41,8 @@ describe("secciones de preparación", () => {
     expect(html).toContain(">No");
   });
 
-  it("pliega cada checklist en un <details> y lista todos sus ítems", () => {
-    const html = renderToStaticMarkup(
+  it("pliega cada checklist en un <details> y lista todos sus ítems", async () => {
+    const html = await renderizar(
       <ChecklistSections sections={prep.checklists} />,
     );
 
@@ -55,17 +56,17 @@ describe("secciones de preparación", () => {
     }
   });
 
-  it("no dibuja un aviso donde el contenido no lo tiene", () => {
+  it("no dibuja un aviso donde el contenido no lo tiene", async () => {
     const conAviso = prep.checklists.filter((s) => s.notice !== null);
-    const html = renderToStaticMarkup(
+    const html = await renderizar(
       <ChecklistSections sections={prep.checklists} />,
     );
 
     expect(html.match(/border-l-4/g) ?? []).toHaveLength(conAviso.length);
   });
 
-  it("arma la tabla con encabezados de fila y de columna", () => {
-    const html = renderToStaticMarkup(
+  it("arma la tabla con encabezados de fila y de columna", async () => {
+    const html = await renderizar(
       <AvoidTable rows={prep.avoid} country="Argentina" />,
     );
 
@@ -79,8 +80,8 @@ describe("secciones de preparación", () => {
     }
   });
 
-  it("numera las preguntas con un contador y no a mano", () => {
-    const html = renderToStaticMarkup(
+  it("numera las preguntas con un contador y no a mano", async () => {
+    const html = await renderizar(
       <FaqList faq={prep.faq} country="Argentina" />,
     );
 
@@ -118,11 +119,11 @@ describe("tarjetas por mes", () => {
 
   const AVISO = "se empaca parecido los doce meses";
 
-  it("avisa cuando los doce meses piden lo mismo", () => {
+  it("avisa cuando los doce meses piden lo mismo", async () => {
     // Es el caso de Iquitos: calor y lluvia todo el año, así que las doce
     // tarjetas salen iguales. Decirlo es mejor que dejar que el título prometa
     // una variación que no existe.
-    const html = renderToStaticMarkup(
+    const html = await renderizar(
       <MonthCards
         months={Array.from({ length: 12 }, (_, i) => mes(i + 1, "calido"))}
         catalog={[]}
@@ -133,8 +134,8 @@ describe("tarjetas por mes", () => {
     expect(html).toContain(AVISO);
   });
 
-  it("no avisa cuando los meses sí difieren", () => {
-    const html = renderToStaticMarkup(
+  it("no avisa cuando los meses sí difieren", async () => {
+    const html = await renderizar(
       <MonthCards
         months={Array.from({ length: 12 }, (_, i) =>
           mes(i + 1, i < 6 ? "calido" : "frio"),
@@ -147,10 +148,10 @@ describe("tarjetas por mes", () => {
     expect(html).not.toContain(AVISO);
   });
 
-  it("no avisa cuando la ropa es la misma pero la lluvia cambia", () => {
+  it("no avisa cuando la ropa es la misma pero la lluvia cambia", async () => {
     // Río: cálido los doce meses, pero de noviembre a marzo llueve y el resto
     // del año no. Las tarjetas de esos meses suman el paraguas.
-    const html = renderToStaticMarkup(
+    const html = await renderizar(
       <MonthCards
         months={Array.from({ length: 12 }, (_, i) =>
           mes(i + 1, "calido", i < 3 || i > 9 ? ["lluvia"] : []),
@@ -163,7 +164,7 @@ describe("tarjetas por mes", () => {
     expect(html).not.toContain(AVISO);
   });
 
-  it("en un mes de lluvia muestra primero lo de la lluvia", () => {
+  it("en un mes de lluvia muestra primero lo de la lluvia", async () => {
     const paraguas: PackingCatalogItem = {
       id: "paraguas",
       category: "accesorios",
@@ -184,7 +185,7 @@ describe("tarjetas por mes", () => {
       climateTags: ["calido"],
     };
 
-    const html = renderToStaticMarkup(
+    const html = await renderizar(
       <MonthCards
         months={[mes(1, "calido", ["lluvia"]), mes(7, "calido")]}
         catalog={[short, paraguas]}
@@ -202,11 +203,11 @@ describe("tarjetas por mes", () => {
     );
   });
 
-  it("no avisa cuando no hay datos de clima en ningún mes", () => {
+  it("no avisa cuando no hay datos de clima en ningún mes", async () => {
     // Doce meses sin bucket también son "todos iguales", pero ahí el problema
     // es que falta el dato, no que el clima sea parejo. Decir que se empaca
     // igual todo el año sería una afirmación sin respaldo.
-    const html = renderToStaticMarkup(
+    const html = await renderizar(
       <MonthCards
         months={Array.from({ length: 12 }, (_, i) => mes(i + 1, null))}
         catalog={[]}

@@ -6,6 +6,7 @@ import { getPackingCatalog, getProducts } from "@/lib/supabase/cached";
 import { resolveItemWrite } from "./item-write";
 import { resolveTripByEditToken } from "./read";
 import { isUuid } from "./validate";
+import type { ProblemaDelViaje } from "./problemas";
 
 /**
  * Escrituras sobre un viaje (spec, sección 6B).
@@ -44,17 +45,18 @@ import { isUuid } from "./validate";
  * LOS ERRORES DE LA BASE VAN A LOS LOGS
  *
  * El texto de Postgres nombra tablas y columnas. A la pantalla llega un
- * mensaje fijo; el detalle, a `console.error`, que en Vercel queda en los logs
- * de la función.
+ * problema fijo (`fallo-al-guardar`), que cuenta en su idioma; el detalle, a
+ * `console.error`, que en Vercel queda en los logs de la función.
  */
 
 /** Lo que pasó, en un formato que la UI pueda mostrar y usar para revertir. */
-export type MutationResult = { ok: true } | { ok: false; error: string };
+export type MutationResult =
+  | { ok: true }
+  | { ok: false; error: ProblemaDelViaje };
 
-const SIN_PERMISO =
-  "No se pudo guardar: este viaje no existe o el link no habilita edición.";
+const SIN_PERMISO: ProblemaDelViaje = { codigo: "sin-permiso" };
 
-const FALLO_DE_BASE = "No se pudo guardar. Probá de nuevo en un momento.";
+const FALLO_DE_BASE: ProblemaDelViaje = { codigo: "fallo-al-guardar" };
 
 function falloDeBase(
   donde: string,
@@ -98,15 +100,15 @@ export async function setPackingItem(
   patch: PackingItemPatch,
 ): Promise<MutationResult> {
   if (!isUuid(itemId)) {
-    return { ok: false, error: "El ítem no existe." };
+    return { ok: false, error: { codigo: "item-inexistente" } };
   }
 
   if (patch.qty === undefined && patch.checked === undefined) {
-    return { ok: false, error: "No hay nada que cambiar." };
+    return { ok: false, error: { codigo: "nada-que-cambiar" } };
   }
 
   if (patch.checked !== undefined && typeof patch.checked !== "boolean") {
-    return { ok: false, error: "No hay nada que cambiar." };
+    return { ok: false, error: { codigo: "nada-que-cambiar" } };
   }
 
   const trip = await resolveTripByEditToken(editToken);
@@ -119,7 +121,7 @@ export async function setPackingItem(
   const catalogo = await getPackingCatalog();
 
   if (!catalogo.some((item) => item.id === itemId)) {
-    return { ok: false, error: "El ítem no existe." };
+    return { ok: false, error: { codigo: "item-inexistente" } };
   }
 
   const write = resolveItemWrite(await leerPackingItem(tripId, itemId), patch);
@@ -160,7 +162,7 @@ export async function setBudgetItemQty(
   qty: number,
 ): Promise<MutationResult> {
   if (!isUuid(productId)) {
-    return { ok: false, error: "El gasto no existe." };
+    return { ok: false, error: { codigo: "gasto-inexistente" } };
   }
 
   const trip = await resolveTripByEditToken(editToken);
@@ -173,7 +175,7 @@ export async function setBudgetItemQty(
   const productos = await getProducts(trip.destinationId);
 
   if (!productos.some((producto) => producto.id === productId)) {
-    return { ok: false, error: "El gasto no existe." };
+    return { ok: false, error: { codigo: "gasto-inexistente" } };
   }
 
   // Cero saca el gasto del presupuesto: fila borrada, no fila en cero.

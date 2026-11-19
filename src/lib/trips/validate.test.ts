@@ -42,7 +42,9 @@ describe("parseTripInput", () => {
     const result = parseTripInput({ ...VALIDO, corridor: "narnia" });
 
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.error).toMatch(/destino/i);
+    if (!result.ok) {
+      expect(result.error).toEqual({ codigo: "destino-desconocido" });
+    }
   });
 
   it("acepta un viaje válido sin tocar los valores", () => {
@@ -70,8 +72,12 @@ describe("parseTripInput", () => {
 
     expect(result).toMatchObject({ ok: false });
     if (result.ok) return;
-    expect(result.error).toContain("35");
-    expect(result.error).toContain(String(MAX_TRIP_DAYS));
+    expect(result.error).toEqual({
+      codigo: "duracion",
+      minimo: 1,
+      maximo: MAX_TRIP_DAYS,
+      dias: 35,
+    });
   });
 
   it("rechaza el rango invertido en vez de darlo vuelta en silencio", () => {
@@ -81,7 +87,10 @@ describe("parseTripInput", () => {
       endDate: "2026-09-01",
     });
 
-    expect(result.ok).toBe(false);
+    expect(result).toEqual({
+      ok: false,
+      error: { codigo: "vuelta-antes-que-ida" },
+    });
   });
 
   it("rechaza un tipo de viaje que no está en el enum", () => {
@@ -92,13 +101,19 @@ describe("parseTripInput", () => {
   });
 
   it("rechaza una fecha que no existe en el calendario", () => {
-    expect(parseTripInput({ ...VALIDO, endDate: "2026-02-30" }).ok).toBe(false);
+    expect(parseTripInput({ ...VALIDO, endDate: "2026-02-30" })).toEqual({
+      ok: false,
+      error: { codigo: "fechas-invalidas" },
+    });
   });
 
   it("rechaza un formato que no es yyyy-mm-dd", () => {
-    expect(parseTripInput({ ...VALIDO, startDate: "01/09/2026" }).ok).toBe(
-      false,
-    );
+    // Escrita al revés, "01/09/2026" se ordena antes que "2026-…": no es un
+    // rango invertido, es una fecha mal escrita.
+    expect(parseTripInput({ ...VALIDO, startDate: "01/09/2026" })).toEqual({
+      ok: false,
+      error: { codigo: "fechas-invalidas" },
+    });
   });
 
   it("rechaza fechas ausentes con un mensaje para el usuario", () => {
@@ -106,7 +121,7 @@ describe("parseTripInput", () => {
 
     expect(result).toMatchObject({ ok: false });
     if (result.ok) return;
-    expect(result.error).toMatch(/fechas/i);
+    expect(result.error).toEqual({ codigo: "faltan-fechas" });
   });
 });
 

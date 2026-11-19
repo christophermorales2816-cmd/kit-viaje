@@ -1,14 +1,16 @@
 import Link from "next/link";
 
+import { Logo } from "@/components/sitio/logo";
 import type { ContinenteDelMenu } from "@/content/guias/continentes";
+import { textos } from "@/i18n/servidor";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 import {
-  COLUMNAS_DEL_PIE,
+  enlacesDelSitio,
   esPronto,
   type ItemDelSitio,
 } from "@/lib/sitio/navegacion";
 import { BUILD_ID, BUILD_URL } from "@/lib/version";
-import { Logo } from "@/components/sitio/logo";
-import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * El pie de todas las páginas (spec, 19.2).
@@ -20,22 +22,31 @@ import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
  *
  * `print:hidden`: el PDF de la lista de equipaje no lleva el pie.
  */
-export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
+export async function Pie({
+  continentes,
+}: {
+  continentes: ContinenteDelMenu[];
+}) {
+  const t = await textos(TEXTOS_DEL_SITIO);
   const total = continentes.reduce((suma, { cantidad }) => suma + cantidad, 0);
 
   const columnas: { titulo: string; items: ItemDelSitio[] }[] = [
     {
-      titulo: "Destinos",
+      titulo: t.pie.destinos,
       items: [
         ...continentes.map((continente) => ({
           id: continente.id,
           nombre: continente.nombre,
           href: `/destinos/${continente.id}`,
         })),
-        { id: "todos", nombre: `Los ${total} destinos`, href: "/destinos" },
+        {
+          id: "todos",
+          nombre: t.pie.todosLosDestinos(total),
+          href: "/destinos",
+        },
       ],
     },
-    ...COLUMNAS_DEL_PIE,
+    ...enlacesDelSitio(t).columnasDelPie,
   ];
 
   return (
@@ -48,10 +59,7 @@ export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
           >
             <Logo className="h-7" />
           </Link>
-          <p className="text-sm text-pretty text-slate-400">
-            Qué llevar, cuánto vas a gastar y qué comer, con el clima de tus
-            fechas y la moneda de cada destino.
-          </p>
+          <p className="text-sm text-pretty text-slate-400">{t.pie.lema}</p>
         </div>
 
         {columnas.map((columna) => (
@@ -70,7 +78,7 @@ export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
                     <span className="inline-flex items-center gap-2 text-slate-500">
                       {item.nombre}
                       <span className="rounded-full border border-slate-700 px-1.5 py-px text-[0.65rem] tracking-wide uppercase">
-                        pronto
+                        {t.pie.pronto}
                       </span>
                     </span>
                   ) : (
@@ -103,10 +111,7 @@ export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
             (src/lib/vuelos/origen.ts): la pone quien elige uno con un botón, y
             /vuelos dice al lado qué guarda y cómo se borra (spec, 17.3).
           */}
-          <p>
-            Usamos analytics sin cookies para saber qué se usa. No vendemos
-            datos ni mostramos anuncios.
-          </p>
+          <p>{t.pie.aviso}</p>
 
           {/*
             El commit que está corriendo. Tres veces un arreglo estuvo en main
@@ -115,7 +120,7 @@ export function Pie({ continentes }: { continentes: ContinenteDelMenu[] }) {
             discutir.
           */}
           <p className="shrink-0">
-            © {new Date().getFullYear()} {NOMBRE_DEL_SITIO} · build{" "}
+            © {new Date().getFullYear()} {NOMBRE_DEL_SITIO} · {t.pie.build}{" "}
             {BUILD_URL ? (
               <a
                 href={BUILD_URL}

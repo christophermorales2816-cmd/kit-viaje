@@ -6,6 +6,8 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import tierraChica from "@/assets/globo/tierra-2048.jpg";
 import tierraGrande from "@/assets/globo/tierra-4096.jpg";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
 import {
   colocarEtiquetas,
   masCercano,
@@ -142,6 +144,7 @@ export function GlobeHero({
   /** El destino que resalta el buscador: el globo vuela hasta él. */
   destacado?: number | null;
 }) {
+  const t = useTextos(TEXTOS_DE_LA_PORTADA).globo;
   const contenedorRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const marcadoresRef = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -638,11 +641,7 @@ export function GlobeHero({
 
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
         window.clearTimeout(avisoDeRueda);
-        setPista(
-          esMac()
-            ? "Para acercar, usá ⌘ + rueda o los botones"
-            : "Para acercar, usá Ctrl + rueda o los botones",
-        );
+        setPista(esMac() ? t.pistaDeRuedaEnMac : t.pistaDeRueda);
         avisoDeRueda = window.setTimeout(() => setPista(null), 1600);
       }
     };
@@ -771,7 +770,7 @@ export function GlobeHero({
       <div
         ref={contenedorRef}
         role="group"
-        aria-label="Globo con los destinos"
+        aria-label={t.nombre}
         className="group/globo relative aspect-square w-full cursor-grab touch-pan-y select-none data-[arrastrando]:cursor-grabbing"
       >
         {/*
@@ -847,21 +846,21 @@ export function GlobeHero({
 
       <div className="absolute top-2 right-0 flex flex-col gap-1.5">
         <BotonDelGlobo
-          etiqueta="Acercar"
+          etiqueta={t.acercar}
           deshabilitado={escala >= ESCALA_MAXIMA - 0.01}
           alClick={() => controlRef.current?.acercar(PASO_DE_ZOOM)}
         >
           <Plus aria-hidden className="size-4" />
         </BotonDelGlobo>
         <BotonDelGlobo
-          etiqueta="Alejar"
+          etiqueta={t.alejar}
           deshabilitado={escala <= ESCALA_MINIMA + 0.01}
           alClick={() => controlRef.current?.acercar(1 / PASO_DE_ZOOM)}
         >
           <Minus aria-hidden className="size-4" />
         </BotonDelGlobo>
         <BotonDelGlobo
-          etiqueta="Ver el globo entero"
+          etiqueta={t.verElGloboEntero}
           deshabilitado={enInicio}
           alClick={() => controlRef.current?.reiniciar()}
         >
@@ -884,7 +883,7 @@ export function GlobeHero({
           >
             <button
               type="button"
-              aria-label="Cerrar"
+              aria-label={t.cerrar}
               onClick={() => controlRef.current?.elegir(null)}
               className="absolute top-2 right-2 inline-flex size-7 items-center justify-center rounded-full text-slate-500 outline-none hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
             >
@@ -901,7 +900,7 @@ export function GlobeHero({
             </p>
             {cercaDeLaElegida.length > 0 ? (
               <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                <span className="text-xs text-slate-500">Muy cerca:</span>
+                <span className="text-xs text-slate-500">{t.muyCerca}</span>
                 {cercaDeLaElegida.map((j) => (
                   <button
                     key={destinations[j].href}
@@ -918,7 +917,7 @@ export function GlobeHero({
               href={elegida.href}
               className="mt-1.5 inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-950 px-4 py-2 text-sm font-medium text-white transition-colors outline-none hover:bg-slate-800 focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
             >
-              Ver la guía
+              {t.verLaGuia}
               <ArrowRight aria-hidden className="size-4" />
             </Link>
           </div>
