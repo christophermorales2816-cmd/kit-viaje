@@ -6,12 +6,13 @@ import { redirect } from "next/navigation";
 
 import { createTrip } from "./create";
 import { consumirCupoDeViaje } from "./cupo";
-import { messageForTripWriteFailure } from "./errors";
+import { problemaDeEscritura } from "./errors";
 import {
   setBudgetItemQty,
   setPackingItem,
   type MutationResult,
 } from "./mutate";
+import type { ProblemaDelViaje } from "./problemas";
 import { parseQty, parseTripInput } from "./validate";
 
 /**
@@ -27,7 +28,7 @@ import { parseQty, parseTripInput } from "./validate";
  * render", que no le dice nada a nadie. El resultado va tipado.
  */
 
-export type CreateTripState = { error: string } | null;
+export type CreateTripState = { error: ProblemaDelViaje } | null;
 
 /**
  * Crea el viaje y redirige a `/viaje/{edit_token}` (spec, 6A paso 2).
@@ -55,10 +56,7 @@ export async function createTripAction(
   // Después de validar y antes de escribir: un formulario mal cargado no gasta
   // cupo, y un loop que crea viajes se frena acá (ver ./cupo.ts).
   if ((await consumirCupoDeViaje(await headers())) === "lleno") {
-    return {
-      error:
-        "Se crearon demasiados viajes desde tu conexión en la última hora. Esperá un rato y probá de nuevo.",
-    };
+    return { error: { codigo: "demasiados-viajes" } };
   }
 
   let editToken: string;
@@ -69,7 +67,7 @@ export async function createTripAction(
   } catch (error) {
     console.error("createTripAction", error);
 
-    return { error: messageForTripWriteFailure(error) };
+    return { error: problemaDeEscritura(error) };
   }
 
   redirect(`/viaje/${editToken}`);
@@ -95,7 +93,7 @@ export async function togglePackingItemAction(
   // El tipo de TypeScript no llega al cable: una Server Action es un endpoint
   // público y puede recibir cualquier cosa.
   if (typeof checked !== "boolean") {
-    return { ok: false, error: "No hay nada que cambiar." };
+    return { ok: false, error: { codigo: "nada-que-cambiar" } };
   }
 
   const result = await setPackingItem(editToken, itemId, { checked });

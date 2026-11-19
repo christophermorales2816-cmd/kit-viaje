@@ -13,6 +13,13 @@ import { TRIP_TYPES, type TripType } from "@/lib/packing";
 import { createTripAction } from "@/lib/trips/actions";
 import { MAX_TRIP_DAYS } from "@/lib/trips/validate";
 import { toIsoDate } from "@/lib/format";
+import { useIdioma, useTextos } from "@/i18n/cliente";
+import type { PorIdioma } from "@/i18n/idiomas";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
+import { describirProblema } from "@/lib/trips/problemas";
+
+/** El idioma del calendario, en cada idioma del sitio. */
+const CALENDARIO: PorIdioma<typeof es> = { es };
 
 /**
  * Los dos únicos datos del MVP (spec, sección 6A paso 1).
@@ -64,6 +71,9 @@ export function NewTripForm({
   /** La que llega elegida desde la página anterior. */
   initialDestinationId?: string;
 }) {
+  const idioma = useIdioma();
+  const textosDelViaje = useTextos(TEXTOS_DEL_VIAJE);
+  const t = textosDelViaje.formulario;
   const [state, formAction, isPending] = useActionState(createTripAction, null);
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [tripType, setTripType] = useState<TripType | null>(null);
@@ -115,10 +125,9 @@ export function NewTripForm({
       */}
       {destinations.length > 1 ? (
         <fieldset className="flex flex-col gap-3">
-          <legend className="text-sm font-medium">¿A qué ciudad vas?</legend>
-
+          <legend className="text-sm font-medium">{t.ciudad}</legend>
           <p className="text-muted-foreground text-sm text-pretty">
-            El clima de la ciudad es lo que define la lista de equipaje.
+            {t.ciudadDetalle}
           </p>
 
           <div className="flex flex-wrap gap-2">
@@ -149,7 +158,7 @@ export function NewTripForm({
       <fieldset className="flex flex-col gap-3">
         <legend className="flex items-center gap-2 text-sm font-medium">
           <CalendarDays className="size-4 text-muted-foreground" />
-          ¿Cuándo viajás?
+          {t.cuando}
         </legend>
 
         <div className="rounded-lg border">
@@ -157,7 +166,7 @@ export function NewTripForm({
             mode="range"
             selected={range}
             onSelect={setRange}
-            locale={es}
+            locale={CALENDARIO[idioma]}
             // El tope lo repiten el constraint trips_max_duration y
             // parseTripInput. Acá es para que el usuario no pueda ni pintar un
             // rango que después le van a rechazar.
@@ -170,13 +179,16 @@ export function NewTripForm({
 
         <p className="min-h-5 text-sm text-muted-foreground" aria-live="polite">
           {range?.from && range.to && dias
-            ? `${formatDateRange(toIsoDate(range.from), toIsoDate(range.to))} — ${formatDuration(dias)}`
-            : `Elegí la ida y la vuelta. Hasta ${MAX_TRIP_DAYS} días.`}
+            ? t.fechasElegidas(
+                formatDateRange(toIsoDate(range.from), toIsoDate(range.to)),
+                formatDuration(dias),
+              )
+            : t.eligeLasFechas(MAX_TRIP_DAYS)}
         </p>
       </fieldset>
 
       <fieldset className="flex flex-col gap-3">
-        <legend className="text-sm font-medium">¿Qué tipo de viaje?</legend>
+        <legend className="text-sm font-medium">{t.tipo}</legend>
 
         {/*
           Chips de un tap y no un select: son cuatro opciones fijas y el spec
@@ -200,7 +212,7 @@ export function NewTripForm({
                     : "border-input bg-background hover:bg-accent",
                 )}
               >
-                {formatTripType(tipo)}
+                {formatTripType(tipo, textosDelViaje.tiposDeViaje)}
               </button>
             );
           })}
@@ -213,7 +225,7 @@ export function NewTripForm({
           className="flex items-start gap-2 rounded-md border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive"
         >
           <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-          {state.error}
+          {describirProblema(textosDelViaje, state.error)}
         </p>
       ) : null}
 
@@ -221,17 +233,14 @@ export function NewTripForm({
         {isPending ? (
           <>
             <Loader2 className="animate-spin" />
-            Armando tu kit…
+            {t.armando}
           </>
         ) : (
-          "Armar mi kit de viaje"
+          t.armar
         )}
       </Button>
 
-      <p className="text-xs text-muted-foreground">
-        Sin cuenta y sin mail. Te vamos a dar un link: ese link es la única
-        forma de volver a tu viaje.
-      </p>
+      <p className="text-xs text-muted-foreground">{t.sinCuenta}</p>
     </form>
   );
 }

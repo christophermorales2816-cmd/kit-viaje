@@ -1,5 +1,12 @@
 import { allGuides } from "@/content/guias";
-import { TRIP_TYPES, durationInDays, type TripType } from "@/lib/packing";
+import {
+  TRIP_TYPES,
+  durationInDays,
+  parseIsoDate,
+  type TripType,
+} from "@/lib/packing";
+
+import type { ProblemaDelViaje } from "./problemas";
 
 /**
  * Validación de lo que llega desde el cliente (spec, sección 6).
@@ -10,7 +17,10 @@ import { TRIP_TYPES, durationInDays, type TripType } from "@/lib/packing";
  *
  * Duplica lo que ya garantizan los constraints de la tabla `trips` a propósito.
  * La base es la última línea de defensa y responde con un error de Postgres
- * imposible de mostrar; esta capa responde en castellano y evita el round-trip.
+ * imposible de mostrar; esta capa dice qué pasó y evita el round-trip.
+ *
+ * Devuelve el problema como datos (`ProblemaDelViaje`) y no como texto: la
+ * pantalla lo cuenta en su idioma (spec, 21.2).
  */
 
 /** El rango que acepta el datepicker de la landing (spec, sección 6A). */
@@ -45,7 +55,17 @@ export interface TripInput {
 
 export type ValidationResult<T> =
   | { ok: true; value: T }
-  | { ok: false; error: string };
+  | { ok: false; error: ProblemaDelViaje };
+
+/** Si `iso` es una fecha yyyy-mm-dd que existe en el calendario. */
+function existe(iso: string): boolean {
+  try {
+    parseIsoDate(iso);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function isTripType(value: unknown): value is TripType {
   return typeof value === "string" && TRIP_TYPES.includes(value as TripType);
@@ -109,23 +129,17 @@ export function parseTripInput(raw: {
   const { startDate, endDate, tripType, corridor, destinationId } = raw;
 
   if (typeof startDate !== "string" || typeof endDate !== "string") {
-    return { ok: false, error: "Elegí las fechas de ida y de vuelta." };
+    return { ok: false, error: { codigo: "faltan-fechas" } };
   }
 
   if (typeof corridor !== "string" || !corredoresValidos().includes(corridor)) {
     // No se cae a un default. Un viaje al país equivocado no falla: sale con
     // el clima y los precios de otro lado, y nadie se entera hasta llegar.
-    return {
-      ok: false,
-      error: "No reconocemos ese destino. Volvé a la guía y probá de nuevo.",
-    };
+    return { ok: false, error: { codigo: "destino-desconocido" } };
   }
 
   if (!isTripType(tripType)) {
-    return {
-      ok: false,
-      error: `Elegí un tipo de viaje: ${TRIP_TYPES.join(", ")}.`,
-    };
+    return { ok: false, error: { codigo: "falta-tipo", tipos: TRIP_TYPES } };
   }
 
   let days: number;
@@ -134,20 +148,29 @@ export function parseTripInput(raw: {
     // durationInDays parsea las dos fechas contra el calendario real y rechaza
     // el orden invertido, así que cubre formato, existencia y orden de una.
     days = durationInDays(startDate, endDate);
-  } catch (error) {
+  } catch {
+    // Si cada fecha por separado existe, lo que falló es el orden: la vuelta
+    // es antes que la ida. Si no, una de las dos está mal escrita o no existe
+    // en el calendario (un 30 de febrero).
     return {
       ok: false,
-      error:
-        error instanceof RangeError
-          ? error.message
-          : "Las fechas del viaje no son válidas.",
+      error: {
+        codigo: [startDate, endDate].every(existe)
+          ? "vuelta-antes-que-ida"
+          : "fechas-invalidas",
+      },
     };
   }
 
   if (days < MIN_TRIP_DAYS || days > MAX_TRIP_DAYS) {
     return {
       ok: false,
-      error: `El viaje tiene que durar entre ${MIN_TRIP_DAYS} y ${MAX_TRIP_DAYS} días, y este dura ${days}.`,
+      error: {
+        codigo: "duracion",
+        minimo: MIN_TRIP_DAYS,
+        maximo: MAX_TRIP_DAYS,
+        dias: days,
+      },
     };
   }
 
@@ -162,10 +185,7 @@ export function parseTripInput(raw: {
       : destinationId;
 
   if (ciudad !== null && !isUuid(ciudad)) {
-    return {
-      ok: false,
-      error: "No reconocemos esa ciudad. Volvé a elegirla y probá de nuevo.",
-    };
+    return { ok: false, error: { codigo: "ciudad-desconocida" } };
   }
 
   return {
@@ -193,13 +213,17 @@ export function parseQty(value: unknown): ValidationResult<number> {
   const parsed = typeof value === "string" ? Number(value) : value;
 
   if (typeof parsed !== "number" || !Number.isInteger(parsed)) {
-    return { ok: false, error: "La cantidad tiene que ser un número entero." };
+    return { ok: false, error: { codigo: "cantidad-no-entera" } };
   }
 
   if (parsed < MIN_ITEM_QTY || parsed > MAX_ITEM_QTY) {
     return {
       ok: false,
-      error: `La cantidad tiene que estar entre ${MIN_ITEM_QTY} y ${MAX_ITEM_QTY}.`,
+      error: {
+        codigo: "cantidad-fuera-de-rango",
+        minimo: MIN_ITEM_QTY,
+        maximo: MAX_ITEM_QTY,
+      },
     };
   }
 
