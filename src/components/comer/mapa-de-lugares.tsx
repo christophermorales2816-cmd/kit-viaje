@@ -10,11 +10,7 @@ import {
   ponerEtiquetasEnCastellano,
 } from "@/components/mapa/maplibre";
 import { Button } from "@/components/ui/button";
-import type {
-  CiudadDelMapa,
-  Mencion,
-  TipoDeLugarOsm,
-} from "@/content/comidas/types";
+import type { CiudadDelMapa, Mencion } from "@/content/comidas/types";
 import {
   ZOOM_MINIMO,
   celdaDeClave,
@@ -23,7 +19,6 @@ import {
   claveDeCelda,
   rutaDeLugares,
 } from "@/lib/comidas/celdas";
-import { NOMBRES_DE_MENCION } from "@/lib/comidas/etiquetas";
 import { horarioEnCastellano } from "@/lib/comidas/horarios";
 import {
   type LugarDeComida,
@@ -38,7 +33,7 @@ import {
 import {
   geojsonDeLugares,
   juntarLugares,
-  mensajeDePausa,
+  minutosDePausa,
   porCercania,
 } from "@/lib/comidas/mapa";
 import {
@@ -50,6 +45,8 @@ import {
 import { ESTILO_DEL_MAPA, textosDelMapa } from "@/lib/mapa/estilo";
 import { useTextos } from "@/i18n/cliente";
 import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+import { enriquecer } from "@/i18n/enriquecer";
 
 /**
  * Dónde sirven un plato, en un mapa (spec, 18.4).
@@ -80,18 +77,6 @@ const COLOR = "#f97316";
 const COLOR_DUDOSO = "#94a3b8";
 const COLOR_MENCION = "#eab308";
 const COLOR_TEXTO = "#0f172a";
-
-const NOMBRES_DE_TIPO: Record<TipoDeLugarOsm, string> = {
-  comida: "Restaurante o comida al paso",
-  cafe: "Café",
-  bar: "Bar",
-  heladeria: "Heladería",
-  panaderia: "Panadería",
-  dulceria: "Pastelería",
-  mercado: "Mercado",
-  almacen: "Almacén",
-  bebidas: "Tienda de bebidas",
-};
 
 type Celdas = Record<
   string,
@@ -143,6 +128,7 @@ export function MapaDeLugares({
   menciones,
 }: Props) {
   const textosDelMapaDeLaPagina = useTextos(TEXTOS_DEL_MAPA);
+  const t = useTextos(TEXTOS_DE_COMIDAS).mapa;
   const contenedor = useRef<HTMLDivElement>(null);
   const mapa = useRef<MapaDeMapLibre | null>(null);
   // Lo pedido y lo vuelto a pedir, fuera del estado: dos movimientos seguidos
@@ -202,7 +188,7 @@ export function MapaDeLugares({
           cooperativeGestures: true,
           attributionControl: { compact: true },
           locale: textosDelMapa(
-            `Mapa de los lugares que sirven ${plato.nombre}. La lista de abajo tiene los mismos datos.`,
+            t.titulo(plato.nombre),
             textosDelMapaDeLaPagina,
           ),
         });
@@ -558,25 +544,23 @@ export function MapaDeLugares({
   let mensaje: string;
 
   if (mapaRoto) {
-    mensaje =
-      "No se pudo dibujar el mapa en este navegador. La lista de abajo tiene los mismos lugares.";
+    mensaje = t.mapaRoto;
   } else if (vista.tipo === "iniciando") {
-    mensaje = "Cargando el mapa…";
+    mensaje = t.cargando;
   } else if (vista.tipo === "lejos") {
-    mensaje = "Acercá el mapa para ver los lugares.";
+    mensaje = t.acercalo;
   } else if (vista.tipo === "fuera") {
-    mensaje = `Esta parte del mapa queda fuera de ${nombreDelPais}.`;
+    mensaje = t.fueraDe(nombreDelPais);
   } else if (estados.some((celda) => !celda || celda.estado === "cargando")) {
-    mensaje = "Buscando lugares en OpenStreetMap…";
+    mensaje = t.buscando;
   } else if (pausas.length > 0) {
-    mensaje = mensajeDePausa(Math.max(...pausas));
+    mensaje = t.pausa(minutosDePausa(Math.max(...pausas)));
   } else if (estados.some((celda) => celda?.estado === "fallo")) {
-    mensaje = "No pudimos traer los lugares de una parte del mapa.";
+    mensaje = t.fallo;
   } else if (enLaZona === 0) {
-    mensaje =
-      "Todavía no hay lugares con este plato cargados en OpenStreetMap en esta zona.";
+    mensaje = t.sinLugares;
   } else {
-    mensaje = `${formatCount(enLaZona)} ${enLaZona === 1 ? "lugar" : "lugares"} en esta zona.`;
+    mensaje = t.enLaZona(enLaZona, formatCount(enLaZona));
   }
 
   // La hora puede terminar en "a. m.": la frase termina con ella, y el
@@ -586,8 +570,8 @@ export function MapaDeLugares({
   const fecha =
     masVieja && vista.tipo === "celdas"
       ? renovando
-        ? `Estamos actualizando los datos de OpenStreetMap, que son del ${cuando}`
-        : `Datos de OpenStreetMap del ${cuando}`
+        ? t.actualizando(cuando)
+        : t.datosDel(cuando)
       : null;
 
   const lugarElegido = lugares.find((lugar) => lugar.id === elegido) ?? null;
@@ -597,15 +581,15 @@ export function MapaDeLugares({
 
   return (
     <section
-      aria-label={`Dónde comer ${plato.nombre}`}
+      aria-label={t.dondeComer(plato.nombre)}
       className="flex flex-col gap-3"
     >
       <div className="flex flex-col gap-2">
-        <h3 className="font-semibold">Dónde comer {plato.nombre}</h3>
+        <h3 className="font-semibold">{t.dondeComer(plato.nombre)}</h3>
         <div
           className="flex gap-2 overflow-x-auto pb-1"
           role="group"
-          aria-label="Ciudades"
+          aria-label={t.ciudades}
         >
           {ciudades.map((otra) => (
             <Button
@@ -636,7 +620,7 @@ export function MapaDeLugares({
         {fecha && <span className="text-muted-foreground">{fecha}</span>}{" "}
         {estados.some((celda) => celda?.estado === "fallo") && (
           <Button variant="link" className="h-auto p-0" onClick={reintentar}>
-            Reintentar
+            {t.reintentar}
           </Button>
         )}
       </p>
@@ -653,7 +637,7 @@ export function MapaDeLugares({
         />
         {!mapaListo && (
           <div className="bg-muted text-muted-foreground absolute inset-0 flex items-center justify-center rounded-xl p-6 text-center text-sm">
-            {mapaRoto ? "El mapa no se pudo cargar." : "Cargando el mapa…"}
+            {mapaRoto ? t.noSePudoCargar : t.cargando}
           </div>
         )}
       </div>
@@ -664,14 +648,14 @@ export function MapaDeLugares({
             className="size-2.5 rounded-full"
             style={{ background: COLOR }}
           />
-          Confirmado o con cambios en los últimos años
+          {t.confirmado}
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span
             className="size-2.5 rounded-full"
             style={{ background: COLOR_DUDOSO }}
           />
-          Sin confirmar hace años: puede haber cerrado
+          {t.sinConfirmar}
         </span>
         {menciones.length > 0 && (
           <span className="inline-flex items-center gap-1.5">
@@ -679,16 +663,13 @@ export function MapaDeLugares({
               className="size-2.5 rounded-full border border-slate-900"
               style={{ background: COLOR_MENCION }}
             />
-            Mención de honor
+            {t.mencion}
           </span>
         )}
       </p>
 
       {recortado && (
-        <p className="text-muted-foreground text-xs">
-          En esta zona hay más lugares de los que mostramos: son tantos que
-          traemos los primeros mil de cada parte del mapa.
-        </p>
+        <p className="text-muted-foreground text-xs">{t.recortado}</p>
       )}
 
       {(lugarElegido || mencionElegida) && (
@@ -703,7 +684,7 @@ export function MapaDeLugares({
       {cercanos.length > 0 && (
         <details className="rounded-xl border">
           <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
-            Ver los lugares en una lista ({formatCount(cercanos.length)})
+            {t.verLaLista(formatCount(cercanos.length))}
           </summary>
           <ol className="divide-y border-t text-sm">
             {cercanos.slice(0, FILAS).map(({ lugar, distanciaKm }) => (
@@ -713,11 +694,11 @@ export function MapaDeLugares({
               >
                 <span className="min-w-0">
                   <span className="block truncate font-medium">
-                    {lugar.nombre ?? "Sin nombre cargado"}
+                    {lugar.nombre ?? t.sinNombre}
                   </span>
                   <span className="text-muted-foreground block text-xs">
-                    {formatDistance(distanciaKm)} del centro del mapa
-                    {sinNovedades(lugar, hoy) ? " · puede haber cerrado" : ""}
+                    {t.delCentro(formatDistance(distanciaKm))}
+                    {sinNovedades(lugar, hoy) ? t.puedeHaberCerrado : ""}
                   </span>
                 </span>
                 <Button
@@ -728,7 +709,7 @@ export function MapaDeLugares({
                     irA(lugar.lat, lugar.lon, 16);
                   }}
                 >
-                  Ver
+                  {t.ver}
                 </Button>
               </li>
             ))}
@@ -737,25 +718,28 @@ export function MapaDeLugares({
       )}
 
       <p className="text-muted-foreground text-xs text-pretty">
-        Lugares: © colaboradores de{" "}
-        <a
-          href="https://www.openstreetmap.org/copyright"
-          target="_blank"
-          rel="noreferrer"
-          className="underline underline-offset-2"
-        >
-          OpenStreetMap
-        </a>
-        , con licencia ODbL. ¿Falta uno, o cerró?{" "}
-        <a
-          href={urlParaAvisar(centro[0], centro[1])}
-          target="_blank"
-          rel="noreferrer"
-          className="underline underline-offset-2"
-        >
-          Avisalo en OpenStreetMap
-        </a>
-        : cuando alguien lo corrige, acá se ve en un día.
+        {enriquecer(t.fuentes, {
+          osm: (texto) => (
+            <a
+              href="https://www.openstreetmap.org/copyright"
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2"
+            >
+              {texto}
+            </a>
+          ),
+          avisar: (texto) => (
+            <a
+              href={urlParaAvisar(centro[0], centro[1])}
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2"
+            >
+              {texto}
+            </a>
+          ),
+        })}
       </p>
     </section>
   );
@@ -772,7 +756,8 @@ function FichaDeLugar({
   hoy: Date;
   onCerrar: () => void;
 }) {
-  const nombre = lugar?.nombre ?? mencion?.nombre ?? "Sin nombre cargado";
+  const { etiquetas, mapa: t } = useTextos(TEXTOS_DE_COMIDAS);
+  const nombre = lugar?.nombre ?? mencion?.nombre ?? t.sinNombre;
   const lat = lugar?.lat ?? mencion!.coords[0];
   const lon = lugar?.lon ?? mencion!.coords[1];
   const horario = horarioEnCastellano(lugar?.horario ?? null);
@@ -780,14 +765,12 @@ function FichaDeLugar({
   let novedad: string | null = null;
 
   if (lugar?.verificado) {
-    novedad = `Alguien confirmó que sigue abierto en ${formatMonthYear(lugar.verificado)}.`;
+    novedad = t.confirmoQueSigue(formatMonthYear(lugar.verificado));
   } else if (lugar && sinNovedades(lugar, hoy)) {
     const ano = anoDeLaUltimaNovedad(lugar);
-    novedad = ano
-      ? `Nadie lo confirma en OpenStreetMap desde ${ano}: puede haber cerrado.`
-      : "Nadie lo confirmó en OpenStreetMap: puede haber cerrado.";
+    novedad = ano ? t.nadieConfirmaDesde(String(ano)) : t.nadieConfirmo;
   } else if (lugar) {
-    novedad = `Última novedad en OpenStreetMap: ${anoDeLaUltimaNovedad(lugar)}.`;
+    novedad = t.ultimaNovedad(String(anoDeLaUltimaNovedad(lugar)));
   }
 
   return (
@@ -800,14 +783,14 @@ function FichaDeLugar({
           )}
           <p className="text-muted-foreground text-xs">
             {mencion
-              ? `Mención de honor · ${NOMBRES_DE_MENCION[mencion.tipo]}`
+              ? t.mencionDeHonor(etiquetas.menciones[mencion.tipo])
               : lugar
-                ? NOMBRES_DE_TIPO[lugar.tipo]
+                ? etiquetas.tiposDeLugar[lugar.tipo]
                 : null}
           </p>
         </div>
         <Button variant="ghost" size="sm" onClick={onCerrar}>
-          Cerrar
+          {t.cerrar}
         </Button>
       </div>
 
@@ -816,19 +799,19 @@ function FichaDeLugar({
       <dl className="grid gap-1">
         {lugar?.direccion && (
           <div className="flex gap-2">
-            <dt className="text-muted-foreground">Dirección</dt>
+            <dt className="text-muted-foreground">{t.direccion}</dt>
             <dd>{lugar.direccion}</dd>
           </div>
         )}
         {horario && (
           <div className="flex gap-2">
-            <dt className="text-muted-foreground">Horario</dt>
+            <dt className="text-muted-foreground">{t.horario}</dt>
             <dd>{horario}</dd>
           </div>
         )}
         {lugar?.telefono && (
           <div className="flex gap-2">
-            <dt className="text-muted-foreground">Teléfono</dt>
+            <dt className="text-muted-foreground">{t.telefono}</dt>
             <dd>
               <a
                 href={`tel:${lugar.telefono.replace(/[^\d+]/g, "")}`}
@@ -841,7 +824,7 @@ function FichaDeLugar({
         )}
         {lugar?.web && (
           <div className="flex gap-2">
-            <dt className="text-muted-foreground">Web</dt>
+            <dt className="text-muted-foreground">{t.web}</dt>
             <dd className="min-w-0 truncate">
               <a
                 href={lugar.web}
@@ -865,7 +848,7 @@ function FichaDeLugar({
           rel="noreferrer"
           className="font-medium underline underline-offset-2"
         >
-          Cómo llegar
+          {t.comoLlegar}
         </a>
         <a
           href={urlEnOpenStreetMap(lugar ?? { id: mencion!.osm })}
@@ -873,7 +856,7 @@ function FichaDeLugar({
           rel="noreferrer"
           className="underline underline-offset-2"
         >
-          Ver en OpenStreetMap
+          {t.verEnOpenStreetMap}
         </a>
         <a
           href={urlParaAvisar(lat, lon)}
@@ -881,7 +864,7 @@ function FichaDeLugar({
           rel="noreferrer"
           className="underline underline-offset-2"
         >
-          ¿Cerró o está mal? Avisá
+          {t.avisar}
         </a>
       </p>
     </div>

@@ -9,6 +9,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { estadisticasDelSitio } from "@/lib/sitio/estadisticas";
+import { enriquecer } from "@/i18n/enriquecer";
+import { TEXTOS_DE_NOSOTROS } from "@/i18n/nosotros";
+import { textos } from "@/i18n/servidor";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * Nosotros (spec, 19.4): qué es el sitio, cómo se hace y de dónde salen los
@@ -19,94 +23,59 @@ import { estadisticasDelSitio } from "@/lib/sitio/estadisticas";
  * nuevas. Los números de la portada se mudaron acá.
  */
 
-export const metadata: Metadata = {
-  title: "Nosotros",
-  description:
-    "Qué es GlobalSunstone, cómo se hace y de dónde salen sus datos: sin registro, sin anuncios y con fuentes abiertas.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await textos(TEXTOS_DE_NOSOTROS);
 
-const PRINCIPIOS: { icono: LucideIcon; titulo: string; texto: string }[] = [
-  {
-    icono: KeyRound,
-    titulo: "Sin registro",
-    texto:
-      "Armás tu viaje sin cuenta y sin mail. Se guarda con un enlace privado, que es tuyo y de nadie más.",
-  },
-  {
-    icono: EyeOff,
-    titulo: "Sin anuncios ni venta de datos",
-    texto:
-      "El sitio es gratis. Para saber qué páginas se usan medimos visitas con analytics sin cookies.",
-  },
-  {
-    icono: CalendarClock,
-    titulo: "Cada dato, con su fecha",
-    texto:
-      "El clima es el promedio histórico de cada ciudad, los precios dicen cuándo se revisaron y las cotizaciones en vivo se actualizan cada pocos minutos. Lo que no es en vivo no se presenta como si lo fuera.",
-  },
-  {
-    icono: Database,
-    titulo: "Fuentes abiertas",
-    texto:
-      "Los mapas y los lugares salen de OpenStreetMap, y las fotos de los platos, de Wikimedia Commons, con su licencia.",
-  },
-];
+  return { title: t.titulo, description: t.descripcion };
+}
 
-const FUENTES: { nombre: string; href: string; para: string }[] = [
+/** El ícono de cada principio. Su título y su texto, en el diccionario. */
+const PRINCIPIOS = [
+  { id: "registro", icono: KeyRound },
+  { id: "anuncios", icono: EyeOff },
+  { id: "fechas", icono: CalendarClock },
+  { id: "fuentes", icono: Database },
+] as const satisfies readonly { id: string; icono: LucideIcon }[];
+
+/** Las fuentes. Para qué sirve cada una, en el diccionario. */
+const FUENTES = [
   {
+    id: "openstreetmap",
     nombre: "OpenStreetMap",
     href: "https://www.openstreetmap.org/copyright",
-    para: "Los lugares de comida y los mapas",
   },
   {
+    id: "wikimedia",
     nombre: "Wikimedia Commons",
     href: "https://commons.wikimedia.org",
-    para: "Las fotos de los platos",
   },
+  { id: "dolarapi", nombre: "dolarapi.com", href: "https://dolarapi.com" },
+  { id: "adsb", nombre: "adsb.lol", href: "https://adsb.lol" },
+  { id: "ourairports", nombre: "OurAirports", href: "https://ourairports.com" },
+  { id: "mosaicos", nombre: null, href: "https://openfreemap.org" },
   {
-    nombre: "dolarapi.com",
-    href: "https://dolarapi.com",
-    para: "Las cotizaciones de Argentina y Brasil",
-  },
-  {
-    nombre: "adsb.lol",
-    href: "https://adsb.lol",
-    para: "Los aviones del radar",
-  },
-  {
-    nombre: "OurAirports",
-    href: "https://ourairports.com",
-    para: "Los aeropuertos",
-  },
-  {
-    nombre: "OpenFreeMap y CARTO",
-    href: "https://openfreemap.org",
-    para: "Los mosaicos de los mapas",
-  },
-  {
+    id: "nasa",
     nombre: "NASA Visible Earth",
     href: "https://visibleearth.nasa.gov/collection/1484/blue-marble",
-    para: "La foto de la Tierra del globo (Blue Marble)",
   },
-];
+] as const;
 
-export default function Nosotros() {
-  const estadisticas = estadisticasDelSitio();
+export default async function Nosotros() {
+  const t = await textos(TEXTOS_DE_NOSOTROS);
+  const estadisticas = estadisticasDelSitio(t.estadisticas);
 
   return (
     <main className="flex flex-1 flex-col">
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-            GlobalSunstone
+            {NOMBRE_DEL_SITIO}
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
-            Nosotros
+            {t.titulo}
           </h1>
           <p className="max-w-2xl text-lg text-pretty text-slate-300">
-            GlobalSunstone es una guía para preparar el viaje: elegís un destino
-            y te decimos qué llevar según el clima de tus fechas, cuánto vas a
-            gastar en la moneda de allá y qué comer cuando llegues.
+            {t.bajada}
           </p>
         </div>
       </header>
@@ -116,18 +85,18 @@ export default function Nosotros() {
         className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-14"
       >
         <h2 id="como" className="text-3xl font-semibold tracking-tight">
-          Cómo lo hacemos
+          {t.comoLoHacemos}
         </h2>
         <ul className="grid gap-4 sm:grid-cols-2">
-          {PRINCIPIOS.map(({ icono: Icono, titulo, texto }) => (
-            <li key={titulo} className="flex gap-4 rounded-xl border p-5">
+          {PRINCIPIOS.map(({ id, icono: Icono }) => (
+            <li key={id} className="flex gap-4 rounded-xl border p-5">
               <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
                 <Icono aria-hidden className="size-5" />
               </span>
               <div className="flex flex-col gap-1">
-                <h3 className="font-medium">{titulo}</h3>
+                <h3 className="font-medium">{t.principios[id].titulo}</h3>
                 <p className="text-muted-foreground text-sm text-pretty">
-                  {texto}
+                  {t.principios[id].texto}
                 </p>
               </div>
             </li>
@@ -141,7 +110,7 @@ export default function Nosotros() {
       >
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
           <h2 id="numeros" className="text-3xl font-semibold tracking-tight">
-            En números
+            {t.enNumeros}
           </h2>
           <dl className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {estadisticas.map((stat) => (
@@ -167,41 +136,41 @@ export default function Nosotros() {
       >
         <div className="flex flex-col gap-2">
           <h2 id="fuentes" className="text-3xl font-semibold tracking-tight">
-            De dónde salen los datos
+            {t.deDondeSalen}
           </h2>
           <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-            Servicios abiertos o gratuitos, cada uno con su licencia. Las guías
-            y los catálogos de comida los escribimos nosotros, con la fecha de
-            su última revisión.
+            {t.deDondeSalenBajada}
           </p>
         </div>
         <ul className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
           {FUENTES.map((fuente) => (
-            <li key={fuente.nombre} className="flex flex-col gap-0.5">
+            <li key={fuente.id} className="flex flex-col gap-0.5">
               <a
                 href={fuente.href}
                 target="_blank"
                 rel="noreferrer"
                 className="self-start rounded-sm font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-orange-400/60"
               >
-                {fuente.nombre}
+                {fuente.nombre ?? t.nombreDeLosMosaicos}
               </a>
               <span className="text-muted-foreground text-sm">
-                {fuente.para}
+                {t.fuentes[fuente.id]}
               </span>
             </li>
           ))}
         </ul>
 
         <p className="text-muted-foreground border-t pt-8 text-sm">
-          ¿Querés empezar?{" "}
-          <Link
-            href="/destinos"
-            className="text-foreground font-medium underline underline-offset-4"
-          >
-            Elegí un destino
-          </Link>
-          .
+          {enriquecer(t.empezar, {
+            enlace: (texto) => (
+              <Link
+                href="/destinos"
+                className="text-foreground font-medium underline underline-offset-4"
+              >
+                {texto}
+              </Link>
+            ),
+          })}
         </p>
       </section>
     </main>

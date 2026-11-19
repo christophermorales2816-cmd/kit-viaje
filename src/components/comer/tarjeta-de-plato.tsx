@@ -1,36 +1,25 @@
 import Link from "next/link";
-import { Flame, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 import { fotoDe } from "@/content/comidas/fotos";
-import type { Picante, Plato } from "@/content/comidas/types";
-import { NOMBRES_DE_PICANTE, PRECIOS } from "@/lib/comidas/etiquetas";
+import type { Plato } from "@/content/comidas/types";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_COMIDAS, type TextosDeComidas } from "@/i18n/comidas";
+import { SIMBOLOS_DE_PRECIO } from "@/lib/comidas/etiquetas";
 import { esVegano, esVegetariano } from "@/lib/comidas/filtros";
 
 import { FotoDeComidaImagen } from "./foto-de-comida";
+import { NivelDePicante } from "./nivel-de-picante";
 
-/** Las llamitas del picante: ninguna, una, dos o tres. */
-export function NivelDePicante({ nivel }: { nivel: Picante }) {
-  if (nivel === 0) return null;
-
-  return (
-    <span
-      className="inline-flex items-center text-orange-600"
-      title={`Picante: ${NOMBRES_DE_PICANTE[nivel].toLowerCase()}`}
-    >
-      {Array.from({ length: nivel }, (_, i) => (
-        <Flame key={i} className="size-3.5" aria-hidden="true" />
-      ))}
-      <span className="sr-only">
-        Picante: {NOMBRES_DE_PICANTE[nivel].toLowerCase()}
-      </span>
-    </span>
-  );
-}
+export { NivelDePicante };
 
 /** "Vegano", "Vegetariano" o nada: lo que más busca quien filtra por dieta. */
-export function etiquetaDeDieta(plato: Plato): string | null {
-  if (esVegano(plato.contiene)) return "Vegano";
-  if (esVegetariano(plato.contiene)) return "Vegetariano";
+export function etiquetaDeDieta(
+  plato: Plato,
+  t: TextosDeComidas["tarjeta"],
+): string | null {
+  if (esVegano(plato.contiene)) return t.vegano;
+  if (esVegetariano(plato.contiene)) return t.vegetariano;
 
   return null;
 }
@@ -51,9 +40,10 @@ export function TarjetaDePlato({
   plato: Plato;
   href: string;
 }) {
+  const { etiquetas, tarjeta: t } = useTextos(TEXTOS_DE_COMIDAS);
   const foto = fotoDe(plato.foto);
-  const dieta = etiquetaDeDieta(plato);
-  const precio = PRECIOS[plato.precio];
+  const dieta = etiquetaDeDieta(plato, t);
+  const simbolo = SIMBOLOS_DE_PRECIO[plato.precio];
   const id = `plato-${plato.id}`;
 
   return (
@@ -85,17 +75,17 @@ export function TarjetaDePlato({
         )}
 
         <span className="absolute right-2 bottom-2 rounded-full bg-white/95 px-2 py-0.5 text-xs font-semibold text-slate-900 shadow-sm">
-          <span aria-hidden="true">{precio.simbolo}</span>
+          <span aria-hidden="true">{simbolo}</span>
           <span id={`${id}-precio`} className="sr-only">
-            {plato.imperdible ? "Imperdible. " : ""}
-            {precio.simbolo}, {precio.rango}.
+            {plato.imperdible ? t.imperdibleParaElLector : ""}
+            {t.precioParaElLector(simbolo, etiquetas.precios[plato.precio])}
           </span>
         </span>
 
         {plato.imperdible && (
           <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-slate-950/85 px-2 py-0.5 text-xs font-medium text-white">
             <Star className="size-3 fill-current" aria-hidden="true" />
-            Imperdible
+            {t.imperdible}
           </span>
         )}
       </div>

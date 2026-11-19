@@ -6,6 +6,9 @@ import type { CatalogoDeComida } from "@/content/comidas/types";
 import { allGuides, type GuideSubregion } from "@/content/guias";
 import { enumerar } from "@/lib/comidas/etiquetas";
 import { formatCount } from "@/lib/format";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+import { textos } from "@/i18n/servidor";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * Qué comer y beber: los países con catálogo (spec, 18.2).
@@ -15,22 +18,25 @@ import { formatCount } from "@/lib/format";
  * que el resto se suma de a tandas.
  */
 
-export const metadata: Metadata = {
-  title: "Qué comer y beber en cada país",
-  description:
-    "Los platos y las bebidas de cada país: qué llevan, a qué saben, cuánto salen y dónde los sirven hoy, con filtros para tu dieta.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { metadatos } = (await textos(TEXTOS_DE_COMIDAS)).indice;
+
+  return { title: metadatos.titulo, description: metadatos.descripcion };
+}
 
 const CATALOGOS = allCatalogos();
 
 /** Tres imperdibles y el resto, para la tarjeta: "Sushi, ramen, okonomiyaki y 36 más". */
-function resumen(catalogo: CatalogoDeComida): string {
+function resumen(
+  catalogo: CatalogoDeComida,
+  yMas: (cantidad: number) => string,
+): string {
   const nombres = catalogo.platos
     .filter((plato) => plato.imperdible)
     .slice(0, 3)
     .map((plato) => plato.nombre.toLowerCase());
   const resto = catalogo.platos.length - nombres.length;
-  const texto = enumerar(resto > 0 ? [...nombres, `${resto} más`] : nombres);
+  const texto = enumerar(resto > 0 ? [...nombres, yMas(resto)] : nombres);
 
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 }
@@ -48,7 +54,8 @@ function porZona() {
   return [...zonas];
 }
 
-export default function QueComer() {
+export default async function QueComer() {
+  const t = (await textos(TEXTOS_DE_COMIDAS)).indice;
   const platos = CATALOGOS.reduce(
     (total, catalogo) => total + catalogo.platos.length,
     0,
@@ -59,26 +66,26 @@ export default function QueComer() {
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-            GlobalSunstone
+            {NOMBRE_DEL_SITIO}
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
-            Qué comer y beber
+            {t.titulo}
           </h1>
           <p className="max-w-2xl text-lg text-pretty text-slate-300">
-            En cada país, lo que no te podés ir sin probar: qué lleva, a qué
-            sabe, cuánto sale y dónde lo sirven hoy. Con filtros para tu dieta y
-            un mapa de los lugares que se renueva todos los días.
+            {t.bajada}
           </p>
           <dl className="flex flex-wrap gap-x-10 gap-y-4 pt-4">
             <div className="flex flex-col">
-              <dt className="order-2 text-sm text-slate-400">países</dt>
+              <dt className="order-2 text-sm text-slate-400">
+                {t.paises(CATALOGOS.length)}
+              </dt>
               <dd className="order-1 text-3xl font-semibold tabular-nums">
                 {CATALOGOS.length}
               </dd>
             </div>
             <div className="flex flex-col">
               <dt className="order-2 text-sm text-slate-400">
-                platos y bebidas
+                {t.platosYBebidas}
               </dt>
               <dd className="order-1 text-3xl font-semibold tabular-nums">
                 {formatCount(platos)}
@@ -94,11 +101,10 @@ export default function QueComer() {
       >
         <div className="flex flex-col gap-2">
           <h2 id="paises" className="text-3xl font-semibold tracking-tight">
-            Elegí el país
+            {t.eligeElPais}
           </h2>
           <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-            Por ahora, {CATALOGOS.length} de los {allGuides().length} destinos
-            del sitio. Los demás se suman de a tandas.
+            {t.porAhora(CATALOGOS.length, allGuides().length)}
           </p>
         </div>
 
@@ -118,7 +124,7 @@ export default function QueComer() {
                       {guiaDelCatalogo(catalogo).country}
                     </span>
                     <span className="text-muted-foreground text-sm text-pretty">
-                      {resumen(catalogo)}
+                      {resumen(catalogo, t.yMas)}
                     </span>
                   </Link>
                 </li>

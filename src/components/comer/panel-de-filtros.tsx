@@ -4,29 +4,17 @@ import { useId } from "react";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Lugar, Plato, Region } from "@/content/comidas/types";
-import {
-  NOMBRES_DE_AVENTURA,
-  NOMBRES_DE_MOMENTO,
-  NOMBRES_DE_PICANTE,
-  PRECIOS,
-  nombreDeLugar,
-} from "@/lib/comidas/etiquetas";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+import { SIMBOLOS_DE_PRECIO, nombreDeLugar } from "@/lib/comidas/etiquetas";
 import {
   DIETAS,
-  type Dieta,
   type Filtros,
   type GrupoDeFiltro,
   type OpcionesDelCatalogo,
   TODO_EL_PAIS,
   contarOpcion,
 } from "@/lib/comidas/filtros";
-
-const NOMBRES_DE_DIETA: Record<Dieta, string> = {
-  vegetariano: "Vegetariano",
-  vegano: "Vegano",
-  "con-carne": "Con carne",
-  "con-pescado": "Con pescado o mariscos",
-};
 
 type GrupoDeLista = Exclude<
   GrupoDeFiltro,
@@ -65,6 +53,7 @@ export function PanelDeFiltros({
   nombresDeLugares,
   onCambio,
 }: Props) {
+  const { etiquetas, filtros: t } = useTextos(TEXTOS_DE_COMIDAS);
   const panel = useId();
 
   // Funciones que devuelven filas, no componentes: un componente definido acá
@@ -112,70 +101,76 @@ export function PanelDeFiltros({
 
   const nombreDeRegion = (id: string) =>
     id === TODO_EL_PAIS
-      ? "En todo el país"
+      ? t.enTodoElPais
       : (regiones.find((region) => region.id === id)?.nombre ?? id);
 
   return (
     <div className="flex flex-col gap-6">
       {(opciones.interruptores.includes("imperdibles") ||
         opciones.interruptores.includes("paraComerSolo")) && (
-        <Grupo leyenda="Para destacar">
+        <Grupo leyenda={t.paraDestacar}>
           {opciones.interruptores.includes("imperdibles") &&
-            interruptor("imperdibles", "Solo los imperdibles")}
+            interruptor("imperdibles", t.soloImperdibles)}
           {opciones.interruptores.includes("paraComerSolo") &&
-            interruptor("paraComerSolo", "Para comer solo")}
+            interruptor("paraComerSolo", t.paraComerSolo)}
         </Grupo>
       )}
 
-      <Grupo leyenda="Dieta">
-        {DIETAS.map((dieta) => opcion("dieta", dieta, NOMBRES_DE_DIETA[dieta]))}
+      <Grupo leyenda={t.dieta}>
+        {DIETAS.map((dieta) => opcion("dieta", dieta, etiquetas.dietas[dieta]))}
         {opciones.interruptores.includes("sinCerdoNiAlcohol") && (
           <>
-            {interruptor("sinCerdoNiAlcohol", "Sin cerdo ni alcohol")}
+            {interruptor("sinCerdoNiAlcohol", t.sinCerdoNiAlcohol)}
             <p className="text-muted-foreground text-xs text-pretty">
-              No es lo mismo que halal: eso depende también de la carne. Y las
-              recetas cambian: confirmalo en el lugar.
+              {t.noEsHalal}
             </p>
           </>
         )}
       </Grupo>
 
-      <Grupo leyenda="Picante">
+      <Grupo leyenda={t.picante}>
         {opciones.picante.map((nivel) =>
-          opcion("picante", nivel, NOMBRES_DE_PICANTE[nivel]),
+          opcion("picante", nivel, etiquetas.picante[nivel]),
         )}
       </Grupo>
 
-      <Grupo leyenda="Dónde se consigue">
+      <Grupo leyenda={t.dondeSeConsigue}>
         {opciones.lugares.map((lugar) =>
-          opcion("lugares", lugar, nombreDeLugar(lugar, nombresDeLugares)),
+          opcion(
+            "lugares",
+            lugar,
+            nombreDeLugar(lugar, nombresDeLugares, etiquetas.lugares),
+          ),
         )}
       </Grupo>
 
-      <Grupo leyenda="Momento del día">
+      <Grupo leyenda={t.momento}>
         {opciones.momentos.map((momento) =>
-          opcion("momentos", momento, NOMBRES_DE_MOMENTO[momento]),
+          opcion("momentos", momento, etiquetas.momentos[momento]),
         )}
       </Grupo>
 
-      <Grupo leyenda="Qué tan aventurero">
+      <Grupo leyenda={t.aventura}>
         {opciones.aventura.map((nivel) =>
-          opcion("aventura", nivel, NOMBRES_DE_AVENTURA[nivel]),
+          opcion("aventura", nivel, etiquetas.aventura[nivel]),
         )}
       </Grupo>
 
-      <Grupo leyenda="Precio por porción">
+      <Grupo leyenda={t.precio}>
         {opciones.precio.map((precio) =>
           opcion(
             "precio",
             precio,
-            `${PRECIOS[precio].simbolo} · ${PRECIOS[precio].rango}`,
+            t.precioConRango(
+              SIMBOLOS_DE_PRECIO[precio],
+              etiquetas.precios[precio],
+            ),
           ),
         )}
       </Grupo>
 
       {opciones.regiones.length > 1 && (
-        <Grupo leyenda="De dónde es típico">
+        <Grupo leyenda={t.region}>
           {opciones.regiones.map((region) =>
             opcion("regiones", region, nombreDeRegion(region)),
           )}
@@ -215,6 +210,7 @@ function FilaDeOpcion({
   elegida: boolean;
   onCambio: () => void;
 }) {
+  const t = useTextos(TEXTOS_DE_COMIDAS).filtros;
   const inutil = cuenta === 0 && !elegida;
   const idDelControl = `filtro-${id}`;
 
@@ -238,7 +234,7 @@ function FilaDeOpcion({
         className="text-muted-foreground ml-auto text-xs tabular-nums"
       >
         {cuenta}
-        <span className="sr-only">{cuenta === 1 ? " plato" : " platos"}</span>
+        <span className="sr-only">{t.platos(cuenta)}</span>
       </span>
     </div>
   );
