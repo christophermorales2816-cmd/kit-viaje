@@ -29,6 +29,9 @@ import type {
   ZonaEnVivo,
 } from "@/lib/vuelos/tipos";
 import { RADIO_DE_ZONA_KM, centroDeZona, rutaDeZona } from "@/lib/vuelos/zona";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
+import { TEXTOS_DE_VUELOS, type TextosDeVuelos } from "@/i18n/vuelos";
 
 /**
  * El radar: lo que vuela ahora alrededor de un punto (spec, 17.5).
@@ -62,11 +65,6 @@ const COLOR_ELEGIDO = "#f97316";
 const SILUETA =
   "M12 2c.8 0 1.3.7 1.3 1.6v5.6l7.7 4.4v2l-7.7-2.4v5.2l2.3 1.8v1.6L12 20.8l-3.6 1v-1.6l2.3-1.8v-5.2L3 15.6v-2l7.7-4.4V3.6C10.7 2.7 11.2 2 12 2z";
 
-/** MapLibre se lo pone al canvas del mapa, para los lectores de pantalla. */
-const TEXTOS = textosDelMapa(
-  "Mapa de los aviones en el aire. La lista de abajo tiene los mismos datos.",
-);
-
 /** El aeropuerto en el que arranca el mapa. */
 export interface Foco {
   lat: number;
@@ -75,14 +73,6 @@ export interface Foco {
 }
 
 type Estado = "listo" | "cargando" | "pausa" | "fallo";
-
-const MENSAJES: Record<Estado, string> = {
-  listo: "En vivo: se actualiza cada 15 segundos.",
-  cargando: "Buscando los aviones de la zona…",
-  pausa:
-    "adsb.lol pidió una pausa: volvemos a buscar en un minuto. Mientras, quedan los últimos datos.",
-  fallo: "No pudimos traer los aviones. Volvemos a intentar en 30 segundos.",
-};
 
 /** El ícono del avión, dibujado en un canvas: sin archivos que servir. */
 function icono(color: string): ImageData {
@@ -113,13 +103,15 @@ function icono(color: string): ImageData {
  * municipio, que a veces no dice nada ("Calden" es el aeropuerto de Kassel) y a
  * veces está en inglés ("London").
  */
-function textoDeZona(zona: ZonaEnVivo | null): string {
+function textoDeZona(
+  t: TextosDeVuelos["radar"],
+  zona: ZonaEnVivo | null,
+): string {
   const referencia = zona?.referencia;
-  const lugar = referencia
-    ? `de ${referencia.nombre} (${referencia.iata})`
-    : "del centro del mapa";
 
-  return `Zona: hasta ${RADIO_DE_ZONA_KM} km alrededor ${lugar}.`;
+  return referencia
+    ? t.zonaAlrededorDe(RADIO_DE_ZONA_KM, referencia.nombre, referencia.iata)
+    : t.zonaAlrededorDelCentro(RADIO_DE_ZONA_KM);
 }
 
 export function Radar({
@@ -132,6 +124,8 @@ export function Radar({
   centroInicial: CentroDeZona;
   foco: Foco;
 }) {
+  const t = useTextos(TEXTOS_DE_VUELOS).radar;
+  const textosDelMapaDeLaPagina = useTextos(TEXTOS_DEL_MAPA);
   const contenedor = useRef<HTMLDivElement>(null);
   const mapa = useRef<MapaDeMapLibre | null>(null);
   // La zona pedida, también para los eventos del mapa, que se registran una
@@ -178,7 +172,9 @@ export function Radar({
           // página queda atrapado adentro del mapa.
           cooperativeGestures: true,
           attributionControl: { compact: true },
-          locale: TEXTOS,
+          // MapLibre se lo pone al canvas del mapa, para los lectores de
+          // pantalla.
+          locale: textosDelMapa(t.tituloDelMapa, textosDelMapaDeLaPagina),
         });
       } catch {
         // Sin WebGL no hay mapa; la lista sigue sirviendo.
@@ -440,9 +436,7 @@ export function Radar({
           <span className="text-4xl font-semibold tabular-nums">
             {formatCount(aviones.length)}
           </span>
-          <span className="text-muted-foreground text-sm">
-            aviones en el aire en esta zona
-          </span>
+          <span className="text-muted-foreground text-sm">{t.enLaZona}</span>
         </div>
 
         {zona?.totalGlobal != null ? (
@@ -450,9 +444,7 @@ export function Radar({
             <span className="text-4xl font-semibold tabular-nums">
               {formatCount(zona.totalGlobal)}
             </span>
-            <span className="text-muted-foreground text-sm">
-              en todo el mundo, según adsb.lol
-            </span>
+            <span className="text-muted-foreground text-sm">{t.enElMundo}</span>
           </div>
         ) : null}
       </div>
@@ -463,7 +455,7 @@ export function Radar({
         el texto, así que no interrumpe a nadie.
       */}
       <p aria-live="polite" className="text-muted-foreground text-sm">
-        {textoDeZona(zona)} {MENSAJES[estado]}
+        {textoDeZona(t, zona)} {t.estados[estado]}
       </p>
 
       <div className="relative">
@@ -474,9 +466,7 @@ export function Radar({
 
         {!mapaListo ? (
           <p className="text-muted-foreground pointer-events-none absolute inset-0 flex items-center justify-center p-6 text-center text-sm">
-            {mapaRoto
-              ? "No pudimos dibujar el mapa en este navegador. La lista de abajo tiene los mismos aviones."
-              : "Cargando el mapa…"}
+            {mapaRoto ? t.mapaRoto : t.cargandoElMapa}
           </p>
         ) : null}
       </div>
@@ -485,48 +475,47 @@ export function Radar({
         <FichaDeVuelo avion={seleccionado} alCerrar={() => setElegido(null)} />
       ) : (
         <p className="text-muted-foreground text-sm">
-          Tocá un avión para ver su vuelo, su modelo y a qué altura va. El punto
-          naranja es {foco.iata}.
+          {t.tocaUnAvion(foco.iata)}
         </p>
       )}
 
       <details className="rounded-xl border">
         <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
-          Ver los aviones en una lista
+          {t.verLaLista}
         </summary>
 
         {lista.length === 0 ? (
           <p className="text-muted-foreground px-4 pb-4 text-sm">
-            No hay aviones en el aire en esta zona ahora.
+            {t.sinAviones}
           </p>
         ) : (
           <div className="overflow-x-auto px-4 pb-4">
             <table className="w-full text-left text-sm">
               <caption className="text-muted-foreground pb-2 text-left text-xs">
-                Del más cercano al más lejano del centro de la zona.
+                {t.orden}
                 {lista.length > FILAS
-                  ? ` Son los ${FILAS} más cercanos de ${formatCount(lista.length)}.`
+                  ? t.recorte(FILAS, formatCount(lista.length))
                   : null}
               </caption>
               <thead className="text-muted-foreground text-xs">
                 <tr>
                   <th scope="col" className="py-1 pr-4 font-medium">
-                    Vuelo
+                    {t.columnas.vuelo}
                   </th>
                   <th scope="col" className="py-1 pr-4 font-medium">
-                    Modelo
+                    {t.columnas.modelo}
                   </th>
                   <th scope="col" className="py-1 pr-4 font-medium">
-                    Altitud
+                    {t.columnas.altitud}
                   </th>
                   <th scope="col" className="py-1 pr-4 font-medium">
-                    Velocidad
+                    {t.columnas.velocidad}
                   </th>
                   <th scope="col" className="py-1 pr-4 font-medium">
-                    Distancia
+                    {t.columnas.distancia}
                   </th>
                   <th scope="col" className="py-1 font-medium">
-                    <span className="sr-only">En el mapa</span>
+                    <span className="sr-only">{t.columnas.enElMapa}</span>
                   </th>
                 </tr>
               </thead>
@@ -554,10 +543,10 @@ export function Radar({
                         onClick={() => verEnElMapa(avion)}
                         className="text-muted-foreground hover:text-foreground underline underline-offset-2"
                       >
-                        Ver
+                        {t.ver}
                         <span className="sr-only">
                           {" "}
-                          {avion.vuelo ?? avion.hex} en el mapa
+                          {t.verEnElMapa(avion.vuelo ?? avion.hex)}
                         </span>
                       </button>
                     </td>
@@ -579,6 +568,8 @@ function FichaDeVuelo({
   avion: AvionEnVuelo;
   alCerrar: () => void;
 }) {
+  const t = useTextos(TEXTOS_DE_VUELOS).radar;
+
   return (
     <div
       aria-live="polite"
@@ -586,7 +577,7 @@ function FichaDeVuelo({
     >
       <div className="flex flex-col gap-2">
         <p className="font-medium">
-          {avion.vuelo ?? "Vuelo sin número"}
+          {avion.vuelo ?? t.sinNumero}
           {avion.matricula ? (
             <span className="text-muted-foreground font-normal">
               {" "}
@@ -596,21 +587,24 @@ function FichaDeVuelo({
         </p>
 
         <dl className="text-muted-foreground grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-          <dt>Modelo</dt>
-          <dd className="text-foreground">{avion.modelo ?? "No informa"}</dd>
-          <dt>Altitud</dt>
+          <dt>{t.columnas.modelo}</dt>
+          <dd className="text-foreground">{avion.modelo ?? t.noInforma}</dd>
+          <dt>{t.columnas.altitud}</dt>
           <dd className="text-foreground">{formatAltitude(avion.altitudM)}</dd>
-          <dt>Velocidad</dt>
+          <dt>{t.columnas.velocidad}</dt>
           <dd className="text-foreground">
             {avion.velocidadKmH === null
-              ? "No informa"
+              ? t.noInforma
               : formatSpeed(avion.velocidadKmH)}
           </dd>
-          <dt>Rumbo</dt>
+          <dt>{t.rumbo}</dt>
           <dd className="text-foreground">
             {avion.rumbo === null
-              ? "No informa"
-              : `Hacia el ${puntoCardinal(avion.rumbo)} (${avion.rumbo}°)`}
+              ? t.noInforma
+              : t.hacia(
+                  t.puntosCardinales[puntoCardinal(avion.rumbo)],
+                  avion.rumbo,
+                )}
           </dd>
         </dl>
       </div>
@@ -620,7 +614,7 @@ function FichaDeVuelo({
         onClick={alCerrar}
         className="text-muted-foreground hover:text-foreground text-sm underline underline-offset-2"
       >
-        Cerrar
+        {t.cerrar}
       </button>
     </div>
   );

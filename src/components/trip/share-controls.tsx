@@ -4,6 +4,9 @@ import { useState } from "react";
 import { Check, Copy, Link2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { enriquecer } from "@/i18n/enriquecer";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Compartir y guardar el link (spec, secciones 6B y 6C).
@@ -43,6 +46,7 @@ export function ShareControls({
   /** null en la vista compartida: ahí no hay link privado que ofrecer. */
   editToken: string | null;
 }) {
+  const t = useTextos(TEXTOS_DEL_VIAJE).compartir;
   const { copiado, copiar } = useCopiar();
 
   // El origin sale del browser y no de una env var: el mismo viaje se abre en
@@ -61,7 +65,7 @@ export function ShareControls({
           onClick={() => copiar(linkCompartir, "share")}
         >
           {copiado === "share" ? <Check /> : <Link2 />}
-          {copiado === "share" ? "Link copiado" : "Compartir solo lectura"}
+          {copiado === "share" ? t.copiado : t.compartir}
         </Button>
 
         {editToken ? (
@@ -72,15 +76,16 @@ export function ShareControls({
             onClick={() => copiar(`${origin}/viaje/${editToken}`, "edit")}
           >
             {copiado === "edit" ? <Check /> : <Copy />}
-            {copiado === "edit" ? "Link copiado" : "Copiar mi link"}
+            {copiado === "edit" ? t.copiado : t.copiarMiEnlace}
           </Button>
         ) : null}
       </div>
 
       {editToken ? (
         <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm">
-          <strong className="font-medium">Guardá este link.</strong> Es la única
-          forma de volver a tu viaje: no hay cuenta ni mail para recuperarlo.
+          {enriquecer(t.aviso, {
+            fuerte: (texto) => <strong className="font-medium">{texto}</strong>,
+          })}
         </p>
       ) : null}
     </div>

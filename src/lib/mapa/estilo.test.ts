@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
+
 import { etiquetaEnCastellano, textosDelMapa } from "./estilo";
 
 describe("etiquetaEnCastellano", () => {
@@ -24,7 +26,7 @@ describe("etiquetaEnCastellano", () => {
 
 describe("textosDelMapa", () => {
   it("pone el título del mapa y los controles en castellano", () => {
-    const textos = textosDelMapa("Mapa de prueba.");
+    const textos = textosDelMapa("Mapa de prueba.", TEXTOS_DEL_MAPA.es);
 
     expect(textos["Map.Title"]).toBe("Mapa de prueba.");
     expect(textos["NavigationControl.ZoomIn"]).toBe("Acercar");

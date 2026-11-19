@@ -94,13 +94,10 @@ export function porCercania(
 }
 
 /**
- * Lo que dice el mapa mientras Overpass tiene frenado al sitio: un minuto si
- * pidió pausa, más si lo rechazó (src/lib/comidas/overpass.ts).
+ * Cuántos minutos espera el mapa mientras Overpass tiene frenado al sitio: uno
+ * si pidió pausa, más si lo rechazó (src/lib/comidas/overpass.ts). El aviso
+ * está en el diccionario de comidas (`mapa.pausa`).
  */
-export function mensajeDePausa(segundos: number): string {
-  const minutos = Math.ceil(segundos / 60);
-
-  return minutos <= 1
-    ? "OpenStreetMap pidió una pausa: volvemos a buscar en un minuto. Mientras, quedan los últimos datos."
-    : `OpenStreetMap no está atendiendo nuestros pedidos: volvemos a buscar en ${minutos} minutos. Mientras, quedan los últimos datos.`;
+export function minutosDePausa(segundos: number): number {
+  return Math.ceil(segundos / 60);
 }

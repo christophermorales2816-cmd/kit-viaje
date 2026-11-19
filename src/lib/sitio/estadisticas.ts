@@ -1,6 +1,7 @@
 import { allCatalogos } from "@/content/comidas";
 import { allGuides, getGuide } from "@/content/guias";
 import { continentesDelMenu } from "@/content/guias/continentes";
+import type { TextosDeNosotros } from "@/i18n/nosotros";
 import { allQuoteCorridors } from "@/lib/quotes";
 
 /**
@@ -17,7 +18,10 @@ export interface Estadistica {
   nota: string;
 }
 
-export function estadisticasDelSitio(): Estadistica[] {
+/** Los números del sitio, con sus etiquetas en el idioma de `t`. */
+export function estadisticasDelSitio(
+  t: TextosDeNosotros["estadisticas"],
+): Estadistica[] {
   const guias = allGuides();
 
   /**
@@ -43,24 +47,24 @@ export function estadisticasDelSitio(): Estadistica[] {
       // (spec, 14.11): tienen moneda y frontera propias, que es lo que el
       // modelo llama un corredor.
       valor: String(guias.length),
-      etiqueta: guias.length === 1 ? "destino" : "destinos",
+      etiqueta: t.destinos(guias.length),
       nota: continentesDelMenu(guias)
         .filter(({ cantidad }) => cantidad > 0)
-        .map(({ nombre, cantidad }) => `${cantidad} en ${nombre}`)
+        .map(({ nombre, cantidad }) => t.enUnLugar(cantidad, nombre))
         .join(", "),
     },
     {
       valor: String(platos),
-      etiqueta: "platos y bebidas",
-      nota: `De ${catalogos.length} países, con dónde probarlos`,
+      etiqueta: t.platosYBebidas,
+      nota: t.dePaises(catalogos.length),
     },
     {
       valor: String(enVivo.reduce((total, { cuantas }) => total + cuantas, 0)),
-      etiqueta: "cotizaciones en vivo",
+      etiqueta: t.cotizacionesEnVivo,
       nota: enVivo
-        .map(({ pais, cuantas }) => `${cuantas} en ${pais}`)
+        .map(({ pais, cuantas }) => t.enUnLugar(cuantas, pais))
         .join(", "),
     },
-    { valor: "0", etiqueta: "registros", nota: "Sin cuenta y sin mail" },
+    { valor: "0", etiqueta: t.registros, nota: t.sinCuenta },
   ];
 }

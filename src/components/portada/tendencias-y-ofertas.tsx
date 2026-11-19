@@ -1,4 +1,6 @@
 import { EN_TENDENCIA, OFERTAS } from "@/content/portada";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
 
 import { TarjetaDeLaPortadaVista } from "./tarjeta-de-la-portada";
 
@@ -11,7 +13,9 @@ import { TarjetaDeLaPortadaVista } from "./tarjeta-de-la-portada";
  * Juntas en una franja, y no en dos secciones enteras, para que la portada no
  * abra con una fila de cosas que todavía no están.
  */
-export function TendenciasYOfertas() {
+export async function TendenciasYOfertas() {
+  const t = await textos(TEXTOS_DE_LA_PORTADA);
+
   return (
     <div className="bg-white">
       <div className="mx-auto grid w-full max-w-6xl gap-4 px-6 pb-16 md:grid-cols-2 md:pb-20">
@@ -19,6 +23,7 @@ export function TendenciasYOfertas() {
           <section key={tarjeta.id} aria-labelledby={`${tarjeta.id}-titulo`}>
             <TarjetaDeLaPortadaVista
               tarjeta={tarjeta}
+              texto={t.tarjetas[tarjeta.id]}
               titulo="h2"
               idDelTitulo={`${tarjeta.id}-titulo`}
               sizes="(min-width: 768px) 560px, 100vw"

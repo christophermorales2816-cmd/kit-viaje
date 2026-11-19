@@ -1,4 +1,6 @@
 import type { GuideScore } from "@/content/guias/types";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Puntajes por dimensión (spec, sección 8.5).
@@ -17,7 +19,7 @@ const formatoPuntaje = new Intl.NumberFormat("es-AR", {
   maximumFractionDigits: 1,
 });
 
-export function ScoreBars({
+export async function ScoreBars({
   country,
   scores,
   shines,
@@ -28,6 +30,8 @@ export function ScoreBars({
   shines: string[];
   costs: string[];
 }) {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).puntajes;
+
   return (
     <section
       aria-labelledby="puntajes-titulo"
@@ -38,13 +42,10 @@ export function ScoreBars({
           id="puntajes-titulo"
           className="text-3xl font-semibold tracking-tight text-balance"
         >
-          Cómo puntúa {country}
+          {t.titulo(country)}
         </h2>
 
-        <p className="text-muted-foreground text-sm">
-          Valoración editorial, no un índice oficial. Es una opinión
-          fundamentada, no una medición.
-        </p>
+        <p className="text-muted-foreground text-sm">{t.bajada}</p>
       </header>
 
       <ul className="flex flex-col gap-5">
@@ -54,7 +55,7 @@ export function ScoreBars({
               <span className="font-medium">{score.dimension}</span>
               <span className="text-sm tabular-nums">
                 {formatoPuntaje.format(score.score)}
-                <span className="text-muted-foreground"> / 10</span>
+                <span className="text-muted-foreground">{t.sobreDiez}</span>
               </span>
             </div>
 
@@ -82,7 +83,7 @@ export function ScoreBars({
 
       <div className="grid gap-px overflow-hidden rounded-xl bg-border md:grid-cols-2">
         <div className="flex flex-col gap-3 bg-background p-6">
-          <h3 className="font-medium">Dónde brilla</h3>
+          <h3 className="font-medium">{t.dondeBrilla}</h3>
           <ul className="text-muted-foreground flex list-disc flex-col gap-2 pl-4 text-sm">
             {shines.map((texto) => (
               <li key={texto} className="text-pretty">
@@ -93,7 +94,7 @@ export function ScoreBars({
         </div>
 
         <div className="flex flex-col gap-3 bg-background p-6">
-          <h3 className="font-medium">Dónde te cuesta</h3>
+          <h3 className="font-medium">{t.dondeTeCuesta}</h3>
           <ul className="text-muted-foreground flex list-disc flex-col gap-2 pl-4 text-sm">
             {costs.map((texto) => (
               <li key={texto} className="text-pretty">

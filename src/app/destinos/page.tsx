@@ -7,6 +7,9 @@ import {
   guiasDelContinente,
   guiasPorZona,
 } from "@/content/guias/continentes";
+import { TEXTOS_DE_DESTINOS } from "@/i18n/destinos";
+import { textos } from "@/i18n/servidor";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * Todos los destinos, por continente y zona (spec, 19.3).
@@ -17,30 +20,30 @@ import {
 
 const GUIAS = allGuides();
 
-export const metadata: Metadata = {
-  title: "Destinos",
-  description: `Los ${GUIAS.length} destinos de GlobalSunstone, por continente: cada uno con su guía, su clima mes a mes y su presupuesto en moneda local.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = (await textos(TEXTOS_DE_DESTINOS)).indice;
 
-export default function Destinos() {
+  return { title: t.titulo, description: t.descripcion(GUIAS.length) };
+}
+
+export default async function Destinos() {
+  const t = (await textos(TEXTOS_DE_DESTINOS)).indice;
+
   return (
     <main className="flex flex-1 flex-col">
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-            GlobalSunstone
+            {NOMBRE_DEL_SITIO}
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
-            Destinos
+            {t.titulo}
           </h1>
           <p className="max-w-2xl text-lg text-pretty text-slate-300">
-            {GUIAS.length} destinos en cinco continentes. Cada uno tiene su
-            guía, su clima mes a mes por ciudad y su presupuesto en moneda
-            local; al lado del nombre, lo que más cambia cómo se prepara ese
-            viaje.
+            {t.bajada(GUIAS.length)}
           </p>
 
-          <nav aria-label="Continentes" className="pt-2">
+          <nav aria-label={t.continentes} className="pt-2">
             <ul className="flex flex-wrap gap-2">
               {CONTINENTES.map((continente) => (
                 <li key={continente.id}>

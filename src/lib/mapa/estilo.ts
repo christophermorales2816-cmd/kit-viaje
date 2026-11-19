@@ -1,3 +1,5 @@
+import type { TextosDelMapa } from "@/i18n/mapa";
+
 /**
  * Lo que comparten los mapas de MapLibre del sitio: el radar de vuelos
  * (spec, 17.5) y el de los lugares de cada plato (18.4).
@@ -15,18 +17,18 @@ export const ESTILO_DEL_MAPA = "https://tiles.openfreemap.org/styles/positron";
  * `titulo` es lo que el lector de pantalla anuncia al llegar al mapa: tiene
  * que decir qué muestra y dónde está lo mismo en texto.
  */
-export function textosDelMapa(titulo: string): Record<string, string> {
+export function textosDelMapa(
+  titulo: string,
+  t: TextosDelMapa,
+): Record<string, string> {
   return {
     "Map.Title": titulo,
-    "NavigationControl.ZoomIn": "Acercar",
-    "NavigationControl.ZoomOut": "Alejar",
-    "AttributionControl.ToggleAttribution": "Ver las fuentes del mapa",
-    "CooperativeGesturesHandler.WindowsHelpText":
-      "Usá Ctrl y la rueda del mouse para acercar o alejar el mapa",
-    "CooperativeGesturesHandler.MacHelpText":
-      "Usá ⌘ y la rueda del mouse para acercar o alejar el mapa",
-    "CooperativeGesturesHandler.MobileHelpText":
-      "Usá dos dedos para mover el mapa",
+    "NavigationControl.ZoomIn": t.acercar,
+    "NavigationControl.ZoomOut": t.alejar,
+    "AttributionControl.ToggleAttribution": t.verLasFuentes,
+    "CooperativeGesturesHandler.WindowsHelpText": t.ayudaEnWindows,
+    "CooperativeGesturesHandler.MacHelpText": t.ayudaEnMac,
+    "CooperativeGesturesHandler.MobileHelpText": t.ayudaEnElTelefono,
   };
 }
 

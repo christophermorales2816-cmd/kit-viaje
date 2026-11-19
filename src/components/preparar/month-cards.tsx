@@ -1,6 +1,8 @@
 import type { PackingCatalogItem } from "@/lib/packing";
 import type { MonthClimate } from "@/lib/prepare/climate-year";
 import { suggestItemsForBuckets } from "@/lib/prepare/suggest-items";
+import { TEXTOS_DE_LA_GUIA, type TextosDeLaGuia } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Una tarjeta por mes: qué clima toca y qué define empacar (spec, sección 9).
@@ -38,14 +40,14 @@ function mismoClimaTodoElAño(months: MonthClimate[]): boolean {
   return climas.size === 1;
 }
 
-function temperatura(mes: MonthClimate): string {
-  if (mes.tempMin === null && mes.tempMax === null) return "Sin datos de clima";
-  if (mes.tempMin === null) return `Hasta ${Math.round(mes.tempMax!)} °C`;
-  if (mes.tempMax === null) return `Desde ${Math.round(mes.tempMin)} °C`;
-  return `${Math.round(mes.tempMin)} a ${Math.round(mes.tempMax)} °C`;
+function temperatura(t: TextosDeLaGuia["meses"], mes: MonthClimate): string {
+  if (mes.tempMin === null && mes.tempMax === null) return t.sinDatosDeClima;
+  if (mes.tempMin === null) return t.hasta(Math.round(mes.tempMax!));
+  if (mes.tempMax === null) return t.desde(Math.round(mes.tempMin));
+  return t.entre(Math.round(mes.tempMin), Math.round(mes.tempMax));
 }
 
-export function MonthCards({
+export async function MonthCards({
   months,
   catalog,
   adviceByBucket,
@@ -54,6 +56,8 @@ export function MonthCards({
   catalog: PackingCatalogItem[];
   adviceByBucket: Record<string, string>;
 }) {
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).meses;
+
   return (
     <section
       aria-labelledby="mes-a-mes"
@@ -63,15 +67,11 @@ export function MonthCards({
         id="mes-a-mes"
         className="text-2xl font-semibold tracking-tight text-balance"
       >
-        Qué llevar según el mes
+        {t.titulo}
       </h2>
 
       {mismoClimaTodoElAño(months) ? (
-        <p className="text-muted-foreground text-pretty">
-          Acá se empaca parecido los doce meses: todos caen en el mismo clima,
-          así que la ropa no cambia. Lo que cambia es cuánto calor y cuánta
-          lluvia te toca, y eso está en los gráficos de arriba.
-        </p>
+        <p className="text-muted-foreground text-pretty">{t.mismoClima}</p>
       ) : null}
 
       <div className="grid gap-px overflow-hidden rounded-xl bg-border md:grid-cols-2 lg:grid-cols-3">
@@ -95,7 +95,7 @@ export function MonthCards({
               <header className="flex items-baseline justify-between gap-2">
                 <h3 className="font-medium">{mes.longName}</h3>
                 <span className="text-muted-foreground text-xs tabular-nums">
-                  {temperatura(mes)}
+                  {temperatura(t, mes)}
                 </span>
               </header>
 

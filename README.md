@@ -77,7 +77,7 @@ cumplir: se pierde al cambiar de dispositivo o limpiar el sitio, y quien confió
 en él perdió el viaje. El aviso al lado del link dice la verdad en su lugar
 (spec, 6C).
 
-Fuera del MVP y sin planificar: cuentas, i18n y tracking de gastos reales. La
+Fuera del MVP y sin planificar: cuentas y tracking de gastos reales. La
 sección 2 del spec explica el porqué de cada uno. La monetización entra como
 experimento, con los links de afiliado de la sección de vuelos.
 
@@ -103,6 +103,15 @@ de OpenStreetMap y se renueva cada doce horas. Las menciones de honor se
 esconden solas si el lugar cierra. Ya están Japón, México y la Argentina; los
 demás países se suman de a tandas. Se enlaza desde la portada y desde la guía
 de cada país.
+
+### Idiomas, en tres fases
+
+El inglés va a ser el idioma principal, y el español pasa a `/es` (spec,
+sección 21). Primero, los textos de la interfaz salen del código a diccionarios
+por idioma. Lo único que cambia a la vista es el voseo, que pasa a tuteo
+neutro. La fase 1 está completa: todo el texto de la interfaz vive en los
+diccionarios, y una regla de lint (`react/jsx-no-literals`) no deja escribir uno
+nuevo a mano en un componente. Lo que sigue es el inglés (fase 2).
 
 ## Stack
 
@@ -362,7 +371,9 @@ src/
 │       ├── aeropuertos/     # la búsqueda del selector, cacheada en la CDN
 │       ├── vuelos/en-vivo/  # los aviones de una zona del radar
 │       └── que-comer/lugares/ # los lugares de una celda del mapa
-├── assets/portada/      # la foto del hero (sección 19.5)
+├── assets/
+│   ├── portada/         # la foto del hero (sección 19.5)
+│   └── marca/           # el logo: símbolo, firmas y nombre (sección 20)
 ├── components/
 │   ├── landing/         # el globo, su buscador y el formulario de viaje nuevo
 │   ├── portada/         # las secciones de la portada debajo del hero (sección 19.6)
@@ -372,12 +383,15 @@ src/
 │   ├── vuelos/          # el radar, el buscador y las opciones de aeropuerto
 │   ├── comer/           # catálogo, filtros, ficha, mapa de lugares y menciones
 │   ├── mapa/            # la carga de MapLibre, común a los dos mapas
+│   ├── sitio/           # la barra, el pie y el logo (sección 19)
 │   ├── analytics.tsx    # Vercel Analytics sin los links privados
 │   └── ui/              # componentes de Shadcn
 ├── content/
 │   ├── guias/           # contenido editorial de las guías (sección 8.2)
 │   ├── portada.ts       # textos, íconos y fotos de las tarjetas de la portada (19.6)
 │   └── comidas/         # los catálogos de "Qué comer" y sus fotos (sección 18)
+├── i18n/                # los idiomas y los diccionarios de textos (sección 21)
+│   └── es/              # los textos en español, uno por zona del sitio
 └── lib/
     ├── packing/         # motor de packing (sección 4)
     │   ├── dates.ts     # meses cubiertos y duración, todo en UTC
@@ -398,7 +412,7 @@ src/
     ├── globo/           # la proyección, el zoom, los nombres y la búsqueda del globo (sección 19.5)
     ├── supabase/        # clientes, lectura de referencia y su caché
     ├── seguridad/       # headers HTTP y redacción de URLs
-    ├── sitio/           # dominio público, para robots y sitemap
+    ├── sitio/           # dominio, nombre del sitio y rutas del menú
     ├── export/          # CSV
     ├── antimeridiano.ts # pines del mapa de un país que cruza el meridiano 180
     ├── quantity.ts      # escalado por duración, usado por los dos motores

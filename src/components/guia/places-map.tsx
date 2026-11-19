@@ -6,6 +6,8 @@ import "leaflet/dist/leaflet.css";
 
 import type { GuidePlace } from "@/content/guias";
 import { sinSaltoDeAntimeridiano } from "@/lib/antimeridiano";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
 
 /**
  * "El país de un vistazo" (spec, sección 8.8).
@@ -67,6 +69,7 @@ export function PlacesMap({
   country: string;
   places: GuidePlace[];
 }) {
+  const t = useTextos(TEXTOS_DE_LA_GUIA).mapa;
   const contenedor = useRef<HTMLDivElement>(null);
 
   // Agrupado en el orden en que aparecen los destinos, no alfabético: es el
@@ -160,12 +163,11 @@ export function PlacesMap({
           id="mapa-titulo"
           className="text-3xl font-semibold tracking-tight text-balance"
         >
-          El país de un vistazo
+          {t.titulo}
         </h2>
 
         <p className="text-muted-foreground text-sm text-pretty">
-          Las distancias de {country} no se entienden en una lista. Tocá un pin
-          para ver de qué destino se trata.
+          {t.bajada(country)}
         </p>
       </header>
 

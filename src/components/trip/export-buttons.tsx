@@ -4,6 +4,8 @@ import { Download, Printer } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { downloadCsv } from "@/lib/export/download";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Exportar (spec, sección 7, criterio 4).
@@ -25,8 +27,11 @@ export function ExportButtons({
   filename: string;
   /** Se arma en el momento del click: la lista cambia con cada edición. */
   csv: () => string;
+  /** Qué lista es: "equipaje", "presupuesto". */
   what: string;
 }) {
+  const t = useTextos(TEXTOS_DEL_VIAJE).exportar;
+
   return (
     <div className="flex flex-wrap gap-2 print:hidden">
       <Button
@@ -36,7 +41,7 @@ export function ExportButtons({
         onClick={() => window.print()}
       >
         <Printer />
-        Imprimir o PDF
+        {t.imprimir}
       </Button>
 
       <Button
@@ -46,7 +51,7 @@ export function ExportButtons({
         onClick={() => downloadCsv(filename, csv())}
       >
         <Download />
-        Descargar {what} (CSV)
+        {t.descargar(what)}
       </Button>
     </div>
   );

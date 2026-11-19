@@ -5,6 +5,8 @@ import { Minus, Plus } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { MAX_ITEM_QTY, MIN_ITEM_QTY } from "@/lib/trips/validate";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Cantidad editable de un ítem.
@@ -26,6 +28,7 @@ export function QtyStepper({
   label: string;
   disabled?: boolean;
 }) {
+  const t = useTextos(TEXTOS_DEL_VIAJE).cantidad;
   // Borrador local mientras se escribe. Puede quedar vacío o a medias, así que
   // no es un number: forzarlo a número en cada tecla haría que borrar el campo
   // valga 0 y el input salte a "0".
@@ -67,7 +70,7 @@ export function QtyStepper({
         type="button"
         onClick={() => ajustar(-1)}
         disabled={disabled || value <= MIN_ITEM_QTY}
-        aria-label={`Restar uno a ${label}`}
+        aria-label={t.restar(label)}
         className="flex size-8 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
       >
         <Minus className="size-3.5" />
@@ -78,7 +81,7 @@ export function QtyStepper({
         inputMode="numeric"
         value={mostrado}
         disabled={disabled}
-        aria-label={`Cantidad de ${label}`}
+        aria-label={t.cantidadDe(label)}
         onChange={(event) => setBorrador(event.target.value)}
         onBlur={confirmar}
         onKeyDown={(event) => {
@@ -96,7 +99,7 @@ export function QtyStepper({
         type="button"
         onClick={() => ajustar(1)}
         disabled={disabled || value >= MAX_ITEM_QTY}
-        aria-label={`Sumar uno a ${label}`}
+        aria-label={t.sumar(label)}
         className="flex size-8 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
       >
         <Plus className="size-3.5" />

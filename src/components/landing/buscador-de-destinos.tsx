@@ -4,6 +4,8 @@ import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useId, useMemo, useState, type KeyboardEvent } from "react";
 
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
 import { buscarDestinos } from "@/lib/globo/buscar";
 
 /**
@@ -16,7 +18,7 @@ import { buscarDestinos } from "@/lib/globo/buscar";
  * recorre, el globo vuela hasta la opción resaltada: es una vista previa, no
  * una elección. Elegir es ir a la guía, como en cualquier buscador.
  *
- * El mismo buscador abre el planificador en "Planificá tu viaje" (19.6): ahí
+ * El mismo buscador abre el planificador en "Planifica tu viaje" (19.6): ahí
  * cada destino lleva a su planificador y no hay globo que resaltar.
  */
 
@@ -29,18 +31,21 @@ export interface DestinoBuscable {
 export function BuscadorDeDestinos({
   destinos,
   alResaltar = () => {},
-  etiqueta = "Buscá un destino",
+  etiqueta,
   etiquetaVisible = false,
-  placeholder = "Buscá un país o un destino",
+  placeholder,
 }: {
   destinos: DestinoBuscable[];
   /** El índice del destino resaltado, o null: el globo vuela hasta él. */
   alResaltar?: (i: number | null) => void;
+  /** Por defecto, "Busca un destino". */
   etiqueta?: string;
   /** Sobre el globo la etiqueta es solo para el lector de pantalla. */
   etiquetaVisible?: boolean;
+  /** Por defecto, "Busca un país o un destino". */
   placeholder?: string;
 }) {
+  const t = useTextos(TEXTOS_DE_LA_PORTADA).buscador;
   const router = useRouter();
   const id = useId();
   const [consulta, setConsulta] = useState("");
@@ -120,7 +125,7 @@ export function BuscadorDeDestinos({
         htmlFor={`${id}-entrada`}
         className={etiquetaVisible ? "text-sm font-medium" : "sr-only"}
       >
-        {etiqueta}
+        {etiqueta ?? t.etiqueta}
       </label>
       <div className="relative">
         <Search
@@ -139,7 +144,7 @@ export function BuscadorDeDestinos({
           }
           autoComplete="off"
           spellCheck={false}
-          placeholder={placeholder}
+          placeholder={placeholder ?? t.placeholder}
           value={consulta}
           onChange={(e) => {
             setConsulta(e.target.value);
@@ -155,7 +160,7 @@ export function BuscadorDeDestinos({
 
         {mostrar ? (
           <div className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-xl border bg-white text-slate-950 shadow-2xl">
-            <ul id={idDeLaLista} role="listbox" aria-label="Destinos">
+            <ul id={idDeLaLista} role="listbox" aria-label={t.resultados}>
               {resultados.map((destino, posicion) => (
                 <li
                   key={destino.href}
@@ -178,7 +183,7 @@ export function BuscadorDeDestinos({
             </ul>
             {resultados.length === 0 ? (
               <p role="status" className="px-4 py-3 text-sm text-slate-600">
-                No tenemos guía de “{consulta.trim()}” todavía.
+                {t.sinResultados(consulta.trim())}
               </p>
             ) : null}
           </div>

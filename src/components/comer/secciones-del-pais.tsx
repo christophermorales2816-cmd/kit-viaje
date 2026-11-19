@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Store } from "lucide-react";
 
 import type { CatalogoDeComida, Mencion } from "@/content/comidas/types";
-import { NOMBRES_DE_MENCION } from "@/lib/comidas/etiquetas";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+import { textos } from "@/i18n/servidor";
 import { urlEnOpenStreetMap, urlParaLlegar } from "@/lib/comidas/lugares";
 
 /** La despensa del país: qué se usa en su cocina (spec, 18.2). */
@@ -40,13 +41,14 @@ export function Despensa({ catalogo }: { catalogo: CatalogoDeComida }) {
  * Las menciones de honor (spec, 18.5): lugares elegidos, no pagados, que se
  * esconden solos si en OpenStreetMap cierran.
  */
-export function MencionesDeHonor({
+export async function MencionesDeHonor({
   catalogo,
   menciones,
 }: {
   catalogo: CatalogoDeComida;
   menciones: Mencion[];
 }) {
+  const { etiquetas, secciones: t } = await textos(TEXTOS_DE_COMIDAS);
   const ciudades = new Map(
     catalogo.ciudades.map((ciudad) => [ciudad.id, ciudad.nombre]),
   );
@@ -60,17 +62,17 @@ export function MencionesDeHonor({
           className="flex flex-col gap-2 rounded-xl border p-5"
         >
           <p className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-            {NOMBRES_DE_MENCION[mencion.tipo]} · {ciudades.get(mencion.ciudad)}
+            {etiquetas.menciones[mencion.tipo]} · {ciudades.get(mencion.ciudad)}
           </p>
           <p className="text-lg font-semibold text-balance">{mencion.nombre}</p>
           <p className="text-muted-foreground text-sm text-pretty">
             {mencion.porQue}
           </p>
           <p className="text-sm">
-            Por{" "}
+            {t.por}{" "}
             {mencion.platos.map((id, i) => (
               <span key={id}>
-                {i > 0 && (i === mencion.platos.length - 1 ? " y " : ", ")}
+                {i > 0 && (i === mencion.platos.length - 1 ? t.y : ", ")}
                 <Link
                   href={`/que-comer/${catalogo.slug}/${id}`}
                   scroll={false}
@@ -88,7 +90,7 @@ export function MencionesDeHonor({
               rel="noreferrer"
               className="font-medium underline underline-offset-2"
             >
-              Cómo llegar
+              {t.comoLlegar}
             </a>
             <a
               href={urlEnOpenStreetMap({ id: mencion.osm })}
@@ -96,7 +98,7 @@ export function MencionesDeHonor({
               rel="noreferrer"
               className="text-muted-foreground underline underline-offset-2"
             >
-              En OpenStreetMap
+              {t.enOpenStreetMap}
             </a>
           </p>
         </li>
@@ -111,22 +113,19 @@ export function MencionesDeHonor({
  * Es la otra mitad de la frescura: el mapa sale de OpenStreetMap, y el que
  * más rápido puede cargar un lugar nuevo es su dueño.
  */
-export function ParaNegocios({ pais }: { pais: string }) {
+export async function ParaNegocios({ pais }: { pais: string }) {
+  const t = (await textos(TEXTOS_DE_COMIDAS)).secciones;
+
   return (
     <aside className="flex flex-col gap-3 rounded-2xl border border-dashed p-6 sm:flex-row sm:items-start sm:gap-5">
       <Store className="size-8 shrink-0 text-orange-500" aria-hidden="true" />
       <div className="flex flex-col gap-2">
-        <h3 className="font-semibold">
-          ¿Tenés un negocio de comida en {pais}?
-        </h3>
+        <h3 className="font-semibold">{t.negocio(pais)}</h3>
         <p className="text-muted-foreground text-sm text-pretty">
-          Cargalo gratis en OpenStreetMap, con el tipo de cocina que hacés —
-          ramen, tacos, parrilla—. Al día siguiente aparece en el mapa de cada
-          plato que servís, acá y en todas las apps que usan OpenStreetMap. No
-          se cobra por aparecer, ni acá ni allá.
+          {t.negocioDetalle}
         </p>
         <p className="text-muted-foreground text-sm text-pretty">
-          Las menciones de honor no se compran: las elegimos nosotros.
+          {t.noSeCompran}
         </p>
         <a
           href="https://www.openstreetmap.org/fixthemap"
@@ -134,7 +133,7 @@ export function ParaNegocios({ pais }: { pais: string }) {
           rel="noreferrer"
           className="w-fit text-sm font-medium underline underline-offset-4"
         >
-          Cómo sumar un lugar a OpenStreetMap
+          {t.comoAgregar}
         </a>
       </div>
     </aside>

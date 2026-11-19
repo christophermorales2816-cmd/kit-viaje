@@ -3,10 +3,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import { Catalogo } from "@/components/comer/catalogo";
-import {
-  CreditoDeFoto,
-  FotoDeComidaImagen,
-} from "@/components/comer/foto-de-comida";
+import { CreditoDeFoto } from "@/components/comer/credito-de-foto";
+import { FotoDeComidaImagen } from "@/components/comer/foto-de-comida";
 import {
   Despensa,
   MencionesDeHonor,
@@ -17,6 +15,9 @@ import { fotoDe } from "@/content/comidas/fotos";
 import { datosDelPais } from "@/lib/comidas/datos";
 import { opcionesDelCatalogo } from "@/lib/comidas/filtros";
 import { formatDate } from "@/lib/format";
+import { enriquecer } from "@/i18n/enriquecer";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Qué comer y beber en un país (spec, sección 18.2).
@@ -50,8 +51,10 @@ export async function generateMetadata({
 
   const { country } = guiaDelCatalogo(catalogo);
 
+  const t = (await textos(TEXTOS_DE_COMIDAS)).pais;
+
   return {
-    title: `Qué comer y beber en ${country}`,
+    title: t.titulo(country),
     description: catalogo.intro[0],
   };
 }
@@ -66,6 +69,7 @@ export default async function QueComerEnElPais({
     (plato) => plato.imperdible,
   ).length;
   const [primero, ...resto] = catalogo.intro;
+  const t = (await textos(TEXTOS_DE_COMIDAS)).pais;
 
   return (
     <main className="flex flex-1 flex-col">
@@ -92,16 +96,16 @@ export default async function QueComerEnElPais({
               className="flex items-center gap-2 hover:text-white"
             >
               <ArrowLeft className="size-4" aria-hidden="true" />
-              Qué comer en otros países
+              {t.otrosPaises}
             </Link>
             <Link href={`/guia/${guia.slug}`} className="hover:text-white">
-              La guía de {guia.country}
+              {t.laGuiaDe(guia.country)}
             </Link>
           </nav>
 
           <div className="flex max-w-3xl flex-col gap-5">
             <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-              Qué comer y beber
+              {t.antetitulo}
             </p>
             <h1 className="text-5xl font-semibold tracking-tight text-balance md:text-7xl">
               {guia.country}
@@ -114,11 +118,11 @@ export default async function QueComerEnElPais({
           <dl className="flex flex-wrap gap-x-10 gap-y-4">
             <Numero
               valor={catalogo.platos.length}
-              etiqueta="platos y bebidas"
+              etiqueta={t.platosYBebidas}
             />
-            <Numero valor={imperdibles} etiqueta="imperdibles" />
+            <Numero valor={imperdibles} etiqueta={t.imperdibles} />
             {catalogo.regiones.length > 0 && (
-              <Numero valor={catalogo.regiones.length} etiqueta="regiones" />
+              <Numero valor={catalogo.regiones.length} etiqueta={t.regiones} />
             )}
           </dl>
 
@@ -129,7 +133,7 @@ export default async function QueComerEnElPais({
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-6 py-14 md:gap-20">
         <section aria-labelledby="cocina" className="flex flex-col gap-6">
           <h2 id="cocina" className="text-3xl font-semibold tracking-tight">
-            La despensa
+            {t.despensa}
           </h2>
           {resto.length > 0 && (
             <div className="flex max-w-3xl flex-col gap-3 text-lg text-pretty">
@@ -144,12 +148,10 @@ export default async function QueComerEnElPais({
         <section aria-labelledby="menu" className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <h2 id="menu" className="text-3xl font-semibold tracking-tight">
-              El menú
+              {t.menu}
             </h2>
             <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-              Tocá un plato para ver qué lleva, a qué sabe y dónde lo sirven
-              cerca tuyo. Los precios son por porción, en dólares, para comparar
-              entre países.
+              {t.menuBajada}
             </p>
           </div>
           <Catalogo
@@ -168,11 +170,10 @@ export default async function QueComerEnElPais({
                 id="menciones"
                 className="text-3xl font-semibold tracking-tight"
               >
-                Menciones de honor
+                {t.menciones}
               </h2>
               <p className="text-muted-foreground max-w-2xl text-sm text-pretty">
-                Puestitos de barrio, lugares con historia y mesas de alta
-                cocina. Si alguno cierra, deja de aparecer solo.
+                {t.mencionesBajada}
               </p>
             </div>
             <MencionesDeHonor catalogo={catalogo} menciones={menciones} />
@@ -182,18 +183,18 @@ export default async function QueComerEnElPais({
         <ParaNegocios pais={guia.country} />
 
         <footer className="text-muted-foreground border-t pt-6 text-xs text-pretty">
-          Lugares: © colaboradores de{" "}
-          <a
-            href="https://www.openstreetmap.org/copyright"
-            target="_blank"
-            rel="noreferrer"
-            className="underline underline-offset-2"
-          >
-            OpenStreetMap
-          </a>{" "}
-          (ODbL), que se renuevan cada doce horas. Fotos: Wikimedia Commons, con
-          su autor y su licencia al lado de cada una. Catálogo revisado el{" "}
-          {formatDate(catalogo.revisado)}.
+          {enriquecer(t.fuentes(formatDate(catalogo.revisado)), {
+            osm: (texto) => (
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-2"
+              >
+                {texto}
+              </a>
+            ),
+          })}
         </footer>
       </div>
     </main>

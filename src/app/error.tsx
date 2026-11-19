@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_SITIO } from "@/i18n/sitio";
 
 /**
  * Red de contención de las rutas (spec, sección 7).
@@ -27,6 +29,8 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const t = useTextos(TEXTOS_DEL_SITIO).error;
+
   useEffect(() => {
     // El servidor ya lo registró; esto cubre los errores que ocurren en el
     // cliente, que de otro modo no dejan rastro en ningún lado.
@@ -36,27 +40,26 @@ export default function Error({
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-24 text-center">
       <h1 className="text-3xl font-semibold tracking-tight text-balance md:text-4xl">
-        Algo se rompió de nuestro lado
+        {t.titulo}
       </h1>
 
       <p className="text-muted-foreground max-w-md text-pretty">
-        No es algo que hayas hecho mal. Probá de nuevo: si el problema era
-        pasajero, con eso alcanza.
+        {t.explicacion}
       </p>
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Button type="button" size="lg" onClick={reset}>
-          Reintentar
+          {t.reintentar}
         </Button>
 
         <Button asChild variant="outline" size="lg">
-          <Link href="/">Volver al inicio</Link>
+          <Link href="/">{t.volverAlInicio}</Link>
         </Button>
       </div>
 
       {error.digest ? (
         <p className="text-muted-foreground text-xs">
-          Referencia: <code className="font-mono">{error.digest}</code>
+          {t.referencia} <code className="font-mono">{error.digest}</code>
         </p>
       ) : null}
     </main>
