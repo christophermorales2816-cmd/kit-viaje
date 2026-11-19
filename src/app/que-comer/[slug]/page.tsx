@@ -51,7 +51,7 @@ export async function generateMetadata({
   const { country } = guiaDelCatalogo(catalogo);
 
   return {
-    title: `Qué comer y beber en ${country} — Kit de viaje`,
+    title: `Qué comer y beber en ${country}`,
     description: catalogo.intro[0],
   };
 }

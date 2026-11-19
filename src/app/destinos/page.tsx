@@ -18,8 +18,8 @@ import {
 const GUIAS = allGuides();
 
 export const metadata: Metadata = {
-  title: "Destinos — Kit de viaje",
-  description: `Los ${GUIAS.length} destinos de Kit de viaje, por continente: cada uno con su guía, su clima mes a mes y su presupuesto en moneda local.`,
+  title: "Destinos",
+  description: `Los ${GUIAS.length} destinos de GlobalSunstone, por continente: cada uno con su guía, su clima mes a mes y su presupuesto en moneda local.`,
 };
 
 export default function Destinos() {
@@ -28,7 +28,7 @@ export default function Destinos() {
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-            Kit de viaje
+            GlobalSunstone
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
             Destinos

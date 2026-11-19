@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: PageProps<"/guia/[slug]">) {
   if (!guia) return {};
 
   return {
-    title: `${guia.country} — Kit de viaje`,
+    title: `${guia.country}`,
     description: guia.subhead,
   };
 }

@@ -16,7 +16,7 @@ import { formatCount } from "@/lib/format";
  */
 
 export const metadata: Metadata = {
-  title: "Qué comer y beber en cada país — Kit de viaje",
+  title: "Qué comer y beber en cada país",
   description:
     "Los platos y las bebidas de cada país: qué llevan, a qué saben, cuánto salen y dónde los sirven hoy, con filtros para tu dieta.",
 };
@@ -59,7 +59,7 @@ export default function QueComer() {
       <header className="bg-slate-950 px-6 py-14 text-slate-100 md:py-20">
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
           <p className="text-sm font-medium tracking-wide text-orange-300 uppercase">
-            Kit de viaje
+            GlobalSunstone
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-balance md:text-6xl">
             Qué comer y beber

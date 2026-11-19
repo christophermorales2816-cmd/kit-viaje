@@ -4,7 +4,6 @@ import {
   ArrowRight,
   ChevronDown,
   CircleUser,
-  Earth,
   Menu,
   Radar,
   UtensilsCrossed,
@@ -36,6 +35,8 @@ import {
   type SeccionDelSitio,
 } from "@/lib/sitio/navegacion";
 import { cn } from "@/lib/utils";
+import { Logo } from "@/components/sitio/logo";
+import { NOMBRE_DEL_SITIO } from "@/lib/sitio/marca";
 
 /**
  * La barra de arriba, en todas las páginas (spec, 19.1).
@@ -121,8 +122,7 @@ export function Encabezado({
             href="/"
             className="flex shrink-0 items-center gap-2 rounded-md font-semibold tracking-tight outline-none focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
           >
-            <Earth aria-hidden className="size-6 text-orange-500" />
-            <span>Kit de viaje</span>
+            <Logo className="h-6 sm:h-7" />
           </Link>
 
           <NavigationMenu.Root
@@ -418,9 +418,8 @@ function MenuDelTelefono({
 
       <SheetContent side="right" className="w-[22rem] gap-0 overflow-y-auto">
         <SheetHeader className="border-b">
-          <SheetTitle className="flex items-center gap-2">
-            <Earth aria-hidden className="size-5 text-orange-500" />
-            Kit de viaje
+          <SheetTitle>
+            <Logo className="h-6" />
           </SheetTitle>
           <SheetDescription className="sr-only">
             Destinos, herramientas y secciones del sitio.
@@ -463,7 +462,7 @@ function MenuDelTelefono({
             ))}
           </GrupoDelTelefono>
 
-          <GrupoDelTelefono titulo="Kit de viaje">
+          <GrupoDelTelefono titulo={NOMBRE_DEL_SITIO}>
             <EnlaceDelTelefono
               href={NOSOTROS.href}
               actual={estaEn(pathname, NOSOTROS.href)}
