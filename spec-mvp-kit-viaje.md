@@ -3082,3 +3082,38 @@ La foto de esta versión salió del paquete `three-globe` de npm, que trae la
 misma Blue Marble de NASA, porque el entorno de desarrollo no llega a los
 servidores de NASA. Se puede reemplazar por el archivo bajado de Visible Earth
 sin tocar código: mismo nombre, mismo tamaño.
+
+### 19.8 El dominio propio
+
+El sitio se muda de `kit-viaje.vercel.app` a un dominio propio. Las dos razones
+son de plata: los programas de afiliados aprueban más fácil un sitio con
+dominio (`docs/monetizacion.md`), y todo lo que se posicione en un subdominio
+de Vercel se pierde el día que haya que mudarse. Mejor antes de la auditoría
+SEO que después.
+
+- **Un genérico (.com), no uno de país.** Google ata un dominio de país
+  (.com.ar, .cr, .mx) a ese país, y el sitio es para toda Hispanoamérica
+  (19.9).
+- **Nada se cambia a mano.** El sitemap, robots.txt, la `metadataBase` y el
+  User-Agent de Overpass salen de `VERCEL_PROJECT_PRODUCTION_URL`, que Vercel
+  cambia al dominio propio cuando pasa a ser el de producción.
+- **El alias de Vercel redirige al dominio con un 308**, con la ruta y los
+  parámetros (`src/lib/sitio/url.ts`): si no, Google ve dos copias del sitio.
+  Se activa sola en el primer deploy con el dominio, solo en producción; los
+  previews no cambian. Ningún workflow llama al sitio por su URL, así que la
+  redirección no rompe ninguna automatización.
+- **Search Console se verifica por DNS** (propiedad de tipo "Dominio"): un
+  registro TXT en el DNS del dominio, sin código ni archivos en el repo. Ahí
+  se envía `sitemap.xml`.
+
+### 19.9 La voz del sitio: tuteo neutro
+
+El sitio es para toda Hispanoamérica, así que el texto que se ve pasa del
+voseo rioplatense ("elegí", "llevate") al tuteo neutro ("elige", "llévate"),
+sin modismos de un país. Se aplica página por página en el paso de los textos,
+junto con el recorte de lo largo. Los comentarios del código y esta spec no
+cambian: son para quien desarrolla.
+
+Queda una decisión que sale de esta: las cotizaciones del presupuesto (oficial,
+MEP, tarjeta, blue) son las del dólar en Argentina. Para el resto de
+Hispanoamérica hace falta otra respuesta, que se decide aparte.

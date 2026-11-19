@@ -5,6 +5,7 @@ import { Analytics } from "@/components/analytics";
 import { Encabezado } from "@/components/sitio/encabezado";
 import { Pie } from "@/components/sitio/pie";
 import { continentesDelMenu } from "@/content/guias/continentes";
+import { urlDelSitio } from "@/lib/sitio/url";
 
 import "./globals.css";
 
@@ -18,7 +19,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SITIO = urlDelSitio();
+
 export const metadata: Metadata = {
+  // La base de las URLs absolutas de la metadata (Open Graph, canonical): el
+  // dominio de producción, el propio cuando lo haya.
+  ...(SITIO ? { metadataBase: new URL(SITIO) } : {}),
   title: "Kit de viaje",
   description:
     "Qué llevar y cuánto vas a gastar, con el clima de la ciudad a la que vas y la cotización que elijas. Sin registro.",
