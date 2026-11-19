@@ -2,6 +2,9 @@ import Link from "next/link";
 
 import { groupCitiesByRegion } from "@/lib/prepare/group-cities";
 import type { Destination } from "@/lib/supabase/reference";
+import { enriquecer } from "@/i18n/enriquecer";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Elegir de qué ciudad habla la página (spec, sección 11.4).
@@ -19,7 +22,7 @@ import type { Destination } from "@/lib/supabase/reference";
  * región es además el dato que ayuda a elegir: Yungas contra Altiplano dice más
  * que los dos nombres juntos.
  */
-export function CitySwitcher({
+export async function CitySwitcher({
   guideSlug,
   destinations,
   current,
@@ -32,11 +35,15 @@ export function CitySwitcher({
 }) {
   if (destinations.length < 2) return null;
 
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).ciudad;
   return (
-    <nav aria-label="Ciudad" className="flex flex-col gap-4">
+    <nav aria-label={t.nombre} className="flex flex-col gap-4">
       <p className="text-muted-foreground text-sm">
-        El clima cambia mucho dentro del país. Estos números son de{" "}
-        <strong className="text-foreground font-medium">{current.name}</strong>.
+        {enriquecer(t.deQuienSonLosNumeros(current.name), {
+          ciudad: (ciudad) => (
+            <strong className="text-foreground font-medium">{ciudad}</strong>
+          ),
+        })}
       </p>
 
       {groupCitiesByRegion(destinations, regionBySlug).map((grupo) => (

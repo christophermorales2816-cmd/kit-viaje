@@ -163,6 +163,18 @@ describe("diccionarios", () => {
     },
   );
 
+  it.each(DICCIONARIOS)("%s cierra cada marca que abre", (_, diccionario) => {
+    // Las marcas de enriquecer(): <nombre>…</nombre>, sin anidar.
+    for (const idioma of IDIOMAS) {
+      for (const [clave, texto] of textosDe(diccionario[idioma])) {
+        const abiertas = [...texto.matchAll(/<(\w+)>/g)].map((m) => m[1]);
+        const cerradas = [...texto.matchAll(/<\/(\w+)>/g)].map((m) => m[1]);
+
+        expect(cerradas, `${idioma}: ${clave}`).toEqual(abiertas);
+      }
+    }
+  });
+
   it.each(DICCIONARIOS)("%s habla de tú, no de vos", (_, diccionario) => {
     for (const [clave, texto] of textosDe(diccionario.es)) {
       const voseo = texto

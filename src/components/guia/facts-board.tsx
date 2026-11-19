@@ -1,4 +1,6 @@
 import type { GuideFact } from "@/content/guias/types";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * "Todo lo que hay que saber antes de reservar" (spec, sección 8.4).
@@ -15,7 +17,7 @@ const formatoFecha = new Intl.DateTimeFormat("es-AR", {
   timeZone: "UTC",
 });
 
-export function FactsBoard({
+export async function FactsBoard({
   facts,
   updatedAt,
 }: {
@@ -27,6 +29,7 @@ export function FactsBoard({
   // "2026-09-01" da medianoche UTC, que en cualquier huso al oeste cae el día
   // anterior — y acá se está formateando con timeZone UTC, pero el mediodía
   // deja el margen igual por si alguien cambia ese formateador.
+  const t = (await textos(TEXTOS_DE_LA_GUIA)).antesDeReservar;
   const revisado = new Date(`${updatedAt}T12:00:00Z`);
 
   return (
@@ -40,11 +43,11 @@ export function FactsBoard({
           id="guia-titulo"
           className="text-3xl font-semibold tracking-tight text-balance"
         >
-          Todo lo que hay que saber antes de reservar
+          {t.titulo}
         </h2>
 
         <p className="text-muted-foreground text-sm">
-          Revisado el{" "}
+          {t.revisadoEl}{" "}
           <time dateTime={updatedAt}>{formatoFecha.format(revisado)}</time>
         </p>
       </header>

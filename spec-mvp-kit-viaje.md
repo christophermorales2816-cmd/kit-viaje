@@ -3235,6 +3235,24 @@ formato depende de la decisión de las monedas.
   texto. `src/content/portada.ts` guarda el ícono, la foto y el enlace de cada
   una, y su título y su descripción están en el diccionario, con el mismo id
   (`IdDeTarjeta`). "ONGs" pasó a "ONG", que en español no lleva plural.
+- **Los destinos y la guía** (`src/i18n/es/destinos.ts` y
+  `src/i18n/es/guia.ts`). Cubren:
+  - las páginas de destinos;
+  - la guía de cada país, la de preparar el viaje y la del planificador;
+  - sus componentes: cotizaciones, puntajes, adónde ir, el mapa, el clima mes
+    a mes, los consejos, la tabla de qué no llevar y las preguntas.
+  Los nombres de los continentes, las zonas, los países y los meses son
+  contenido o formato, y quedan para la fase 2. "Adónde ir" decía "Nueve
+  destinos" fijo, y una guía tiene quince: ahora cuenta los que hay.
+- **Textos con partes que se dibujan aparte** (un nombre en negrita, un enlace
+  dentro de una frase). El diccionario guarda la frase entera con marcas:
+  `"Estos números son de <ciudad>${ciudad}</ciudad>."`. `enriquecer()`
+  (`src/i18n/enriquecer.tsx`) dibuja cada marca, y así cada idioma ordena la
+  frase a su manera. El test de los diccionarios revisa que cada marca se
+  cierre.
+- **Tests de componentes asíncronos.** Los que piden sus textos con
+  `textos()` se prueban con `renderizar()` (`src/test/renderizar.tsx`), que
+  espera a los componentes asíncronos. `renderToStaticMarkup` no espera.
 - **Componentes que se usan en el servidor y en el cliente.** No pueden pedir
   los textos de forma asíncrona. Hay dos salidas:
   - reciben el texto armado por prop, como `TarjetaDeLaPortadaVista`;

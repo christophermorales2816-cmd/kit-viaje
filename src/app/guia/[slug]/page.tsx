@@ -13,6 +13,9 @@ import { Button } from "@/components/ui/button";
 import { getCatalogo } from "@/content/comidas";
 import { allGuides, getGuide } from "@/content/guias";
 import { continenteDeLaZona } from "@/content/guias/continentes";
+import { TEXTOS_DE_DESTINOS } from "@/i18n/destinos";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { textos } from "@/i18n/servidor";
 
 /**
  * Página 2 — la guía del país (spec, sección 8.1).
@@ -63,7 +66,8 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
   // La vuelta es a los destinos de su continente: la lista de la portada se
   // mudó ahí (spec, 19.3).
   const continente = continenteDeLaZona(guia.subregion);
-
+  const { pagina: t } = await textos(TEXTOS_DE_LA_GUIA);
+  const { continente: destinos } = await textos(TEXTOS_DE_DESTINOS);
   return (
     <main className="flex flex-1 flex-col items-center gap-16 px-6 py-12 md:gap-24 md:py-16">
       <header className="flex w-full max-w-5xl flex-col gap-8">
@@ -72,7 +76,7 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
           className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 text-sm transition-colors"
         >
           <ArrowLeft className="size-4" />
-          Destinos en {continente.nombre}
+          {destinos.titulo(continente.nombre)}
         </Link>
 
         <div className="flex flex-col gap-4">
@@ -112,14 +116,13 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
         >
           <span className="flex flex-col gap-1">
             <span className="text-sm font-medium text-orange-700">
-              Qué comer y beber
+              {t.queComer.antetitulo}
             </span>
             <span className="text-xl font-semibold tracking-tight text-balance md:text-2xl">
-              Los {comida.platos.length} platos y bebidas de {guia.country}, y
-              dónde los sirven hoy
+              {t.queComer.titulo(comida.platos.length, guia.country)}
             </span>
             <span className="text-muted-foreground text-sm text-pretty">
-              Qué lleva cada uno, a qué sabe, cuánto sale y si es para tu dieta.
+              {t.queComer.bajada}
             </span>
           </span>
           <ArrowRight
@@ -131,16 +134,15 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
 
       <section className="bg-muted/40 flex w-full max-w-5xl flex-col items-center gap-4 rounded-2xl border p-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-balance">
-          Ya sabés a qué vas. Ahora armemos el viaje.
+          {t.cierre.titulo}
         </h2>
 
         <p className="text-muted-foreground max-w-xl text-sm text-pretty">
-          Antes del calendario, lo práctico: cuándo conviene ir, qué clima te
-          toca cada mes y qué llevar. Después elegís las fechas.
+          {t.cierre.bajada}
         </p>
 
         <Button asChild size="lg">
-          <Link href={`/guia/${guia.slug}/preparar`}>Preparar el viaje</Link>
+          <Link href={`/guia/${guia.slug}/preparar`}>{t.cierre.boton}</Link>
         </Button>
 
         <p className="text-muted-foreground text-xs text-pretty">
