@@ -1,5 +1,6 @@
 import type { BudgetLineItem } from "@/lib/budget";
 import type { TripPackingEntry } from "@/lib/trips/types";
+import type { TextosDelViaje } from "@/i18n/viaje";
 
 /**
  * Exportación a CSV (spec, sección 7, criterio 4).
@@ -33,23 +34,22 @@ export function toCsv(rows: (string | number)[][]): string {
   return rows.map((row) => row.map(cell).join(",")).join("\r\n");
 }
 
-export function packingCsv(entries: TripPackingEntry[]): string {
+/** Los encabezados y los valores en el idioma del archivo. */
+export type TextosDelCsv = TextosDelViaje["csv"];
+
+export function packingCsv(
+  entries: TripPackingEntry[],
+  t: TextosDelCsv,
+): string {
   return toCsv([
-    [
-      "Categoría",
-      "Ítem",
-      "Cantidad",
-      "Peso unitario (g)",
-      "Peso total (g)",
-      "Listo",
-    ],
+    [t.categoria, t.item, t.cantidad, t.pesoUnitario, t.pesoTotal, t.listo],
     ...entries.map((entry) => [
       entry.item.category,
       entry.item.name,
       entry.qty,
       entry.item.weightG,
       entry.totalWeightG,
-      entry.checked ? "sí" : "no",
+      entry.checked ? t.si : t.no,
     ]),
   ]);
 }
@@ -62,9 +62,9 @@ export function packingCsv(entries: TripPackingEntry[]): string {
  * semanas mostraría una conversión vieja como si fuera un dato del viaje. Los
  * precios en moneda local sí son del viaje.
  */
-export function budgetCsv(items: BudgetLineItem[]): string {
+export function budgetCsv(items: BudgetLineItem[], t: TextosDelCsv): string {
   return toCsv([
-    ["Categoría", "Gasto", "Cantidad", "Precio unitario", "Subtotal", "Moneda"],
+    [t.categoria, t.gasto, t.cantidad, t.precioUnitario, t.subtotal, t.moneda],
     ...items.map((line) => [
       line.product.category,
       line.product.name,
@@ -80,7 +80,8 @@ export function budgetCsv(items: BudgetLineItem[]): string {
 export function csvFilename(
   destination: string,
   startDate: string,
-  what: "equipaje" | "presupuesto",
+  /** Qué lista es, en el idioma del archivo: "equipaje", "presupuesto". */
+  what: string,
 ): string {
   const destino = destination
     .toLowerCase()

@@ -3244,6 +3244,20 @@ formato depende de la decisión de las monedas.
   Los nombres de los continentes, las zonas, los países y los meses son
   contenido o formato, y quedan para la fase 2. "Adónde ir" decía "Nueve
   destinos" fijo, y una guía tiene quince: ahora cuenta los que hay.
+- **El viaje** (`src/i18n/es/viaje.ts`). Cubre el formulario que lo crea, el
+  tablero, la lista de equipaje, el presupuesto, compartir, exportar y los
+  CSV. Lo que puede salir mal al crear o editar un viaje ya no es un texto:
+  es un `ProblemaDelViaje` (`src/lib/trips/problemas.ts`), un código con sus
+  datos (`{ codigo: "duracion", minimo, maximo, dias }`).
+  - Las Server Actions devuelven el problema, porque no pueden leer
+    `next/root-params` ni saben en qué idioma está la página.
+  - La pantalla lo cuenta en su idioma con `describirProblema`.
+  - Los tests verifican el código y no la redacción.
+  - De paso, una vuelta antes que la ida ahora dice eso, y no "fecha
+    inválida".
+- **Los nombres de los tipos de viaje y de las categorías** también están en
+  el diccionario del viaje. `formatTripType` y `formatCategory` los reciben, y
+  una categoría nueva de la base sigue apareciendo capitalizada.
 - **Textos con partes que se dibujan aparte** (un nombre en negrita, un enlace
   dentro de una frase). El diccionario guarda la frase entera con marcas:
   `"Estos números son de <ciudad>${ciudad}</ciudad>."`. `enriquecer()`

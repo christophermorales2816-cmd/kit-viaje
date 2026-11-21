@@ -26,6 +26,9 @@ import {
 } from "@/lib/format";
 
 import { QtyStepper } from "./qty-stepper";
+import { enriquecer } from "@/i18n/enriquecer";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Presupuesto (spec, sección 6B).
@@ -67,21 +70,17 @@ function AvisoDeConversion({
   quotesError: string | null;
   baseCurrency: string;
 }) {
+  const t = useTextos(TEXTOS_DEL_VIAJE).presupuesto;
+
   if (conversion === "dolarizado") {
-    return (
-      <p className="text-sm text-muted-foreground">
-        Los precios de este destino están en dólares: el total ya está en la
-        moneda que vas a usar y no hay cotización que elegir.
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground">{t.dolarizado}</p>;
   }
 
   if (conversion === "sin-fuente") {
     return (
       <p className="flex items-start gap-2 text-sm text-muted-foreground">
         <TriangleAlert className="mt-0.5 size-4 shrink-0" />
-        Todavía no tenemos cotización en vivo para {baseCurrency}. El total en
-        moneda local es correcto; la conversión a dólares no está disponible.
+        {t.sinFuente(baseCurrency)}
       </p>
     );
   }
@@ -95,8 +94,7 @@ function AvisoDeConversion({
         El total en moneda local se muestra igual: la conversión es lo único
         que depende de la API externa.
       */}
-      No pudimos traer las cotizaciones ahora ({quotesError}). El total en
-      moneda local es correcto; la conversión a dólares no está disponible.
+      {t.sinCotizaciones(quotesError)}
     </p>
   );
 }
@@ -130,10 +128,13 @@ export function BudgetList({
   isReadOnly: boolean;
   onQty: (productId: string, qty: number) => void;
 }) {
+  const textosDelViaje = useTextos(TEXTOS_DEL_VIAJE);
+  const t = textosDelViaje.presupuesto;
+
   if (items.length === 0) {
     return (
       <p className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
-        No hay gastos cargados para este destino.
+        {t.vacio}
       </p>
     );
   }
@@ -146,9 +147,7 @@ export function BudgetList({
       <div className="flex flex-col gap-4 rounded-lg border bg-muted/40 px-4 py-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">
-              Total del viaje
-            </span>
+            <span className="text-xs text-muted-foreground">{t.total}</span>
             <span className="text-2xl font-semibold tabular-nums">
               {formatMoney(totalBase, baseCurrency)}
             </span>
@@ -160,11 +159,8 @@ export function BudgetList({
                 value={quoteId ?? undefined}
                 onValueChange={(value) => onQuoteChange(value as QuoteId)}
               >
-                <SelectTrigger
-                  size="sm"
-                  aria-label="Cotización para convertir el total"
-                >
-                  <SelectValue placeholder="Cotización" />
+                <SelectTrigger size="sm" aria-label={t.cotizacionParaConvertir}>
+                  <SelectValue placeholder={t.cotizacion} />
                 </SelectTrigger>
                 <SelectContent>
                   {quotes.map((candidate) => (
@@ -177,7 +173,7 @@ export function BudgetList({
 
               {quote ? (
                 <span className="text-xs text-muted-foreground">
-                  actualizada {formatTimestamp(quote.updatedAt)}
+                  {t.actualizada(formatTimestamp(quote.updatedAt))}
                 </span>
               ) : null}
             </div>
@@ -186,11 +182,20 @@ export function BudgetList({
 
         {totals ? (
           <p className="text-sm text-muted-foreground">
-            Son{" "}
-            <span className="font-medium text-foreground tabular-nums">
-              {formatMoney(totals.totalConverted, totals.convertedCurrency)}
-            </span>{" "}
-            al {totals.quote.label} ({formatRate(totals.rate)} por dólar).
+            {enriquecer(
+              t.convertido(
+                formatMoney(totals.totalConverted, totals.convertedCurrency),
+                totals.quote.label,
+                formatRate(totals.rate),
+              ),
+              {
+                monto: (monto) => (
+                  <span className="font-medium text-foreground tabular-nums">
+                    {monto}
+                  </span>
+                ),
+              },
+            )}
           </p>
         ) : null}
 
@@ -217,17 +222,19 @@ export function BudgetList({
           {freshness.isStale ? (
             <TriangleAlert className="mt-0.5 size-4 shrink-0" />
           ) : null}
-          Precios actualizados {formatAge(freshness.ageDays)}
           {freshness.isStale
-            ? ` — más de ${freshness.staleAfterDays} días. Tomalos como referencia vieja.`
-            : "."}
+            ? t.preciosViejos(
+                formatAge(freshness.ageDays),
+                freshness.staleAfterDays,
+              )
+            : t.preciosActualizados(formatAge(freshness.ageDays))}
         </p>
       </div>
 
       {agruparPorCategoria(items).map(([categoria, lineas]) => (
         <section key={categoria} className="flex flex-col gap-2">
           <h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-            {formatCategory(categoria)}
+            {formatCategory(categoria, textosDelViaje.categorias)}
           </h3>
 
           <ul className="divide-y rounded-lg border">
@@ -239,8 +246,12 @@ export function BudgetList({
                 <div className="flex min-w-0 flex-1 flex-col">
                   <span className="text-sm">{line.product.name}</span>
                   <span className="text-xs text-muted-foreground tabular-nums">
-                    {formatMoney(line.product.basePrice, line.product.currency)}{" "}
-                    c/u
+                    {t.cadaUno(
+                      formatMoney(
+                        line.product.basePrice,
+                        line.product.currency,
+                      ),
+                    )}
                   </span>
                 </div>
 

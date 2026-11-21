@@ -5,6 +5,9 @@ import { formatCategory, formatWeight } from "@/lib/format";
 import type { TripPackingEntry } from "@/lib/trips/types";
 
 import { QtyStepper } from "./qty-stepper";
+import { enriquecer } from "@/i18n/enriquecer";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DEL_VIAJE } from "@/i18n/viaje";
 
 /**
  * Lista de equipaje (spec, sección 6B).
@@ -44,11 +47,12 @@ export function PackingList({
   onToggle: (itemId: string, checked: boolean) => void;
   onQty: (itemId: string, qty: number) => void;
 }) {
+  const t = useTextos(TEXTOS_DEL_VIAJE);
+
   if (entries.length === 0) {
     return (
       <p className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
-        No se generó ningún ítem para este viaje. Puede que falten datos de
-        clima o de catálogo para el mes y el tipo de viaje elegidos.
+        {t.equipaje.vacio}
       </p>
     );
   }
@@ -59,13 +63,14 @@ export function PackingList({
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2 rounded-lg border bg-muted/40 px-4 py-3">
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium text-foreground">
-            {listos} de {entries.length}
-          </span>{" "}
-          {listos === 1 ? "ítem listo" : "ítems listos"}
+          {enriquecer(t.equipaje.listos(listos, entries.length), {
+            cifra: (cifra) => (
+              <span className="font-medium text-foreground">{cifra}</span>
+            ),
+          })}
         </p>
         <p className="text-sm text-muted-foreground">
-          Peso total{" "}
+          {t.equipaje.pesoTotal}{" "}
           <span className="font-medium text-foreground tabular-nums">
             {formatWeight(totalWeightG)}
           </span>
@@ -75,7 +80,7 @@ export function PackingList({
       {agruparPorCategoria(entries).map(([categoria, items]) => (
         <section key={categoria} className="flex flex-col gap-2">
           <h3 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-            {formatCategory(categoria)}
+            {formatCategory(categoria, t.categorias)}
           </h3>
 
           <ul className="divide-y rounded-lg border">
@@ -100,7 +105,7 @@ export function PackingList({
                     onCheckedChange={(checked) =>
                       onToggle(entry.item.id, checked === true)
                     }
-                    aria-label={`Marcar ${entry.item.name} como listo`}
+                    aria-label={t.equipaje.marcar(entry.item.name)}
                   />
                 )}
 
@@ -116,7 +121,9 @@ export function PackingList({
                   </span>
                   <span className="text-xs text-muted-foreground tabular-nums">
                     {formatWeight(entry.totalWeightG)}
-                    {entry.qty > 1 ? ` · ${formatWeight(entry.item.weightG)} c/u` : ""}
+                    {entry.qty > 1
+                      ? ` · ${t.equipaje.cadaUno(formatWeight(entry.item.weightG))}`
+                      : ""}
                   </span>
                 </div>
 

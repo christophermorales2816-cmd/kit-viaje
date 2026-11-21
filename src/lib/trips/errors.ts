@@ -1,3 +1,5 @@
+import type { ProblemaDelViaje } from "./problemas";
+
 /**
  * Clasificación de fallos al escribir un viaje.
  *
@@ -24,7 +26,7 @@
  * porque era la forma más rápida de diagnosticar sin entrar a los logs. La
  * auditoría de seguridad lo sacó: ese texto nombra tablas, columnas y reglas
  * del esquema, y le sirve más a quien está probando la app que a quien quiere
- * armar una valija. El SQLSTATE sí se muestra —dice qué clase de fallo fue sin
+ * armar una maleta. El SQLSTATE sí se muestra —dice qué clase de fallo fue sin
  * describir la base— y el detalle entero queda en los logs del servidor, donde
  * lo escribe `createTripAction`.
  */
@@ -79,39 +81,25 @@ export class TripWriteError extends Error {
 }
 
 /**
- * El código de Postgres, entre paréntesis y al final.
+ * Qué clase de fallo fue, para que la pantalla lo cuente en su idioma
+ * (src/lib/trips/problemas.ts).
  *
- * Alcanza para saber qué clase de fallo fue y buscar el detalle en los logs.
- * El texto de la base no se agrega: describe el esquema (ver arriba).
+ * Lleva el código de Postgres, que alcanza para saber qué pasó y buscar el
+ * detalle en los logs. El texto de la base no viaja: describe el esquema (ver
+ * arriba).
  */
-function conDetalle(base: string, error: TripWriteError): string {
-  return error.code ? `${base} (código ${error.code})` : base;
-}
-
-/** Mensaje para el usuario según qué clase de fallo fue. */
-export function messageForTripWriteFailure(error: unknown): string {
+export function problemaDeEscritura(error: unknown): ProblemaDelViaje {
   if (!(error instanceof TripWriteError)) {
-    return "No pudimos crear el viaje. Probá de nuevo en un momento.";
+    return { codigo: "fallo-al-crear", codigoDeLaBase: null };
   }
 
   if (error.isSchemaMismatch) {
-    return conDetalle(
-      "No pudimos crear el viaje: la base de datos no tiene algo que la " +
-        "aplicación necesita. Reintentar no ayuda — hay migraciones sin aplicar.",
-      error,
-    );
+    return { codigo: "esquema-viejo", codigoDeLaBase: error.code };
   }
 
   if (error.isConstraintViolation) {
-    return conDetalle(
-      "No pudimos crear el viaje: la base rechazó los datos. Puede ser una " +
-        "regla del esquema o una migración sin aplicar.",
-      error,
-    );
+    return { codigo: "datos-rechazados", codigoDeLaBase: error.code };
   }
 
-  return conDetalle(
-    "No pudimos crear el viaje. Probá de nuevo en un momento.",
-    error,
-  );
+  return { codigo: "fallo-al-crear", codigoDeLaBase: error.code };
 }
