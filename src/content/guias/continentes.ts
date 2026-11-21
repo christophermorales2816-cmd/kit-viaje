@@ -38,6 +38,7 @@ export const ZONAS: GuideSubregion[] = [
   "Sudamérica",
   "México y Centroamérica",
   "Caribe",
+  "Norteamérica",
   "Europa del Sur",
   "Europa Occidental",
   "Europa del Norte",
@@ -66,6 +67,7 @@ const CONTINENTE_DE_LA_ZONA: Record<GuideSubregion, ContinenteId> = {
   Sudamérica: "america",
   "México y Centroamérica": "america",
   Caribe: "america",
+  Norteamérica: "america",
   "Europa del Sur": "europa",
   "Europa Occidental": "europa",
   "Europa del Norte": "europa",
@@ -89,7 +91,7 @@ const CONTINENTE_DE_LA_ZONA: Record<GuideSubregion, ContinenteId> = {
 const NOMBRES: Record<ContinenteId, { nombre: string; resumen: string }> = {
   america: {
     nombre: "América",
-    resumen: "De la Patagonia a México y las islas del Caribe.",
+    resumen: "De la Patagonia a Alaska, con las islas del Caribe.",
   },
   europa: {
     nombre: "Europa",

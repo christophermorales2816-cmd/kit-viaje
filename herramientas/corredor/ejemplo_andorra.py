@@ -6,7 +6,9 @@
 # plantilla para un país nuevo: copiá el archivo, cambiá los datos y el `cc`.
 #
 # Ciudad: (nn, slug, nombre, mínimas[12], máximas[12], lluvia[12] 0-100, factor)
-#   nn       00 a 08; 00 es la base y lleva factor 1.00
+#   nn       00 a 08; 00 es la base y lleva factor 1.00. Un país con más o
+#            menos ciudades lo dice con n_ciudades (spec, 22), y sus nn van
+#            de 00 a n_ciudades - 1.
 #   factor   multiplica los precios de la base para esa ciudad
 # cc: dos dígitos hex para los ids, únicos en todo el proyecto. Para ver los que
 #     ya se usaron:

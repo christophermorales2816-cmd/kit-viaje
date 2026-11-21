@@ -31,9 +31,9 @@ PAISES = importlib.import_module(MODULO).PAISES
 
 # Monedas cuyos precios llevan centavos: las ciudades derivadas se redondean al
 # centavo y no a la unidad. Misma lista que MONEDAS_CON_CENTAVOS en format.ts
-# (la regla: la unidad vale más de medio dólar), y un test lo verifica.
+# (la regla: la unidad vale medio dólar o más), y un test lo verifica.
 CON_CENTAVOS = {"USD", "EUR", "GBP", "CHF", "BAM", "SGD", "BND", "AZN", "JOD", "KWD", "BHD", "OMR",
-                "AUD", "NZD"}
+                "AUD", "NZD", "CAD", "BSD", "BZD", "BBD"}
 
 PLANTILLA = [
     ("comida", "Desayuno", 1, True, 1, 30),
@@ -91,12 +91,24 @@ def t(x):
 
 SLUG = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
+# Nueve ciudades por país, salvo que el país diga otra cosa con `n_ciudades`.
+# Estados Unidos y Canadá lo dicen: con nueve, Alaska y Hawái —o las Rocosas y
+# las auroras— no entraban sin sacar Nueva York o Montreal. Los ids siguen
+# siendo dos dígitos decimales por ciudad, así que el tope es cien.
+def esperadas(p):
+    n = p.get("n_ciudades", 9)
+    assert 2 <= n <= 99, (p["slug"], "n_ciudades", n)
+    return n
+
+NUMEROS = {8: "ocho", 9: "nueve", 10: "diez", 11: "once", 12: "doce", 13: "trece", 14: "catorce"}
+
 def validar(p):
     c = p["ciudades"]
-    assert len(c) == 9, (p["slug"], "ciudades", len(c))
-    assert [x[0] for x in c] == [f"{i:02d}" for i in range(9)], p["slug"]
+    n = esperadas(p)
+    assert len(c) == n, (p["slug"], "ciudades", len(c))
+    assert [x[0] for x in c] == [f"{i:02d}" for i in range(n)], p["slug"]
     slugs = [x[1] for x in c]
-    assert len(set(slugs)) == 9, (p["slug"], "slugs repetidos")
+    assert len(set(slugs)) == n, (p["slug"], "slugs repetidos")
     for nn, slug, nombre, mins, maxs, lluvia, factor in c:
         assert SLUG.match(slug), slug
         assert len(mins) == len(maxs) == len(lluvia) == 12, (p["slug"], slug)
@@ -146,7 +158,7 @@ def migracion(p, ts):
         rango = f"{lo:g} / {hi:g}".replace(".", ",")
         out.append(f"--   {nombre} en {MESES[mes]}: {rango} → {' + '.join(bs)} → {glosa(bs)}")
     out.append("--")
-    out.append(f"-- IDS FIJOS: destinos 00000000-…-00000000{cc}00 a {cc}08, la base es {cc}00.")
+    out.append(f"-- IDS FIJOS: destinos 00000000-…-00000000{cc}00 a {cc}{len(ciudades) - 1:02d}, la base es {cc}00.")
     out.append("-- Los precios usan md5(destino || nombre)::uuid, igual que las ciudades")
     out.append("-- derivadas de las migraciones anteriores: determinístico y sin choques.")
     out.append("")
@@ -197,7 +209,8 @@ def migracion(p, ts):
     out.append("")
 
     redondeo = ", 2" if moneda in CON_CENTAVOS else ""
-    out.append("-- Las otras ocho ciudades, derivadas de la base con un factor.")
+    otras = len(ciudades) - 1
+    out.append(f"-- Las otras {NUMEROS.get(otras, otras)} ciudades, derivadas de la base con un factor.")
     if moneda in CON_CENTAVOS:
         out.append(f"-- En {moneda} se redondea al centavo: redondear a la unidad convertiría un")
         out.append("-- café de 2,50 en uno de 2 o de 3.")

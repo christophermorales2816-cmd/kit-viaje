@@ -9,9 +9,12 @@ import { armenia } from "./armenia";
 import { australia } from "./australia";
 import { austria } from "./austria";
 import { azerbaiyan } from "./azerbaiyan";
+import { bahamas } from "./bahamas";
 import { banglades } from "./banglades";
+import { barbados } from "./barbados";
 import { barein } from "./barein";
 import { belgica } from "./belgica";
+import { belice } from "./belice";
 import { benin } from "./benin";
 import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
@@ -24,6 +27,7 @@ import { butan } from "./butan";
 import { caboVerde } from "./cabo-verde";
 import { camboya } from "./camboya";
 import { camerun } from "./camerun";
+import { canada } from "./canada";
 import { catar } from "./catar";
 import { chad } from "./chad";
 import { chequia } from "./chequia";
@@ -46,6 +50,7 @@ import { eritrea } from "./eritrea";
 import { eslovaquia } from "./eslovaquia";
 import { eslovenia } from "./eslovenia";
 import { espana } from "./espana";
+import { estadosUnidos } from "./estados-unidos";
 import { estonia } from "./estonia";
 import { esuatini } from "./esuatini";
 import { etiopia } from "./etiopia";
@@ -76,6 +81,7 @@ import { islasMarshall } from "./islas-marshall";
 import { islasSalomon } from "./islas-salomon";
 import { israelYPalestina } from "./israel-y-palestina";
 import { italia } from "./italia";
+import { jamaica } from "./jamaica";
 import { japon } from "./japon";
 import { jordania } from "./jordania";
 import { kazajistan } from "./kazajistan";
@@ -196,7 +202,7 @@ export { GUIDE_FACTS_MAX_AGE_DAYS } from "./types";
  * continente, y el import y el export, en orden alfabético.
  */
 const GUIAS: DestinationGuide[] = [
-  // AMÉRICA (spec, 10 a 13)
+  // AMÉRICA (spec, 10 a 13 y 22)
   argentina,
   brasil,
   bolivia,
@@ -208,6 +214,7 @@ const GUIAS: DestinationGuide[] = [
   colombia,
   venezuela,
   mexico,
+  belice,
   guatemala,
   honduras,
   elSalvador,
@@ -216,6 +223,11 @@ const GUIAS: DestinationGuide[] = [
   panama,
   cuba,
   republicaDominicana,
+  jamaica,
+  bahamas,
+  barbados,
+  estadosUnidos,
+  canada,
 
   // EUROPA
   espana,
@@ -398,9 +410,12 @@ export {
   australia,
   austria,
   azerbaiyan,
+  bahamas,
   banglades,
+  barbados,
   barein,
   belgica,
+  belice,
   benin,
   bolivia,
   bosniaYHerzegovina,
@@ -413,6 +428,7 @@ export {
   caboVerde,
   camboya,
   camerun,
+  canada,
   catar,
   chad,
   chequia,
@@ -435,6 +451,7 @@ export {
   eslovaquia,
   eslovenia,
   espana,
+  estadosUnidos,
   estonia,
   esuatini,
   etiopia,
@@ -465,6 +482,7 @@ export {
   islasSalomon,
   israelYPalestina,
   italia,
+  jamaica,
   japon,
   jordania,
   kazajistan,

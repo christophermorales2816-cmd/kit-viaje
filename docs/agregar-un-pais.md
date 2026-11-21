@@ -64,7 +64,8 @@ decorativos: hay tests que los fijan.
 - **El lugar destacado es la ciudad base.** La portada pone el marcador del
   globo en el destino destacado, y ese marcador dice dónde están calibrados los
   cálculos.
-- **`subregion`**: Sudamérica, México y Centroamérica o Caribe en América. En
+- **`subregion`**: Sudamérica, México y Centroamérica, Caribe o Norteamérica
+  en América (Norteamérica es Estados Unidos y Canadá, spec 22). En
   Europa, África, Asia y Oceanía, la división de la ONU: Europa del Sur,
   Occidental, del Norte y del Este; África del Norte, Occidental, Central,
   Oriental y Austral; Asia Occidental, Central, del Sur, Sudeste Asiático y Asia
@@ -172,18 +173,21 @@ Ids fijos, nunca `gen_random_uuid()`, en un rango que no choque con los países
 que ya están. Los países de 2026-10 usan `00000000-0000-4000-8000-00000000{cc}{nn}`,
 con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
 `4f` queda para lo que falte de Europa, **Asia usó del `50` al `7b`** (hay lugar
-hasta `8f`), **África, del `90` al `bd`**, y **Oceanía, del `c0` al `d0`**. Por
-cada ciudad:
+hasta `8f`), **África, del `90` al `bd`**, **Oceanía, del `c0` al `d0`**, y
+**Norteamérica y el Caribe, del `e0` en adelante** (spec, 22: la primera tanda
+usó del `e0` al `e5`). Por cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).
 - **12 filas** en `climate_profiles`. No once.
 - **18 filas** en `products`. Las de la ciudad base a mano, en su moneda; las
   demás derivadas con un factor y `md5(destination_id || name)::uuid`. **Una
-  moneda lleva centavos si su unidad vale más de medio dólar** —dólar, euro,
+  moneda lleva centavos si su unidad vale medio dólar o más** —dólar, euro,
   libra, franco suizo, marco bosnio; en Asia, los dólares de Singapur y Brunéi,
   el manat azerí y los dinares y riales de Kuwait, Baréin, Omán y Jordania; en
-  Oceanía, el dólar australiano y el neozelandés—, y
+  Oceanía, el dólar australiano y el neozelandés; en Norteamérica y el Caribe,
+  el canadiense, el bahameño y los de Belice y Barbados, que valen medio por
+  paridad fija—, y
   ahí las derivadas van con `round(precio * factor, 2)`: redondear a la unidad
   convierte un café de 2,50 en uno de 2 o de 3. Las demás, enteras. La lista
   vive en `MONEDAS_CON_CENTAVOS` (`src/lib/format.ts`) y en `CON_CENTAVOS`
@@ -204,8 +208,9 @@ cada ciudad:
 
 Las migraciones de los países de 2026-10 tienen la forma exacta a copiar; la
 de Chile es la más corta de leer. Las de Europa se generaron con
-`herramientas/corredor/generar.py`, que valida doce meses, nueve ciudades y
-dieciocho precios antes de escribir nada: describir el país en un archivo como
+`herramientas/corredor/generar.py`, que valida doce meses, nueve ciudades
+—o las que diga `n_ciudades`, como las doce de Estados Unidos— y dieciocho
+precios antes de escribir nada: describir el país en un archivo como
 `herramientas/corredor/ejemplo_andorra.py` y correr
 
 ```bash

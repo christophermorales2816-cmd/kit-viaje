@@ -139,10 +139,12 @@ export function formatSpeed(kmPorHora: number): string {
 /**
  * Las monedas cuyos precios se muestran con centavos.
  *
- * La regla: **una moneda lleva centavos si su unidad vale más de medio dólar.**
+ * La regla: **una moneda lleva centavos si su unidad vale medio dólar o más.**
  * Por debajo de eso, un café o un boleto cuestan varias unidades y redondear
  * a la unidad no cambia el precio; por encima, sí: un café a 3,50 redondeado a
- * 4 es otro precio.
+ * 4 es otro precio. Decía "más de medio dólar" hasta que llegaron el dólar de
+ * Belice y el de Barbados, que valen exactamente medio por paridad fija y se
+ * cobran en mitades: un boleto de bus de Barbados cuesta 3,50.
  *
  * La regla se escribió después de las decisiones y las explica todas. Los
  * catálogos de América Latina —pesos, reales, bolivianos, soles, quetzales,
@@ -167,6 +169,11 @@ export function formatSpeed(kmPorHora: number): string {
  * van enteros. Palaos, Micronesia y las Islas Marshall cobran en dólares
  * estadounidenses.
  *
+ * En Norteamérica y el Caribe, el dólar canadiense y el bahameño, que vale uno
+ * estadounidense, llevan centavos, y el de Belice y el de Barbados también, por
+ * lo que dice la regla. El dólar jamaiquino vale menos de un centavo de dólar y
+ * va entero. Estados Unidos ya estaba: es el dólar.
+ *
  * Antes la regla era al revés —"sin decimales solo para ARS"— y con un solo
  * país eso alcanzaba. Con diecinueve habría que haber sumado cada moneda nueva
  * a mano, y la que se olvidara saldría con ",00" en todos sus precios.
@@ -190,6 +197,10 @@ export const MONEDAS_CON_CENTAVOS: ReadonlySet<string> = new Set([
   "OMR",
   "AUD",
   "NZD",
+  "CAD",
+  "BSD",
+  "BZD",
+  "BBD",
 ]);
 
 /** Importes con el símbolo de la moneda: precios, subtotales y totales. */
