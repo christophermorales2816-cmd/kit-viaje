@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 
 import type { GuidePlace } from "@/content/guias";
 import { cn } from "@/lib/utils";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
 
 /**
  * "Adónde ir" (spec, sección 8.8).
@@ -32,8 +34,8 @@ const TINTES: Record<string, string> = {
 
 const TINTE_POR_DEFECTO = "from-slate-800 to-slate-950";
 
-const TODAS = "Todas";
-
+/** El filtro que muestra todos los lugares. */
+const TODAS = null;
 export function PlacesGrid({
   places,
   guideSlug,
@@ -44,12 +46,12 @@ export function PlacesGrid({
 }) {
   // El orden de las regiones sale del contenido, no de una lista aparte: si
   // alguien suma un destino de una región nueva, el filtro aparece solo.
+  const t = useTextos(TEXTOS_DE_LA_GUIA).adondeIr;
   const regiones = useMemo(
     () => [TODAS, ...new Set(places.map((place) => place.region))],
     [places],
   );
-
-  const [region, setRegion] = useState(TODAS);
+  const [region, setRegion] = useState<string | null>(TODAS);
 
   const visibles =
     region === TODAS
@@ -66,23 +68,22 @@ export function PlacesGrid({
           id="destinos-titulo"
           className="text-3xl font-semibold tracking-tight text-balance"
         >
-          Adónde ir
+          {t.titulo}
         </h2>
 
         <p className="text-muted-foreground text-sm text-pretty">
-          Nueve destinos que anclan la mayoría de los viajes. Filtrá por región
-          para armar tu ruta.
+          {t.bajada(places.length)}
         </p>
       </header>
 
       <div
         role="group"
-        aria-label="Filtrar por región"
+        aria-label={t.filtrarPorRegion}
         className="flex flex-wrap gap-2"
       >
         {regiones.map((nombre) => (
           <button
-            key={nombre}
+            key={nombre ?? "todas"}
             type="button"
             onClick={() => setRegion(nombre)}
             aria-pressed={region === nombre}
@@ -93,7 +94,7 @@ export function PlacesGrid({
                 : "hover:bg-accent",
             )}
           >
-            {nombre}
+            {nombre ?? t.todas}
           </button>
         ))}
       </div>
@@ -145,7 +146,7 @@ export function PlacesGrid({
                 href={`/guia/${guideSlug}/preparar?ciudad=${place.id}`}
                 className="mt-1 w-fit rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:outline-none"
               >
-                Planificar {place.name}
+                {t.planificar(place.name)}
               </Link>
             </article>
           </li>

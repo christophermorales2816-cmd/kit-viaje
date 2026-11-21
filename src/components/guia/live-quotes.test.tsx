@@ -1,5 +1,6 @@
-import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+
+import { renderizar } from "@/test/renderizar";
 
 import { LiveQuotesSkeleton } from "./live-quotes";
 
@@ -15,8 +16,8 @@ import { LiveQuotesSkeleton } from "./live-quotes";
  * hace I/O; las otras dos comparten exactamente el mismo componente de marco.
  */
 describe("encabezado de cotizaciones", () => {
-  it("habla en singular para un corredor de una sola cotización", () => {
-    const html = renderToStaticMarkup(<LiveQuotesSkeleton corridor="brasil" />);
+  it("habla en singular para un corredor de una sola cotización", async () => {
+    const html = await renderizar(<LiveQuotesSkeleton corridor="brasil" />);
 
     expect(html).toContain("La cotización, ahora");
     expect(html).not.toContain("cuatro");
@@ -24,26 +25,24 @@ describe("encabezado de cotizaciones", () => {
     expect(html).not.toContain("según cuál mires");
   });
 
-  it("cuenta las que tiene el corredor en vez de decir un número fijo", () => {
-    const html = renderToStaticMarkup(
-      <LiveQuotesSkeleton corridor="argentina" />,
-    );
+  it("cuenta las que tiene el corredor en vez de decir un número fijo", async () => {
+    const html = await renderizar(<LiveQuotesSkeleton corridor="argentina" />);
 
     expect(html).toContain("Las 4 cotizaciones, ahora");
     expect(html).toContain("según cuál mires");
   });
 
-  it("no afirma un número cuando todavía no sabe cuál es", () => {
-    const html = renderToStaticMarkup(<LiveQuotesSkeleton />);
+  it("no afirma un número cuando todavía no sabe cuál es", async () => {
+    const html = await renderizar(<LiveQuotesSkeleton />);
 
     expect(html).toContain("Las cotizaciones, ahora");
   });
 
-  it("no deja tres huecos al lado de una sola cotización", () => {
+  it("no deja tres huecos al lado de una sola cotización", async () => {
     // La grilla estaba fija en cuatro columnas, así que la única de Brasil
     // salía ocupando un cuarto del ancho.
-    const uno = renderToStaticMarkup(<LiveQuotesSkeleton corridor="brasil" />);
-    const cuatro = renderToStaticMarkup(
+    const uno = await renderizar(<LiveQuotesSkeleton corridor="brasil" />);
+    const cuatro = await renderizar(
       <LiveQuotesSkeleton corridor="argentina" />,
     );
 
