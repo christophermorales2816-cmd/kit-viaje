@@ -424,6 +424,37 @@ const CORREDORES = [
     timeZone: "America/Santo_Domingo",
     label: "hora de Santo Domingo",
   }),
+  // Norteamérica y el Caribe que no habla español (spec, 22). Estados Unidos
+  // es el dólar: no hay nada que cotizar. El dólar de las Bahamas vale uno
+  // estadounidense y el de Belice y el de Barbados, medio, por paridad fija;
+  // el canadiense y el jamaiquino flotan. Ninguno tiene fuente verificada, y
+  // una paridad fija tampoco es una fuente que el modelo sepa expresar todavía
+  // —llega con la conversión mundial—, así que van con `source: null`, como el
+  // resto, y la guía explica la paridad.
+  dolarizado("estados-unidos", {
+    timeZone: "America/New_York",
+    label: "hora de Nueva York",
+  }),
+  unaCotizacion("canada", "CAD", {
+    timeZone: "America/Toronto",
+    label: "hora de Toronto",
+  }),
+  unaCotizacion("jamaica", "JMD", {
+    timeZone: "America/Jamaica",
+    label: "hora de Kingston",
+  }),
+  unaCotizacion("belice", "BZD", {
+    timeZone: "America/Belize",
+    label: "hora de Belmopán",
+  }),
+  unaCotizacion("bahamas", "BSD", {
+    timeZone: "America/Nassau",
+    label: "hora de Nasáu",
+  }),
+  unaCotizacion("barbados", "BBD", {
+    timeZone: "America/Barbados",
+    label: "hora de Bridgetown",
+  }),
   // Europa. Ninguna de sus monedas tiene mercado paralelo —el euro, la libra,
   // el franco suizo, las coronas, el zloty, el forinto, los dos lei, el lek,
   // el dinar, el denar, la lira turca y el marco bosnio, atado al euro—: una

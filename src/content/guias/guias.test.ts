@@ -63,6 +63,17 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     panama: { lat: [7.1, 9.7], lon: [-83.1, -77.1] },
     cuba: { lat: [19.8, 23.3], lon: [-85, -74.1] },
     "republica-dominicana": { lat: [17.5, 20], lon: [-72.1, -68.3] },
+    // Con los cayos del arrecife, al este de la costa.
+    belice: { lat: [15.8, 18.6], lon: [-89.3, -87.3] },
+    jamaica: { lat: [17.6, 18.6], lon: [-78.5, -76.1] },
+    // De Gran Bahama y Ábaco, al norte, a Exuma; Inagua quedaría al sur.
+    bahamas: { lat: [20.8, 27.4], lon: [-79.6, -72.6] },
+    barbados: { lat: [13, 13.4], lon: [-59.7, -59.4] },
+    // Con Alaska y Hawái: Honolulu es lo más al sur, y Anchorage, lo más al
+    // norte del planificador. Sin las Aleutianas, que cruzan el antimeridiano.
+    "estados-unidos": { lat: [18.5, 71.5], lon: [-170, -66.8] },
+    // Yellowknife, a orillas del Gran Lago del Esclavo, es lo más al norte.
+    canada: { lat: [41.6, 83.2], lon: [-141.1, -52.5] },
 
     // EUROPA
     // Canarias está frente a África, mil kilómetros al sur de la península.

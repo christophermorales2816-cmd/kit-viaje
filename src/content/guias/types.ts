@@ -158,11 +158,16 @@ export interface GuidePreparation {
  * queda en Asia Occidental, como dice la ONU, y Egipto en África del Norte,
  * con el Sinaí incluido. Zimbabue y Zambia, que se viajan junto con Botsuana y
  * Namibia, quedan en África Oriental, también como dice la ONU.
+ *
+ * Norteamérica es la "América septentrional" de la ONU: Estados Unidos y
+ * Canadá, y más adelante Groenlandia y Bermudas. México queda en su zona de
+ * siempre, con Centroamérica, que es como se viaja (spec, 22).
  */
 export type GuideSubregion =
   | "Sudamérica"
   | "México y Centroamérica"
   | "Caribe"
+  | "Norteamérica"
   | "Europa del Sur"
   | "Europa Occidental"
   | "Europa del Norte"

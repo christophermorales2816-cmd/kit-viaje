@@ -20,11 +20,14 @@ export const NOMBRES_EN_CASTELLANO: Record<string, string[]> = {
   // América
   // Antigua Guatemala no tiene aeropuerto: se llega por La Aurora.
   "Antigua Guatemala": ["GUA"],
+  "Ciudad de Belice": ["BZE"],
   "Ciudad de Guatemala": ["GUA"],
   "Ciudad de México": ["MEX", "NLU"],
   "Ciudad de Panamá": ["PTY"],
+  "Ciudad de Quebec": ["YQB"],
   Filadelfia: ["PHL"],
   "La Habana": ["HAV"],
+  Nasáu: ["NAS"],
   "Nueva Orleans": ["MSY"],
   "Nueva York": ["JFK", "LGA", "EWR"],
   "San Pablo": ["GRU", "CGH", "VCP"],

@@ -1059,6 +1059,12 @@ su corredor de cotizaciones. Quedan afuera Haití, Belice, Guyana, Surinam y
 Puerto Rico: la app está escrita en español rioplatense para países
 hispanohablantes más Brasil, y Puerto Rico es territorio de Estados Unidos.
 
+> **Revisado en la sección 22:** con el sitio en inglés para todo el mundo, el
+> criterio de idioma dejó de valer. Belice, Guyana, Surinam y el Caribe de
+> habla inglesa entran por tandas, junto con Estados Unidos y Canadá. Haití
+> queda afuera por la regla de 14.2, y Puerto Rico se decide en la tercera
+> tanda.
+
 ### 13.1 Antes de sumar países, lo que asumía que había pocos
 
 La primera tarea no fue cargar países sino buscar qué se rompía con muchos.
@@ -3296,3 +3302,130 @@ formato depende de la decisión de las monedas.
   los textos de forma asíncrona. Hay dos salidas:
   - reciben el texto armado por prop, como `TarjetaDeLaPortadaVista`;
   - son de cliente y lo leen con `useTextos`, como `Pronto`.
+
+## 22. Norteamérica y el Caribe que no habla español
+
+La sección 13 dejó afuera a Haití, Belice, Guyana, Surinam, Puerto Rico y el
+Caribe de habla inglesa con un criterio de idioma: el sitio estaba escrito
+para países hispanohablantes más Brasil. Estados Unidos y Canadá nunca se
+cargaron. Con el sitio en inglés para todo el mundo (sección 21), ese
+criterio dejó de tener sentido, y quienes probaron el sitio lo notaron:
+preguntaron por Jamaica, por Belice, por el resto del Caribe y por los
+destinos de nieve.
+
+### 22.1 Alcance
+
+Tres tandas, más Groenlandia:
+
+1. **Estados Unidos, Canadá, Jamaica, Belice, Bahamas y Barbados**, cargada
+   el 2026-11-21.
+2. Trinidad y Tobago, Santa Lucía, Antigua y Barbuda, Granada, San Vicente y
+   las Granadinas, Dominica, San Cristóbal y Nieves, Guyana y Surinam.
+3. Los territorios que cumplen el criterio de 16.2 —moneda o reglas de entrada
+   propias, y se viaja a ellos como a un país—: Aruba, Curazao, Islas Caimán,
+   Turcas y Caicos y Bermudas, y Groenlandia.
+
+Haití queda afuera por la regla de 14.2: Estados Unidos lo tiene en el nivel
+más alto de su recomendación ("no viajar"), revisada en julio de 2026.
+
+Hawái y Alaska, que comparten moneda y frontera con Estados Unidos (16.2),
+entran como ciudades de su guía: Honolulu y Anchorage. Puerto Rico tampoco
+cumple el criterio de 16.2, pero se viaja a él como a un destino propio, y en
+español: se decide en la tercera tanda.
+
+**Jamaica y Belice entran con aviso**, con el bloque de Pakistán (14.11):
+
+- **Jamaica** está en el nivel 2 de la recomendación de Estados Unidos desde
+  enero de 2026, pero con barrios de Kingston, Montego Bay y otras ciudades
+  en el nivel 4.
+- **Belice** está en el nivel 2, con el sur de Ciudad de Belice en el nivel 3.
+  Ninguna de sus nueve ciudades está en Ciudad de Belice.
+- **Bahamas** (nivel 2, sin zonas), **Barbados** y **Canadá** (nivel 1) van
+  con precauciones normales.
+
+Las recomendaciones se revisaron el 2026-11-21.
+
+### 22.2 Una zona nueva: Norteamérica
+
+Es la "América septentrional" de la ONU: Estados Unidos y Canadá, y en la
+tanda 3, Groenlandia y Bermudas. México sigue en "México y Centroamérica",
+que es como se viaja, y Belice entra ahí. Jamaica, Bahamas y Barbados van al
+Caribe. El resumen de América pasó a "De la Patagonia a Alaska, con las islas
+del Caribe".
+
+### 22.3 Más de nueve ciudades
+
+El generador (`herramientas/corredor/generar.py`) exigía nueve ciudades por
+país; ahora acepta `n_ciudades`. Estados Unidos tiene doce, para que entren
+Alaska y Hawái sin sacar a Nueva York o a California. Canadá tiene diez, con
+las Rocosas, Whistler y Yellowknife, que son los destinos de nieve. Los ids
+siguen siendo dos dígitos decimales por ciudad. El bloque de Norteamérica y el
+Caribe empieza en `e0` (tanda 1: `e0` a `e5`).
+
+Las bases son la ciudad donde duerme la mayoría de los viajeros, como en las
+tandas de Oceanía y África, y no la capital: Nueva York, Toronto, Montego Bay,
+San Pedro (cayo Ambergris, como Antigua en 13.5), Nasáu y Bridgetown.
+
+### 22.4 Monedas
+
+- **Estados Unidos** es dolarizado por definición.
+- **El dólar canadiense y el jamaiquino** flotan.
+- **El bahameño** vale uno estadounidense.
+- **El de Belice y el de Barbados** valen medio, por paridad fija.
+
+Todos van con `source: null`. Una paridad fija tampoco es una fuente que el
+modelo sepa expresar todavía: llega con la conversión mundial de la fase 2
+(sección 21), y mientras tanto cada guía explica la paridad.
+
+La regla de los centavos (`MONEDAS_CON_CENTAVOS`) pasó de "más de medio dólar"
+a "medio dólar o más". Así entran el dólar de Belice y el de Barbados, que se
+cobran en mitades: el boleto de bus de Barbados cuesta 3,50. También entran
+el canadiense y el bahameño. El jamaiquino va entero.
+
+Precios con reglas propias, cada uno con su `update` comentado al final de su
+migración:
+
+- Estados Unidos y Canadá no incluyen el impuesto a las ventas, que cambia por
+  estado o provincia. La cena incluye la propina, y el nombre lo dice.
+- En Orlando, la atracción principal es un día en un parque temático.
+- Banff y Whistler llevan el traslado desde Calgary y desde Vancouver, y un
+  día de esquí con pase.
+- En Barbados el bus tiene tarifa única en toda la isla.
+
+### 22.5 Lo que aporta cada país
+
+- **Estados Unidos.** El precio de la etiqueta no es el que se paga: la guía
+  pone el impuesto y la propina en los números de arriba. Desde 2026 quienes
+  no residen pagan un recargo en los once parques nacionales más visitados. La
+  entrada (ESTA o visa) depende del pasaporte, y algunas nacionalidades tienen
+  la entrada restringida: la guía manda a verificar el propio.
+- **Canadá.** Yellowknife, con mínimas de −30,9 °C en enero, es la ciudad más
+  fría del planificador; está por las auroras. El aerosol contra osos se
+  compra al llegar, porque no viaja en avión.
+- **Jamaica.** El huracán Melissa (octubre de 2025) se nombra una vez, con su
+  fecha, y la guía manda a confirmar que el alojamiento esté abierto; no
+  describe la reconstrucción. Las Montañas Azules son el Constanza de la isla:
+  noches frescas y frío de madrugada en el pico.
+- **Belice.** Es la primera paridad fija del sitio, y el dólar estadounidense
+  circula junto al local. La guía dice que hay que preguntar en qué dólares
+  está cada precio.
+- **Bahamas.** Es la primera guía hecha de islas remotas: pocos cajeros, pocos
+  médicos y avionetas. Lo esencial se resuelve en Nasáu antes de salir, y la
+  guía lo dice.
+- **Barbados.** Una isla de 34 km con dos mares: se nada al oeste y al sur, y
+  al este se mira. El manzanillo y la ropa de camuflaje van en la guía.
+
+Las seis guías son las primeras escritas desde cero en tuteo neutro (19.9).
+
+### 22.6 Verificado
+
+- El lint, los tests, el build y el typecheck, en verde.
+- Las migraciones, sobre una base virgen, con el smoke de RLS y la integridad
+  en verde.
+- El motor de equipaje, con el clima de la base local: Anchorage en enero da
+  abrigo y nada de playa; San Pedro en febrero, playa y nada de abrigo; las
+  Montañas Azules, un polar y protector solar a la vez.
+- Las guías, la lista de destinos y la zona nueva, mirados en el navegador.
+
+El planificador no se pudo mirar con datos: corre contra Supabase, y la base
+local no tiene su API.
