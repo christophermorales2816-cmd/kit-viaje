@@ -3,6 +3,9 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { IDIOMAS } from "@/i18n/idiomas";
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+
 import {
   EN_TENDENCIA,
   IMPERDIBLES_DE_CULTURA,
@@ -47,10 +50,18 @@ describe("tarjetas de la portada", () => {
     }
   });
 
-  it("todas tienen título y una línea que dice qué va a haber", () => {
-    for (const { id, titulo, descripcion } of [...TARJETAS, VACACIONES]) {
-      expect(titulo.trim().length, id).toBeGreaterThan(0);
-      expect(descripcion.trim().length, id).toBeGreaterThan(0);
+  it("todas tienen su título y su descripción en cada idioma", () => {
+    for (const idioma of IDIOMAS) {
+      const { tarjetas, opciones } = TEXTOS_DE_LA_PORTADA[idioma];
+
+      for (const { id } of [...TARJETAS, VACACIONES]) {
+        expect(tarjetas[id]?.titulo, `${idioma}: ${id}`).toBeTruthy();
+        expect(tarjetas[id]?.descripcion, `${idioma}: ${id}`).toBeTruthy();
+      }
+
+      for (const { id } of VACACIONES.opciones) {
+        expect(opciones[id], `${idioma}: ${id}`).toBeTruthy();
+      }
     }
   });
 });

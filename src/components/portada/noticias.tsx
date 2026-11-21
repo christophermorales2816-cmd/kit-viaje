@@ -6,6 +6,9 @@ import {
   TrainFront,
 } from "lucide-react";
 
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
+
 import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
 
 /**
@@ -19,24 +22,25 @@ import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
  */
 
 const TEMAS = [
-  { nombre: "Requisitos de entrada", icono: Stamp },
-  { nombre: "Transporte y paros", icono: TrainFront },
-  { nombre: "Clima extremo", icono: CloudLightning },
-  { nombre: "Avisos oficiales", icono: Megaphone },
-];
+  { id: "requisitos", icono: Stamp },
+  { id: "transporte", icono: TrainFront },
+  { id: "clima", icono: CloudLightning },
+  { id: "avisos", icono: Megaphone },
+] as const;
 
-export function Noticias() {
+export async function Noticias() {
+  const t = (await textos(TEXTOS_DE_LA_PORTADA)).noticias;
+
   return (
     <section aria-labelledby="noticias-titulo" className="bg-white">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-16 md:py-20">
         <EncabezadoDeSeccion
           id="noticias-titulo"
-          antetitulo="Noticias para viajeros"
-          titulo="Lo que cambia antes de que viajes"
+          antetitulo={t.antetitulo}
+          titulo={t.titulo}
           pronto
         >
-          Requisitos de entrada, paros de transporte, alertas de clima y avisos
-          oficiales de cada destino, con la fuente y la fecha de cada dato.
+          {t.bajada}
         </EncabezadoDeSeccion>
 
         <div className="relative isolate overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 p-6 md:p-10">
@@ -60,23 +64,21 @@ export function Noticias() {
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <p className="text-lg font-semibold text-slate-950">
-                  Estamos armando este panel.
+                  {t.enConstruccion}
                 </p>
                 <p className="max-w-2xl text-sm text-pretty text-slate-600">
-                  Va a ser una herramienta más del sitio: lo que cambió en cada
-                  destino y desde cuándo, para enterarte antes de salir y no en
-                  el aeropuerto.
+                  {t.queVaASer}
                 </p>
               </div>
 
-              <ul aria-label="Temas del panel" className="flex flex-wrap gap-2">
-                {TEMAS.map(({ nombre, icono: Icono }) => (
+              <ul aria-label={t.temasDelPanel} className="flex flex-wrap gap-2">
+                {TEMAS.map(({ id, icono: Icono }) => (
                   <li
-                    key={nombre}
+                    key={id}
                     className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700"
                   >
                     <Icono aria-hidden className="size-4 text-slate-500" />
-                    {nombre}
+                    {t.temas[id]}
                   </li>
                 ))}
               </ul>

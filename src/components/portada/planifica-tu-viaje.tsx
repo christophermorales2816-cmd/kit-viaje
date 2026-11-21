@@ -11,6 +11,9 @@ import {
   type DestinoBuscable,
 } from "@/components/landing/buscador-de-destinos";
 
+import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { textos } from "@/i18n/servidor";
+
 import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
 
 /**
@@ -23,30 +26,19 @@ import { EncabezadoDeSeccion } from "./encabezado-de-seccion";
  */
 
 const PASOS = [
-  {
-    icono: MapPin,
-    titulo: "Elegí el destino y la ciudad",
-    detalle:
-      "El clima y los precios son los de esa ciudad, no un promedio del país.",
-  },
-  {
-    icono: CalendarDays,
-    titulo: "Poné las fechas y el tipo de viaje",
-    detalle: "No es lo mismo una semana de playa que una de trabajo.",
-  },
-  {
-    icono: FileSpreadsheet,
-    titulo: "Llevate la lista y el presupuesto",
-    detalle: "Para editar, compartir con un enlace y bajar en CSV.",
-  },
-];
+  { id: "destino", icono: MapPin },
+  { id: "fechas", icono: CalendarDays },
+  { id: "lista", icono: FileSpreadsheet },
+] as const;
 
-export function PlanificaTuViaje({
+export async function PlanificaTuViaje({
   destinos,
 }: {
   /** Cada destino, con el enlace a su planificador. */
   destinos: DestinoBuscable[];
 }) {
+  const t = (await textos(TEXTOS_DE_LA_PORTADA)).planifica;
+
   return (
     <section
       aria-labelledby="planificar-titulo"
@@ -69,17 +61,16 @@ export function PlanificaTuViaje({
         <div className="flex flex-col gap-10">
           <EncabezadoDeSeccion
             id="planificar-titulo"
-            antetitulo="Planificá tu viaje"
-            titulo="Qué llevar y cuánto vas a gastar, para tus fechas"
+            antetitulo={t.antetitulo}
+            titulo={t.titulo}
             oscuro
           >
-            La lista de equipaje sale del clima de esas fechas, y el
-            presupuesto, de la cotización que elijas. Sin registrarte.
+            {t.bajada}
           </EncabezadoDeSeccion>
 
           <ol className="flex flex-col gap-5">
-            {PASOS.map(({ icono: Icono, titulo, detalle }, i) => (
-              <li key={titulo} className="flex gap-4">
+            {PASOS.map(({ id, icono: Icono }, i) => (
+              <li key={id} className="flex gap-4">
                 <span className="relative flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/15">
                   <Icono aria-hidden className="size-5 text-orange-400" />
                   <span
@@ -90,8 +81,10 @@ export function PlanificaTuViaje({
                   </span>
                 </span>
                 <div className="flex flex-col gap-0.5 pt-0.5">
-                  <p className="font-medium">{titulo}</p>
-                  <p className="text-sm text-pretty text-white/70">{detalle}</p>
+                  <p className="font-medium">{t.pasos[id].titulo}</p>
+                  <p className="text-sm text-pretty text-white/70">
+                    {t.pasos[id].detalle}
+                  </p>
                 </div>
               </li>
             ))}
@@ -101,19 +94,16 @@ export function PlanificaTuViaje({
         <div className="flex flex-col gap-5 rounded-3xl bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-sm md:p-8">
           <BuscadorDeDestinos
             destinos={destinos}
-            etiqueta="¿Adónde viajás?"
+            etiqueta={t.adondeViajas}
             etiquetaVisible
-            placeholder="Buscá un país"
+            placeholder={t.buscaUnPais}
           />
-          <p className="text-sm text-white/70">
-            Te lleva al planificador de ese destino, donde elegís la ciudad y
-            las fechas.
-          </p>
+          <p className="text-sm text-white/70">{t.queHaceElBuscador}</p>
           <Link
             href="/destinos"
             className="inline-flex w-fit items-center gap-1.5 rounded-sm text-sm font-medium text-white underline decoration-white/30 underline-offset-4 transition-colors outline-none hover:decoration-orange-400 focus-visible:ring-[3px] focus-visible:ring-orange-400/60"
           >
-            ¿Todavía no sabés adónde? Mirá todos los destinos
+            {t.todaviaNoSabes}
             <ArrowRight aria-hidden className="size-4" />
           </Link>
         </div>

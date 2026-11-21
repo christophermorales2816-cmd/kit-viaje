@@ -109,8 +109,8 @@ de cada país.
 El inglés va a ser el idioma principal, y el español pasa a `/es` (spec,
 sección 21). Primero, los textos de la interfaz salen del código a diccionarios
 por idioma. Lo único que cambia a la vista es el voseo, que pasa a tuteo
-neutro. Ya están en diccionarios la barra, el pie, el menú y las páginas de
-error.
+neutro. Ya están en diccionarios la barra, el pie, el menú, las páginas de
+error y la portada.
 
 ## Stack
 
