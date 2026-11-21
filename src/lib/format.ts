@@ -172,7 +172,11 @@ export function formatSpeed(kmPorHora: number): string {
  * En Norteamérica y el Caribe, el dólar canadiense y el bahameño, que vale uno
  * estadounidense, llevan centavos, y el de Belice y el de Barbados también, por
  * lo que dice la regla. El dólar jamaiquino vale menos de un centavo de dólar y
- * va entero. Estados Unidos ya estaba: es el dólar.
+ * va entero. Estados Unidos ya estaba: es el dólar. Con los territorios (spec,
+ * 22.8) entran el florín de Aruba y el del Caribe, que usa Curazao: valen algo
+ * más de medio dólar, por paridad fija. También el dólar de las Caimán, que
+ * vale más que uno, y el de Bermudas, que vale uno. La corona danesa de
+ * Groenlandia sigue afuera, como en Dinamarca.
  *
  * Antes la regla era al revés —"sin decimales solo para ARS"— y con un solo
  * país eso alcanzaba. Con diecinueve habría que haber sumado cada moneda nueva
@@ -201,6 +205,10 @@ export const MONEDAS_CON_CENTAVOS: ReadonlySet<string> = new Set([
   "BSD",
   "BZD",
   "BBD",
+  "AWG",
+  "XCG",
+  "KYD",
+  "BMD",
 ]);
 
 /** Importes con el símbolo de la moneda: precios, subtotales y totales. */

@@ -3322,9 +3322,10 @@ Tres tandas, más Groenlandia:
 2. **Trinidad y Tobago, Santa Lucía, Antigua y Barbuda, Granada, San Vicente
    y las Granadinas, Dominica, San Cristóbal y Nieves, Guyana y Surinam**,
    cargada el 2026-11-21 (22.7).
-3. Los territorios que cumplen el criterio de 16.2 —moneda o reglas de entrada
-   propias, y se viaja a ellos como a un país—: Aruba, Curazao, Islas Caimán,
-   Turcas y Caicos y Bermudas, y Groenlandia.
+3. **Puerto Rico y los territorios que cumplen el criterio de 16.2** —moneda o
+   reglas de entrada propias, y se viaja a ellos como a un país—: **Aruba,
+   Curazao, Islas Caimán, Turcas y Caicos, Bermudas y Groenlandia**, cargada
+   el 2026-11-21 (22.8).
 
 Haití queda afuera por la regla de 14.2: Estados Unidos lo tiene en el nivel
 más alto de su recomendación ("no viajar"), revisada en julio de 2026.
@@ -3332,7 +3333,7 @@ más alto de su recomendación ("no viajar"), revisada en julio de 2026.
 Hawái y Alaska, que comparten moneda y frontera con Estados Unidos (16.2),
 entran como ciudades de su guía: Honolulu y Anchorage. Puerto Rico tampoco
 cumple el criterio de 16.2, pero se viaja a él como a un destino propio, y en
-español: se decide en la tercera tanda.
+español: entra en la tercera tanda con guía propia (22.8).
 
 **Jamaica y Belice entran con aviso**, con el bloque de Pakistán (14.11):
 
@@ -3361,7 +3362,8 @@ país; ahora acepta `n_ciudades`. Estados Unidos tiene doce, para que entren
 Alaska y Hawái sin sacar a Nueva York o a California. Canadá tiene diez, con
 las Rocosas, Whistler y Yellowknife, que son los destinos de nieve. Los ids
 siguen siendo dos dígitos decimales por ciudad. El bloque de Norteamérica y el
-Caribe empieza en `e0` (tanda 1: `e0` a `e5`; tanda 2: `e6` a `ee`).
+Caribe empieza en `e0` (tanda 1: `e0` a `e5`; tanda 2: `e6` a `ee`; tanda 3:
+`ef` a `f5`).
 
 Las bases son la ciudad donde duerme la mayoría de los viajeros, como en las
 tandas de Oceanía y África, y no la capital: Nueva York, Toronto, Montego Bay,
@@ -3499,3 +3501,88 @@ máximo del generador (2,5).
   integridad, en verde.
 - El motor de equipaje, con el clima de la base local.
 - Las guías, en el navegador.
+
+### 22.8 Tanda 3: Puerto Rico, los territorios y Groenlandia
+
+Siete destinos, cargados el 2026-11-21, con nueve ciudades cada uno (ids `ef`
+a `f5`). Puerto Rico, Aruba, Curazao, Islas Caimán y Turcas y Caicos van al
+Caribe; Bermudas y Groenlandia, a Norteamérica (22.2).
+
+**Puerto Rico.** No cumple el criterio de 16.2: comparte moneda y frontera con
+Estados Unidos, como Hawái. Entra igual, con guía propia y no como ciudad de la
+guía de Estados Unidos, porque se viaja a él como a un país del Caribe, y en
+español. Es dolarizado, y la guía pone arriba la regla que importa: para
+entrar valen las de Estados Unidos, ESTA o visa.
+
+**Los territorios.** Aruba y Curazao son países del Reino de los Países Bajos;
+Islas Caimán, Turcas y Caicos y Bermudas, territorios británicos de ultramar;
+Groenlandia, parte del Reino de Dinamarca, pero fuera de Schengen y de la Unión
+Europea. Los seis tienen reglas de entrada propias, y todos menos Turcas y
+Caicos, moneda propia: cumplen 16.2.
+
+**Recomendaciones de viaje**, revisadas el 2026-11-21. Turcas y Caicos está en
+el nivel 2 de la recomendación de Estados Unidos, sin zonas, y su aviso destaca
+la ley de armas. Ninguno de los siete entra con aviso.
+
+**Monedas.** Puerto Rico y Turcas y Caicos cobran en dólares estadounidenses:
+corredores dolarizados. El florín de Aruba y el florín del Caribe (XCG) de
+Curazao, que reemplazó al florín antillano en 2025, valen algo más de medio
+dólar por paridad fija de 1,79; el dólar de las Caimán vale más que uno, y el
+de Bermudas, uno. Los cuatro llevan centavos (`MONEDAS_CON_CENTAVOS`). La corona
+danesa va entera, como en Dinamarca. Todos con `source: null`, por la misma
+razón que la tanda 1.
+
+**Precios con reglas propias.** Donde no hay bus de larga distancia, el renglón
+pasa a lo que se usa: el vuelo a las islas hermanas en las Caimán, el vuelo o
+el ferry a otra isla en Turcas y Caicos, el jeep o el auto de alquiler en Aruba
+y Curazao, el miniauto eléctrico o la moto en Bermudas y el vuelo o el barco
+entre pueblos en Groenlandia. En Turcas y Caicos tampoco hay buses urbanos: el
+transporte del día es el taxi, que cobra por persona. Puerto Rico, como
+Estados Unidos, no incluye el impuesto a las ventas, y la cena incluye la
+propina.
+
+**Lo que aporta cada destino:**
+
+- **Puerto Rico.** Las tres bahías bioluminiscentes y una medida que confunde a
+  todos: las carreteras marcan kilómetros, las velocidades van en millas y la
+  gasolina se vende por litro. Los cortes de luz entran en la checklist, con
+  batería portátil y linterna.
+- **Aruba.** El Caribe sin lluvia: está fuera del cinturón de huracanes y el
+  motor no encuentra un mes de lluvia. La entrada se resuelve antes de volar,
+  en dos pasos: la tarjeta ED, de entrada y salida, y la tasa de
+  sostenibilidad. La guía dice "tarjeta ED" y no "tarjeta de embarque", que en
+  castellano es el pase de abordar.
+- **Curazao.** La primera moneda del sitio nacida después del planificador, el
+  florín del Caribe. Buceo desde la orilla y la tarjeta digital de inmigración,
+  con el aviso de usar solo el sitio oficial.
+- **Islas Caimán.** Una moneda que vale más que el dólar, con precios de los más
+  altos del Caribe, y dos islas hermanas, Caimán Brac y Pequeño Caimán, remotas
+  y tranquilas.
+- **Turcas y Caicos.** La ley de armas: tener munición es delito aunque sea una
+  bala olvidada en una mochila, y se castiga con cárcel. No es una alerta de
+  seguridad sino una regla que se aplica a turistas, y la guía la pone arriba:
+  en los números, en la checklist de documentos, en lo que no hay que llevar y
+  en las preguntas.
+- **Bermudas.** Una isla de playa con invierno: de diciembre a marzo hace fresco
+  y sopla el viento, y la guía lo dice antes que nada, porque quien piensa en el
+  Caribe arma mal la maleta. Quien visita no puede alquilar un auto común.
+- **Groenlandia.** El destino más remoto del planificador, y la respuesta a lo
+  que pedían quienes probaron el sitio: no hay rutas entre pueblos, el clima
+  manda en los vuelos, y la guía dice qué se encuentra en los asentamientos —una
+  tienda general que vende combustible y hace de correo, y muchas veces una
+  enfermería— y qué resolver antes de salir. Una visa Schengen no sirve para
+  entrar. Qaanaaq, a más de 77° de latitud norte, es la ciudad más al norte del
+  planificador, y en Kangerlussuaq hasta julio pide abrigo.
+
+El buscador de vuelos suma un alias: Grace Bay, la base de Turcas y Caicos, se
+busca por el aeropuerto de Providenciales.
+
+**Verificado.**
+
+- El lint, los tests, el build y el typecheck, en verde.
+- Las migraciones, sobre una base virgen, con el smoke de RLS y la integridad,
+  en verde.
+- El motor de equipaje, con el clima de la base local: Qaanaaq en febrero y
+  Kangerlussuaq en julio dan abrigo; Bermudas en febrero, polar e impermeable
+  sin abrigo; Aruba en agosto, playa y nada de lluvia.
+- Las guías y la lista de destinos, en el navegador.

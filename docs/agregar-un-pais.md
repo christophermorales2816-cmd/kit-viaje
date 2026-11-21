@@ -65,7 +65,8 @@ decorativos: hay tests que los fijan.
   globo en el destino destacado, y ese marcador dice dónde están calibrados los
   cálculos.
 - **`subregion`**: Sudamérica, México y Centroamérica, Caribe o Norteamérica
-  en América (Norteamérica es Estados Unidos y Canadá, spec 22). En
+  en América (Norteamérica es Estados Unidos, Canadá, Bermudas y Groenlandia,
+  spec 22). En
   Europa, África, Asia y Oceanía, la división de la ONU: Europa del Sur,
   Occidental, del Norte y del Este; África del Norte, Occidental, Central,
   Oriental y Austral; Asia Occidental, Central, del Sur, Sudeste Asiático y Asia
@@ -175,7 +176,8 @@ con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
 `4f` queda para lo que falte de Europa, **Asia usó del `50` al `7b`** (hay lugar
 hasta `8f`), **África, del `90` al `bd`**, **Oceanía, del `c0` al `d0`**, y
 **Norteamérica y el Caribe, del `e0` en adelante** (spec, 22: la tanda 1 usó
-del `e0` al `e5`, y la tanda 2, del `e6` al `ee`). Por cada ciudad:
+del `e0` al `e5`, la tanda 2, del `e6` al `ee`, y la tanda 3, del `ef` al
+`f5`; quedan del `f6` al `ff`). Por cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).
@@ -187,7 +189,8 @@ del `e0` al `e5`, y la tanda 2, del `e6` al `ee`). Por cada ciudad:
   el manat azerí y los dinares y riales de Kuwait, Baréin, Omán y Jordania; en
   Oceanía, el dólar australiano y el neozelandés; en Norteamérica y el Caribe,
   el canadiense, el bahameño y los de Belice y Barbados, que valen medio por
-  paridad fija—, y
+  paridad fija, el florín de Aruba, el florín del Caribe de Curazao y los
+  dólares de las Caimán y de Bermudas—, y
   ahí las derivadas van con `round(precio * factor, 2)`: redondear a la unidad
   convierte un café de 2,50 en uno de 2 o de 3. Las demás, enteras. La lista
   vive en `MONEDAS_CON_CENTAVOS` (`src/lib/format.ts`) y en `CON_CENTAVOS`

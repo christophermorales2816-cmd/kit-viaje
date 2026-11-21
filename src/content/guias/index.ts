@@ -7,6 +7,7 @@ import { arabiaSaudita } from "./arabia-saudita";
 import { argelia } from "./argelia";
 import { argentina } from "./argentina";
 import { armenia } from "./armenia";
+import { aruba } from "./aruba";
 import { australia } from "./australia";
 import { austria } from "./austria";
 import { azerbaiyan } from "./azerbaiyan";
@@ -17,6 +18,7 @@ import { barein } from "./barein";
 import { belgica } from "./belgica";
 import { belice } from "./belice";
 import { benin } from "./benin";
+import { bermudas } from "./bermudas";
 import { bolivia } from "./bolivia";
 import { bosniaYHerzegovina } from "./bosnia-y-herzegovina";
 import { botsuana } from "./botsuana";
@@ -42,6 +44,7 @@ import { costaDeMarfil } from "./costa-de-marfil";
 import { costaRica } from "./costa-rica";
 import { croacia } from "./croacia";
 import { cuba } from "./cuba";
+import { curazao } from "./curazao";
 import { dinamarca } from "./dinamarca";
 import { dominica } from "./dominica";
 import { ecuador } from "./ecuador";
@@ -66,6 +69,7 @@ import { georgia } from "./georgia";
 import { ghana } from "./ghana";
 import { granada } from "./granada";
 import { grecia } from "./grecia";
+import { groenlandia } from "./groenlandia";
 import { guatemala } from "./guatemala";
 import { guinea } from "./guinea";
 import { guineaBisau } from "./guinea-bisau";
@@ -80,6 +84,7 @@ import { irak } from "./irak";
 import { iran } from "./iran";
 import { irlanda } from "./irlanda";
 import { islandia } from "./islandia";
+import { islasCaiman } from "./islas-caiman";
 import { islasCook } from "./islas-cook";
 import { islasMarshall } from "./islas-marshall";
 import { islasSalomon } from "./islas-salomon";
@@ -136,6 +141,7 @@ import { peru } from "./peru";
 import { polinesiaFrancesa } from "./polinesia-francesa";
 import { polonia } from "./polonia";
 import { portugal } from "./portugal";
+import { puertoRico } from "./puerto-rico";
 import { reinoUnido } from "./reino-unido";
 import { republicaDelCongo } from "./republica-del-congo";
 import { republicaDemocraticaDelCongo } from "./republica-democratica-del-congo";
@@ -166,6 +172,7 @@ import { togo } from "./togo";
 import { tonga } from "./tonga";
 import { trinidadYTobago } from "./trinidad-y-tobago";
 import { tunez } from "./tunez";
+import { turcasYCaicos } from "./turcas-y-caicos";
 import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
 import { tuvalu } from "./tuvalu";
@@ -231,8 +238,8 @@ const GUIAS: DestinationGuide[] = [
   panama,
   cuba,
   republicaDominicana,
-  // Norteamérica y el Caribe que no habla español (spec, 22), en el orden en
-  // que se sumaron.
+  // Norteamérica y el resto del Caribe (spec, 22), en el orden en que se
+  // sumaron.
   estadosUnidos,
   canada,
   jamaica,
@@ -248,6 +255,13 @@ const GUIAS: DestinationGuide[] = [
   sanCristobalYNieves,
   guyana,
   surinam,
+  puertoRico,
+  aruba,
+  curazao,
+  islasCaiman,
+  turcasYCaicos,
+  bermudas,
+  groenlandia,
 
   // EUROPA
   espana,
@@ -428,6 +442,7 @@ export {
   argelia,
   argentina,
   armenia,
+  aruba,
   australia,
   austria,
   azerbaiyan,
@@ -438,6 +453,7 @@ export {
   belgica,
   belice,
   benin,
+  bermudas,
   bolivia,
   bosniaYHerzegovina,
   botsuana,
@@ -463,6 +479,7 @@ export {
   costaRica,
   croacia,
   cuba,
+  curazao,
   dinamarca,
   dominica,
   ecuador,
@@ -487,6 +504,7 @@ export {
   ghana,
   granada,
   grecia,
+  groenlandia,
   guatemala,
   guinea,
   guineaBisau,
@@ -501,6 +519,7 @@ export {
   iran,
   irlanda,
   islandia,
+  islasCaiman,
   islasCook,
   islasMarshall,
   islasSalomon,
@@ -557,6 +576,7 @@ export {
   polinesiaFrancesa,
   polonia,
   portugal,
+  puertoRico,
   reinoUnido,
   republicaDelCongo,
   republicaDemocraticaDelCongo,
@@ -587,6 +607,7 @@ export {
   tonga,
   trinidadYTobago,
   tunez,
+  turcasYCaicos,
   turkmenistan,
   turquia,
   tuvalu,
