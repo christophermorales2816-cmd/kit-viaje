@@ -3319,8 +3319,9 @@ Tres tandas, más Groenlandia:
 
 1. **Estados Unidos, Canadá, Jamaica, Belice, Bahamas y Barbados**, cargada
    el 2026-11-21.
-2. Trinidad y Tobago, Santa Lucía, Antigua y Barbuda, Granada, San Vicente y
-   las Granadinas, Dominica, San Cristóbal y Nieves, Guyana y Surinam.
+2. **Trinidad y Tobago, Santa Lucía, Antigua y Barbuda, Granada, San Vicente
+   y las Granadinas, Dominica, San Cristóbal y Nieves, Guyana y Surinam**,
+   cargada el 2026-11-21 (22.7).
 3. Los territorios que cumplen el criterio de 16.2 —moneda o reglas de entrada
    propias, y se viaja a ellos como a un país—: Aruba, Curazao, Islas Caimán,
    Turcas y Caicos y Bermudas, y Groenlandia.
@@ -3360,7 +3361,7 @@ país; ahora acepta `n_ciudades`. Estados Unidos tiene doce, para que entren
 Alaska y Hawái sin sacar a Nueva York o a California. Canadá tiene diez, con
 las Rocosas, Whistler y Yellowknife, que son los destinos de nieve. Los ids
 siguen siendo dos dígitos decimales por ciudad. El bloque de Norteamérica y el
-Caribe empieza en `e0` (tanda 1: `e0` a `e5`).
+Caribe empieza en `e0` (tanda 1: `e0` a `e5`; tanda 2: `e6` a `ee`).
 
 Las bases son la ciudad donde duerme la mayoría de los viajeros, como en las
 tandas de Oceanía y África, y no la capital: Nueva York, Toronto, Montego Bay,
@@ -3429,3 +3430,72 @@ Las seis guías son las primeras escritas desde cero en tuteo neutro (19.9).
 
 El planificador no se pudo mirar con datos: corre contra Supabase, y la base
 local no tiene su API.
+
+### 22.7 Tanda 2: el resto del Caribe, Guyana y Surinam
+
+Nueve países, cargados el 2026-11-21, con nueve ciudades cada uno (ids `e6` a
+`ee`). Trinidad y Tobago y las islas van al Caribe; Guyana y Surinam, a
+Sudamérica, donde la ONU los pone.
+
+**Recomendaciones de viaje**, revisadas el 2026-11-21:
+
+- **Trinidad y Tobago** está en el nivel 3 de la recomendación de Estados
+  Unidos, con barrios de Puerto España en los que su personal no puede
+  entrar. **Guyana** está en el nivel 3 por el delito, con la frontera con
+  Venezuela, en disputa, como riesgo aparte. Los dos entran con aviso, como
+  Pakistán. Ninguna ciudad del planificador está en esos barrios ni cerca de
+  esa frontera.
+- **Santa Lucía** y **Granada** están en el nivel 2, sin zonas, y **Antigua y
+  Barbuda**, **Dominica**, **San Cristóbal y Nieves**, **San Vicente y las
+  Granadinas** y **Surinam**, en el nivel 1. Van con precauciones normales.
+
+**Monedas.** Seis países comparten el dólar del Caribe Oriental (XCD), con
+paridad fija de 2,70 por dólar. El de Trinidad y Tobago, el guyanés y el
+surinamés flotan; el surinamés perdió mucho valor en los últimos años, y lo
+turístico se cobra en dólares o euros. Los nueve van enteros: ninguno vale
+medio dólar. Todos con `source: null`.
+
+**Precios con reglas propias.** El traslado al aeropuerto se corrige donde la
+pista queda al lado: Vieux Fort, junto a Hewanorra, en Santa Lucía, y el norte
+y el este de Dominica, cerca de Douglas-Charles. Mustique lleva el factor
+máximo del generador (2,5).
+
+**Lo que aporta cada país:**
+
+- **Trinidad y Tobago.** El carnaval, con la ropa vieja del J'ouvert en la
+  checklist, y dos islas que son dos viajes. Las tortugas laúd de Grande
+  Riviere, de marzo a agosto.
+- **Santa Lucía.** Es la primera guía donde el aeropuerto internacional queda
+  lejos de donde duerme casi todo el mundo: la base es Rodney Bay, en el
+  norte, y Hewanorra está en el extremo sur.
+- **Antigua y Barbuda.** El enchufe es de clavijas planas, pero a 230 V, y la
+  guía lo pone en los números de arriba: un cargador que solo diga 110 V se
+  quema. Barbuda es una isla remota, con pocos servicios.
+- **Granada.** El bosque de Grand Etang, más fresco y lluvioso que la costa.
+  Carriacou y Petite Martinique, golpeadas por el huracán Beryl en 2024, se
+  presentan como islas chicas, sin describir la reconstrucción.
+- **San Vicente y las Granadinas.** Es el contraste de precios más grande del
+  planificador: San Vicente es barata y Mustique es una isla privada de lujo.
+  Además, un volcán activo, La Soufrière: la guía manda a revisar el nivel de
+  alerta antes de subir.
+- **Dominica.** Es la isla más montañosa y lluviosa: el parque Morne Trois
+  Pitons pide capas. La guía aclara una vez que no es la República Dominicana.
+- **San Cristóbal y Nieves.** Desde 2025 pide una eTA a casi todos los
+  visitantes, y la guía la pone arriba de todo.
+- **Guyana.** Tiene el interior más remoto del planificador: Kaieteur,
+  Iwokrama y la Rupununi se alcanzan en avioneta o por rutas de tierra, y se
+  duerme en lodges comunitarios. La entrada también es salud: la fiebre
+  amarilla y la malaria del interior, con la consulta a un médico de viajes,
+  como en África (15.4).
+- **Surinam.** Es el único país de América donde el idioma oficial es el
+  neerlandés. Tiene una entrada que no es visa, pero se paga antes: muchos
+  pasaportes pagan en línea una tasa de entrada. Y el enchufe es el europeo,
+  pero a 127 V.
+
+**Verificado.**
+
+- El lint, los tests, el build y el typecheck, en verde.
+- Las migraciones, sobre una base virgen, con el smoke de RLS y la
+  integridad, en verde.
+- El motor de equipaje, con el clima de la base local.
+- Las guías, en el navegador.

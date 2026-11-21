@@ -38,7 +38,7 @@ export const bahamas: DestinationGuide = {
     },
     {
       value: "Izquierda",
-      label: "se conduce por la",
+      label: "lado por el que se conduce",
       note: "Aunque muchos autos tienen el volante a la izquierda, como en Estados Unidos.",
     },
     {

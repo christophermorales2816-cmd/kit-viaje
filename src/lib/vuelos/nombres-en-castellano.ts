@@ -28,9 +28,20 @@ export const NOMBRES_EN_CASTELLANO: Record<string, string[]> = {
   Filadelfia: ["PHL"],
   "La Habana": ["HAV"],
   Nasáu: ["NAS"],
+  Nieves: ["NEV"],
   "Nueva Orleans": ["MSY"],
   "Nueva York": ["JFK", "LGA", "EWR"],
+  "Puerto España": ["POS"],
+  // Rodney Bay no tiene aeropuerto: los vuelos internacionales llegan a
+  // Hewanorra, en el sur de Santa Lucía, y los regionales, a Castries.
+  "Rodney Bay": ["UVF", "SLU"],
+  // OurAirports pone el de Roseau en el municipio de cada pista: Marigot, el
+  // internacional, y Canefield, el regional.
+  Roseau: ["DOM", "DCF"],
+  // El de Antigua figura en Osbourn, el pueblo de la pista.
+  "Saint John's": ["ANU"],
   "San Pablo": ["GRU", "CGH", "VCP"],
+  Tobago: ["TAB"],
 
   // Europa
   // Andorra no tiene aeropuerto: el más cercano es el de La Seu d'Urgell.

@@ -174,8 +174,8 @@ que ya están. Los países de 2026-10 usan `00000000-0000-4000-8000-00000000{cc}
 con `cc` en hexadecimal y por bloques: Europa usó del `10` al `46`, del `47` al
 `4f` queda para lo que falte de Europa, **Asia usó del `50` al `7b`** (hay lugar
 hasta `8f`), **África, del `90` al `bd`**, **Oceanía, del `c0` al `d0`**, y
-**Norteamérica y el Caribe, del `e0` en adelante** (spec, 22: la primera tanda
-usó del `e0` al `e5`). Por cada ciudad:
+**Norteamérica y el Caribe, del `e0` en adelante** (spec, 22: la tanda 1 usó
+del `e0` al `e5`, y la tanda 2, del `e6` al `ee`). Por cada ciudad:
 
 - 1 fila en `destinations`, con `slug` y con `is_base` en **una sola** por
   corredor (hay un índice parcial que lo obliga).

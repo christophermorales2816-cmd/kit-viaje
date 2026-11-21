@@ -2,6 +2,7 @@ import { albania } from "./albania";
 import { alemania } from "./alemania";
 import { andorra } from "./andorra";
 import { angola } from "./angola";
+import { antiguaYBarbuda } from "./antigua-y-barbuda";
 import { arabiaSaudita } from "./arabia-saudita";
 import { argelia } from "./argelia";
 import { argentina } from "./argentina";
@@ -42,6 +43,7 @@ import { costaRica } from "./costa-rica";
 import { croacia } from "./croacia";
 import { cuba } from "./cuba";
 import { dinamarca } from "./dinamarca";
+import { dominica } from "./dominica";
 import { ecuador } from "./ecuador";
 import { egipto } from "./egipto";
 import { elSalvador } from "./el-salvador";
@@ -62,11 +64,13 @@ import { gabon } from "./gabon";
 import { gambia } from "./gambia";
 import { georgia } from "./georgia";
 import { ghana } from "./ghana";
+import { granada } from "./granada";
 import { grecia } from "./grecia";
 import { guatemala } from "./guatemala";
 import { guinea } from "./guinea";
 import { guineaBisau } from "./guinea-bisau";
 import { guineaEcuatorial } from "./guinea-ecuatorial";
+import { guyana } from "./guyana";
 import { honduras } from "./honduras";
 import { hongKong } from "./hong-kong";
 import { hungria } from "./hungria";
@@ -139,6 +143,9 @@ import { republicaDominicana } from "./republica-dominicana";
 import { ruanda } from "./ruanda";
 import { rumania } from "./rumania";
 import { samoa } from "./samoa";
+import { sanCristobalYNieves } from "./san-cristobal-y-nieves";
+import { sanVicenteYLasGranadinas } from "./san-vicente-y-las-granadinas";
+import { santaLucia } from "./santa-lucia";
 import { santoTomeYPrincipe } from "./santo-tome-y-principe";
 import { senegal } from "./senegal";
 import { serbia } from "./serbia";
@@ -149,6 +156,7 @@ import { sriLanka } from "./sri-lanka";
 import { sudafrica } from "./sudafrica";
 import { suecia } from "./suecia";
 import { suiza } from "./suiza";
+import { surinam } from "./surinam";
 import { tailandia } from "./tailandia";
 import { taiwan } from "./taiwan";
 import { tanzania } from "./tanzania";
@@ -156,6 +164,7 @@ import { tayikistan } from "./tayikistan";
 import { timorOriental } from "./timor-oriental";
 import { togo } from "./togo";
 import { tonga } from "./tonga";
+import { trinidadYTobago } from "./trinidad-y-tobago";
 import { tunez } from "./tunez";
 import { turkmenistan } from "./turkmenistan";
 import { turquia } from "./turquia";
@@ -214,7 +223,6 @@ const GUIAS: DestinationGuide[] = [
   colombia,
   venezuela,
   mexico,
-  belice,
   guatemala,
   honduras,
   elSalvador,
@@ -223,11 +231,23 @@ const GUIAS: DestinationGuide[] = [
   panama,
   cuba,
   republicaDominicana,
-  jamaica,
-  bahamas,
-  barbados,
+  // Norteamérica y el Caribe que no habla español (spec, 22), en el orden en
+  // que se sumaron.
   estadosUnidos,
   canada,
+  jamaica,
+  belice,
+  bahamas,
+  barbados,
+  trinidadYTobago,
+  santaLucia,
+  antiguaYBarbuda,
+  granada,
+  sanVicenteYLasGranadinas,
+  dominica,
+  sanCristobalYNieves,
+  guyana,
+  surinam,
 
   // EUROPA
   espana,
@@ -403,6 +423,7 @@ export {
   alemania,
   andorra,
   angola,
+  antiguaYBarbuda,
   arabiaSaudita,
   argelia,
   argentina,
@@ -443,6 +464,7 @@ export {
   croacia,
   cuba,
   dinamarca,
+  dominica,
   ecuador,
   egipto,
   elSalvador,
@@ -463,11 +485,13 @@ export {
   gambia,
   georgia,
   ghana,
+  granada,
   grecia,
   guatemala,
   guinea,
   guineaBisau,
   guineaEcuatorial,
+  guyana,
   honduras,
   hongKong,
   hungria,
@@ -540,6 +564,9 @@ export {
   ruanda,
   rumania,
   samoa,
+  sanCristobalYNieves,
+  sanVicenteYLasGranadinas,
+  santaLucia,
   santoTomeYPrincipe,
   senegal,
   serbia,
@@ -550,6 +577,7 @@ export {
   sudafrica,
   suecia,
   suiza,
+  surinam,
   tailandia,
   taiwan,
   tanzania,
@@ -557,6 +585,7 @@ export {
   timorOriental,
   togo,
   tonga,
+  trinidadYTobago,
   tunez,
   turkmenistan,
   turquia,

@@ -41,7 +41,7 @@ export const jamaica: DestinationGuide = {
     },
     {
       value: "Izquierda",
-      label: "se conduce por la",
+      label: "lado por el que se conduce",
       note: "Herencia británica: el volante va a la derecha y las rutas son angostas y con curvas.",
     },
     {
