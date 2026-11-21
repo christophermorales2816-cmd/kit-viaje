@@ -495,6 +495,39 @@ const CORREDORES = [
     timeZone: "America/Paramaribo",
     label: "hora de Paramaribo",
   }),
+  // La tanda 3 (spec, 22.8). Puerto Rico y Turcas y Caicos cobran en dólares
+  // estadounidenses. El florín de Aruba, el florín del Caribe de Curazao, el
+  // dólar de las Caimán y el de Bermudas tienen paridad fija con el dólar; la
+  // corona danesa de Groenlandia sigue al euro. Todos con `source: null`, por
+  // la misma razón que la tanda 1.
+  dolarizado("puerto-rico", {
+    timeZone: "America/Puerto_Rico",
+    label: "hora de San Juan",
+  }),
+  unaCotizacion("aruba", "AWG", {
+    timeZone: "America/Aruba",
+    label: "hora de Oranjestad",
+  }),
+  unaCotizacion("curazao", "XCG", {
+    timeZone: "America/Curacao",
+    label: "hora de Willemstad",
+  }),
+  unaCotizacion("islas-caiman", "KYD", {
+    timeZone: "America/Cayman",
+    label: "hora de George Town",
+  }),
+  dolarizado("turcas-y-caicos", {
+    timeZone: "America/Grand_Turk",
+    label: "hora de Cockburn Town",
+  }),
+  unaCotizacion("bermudas", "BMD", {
+    timeZone: "Atlantic/Bermuda",
+    label: "hora de Hamilton",
+  }),
+  unaCotizacion("groenlandia", "DKK", {
+    timeZone: "America/Nuuk",
+    label: "hora de Nuuk",
+  }),
   // Europa. Ninguna de sus monedas tiene mercado paralelo —el euro, la libra,
   // el franco suizo, las coronas, el zloty, el forinto, los dos lei, el lek,
   // el dinar, el denar, la lira turca y el marco bosnio, atado al euro—: una

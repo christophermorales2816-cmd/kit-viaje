@@ -91,6 +91,18 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     // De la costa a la sabana de Lethem, en la frontera con Brasil.
     guyana: { lat: [1.1, 8.6], lon: [-61.5, -56.4] },
     surinam: { lat: [1.8, 6.1], lon: [-58.1, -53.9] },
+    // Con Vieques y Culebra, al este.
+    "puerto-rico": { lat: [17.85, 18.55], lon: [-67.3, -65.2] },
+    aruba: { lat: [12.4, 12.65], lon: [-70.1, -69.85] },
+    curazao: { lat: [12.0, 12.4], lon: [-69.2, -68.7] },
+    // Con Caimán Brac y Pequeño Caimán, a más de cien kilómetros al noreste de
+    // Gran Caimán.
+    "islas-caiman": { lat: [19.2, 19.8], lon: [-81.5, -79.7] },
+    // De Providenciales a Grand Turk y Salt Cay.
+    "turcas-y-caicos": { lat: [21.2, 22.0], lon: [-72.5, -71.05] },
+    bermudas: { lat: [32.2, 32.45], lon: [-64.9, -64.6] },
+    // De Qaqortoq, en el sur, a Qaanaaq, más allá del paralelo 77.
+    groenlandia: { lat: [59.7, 83.7], lon: [-73.3, -11.3] },
 
     // EUROPA
     // Canarias está frente a África, mil kilómetros al sur de la península.

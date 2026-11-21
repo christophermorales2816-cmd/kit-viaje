@@ -33,7 +33,7 @@ PAISES = importlib.import_module(MODULO).PAISES
 # centavo y no a la unidad. Misma lista que MONEDAS_CON_CENTAVOS en format.ts
 # (la regla: la unidad vale medio dólar o más), y un test lo verifica.
 CON_CENTAVOS = {"USD", "EUR", "GBP", "CHF", "BAM", "SGD", "BND", "AZN", "JOD", "KWD", "BHD", "OMR",
-                "AUD", "NZD", "CAD", "BSD", "BZD", "BBD"}
+                "AUD", "NZD", "CAD", "BSD", "BZD", "BBD", "AWG", "XCG", "KYD", "BMD"}
 
 PLANTILLA = [
     ("comida", "Desayuno", 1, True, 1, 30),

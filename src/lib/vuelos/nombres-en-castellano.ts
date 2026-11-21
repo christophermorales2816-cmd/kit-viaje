@@ -26,6 +26,9 @@ export const NOMBRES_EN_CASTELLANO: Record<string, string[]> = {
   "Ciudad de Panamá": ["PTY"],
   "Ciudad de Quebec": ["YQB"],
   Filadelfia: ["PHL"],
+  // Grace Bay es la playa de los hoteles de Providenciales, a pocos minutos
+  // del aeropuerto de la isla.
+  "Grace Bay": ["PLS"],
   "La Habana": ["HAV"],
   Nasáu: ["NAS"],
   Nieves: ["NEV"],
