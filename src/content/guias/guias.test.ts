@@ -74,6 +74,23 @@ const CAJAS: Record<string, { lat: [number, number]; lon: [number, number] }> =
     "estados-unidos": { lat: [18.5, 71.5], lon: [-170, -66.8] },
     // Yellowknife, a orillas del Gran Lago del Esclavo, es lo más al norte.
     canada: { lat: [41.6, 83.2], lon: [-141.1, -52.5] },
+    // Con Tobago, al noreste de Trinidad.
+    "trinidad-y-tobago": { lat: [10, 11.4], lon: [-61.95, -60.45] },
+    "santa-lucia": { lat: [13.65, 14.15], lon: [-61.1, -60.85] },
+    // Con Barbuda, a unos cuarenta kilómetros al norte de Antigua.
+    "antigua-y-barbuda": { lat: [16.9, 17.8], lon: [-62, -61.6] },
+    // Con Carriacou y Petite Martinique, al norte de la isla grande.
+    granada: { lat: [11.95, 12.6], lon: [-61.85, -61.35] },
+    // De La Soufrière, al norte de San Vicente, a Union Island, al sur.
+    "san-vicente-y-las-granadinas": {
+      lat: [12.5, 13.45],
+      lon: [-61.5, -61.1],
+    },
+    dominica: { lat: [15.15, 15.7], lon: [-61.5, -61.2] },
+    "san-cristobal-y-nieves": { lat: [17.05, 17.45], lon: [-62.9, -62.5] },
+    // De la costa a la sabana de Lethem, en la frontera con Brasil.
+    guyana: { lat: [1.1, 8.6], lon: [-61.5, -56.4] },
+    surinam: { lat: [1.8, 6.1], lon: [-58.1, -53.9] },
 
     // EUROPA
     // Canarias está frente a África, mil kilómetros al sur de la península.

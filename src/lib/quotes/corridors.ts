@@ -455,6 +455,46 @@ const CORREDORES = [
     timeZone: "America/Barbados",
     label: "hora de Bridgetown",
   }),
+  // La tanda 2 (spec, 22). Seis países comparten el dólar del Caribe Oriental
+  // (XCD), con paridad fija de 2,70 por dólar; el de Trinidad y Tobago, el
+  // guyanés y el surinamés flotan. Todos con `source: null`, por la misma
+  // razón que la tanda 1.
+  unaCotizacion("trinidad-y-tobago", "TTD", {
+    timeZone: "America/Port_of_Spain",
+    label: "hora de Puerto España",
+  }),
+  unaCotizacion("santa-lucia", "XCD", {
+    timeZone: "America/St_Lucia",
+    label: "hora de Castries",
+  }),
+  unaCotizacion("antigua-y-barbuda", "XCD", {
+    timeZone: "America/Antigua",
+    label: "hora de Saint John's",
+  }),
+  unaCotizacion("granada", "XCD", {
+    timeZone: "America/Grenada",
+    label: "hora de Saint George's",
+  }),
+  unaCotizacion("san-vicente-y-las-granadinas", "XCD", {
+    timeZone: "America/St_Vincent",
+    label: "hora de Kingstown",
+  }),
+  unaCotizacion("dominica", "XCD", {
+    timeZone: "America/Dominica",
+    label: "hora de Roseau",
+  }),
+  unaCotizacion("san-cristobal-y-nieves", "XCD", {
+    timeZone: "America/St_Kitts",
+    label: "hora de Basseterre",
+  }),
+  unaCotizacion("guyana", "GYD", {
+    timeZone: "America/Guyana",
+    label: "hora de Georgetown",
+  }),
+  unaCotizacion("surinam", "SRD", {
+    timeZone: "America/Paramaribo",
+    label: "hora de Paramaribo",
+  }),
   // Europa. Ninguna de sus monedas tiene mercado paralelo —el euro, la libra,
   // el franco suizo, las coronas, el zloty, el forinto, los dos lei, el lek,
   // el dinar, el denar, la lira turca y el marco bosnio, atado al euro—: una

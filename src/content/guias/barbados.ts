@@ -37,7 +37,7 @@ export const barbados: DestinationGuide = {
     },
     {
       value: "Izquierda",
-      label: "se conduce por la",
+      label: "lado por el que se conduce",
       note: "Herencia británica, como el críquet. Las rutas son angostas y con curvas.",
     },
     {
