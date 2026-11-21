@@ -5,6 +5,8 @@ import { ArrowLeft } from "lucide-react";
 import { FichaDePlato } from "@/components/comer/ficha-de-plato";
 import { getCatalogo, getPlato, guiaDelCatalogo } from "@/content/comidas";
 import { datosDelPlato, parametrosDePlatos } from "@/lib/comidas/datos";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+import { textos } from "@/i18n/servidor";
 
 /**
  * La página de un plato (spec, 18.3).
@@ -34,8 +36,10 @@ export async function generateMetadata({
 
   const { country } = guiaDelCatalogo(catalogo);
 
+  const t = (await textos(TEXTOS_DE_COMIDAS)).plato;
+
   return {
-    title: `${plato.nombre}: qué es y dónde comerlo en ${country}`,
+    title: t.titulo(plato.nombre, country),
     description: plato.resumen,
   };
 }
@@ -56,7 +60,7 @@ export default async function PaginaDelPlato({
         className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 text-sm transition-colors"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
-        Qué comer y beber en {guia.country}
+        {(await textos(TEXTOS_DE_COMIDAS)).plato.volver(guia.country)}
       </Link>
 
       <FichaDePlato

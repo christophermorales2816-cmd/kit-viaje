@@ -24,6 +24,8 @@ import {
 
 import { PanelDeFiltros } from "./panel-de-filtros";
 import { TarjetaDePlato } from "./tarjeta-de-plato";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
 
 interface Props {
   slug: string;
@@ -72,6 +74,7 @@ export function Catalogo({
   regiones,
   nombresDeLugares,
 }: Props) {
+  const t = useTextos(TEXTOS_DE_COMIDAS).catalogo;
   const ruta = `/que-comer/${slug}`;
   const busqueda = useSyncExternalStore(
     suscribir,
@@ -114,22 +117,22 @@ export function Catalogo({
 
   const cuenta =
     visibles.length === platos.length
-      ? `${platos.length} platos y bebidas`
-      : `${visibles.length} de ${platos.length} platos y bebidas`;
+      ? t.cuenta(platos.length)
+      : t.cuentaFiltrada(visibles.length, platos.length);
 
   return (
     <div className="grid gap-8 lg:grid-cols-[15rem_1fr]">
-      <aside className="hidden lg:block" aria-label="Filtros">
+      <aside className="hidden lg:block" aria-label={t.filtros}>
         <div className="sticky top-6 flex max-h-[calc(100dvh-3rem)] flex-col gap-4 overflow-y-auto pr-2 pb-6">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold">Filtros</h3>
+            <h3 className="font-semibold">{t.filtros}</h3>
             {elegidos > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => cambiar(SIN_FILTROS)}
               >
-                Borrar
+                {t.borrar}
               </Button>
             )}
           </div>
@@ -147,12 +150,12 @@ export function Catalogo({
             <SheetTrigger asChild>
               <Button variant="outline" size="sm" className="lg:hidden">
                 <SlidersHorizontal className="size-4" aria-hidden="true" />
-                Filtros{elegidos > 0 ? ` (${elegidos})` : ""}
+                {elegidos > 0 ? t.filtrosElegidos(elegidos) : t.filtros}
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[85%] overflow-y-auto">
               <div className="flex flex-col gap-1 p-4 pb-0">
-                <SheetTitle>Filtros</SheetTitle>
+                <SheetTitle>{t.filtros}</SheetTitle>
                 <SheetDescription>{cuenta}</SheetDescription>
               </div>
               <div className="flex flex-col gap-4 p-4">
@@ -163,7 +166,7 @@ export function Catalogo({
                     className="self-start"
                     onClick={() => cambiar(SIN_FILTROS)}
                   >
-                    Borrar los filtros
+                    {t.borrarLosFiltros}
                   </Button>
                 )}
                 {panel}
@@ -182,11 +185,9 @@ export function Catalogo({
           </ul>
         ) : (
           <div className="flex flex-col items-start gap-3 rounded-xl border border-dashed p-8">
-            <p className="text-pretty">
-              Ningún plato cumple todo eso a la vez. Probá sacando un filtro.
-            </p>
+            <p className="text-pretty">{t.ninguno}</p>
             <Button variant="outline" onClick={() => cambiar(SIN_FILTROS)}>
-              Borrar los filtros
+              {t.borrarLosFiltros}
             </Button>
           </div>
         )}

@@ -6,6 +6,8 @@ import { Check, MapPin, MapPinOff, Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { CiudadDelMapa, Mencion } from "@/content/comidas/types";
+import { useTextos } from "@/i18n/cliente";
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
 
 /**
  * El mapa recién se baja cuando alguien lo pide: MapLibre pesa más que todo
@@ -15,13 +17,19 @@ const MapaDeLugares = dynamic(
   () => import("./mapa-de-lugares").then((modulo) => modulo.MapaDeLugares),
   {
     ssr: false,
-    loading: () => (
-      <div className="bg-muted text-muted-foreground flex h-[420px] items-center justify-center rounded-xl border text-sm sm:h-[480px]">
-        Cargando el mapa…
-      </div>
-    ),
+    loading: () => <CargandoElMapa />,
   },
 );
+
+function CargandoElMapa() {
+  const t = useTextos(TEXTOS_DE_COMIDAS).mapa;
+
+  return (
+    <div className="bg-muted text-muted-foreground flex h-[420px] items-center justify-center rounded-xl border text-sm sm:h-[480px]">
+      {t.cargando}
+    </div>
+  );
+}
 
 interface Props {
   pais: string;
@@ -46,6 +54,7 @@ export function AccionesDelPlato({
   ciudadInicial,
   menciones,
 }: Props) {
+  const t = useTextos(TEXTOS_DE_COMIDAS).acciones;
   const [mapaAbierto, setMapaAbierto] = useState(false);
   const [copiado, setCopiado] = useState(false);
   const seccion = useRef<HTMLDivElement>(null);
@@ -64,7 +73,7 @@ export function AccionesDelPlato({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${plato.nombre} — Qué comer en ${nombreDelPais}`,
+          title: t.tituloAlCompartir(plato.nombre, nombreDelPais),
           url,
         });
       } catch {
@@ -78,7 +87,7 @@ export function AccionesDelPlato({
       setCopiado(true);
       window.setTimeout(() => setCopiado(false), 2500);
     } catch {
-      window.prompt("Copiá el link:", url);
+      window.prompt(t.copiaElEnlace, url);
     }
   }
 
@@ -95,7 +104,7 @@ export function AccionesDelPlato({
         {!sinMapa && !mapaAbierto && (
           <Button size="lg" onClick={() => setMapaAbierto(true)}>
             <MapPin className="size-4" aria-hidden="true" />
-            Buscá restaurantes con esta comida
+            {t.buscarRestaurantes}
           </Button>
         )}
         <Button size="lg" variant="outline" onClick={compartir}>
@@ -104,7 +113,7 @@ export function AccionesDelPlato({
           ) : (
             <Share2 className="size-4" aria-hidden="true" />
           )}
-          {copiado ? "Link copiado" : "Compartir"}
+          {copiado ? t.copiado : t.compartir}
         </Button>
       </div>
 

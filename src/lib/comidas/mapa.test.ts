@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
+import { TEXTOS_DE_COMIDAS } from "@/i18n/comidas";
+
 import type { LugarDeComida } from "./lugares";
 import { sinNovedades, urlParaAvisar, urlParaLlegar } from "./lugares";
 import {
   ciudadInicial,
   geojsonDeLugares,
   juntarLugares,
-  mensajeDePausa,
+  minutosDePausa,
   porCercania,
 } from "./mapa";
 
@@ -120,12 +122,20 @@ describe("los links de cada lugar", () => {
   });
 });
 
-describe("mensajeDePausa", () => {
-  it("dice cuánto falta, en minutos", () => {
-    expect(mensajeDePausa(60)).toContain("pidió una pausa");
-    expect(mensajeDePausa(60)).toContain("en un minuto");
-    expect(mensajeDePausa(61)).toContain("en 2 minutos");
-    expect(mensajeDePausa(900)).toContain(
+describe("minutosDePausa", () => {
+  it("redondea para arriba, en minutos", () => {
+    expect(minutosDePausa(60)).toBe(1);
+    expect(minutosDePausa(61)).toBe(2);
+    expect(minutosDePausa(900)).toBe(15);
+  });
+
+  it("el aviso dice cuánto falta", () => {
+    const { pausa } = TEXTOS_DE_COMIDAS.es.mapa;
+
+    expect(pausa(minutosDePausa(60))).toContain("pidió una pausa");
+    expect(pausa(minutosDePausa(60))).toContain("en un minuto");
+    expect(pausa(minutosDePausa(61))).toContain("en 2 minutos");
+    expect(pausa(minutosDePausa(900))).toContain(
       "no está atendiendo nuestros pedidos: volvemos a buscar en 15 minutos.",
     );
   });

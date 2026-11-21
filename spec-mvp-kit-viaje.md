@@ -3261,6 +3261,25 @@ formato depende de la decisión de las monedas.
   por fuente, dibujada con `enriquecer()`. Los puntos cardinales son claves
   (`PuntoCardinal`) y su nombre está en el diccionario. Los nombres de los
   aeropuertos y de las ciudades vienen de OurAirports y quedan como vienen.
+- **"Qué comer y beber"** (`src/i18n/es/comidas.ts`). Cubre las tres páginas,
+  el catálogo con sus filtros, la ficha de cada plato y el mapa de lugares.
+  - Los nombres de los valores del catálogo (lugares, momentos, picante,
+    alérgenos, menciones, tipos de lugar) pasaron de
+    `src/lib/comidas/etiquetas.ts` al diccionario, en un Record sobre cada
+    tipo. En `etiquetas.ts` quedan los símbolos de precio, `nombreDeLugar` y
+    `enumerar`, que todavía es solo del español (y/e, o/u).
+  - El aviso de pausa del mapa sale del diccionario: `minutosDePausa` calcula
+    el número y el texto lo arma cada idioma.
+  - El picante (`nivel-de-picante.tsx`) y el crédito de las fotos
+    (`credito-de-foto.tsx`) pasaron a sus propios archivos. El primero se usa
+    en el servidor y en el cliente; el segundo pide sus textos en el servidor.
+- **Nosotros** (`src/i18n/es/nosotros.ts`), con los números de
+  `estadisticasDelSitio(t)`.
+- **La guarda: `react/jsx-no-literals`** (en `eslint.config.mjs`). Un texto
+  escrito a mano en un componente de `src/app` o `src/components` no pasa el
+  lint: tiene que ir al diccionario. Se permiten los signos que no cambian con
+  el idioma (· × © ° % …), y los atributos quedan afuera. Con esto, la fase 1
+  está completa: todo el texto de la interfaz vive en los diccionarios.
 - **Los nombres de los tipos de viaje y de las categorías** también están en
   el diccionario del viaje. `formatTripType` y `formatCategory` los reciben, y
   una categoría nueva de la base sigue apareciendo capitalizada.
