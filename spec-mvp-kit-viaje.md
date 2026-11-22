@@ -466,6 +466,9 @@ El bloque que cumple la promesa de "en tiempo real". No hay que construir casi n
 
 ### 8.8 Destinos: el mosaico y el mapa
 
+> **Revisado en la sección 24:** el mapa pasó de Leaflet a MapLibre, con los
+> nombres en castellano y los estados y las provincias a la vista.
+
 Dos bloques que salen de **una sola lista** (`places` en el contenido de la guía). Que compartan la fuente no es economía de código: es lo que evita que el mapa marque un lugar que el mosaico no menciona.
 
 Cada destino tiene nombre, región, una etiqueta corta, un párrafo, coordenadas y una foto opcional. Las coordenadas son del centro de la localidad, no del atractivo — el pin de El Calafate marca el pueblo donde se duerme, no el glaciar.
@@ -3672,3 +3675,51 @@ reservar", "hacen falta"), que no choca con ninguna de las dos voces.
   Leñas, Sierra Nevada, Vail, Niseko, Thredbo y Yellowknife; nada de eso en
   Aruba.
 - Las seis guías, con la estación y la entrada de nieve, en el navegador.
+
+## 24. El mapa de la guía: estados y provincias
+
+Quienes probaron el sitio pidieron un mapa más detallado, con los estados o los
+lugares más importantes de cada país.
+
+### 24.1 De Leaflet a MapLibre
+
+"El país de un vistazo" (8.8) era Leaflet con mosaicos raster de CARTO. Al
+encuadrar el país entero mostraba el contorno y casi nada adentro, y los
+nombres salían en el idioma de cada país. Pasa a MapLibre con los mosaicos
+vectoriales de OpenFreeMap, los mismos del radar de vuelos (17.5) y del mapa de
+cada plato (18.4):
+
+- **Los nombres, en castellano** cuando OpenStreetMap lo tiene (`name:es`):
+  "Islas Malvinas", "Nuevo México", "Luisiana".
+- **Los estados y las provincias, con sus límites y su nombre, desde el zoom
+  2.** El estilo los mostraba desde el 5 (los nombres) y el 8 (los límites), y
+  el mapa de la guía encuadra el país entre el zoom 2 de Rusia o Canadá y el 7
+  de un país chico. Los límites van en una capa propia con solo el nivel 4: la
+  del estilo dibuja también departamentos y condados, que en un mapa del país
+  entero serían una telaraña. Si el estilo cambia y la capa ya no está, el mapa
+  sigue funcionando sin los límites.
+- **Los gestos de los otros mapas:** la página sigue bajando con la rueda, el
+  mapa se mueve con Ctrl o con dos dedos, y el norte queda arriba.
+- **Los pines** abren el mismo texto que la tarjeta del mosaico, como antes, y
+  MapLibre los hace accesibles con el teclado, con una condición: el popup se
+  pone después de sumar el pin al mapa. Al revés, `addTo` empieza por `remove`,
+  que le saca al pin el oyente del teclado, y el pin se abre con el mouse pero
+  no con Enter.
+- **Sin WebGL** queda un aviso en lugar del mapa, y la lista por región.
+
+Leaflet sale de las dependencias: este era el único mapa que lo usaba.
+
+### 24.2 Los lugares más importantes
+
+Los destinos del planificador siguen siendo los pines. Las ciudades principales
+las pone el mapa, con su nombre, al acercar. Un destino nuevo en el
+planificador sigue el criterio de 22.3 y 23.1: entra cuando hace falta otro
+clima u otro presupuesto, no para llenar el mapa.
+
+### 24.3 Verificado
+
+- El lint, los tests, el build y el typecheck, en verde.
+- En el navegador: Argentina con sus provincias y Las Leñas; Estados Unidos,
+  con Alaska y Hawái en el encuadre; Fiyi, que cruza el antimeridiano, con los
+  pines juntos; Andorra, con el tope de zoom; y Groenlandia. Los pines se
+  abren con el mouse y con Enter, y sin WebGL queda el aviso.

@@ -1,6 +1,12 @@
-import type { Map as MapaDeMapLibre } from "maplibre-gl";
+import type { LayerSpecification, Map as MapaDeMapLibre } from "maplibre-gl";
 
-import { etiquetaEnCastellano } from "@/lib/mapa/estilo";
+import {
+  CAPA_DE_NOMBRES_DE_ESTADOS,
+  type CapaDelEstilo,
+  ESTADOS_DESDE_EL_ZOOM,
+  capaDeLimitesDeEstados,
+  etiquetaEnCastellano,
+} from "@/lib/mapa/estilo";
 
 /**
  * MapLibre, cargado en el navegador y con su worker en su lugar.
@@ -34,5 +40,29 @@ export function ponerEtiquetasEnCastellano(mapa: MapaDeMapLibre): void {
     if (enCastellano !== campo) {
       mapa.setLayoutProperty(capa.id, "text-field", enCastellano);
     }
+  }
+}
+
+/**
+ * Los estados y las provincias, visibles desde que se ve el país entero
+ * (src/lib/mapa/estilo.ts). Los nombres usan la capa del estilo con otro
+ * rango; los límites, una capa propia debajo de la del estilo.
+ */
+export function mostrarEstados(mapa: MapaDeMapLibre): void {
+  const capas = mapa.getStyle().layers as unknown as CapaDelEstilo[];
+  const nombres = capas.find((capa) => capa.id === CAPA_DE_NOMBRES_DE_ESTADOS);
+
+  if (nombres) {
+    mapa.setLayerZoomRange(
+      nombres.id,
+      ESTADOS_DESDE_EL_ZOOM,
+      nombres.maxzoom ?? 24,
+    );
+  }
+
+  const limites = capaDeLimitesDeEstados(capas);
+
+  if (limites && !mapa.getLayer(limites.id)) {
+    mapa.addLayer(limites as unknown as LayerSpecification, "boundary_3");
   }
 }

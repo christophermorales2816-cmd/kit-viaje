@@ -87,6 +87,9 @@ const guia = {
     titulo: "El país de un vistazo",
     bajada: (pais: string) =>
       `Las distancias de ${pais} no se entienden en una lista. Toca un marcador para ver de qué destino se trata.`,
+    /** Sin WebGL no hay mapa; la lista de la derecha sigue sirviendo. */
+    sinMapa:
+      "Este navegador no puede mostrar el mapa. Los destinos están en la lista.",
   },
 
   preparar: {
