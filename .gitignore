@@ -46,3 +46,6 @@ next-env.d.ts
 
 # python
 __pycache__/
+
+# Graphify: el grafo va en Git, su caché no (CLAUDE.md)
+/graphify-out/cache/

@@ -1,0 +1,4550 @@
+{
+  ".github/dependabot.yml": {
+    "mtime": 1794287743.9874704,
+    "seen": 1795335541.7853396,
+    "ast_hash": "b7f11b376ab17c0b1822ec7f08083f66",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1794287743.9887447,
+    "seen": 1795335541.785348,
+    "ast_hash": "af8d49762dc9d4bd7466d61d381142f5",
+    "semantic_hash": ""
+  },
+  ".github/workflows/lugares.yml": {
+    "mtime": 1794454039.3583765,
+    "seen": 1795335541.7853515,
+    "ast_hash": "1ceb473cbb49252212bdacadc290ed6d",
+    "semantic_hash": ""
+  },
+  ".github/workflows/migraciones.yml": {
+    "mtime": 1794287743.9888065,
+    "seen": 1795335541.7853546,
+    "ast_hash": "57a05b18c27729126f2b4c66ce7c7db7",
+    "semantic_hash": ""
+  },
+  "components.json": {
+    "mtime": 1794287743.9888065,
+    "seen": 1795335541.785357,
+    "ast_hash": "99cd2c1611d84662712cc9da39a01f9c",
+    "semantic_hash": ""
+  },
+  "eslint.config.mjs": {
+    "mtime": 1795304943.3386486,
+    "seen": 1795335541.7853599,
+    "ast_hash": "d0a28060584a95cc9e82ca6b72c5ea41",
+    "semantic_hash": ""
+  },
+  "herramientas/aeropuertos/generar.py": {
+    "mtime": 1794287743.9900246,
+    "seen": 1795335541.785363,
+    "ast_hash": "499c4a7948f165b73d8cf748be3cf264",
+    "semantic_hash": ""
+  },
+  "herramientas/comidas/fotos.py": {
+    "mtime": 1794287743.9900246,
+    "seen": 1795335541.7853673,
+    "ast_hash": "643f613030819b417fdd1193b1efaa39",
+    "semantic_hash": ""
+  },
+  "herramientas/corredor/ejemplo_andorra.py": {
+    "mtime": 1795304943.3386486,
+    "seen": 1795335541.785371,
+    "ast_hash": "73b70b09d4174ee8272717d73d5693e9",
+    "semantic_hash": ""
+  },
+  "herramientas/corredor/generar.py": {
+    "mtime": 1795304943.3386486,
+    "seen": 1795335541.785374,
+    "ast_hash": "cef7b0bcc9386d10ecb1d79f637a391a",
+    "semantic_hash": ""
+  },
+  "herramientas/globo/estados.py": {
+    "mtime": 1795335536.7539876,
+    "seen": 1795335541.785376,
+    "ast_hash": "6abd57ce9c42b81013ed91532ee166f7",
+    "semantic_hash": ""
+  },
+  "herramientas/globo/fronteras.py": {
+    "mtime": 1795333478.2520964,
+    "seen": 1795335541.7853792,
+    "ast_hash": "61d344211d9139273728d28146caf3b2",
+    "semantic_hash": ""
+  },
+  "herramientas/globo/guias.ts": {
+    "mtime": 1795335536.7539876,
+    "seen": 1795335541.7853816,
+    "ast_hash": "2727860aa910bea64eaf6ef482053fb5",
+    "semantic_hash": ""
+  },
+  "herramientas/lugares/cargar.ts": {
+    "mtime": 1794473052.0750725,
+    "seen": 1795335541.7853837,
+    "ast_hash": "1d9114c4700f401ce5402d8f3cc0eb9e",
+    "semantic_hash": ""
+  },
+  "herramientas/lugares/filtro.ts": {
+    "mtime": 1794454039.5104065,
+    "seen": 1795335541.7853866,
+    "ast_hash": "6757323799d9258debf6e587b8d2ae4d",
+    "semantic_hash": ""
+  },
+  "herramientas/lugares/paises.ts": {
+    "mtime": 1794454039.5104065,
+    "seen": 1795335541.7853887,
+    "ast_hash": "2dfea20d1cdf27b8aaf70e75bad931fa",
+    "semantic_hash": ""
+  },
+  "herramientas/lugares/procesar.sh": {
+    "mtime": 1794454039.5104065,
+    "seen": 1795335541.7853909,
+    "ast_hash": "de0df157acff51b366fb4bec9c0ac8c8",
+    "semantic_hash": ""
+  },
+  "next.config.ts": {
+    "mtime": 1795071346.6414711,
+    "seen": 1795335541.7853925,
+    "ast_hash": "f8a3f26b1dbdadc8467a8fffb19972fd",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1795329414.2089565,
+    "seen": 1795335541.785395,
+    "ast_hash": "aef26ce11d6b43c51090766281dd167a",
+    "semantic_hash": ""
+  },
+  "postcss.config.mjs": {
+    "mtime": 1794287743.9902747,
+    "seen": 1795335541.7853973,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": ""
+  },
+  "src/app/api/aeropuertos/route.ts": {
+    "mtime": 1794287743.9931757,
+    "seen": 1795335541.7853992,
+    "ast_hash": "f2d6e6624883867e620c41688c7465c8",
+    "semantic_hash": ""
+  },
+  "src/app/api/que-comer/lugares/route.test.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7854013,
+    "ast_hash": "6a4c63882536e9241418fd6deb5094b0",
+    "semantic_hash": ""
+  },
+  "src/app/api/que-comer/lugares/route.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7854044,
+    "ast_hash": "fc04f747b6642d4fc2b32f9c61e73434",
+    "semantic_hash": ""
+  },
+  "src/app/api/servicios/route.test.ts": {
+    "mtime": 1795333478.2520964,
+    "seen": 1795335541.7854068,
+    "ast_hash": "20b99bac85faca43b3e7286dab42cf26",
+    "semantic_hash": ""
+  },
+  "src/app/api/servicios/route.ts": {
+    "mtime": 1795333478.255466,
+    "seen": 1795335541.7854087,
+    "ast_hash": "9b9f31392ab064b97f7608fff0b1ada0",
+    "semantic_hash": ""
+  },
+  "src/app/api/vuelos/en-vivo/route.test.ts": {
+    "mtime": 1794287743.9934137,
+    "seen": 1795335541.785411,
+    "ast_hash": "bef1d8f5a43473f14cdf265ad0371a67",
+    "semantic_hash": ""
+  },
+  "src/app/api/vuelos/en-vivo/route.ts": {
+    "mtime": 1794287743.9934642,
+    "seen": 1795335541.7854128,
+    "ast_hash": "670c22b04f44329137afe9c04586df6c",
+    "semantic_hash": ""
+  },
+  "src/app/destinos/[continente]/page.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.7854152,
+    "ast_hash": "4f5d1bdda8c64d09b6ed057392518614",
+    "semantic_hash": ""
+  },
+  "src/app/destinos/page.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.7854173,
+    "ast_hash": "c66e313b2f416393d498b4edb23b439d",
+    "semantic_hash": ""
+  },
+  "src/app/error.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.7854192,
+    "ast_hash": "3091ab182ed43e582698a3f4d167d1e6",
+    "semantic_hash": ""
+  },
+  "src/app/global-error.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.7854218,
+    "ast_hash": "d0a659ecd85f4b653693f6d86f36c516",
+    "semantic_hash": ""
+  },
+  "src/app/guia/[slug]/page.tsx": {
+    "mtime": 1795333478.255466,
+    "seen": 1795335541.7854235,
+    "ast_hash": "71e6034906d4309c0087670874030a2e",
+    "semantic_hash": ""
+  },
+  "src/app/guia/[slug]/planificar/page.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.785426,
+    "ast_hash": "1b5701fd0c1110aea2c46d57a9d39a18",
+    "semantic_hash": ""
+  },
+  "src/app/guia/[slug]/preparar/page.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.785428,
+    "ast_hash": "7daf10bc1b74bc5752c5aaee554cc354",
+    "semantic_hash": ""
+  },
+  "src/app/layout.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.7854302,
+    "ast_hash": "231629b0b5143b2bad78f20ad98ab3f3",
+    "semantic_hash": ""
+  },
+  "src/app/nosotros/page.tsx": {
+    "mtime": 1795304943.4906487,
+    "seen": 1795335541.785432,
+    "ast_hash": "c2d5df9363db153a55d5fe850b9ef27c",
+    "semantic_hash": ""
+  },
+  "src/app/not-found.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854345,
+    "ast_hash": "ff37b5cfad133b99032e57ae3ad405a6",
+    "semantic_hash": ""
+  },
+  "src/app/page.tsx": {
+    "mtime": 1795335536.7579877,
+    "seen": 1795335541.7854366,
+    "ast_hash": "7ecc8bd9f452c887421fd68fca2fa55d",
+    "semantic_hash": ""
+  },
+  "src/app/que-comer/[slug]/@ficha/(.)[plato]/page.tsx": {
+    "mtime": 1794287743.9942865,
+    "seen": 1795335541.7854388,
+    "ast_hash": "2d3c337d4eef7afcf45099b953c3fad0",
+    "semantic_hash": ""
+  },
+  "src/app/que-comer/[slug]/@ficha/default.tsx": {
+    "mtime": 1794287743.9942865,
+    "seen": 1795335541.7854407,
+    "ast_hash": "751cfdb84cc9c53789c4e066809b0576",
+    "semantic_hash": ""
+  },
+  "src/app/que-comer/[slug]/[plato]/page.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854428,
+    "ast_hash": "f4b7c204a0f1059ee60732faeea4866a",
+    "semantic_hash": ""
+  },
+  "src/app/que-comer/[slug]/layout.tsx": {
+    "mtime": 1794287743.9942865,
+    "seen": 1795335541.7854452,
+    "ast_hash": "3f6ef47f9b81ffebe9662ec5960c1d74",
+    "semantic_hash": ""
+  },
+  "src/app/que-comer/[slug]/page.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.785447,
+    "ast_hash": "26f7f32bcd3ed6230e5fde6391312a6c",
+    "semantic_hash": ""
+  },
+  "src/app/que-comer/page.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854583,
+    "ast_hash": "c29ae036483a711efbe03a658b841293",
+    "semantic_hash": ""
+  },
+  "src/app/robots.ts": {
+    "mtime": 1794287743.9942865,
+    "seen": 1795335541.785461,
+    "ast_hash": "bd5b2ab18d64b8b2ca2fdfc23f8d5143",
+    "semantic_hash": ""
+  },
+  "src/app/sitemap.ts": {
+    "mtime": 1794807734.7054737,
+    "seen": 1795335541.7854633,
+    "ast_hash": "5cfb69c7401accb6ffb4c70954dbc3be",
+    "semantic_hash": ""
+  },
+  "src/app/viaje/[editToken]/page.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.785465,
+    "ast_hash": "02b74e5e3320a01ed0bf0334457ccdd1",
+    "semantic_hash": ""
+  },
+  "src/app/viaje/ver/[shareSlug]/page.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854674,
+    "ast_hash": "175506a29bd9a67c46d700a5b6d72829",
+    "semantic_hash": ""
+  },
+  "src/app/vuelos/page.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854695,
+    "ast_hash": "cb22fd535fd92fc5fdf24dd539319e0b",
+    "semantic_hash": ""
+  },
+  "src/assets/globo/estados.json": {
+    "mtime": 1795335536.7579877,
+    "seen": 1795335541.7854714,
+    "ast_hash": "c52f088f609c0dce4cf1c68d6d795b02",
+    "semantic_hash": ""
+  },
+  "src/components/analytics.tsx": {
+    "mtime": 1794287743.9947162,
+    "seen": 1795335541.7854736,
+    "ast_hash": "9272f734dbd5125880669aeb8b05af4d",
+    "semantic_hash": ""
+  },
+  "src/components/comer/acciones-del-plato.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854755,
+    "ast_hash": "d0a0db4924f4a7889c8ba362cf7b60e3",
+    "semantic_hash": ""
+  },
+  "src/components/comer/catalogo.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854776,
+    "ast_hash": "6eb30330704192df4eedc32f08c8fe8a",
+    "semantic_hash": ""
+  },
+  "src/components/comer/credito-de-foto.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854798,
+    "ast_hash": "8cdb16dddd361f1bb47d15f4dcd91f3e",
+    "semantic_hash": ""
+  },
+  "src/components/comer/ficha-de-plato.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854817,
+    "ast_hash": "f70a40776d0a173b073dc1d28b434cc5",
+    "semantic_hash": ""
+  },
+  "src/components/comer/foto-de-comida.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.785484,
+    "ast_hash": "bd2f20b0541299e32ee25be786d93f6e",
+    "semantic_hash": ""
+  },
+  "src/components/comer/mapa-de-lugares.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.785486,
+    "ast_hash": "a918c0da9885dedb638a2ae500a24d1f",
+    "semantic_hash": ""
+  },
+  "src/components/comer/nivel-de-picante.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854884,
+    "ast_hash": "cbbbcc08d230e60b2a76e7e72a648b17",
+    "semantic_hash": ""
+  },
+  "src/components/comer/panel-de-filtros.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7854908,
+    "ast_hash": "51aeacfa1cc40e99b33a8173e4f0bb0b",
+    "semantic_hash": ""
+  },
+  "src/components/comer/secciones-del-pais.tsx": {
+    "mtime": 1795304943.4946487,
+    "seen": 1795335541.7855077,
+    "ast_hash": "b5d3e62b2fc04f4d96bf45528c4c6f92",
+    "semantic_hash": ""
+  },
+  "src/components/comer/tarjeta-de-plato.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855098,
+    "ast_hash": "81ff2c9b71d717edaa9aa3487fea8290",
+    "semantic_hash": ""
+  },
+  "src/components/comer/ventana-de-ficha.tsx": {
+    "mtime": 1794287743.9950235,
+    "seen": 1795335541.7855122,
+    "ast_hash": "a54d9d8c61a5855328f69ff97a151ade",
+    "semantic_hash": ""
+  },
+  "src/components/destinos/lista-de-destinos.tsx": {
+    "mtime": 1794807734.9556265,
+    "seen": 1795335541.7855144,
+    "ast_hash": "76972cf94ac566cee12a86cad4e53cfc",
+    "semantic_hash": ""
+  },
+  "src/components/guia/facts-board.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855165,
+    "ast_hash": "d617577fc12cecdb72eb6b33f6ae1249",
+    "semantic_hash": ""
+  },
+  "src/components/guia/guide-highlights.tsx": {
+    "mtime": 1794287743.995639,
+    "seen": 1795335541.785519,
+    "ast_hash": "4d06475f7e18672256815a4f72c7c830",
+    "semantic_hash": ""
+  },
+  "src/components/guia/live-quotes.test.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855213,
+    "ast_hash": "ad0c9d5a4cb9c263f878a69515018eac",
+    "semantic_hash": ""
+  },
+  "src/components/guia/live-quotes.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855232,
+    "ast_hash": "9b569d17641e3ca78cb7e379d51d0d80",
+    "semantic_hash": ""
+  },
+  "src/components/guia/places-grid.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855256,
+    "ast_hash": "6b06f4374593bb5e20ee9f8149f648e8",
+    "semantic_hash": ""
+  },
+  "src/components/guia/places-map.tsx": {
+    "mtime": 1795333478.2560964,
+    "seen": 1795335541.7855282,
+    "ast_hash": "2d34839685ab96612bee06d0a848a12e",
+    "semantic_hash": ""
+  },
+  "src/components/guia/score-bars.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.78553,
+    "ast_hash": "fb1a137b802e6e390d2e17c574fe65c9",
+    "semantic_hash": ""
+  },
+  "src/components/guia/servicios-cerca.tsx": {
+    "mtime": 1795333478.2560964,
+    "seen": 1795335541.7855322,
+    "ast_hash": "0107799936aefce451c171b28fd3289e",
+    "semantic_hash": ""
+  },
+  "src/components/landing/buscador-de-destinos.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855344,
+    "ast_hash": "59ce21a1d95dedef75bb75ddc18b5d50",
+    "semantic_hash": ""
+  },
+  "src/components/landing/esfera.test.ts": {
+    "mtime": 1795335536.7579877,
+    "seen": 1795335541.7855365,
+    "ast_hash": "edcf6d8954d88084a3da99c4645ed93e",
+    "semantic_hash": ""
+  },
+  "src/components/landing/esfera.ts": {
+    "mtime": 1795335536.7579877,
+    "seen": 1795335541.7855387,
+    "ast_hash": "c14a639fab0c30c176aa51193577d934",
+    "semantic_hash": ""
+  },
+  "src/components/landing/explorador-del-globo.tsx": {
+    "mtime": 1795335536.7579877,
+    "seen": 1795335541.7855408,
+    "ast_hash": "87db3a88979b3b0b087fb2db7af4cda9",
+    "semantic_hash": ""
+  },
+  "src/components/landing/globe-hero.tsx": {
+    "mtime": 1795335536.7619877,
+    "seen": 1795335541.785543,
+    "ast_hash": "131b9c57670b015a1a24125f31e7d3b2",
+    "semantic_hash": ""
+  },
+  "src/components/landing/new-trip-form.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.785545,
+    "ast_hash": "5049abbdb6b7cf79a61054b6ad3e83c1",
+    "semantic_hash": ""
+  },
+  "src/components/mapa/maplibre.ts": {
+    "mtime": 1795329414.4809566,
+    "seen": 1795335541.7855473,
+    "ast_hash": "9dedec7d53ef4ed427231a6156cd00c7",
+    "semantic_hash": ""
+  },
+  "src/components/portada/encabezado-de-seccion.tsx": {
+    "mtime": 1794807734.9556265,
+    "seen": 1795335541.7855496,
+    "ast_hash": "5f0e5720ac2b09ed896c0e67d6d742b8",
+    "semantic_hash": ""
+  },
+  "src/components/portada/imperdibles.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855518,
+    "ast_hash": "70ff2f21785b9813d36c4ae104bda40a",
+    "semantic_hash": ""
+  },
+  "src/components/portada/noticias.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.785554,
+    "ast_hash": "1de3455a2511b461d6439b949d23ef34",
+    "semantic_hash": ""
+  },
+  "src/components/portada/ongs.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.785556,
+    "ast_hash": "0b3f77c102a4b9185c49aeb201c32005",
+    "semantic_hash": ""
+  },
+  "src/components/portada/planifica-tu-viaje.tsx": {
+    "mtime": 1795304943.4986486,
+    "seen": 1795335541.7855582,
+    "ast_hash": "416578092c8c5325c679aa2b874ddd5c",
+    "semantic_hash": ""
+  },
+  "src/components/portada/por-continente.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855604,
+    "ast_hash": "aba4662c82159551de4be58a00120599",
+    "semantic_hash": ""
+  },
+  "src/components/portada/preguntas-frecuentes.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855625,
+    "ast_hash": "0fa7e8361620786a3813c04f6619ae0f",
+    "semantic_hash": ""
+  },
+  "src/components/portada/pronto.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855644,
+    "ast_hash": "196270afb62c95e4565d885154875227",
+    "semantic_hash": ""
+  },
+  "src/components/portada/tarjeta-de-la-portada.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855682,
+    "ast_hash": "262689cfa34440dab6212d8460606ff6",
+    "semantic_hash": ""
+  },
+  "src/components/portada/tendencias-y-ofertas.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855704,
+    "ast_hash": "598474552c6d2ce0cd0c153fe9aa05f4",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/avoid-table.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855725,
+    "ast_hash": "f350a8fd40452e26f2124919597d9be8",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/checklist-sections.tsx": {
+    "mtime": 1794287743.9964583,
+    "seen": 1795335541.7855747,
+    "ast_hash": "1be66adf8ff8859b4910f3f170301aab",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/city-switcher.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855768,
+    "ast_hash": "52628c5e14d38130b7de827c63f9a862",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/climate-bars.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855785,
+    "ast_hash": "bba458c09764314dca3783b26913f052",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/faq-list.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855806,
+    "ast_hash": "b1b092f4723208f92aefb6707e98876f",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/month-cards.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855823,
+    "ast_hash": "5e3332c734e61d9fb935b032949bc7b8",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/month-strip.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855847,
+    "ast_hash": "e35450aaffd8830878b964981b88ae3c",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/packing-tips.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855864,
+    "ast_hash": "c805adaba3273fe222a7b49efa4683bf",
+    "semantic_hash": ""
+  },
+  "src/components/preparar/sections.test.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855883,
+    "ast_hash": "10543abcba6820e3ae771980c1cfc4c9",
+    "semantic_hash": ""
+  },
+  "src/components/sitio/encabezado.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855902,
+    "ast_hash": "03c834065aed579872efeb2325bc9b0c",
+    "semantic_hash": ""
+  },
+  "src/components/sitio/logo.tsx": {
+    "mtime": 1795072634.611472,
+    "seen": 1795335541.7855923,
+    "ast_hash": "1e1540d4ee1eb3278cbba7dab8bb759e",
+    "semantic_hash": ""
+  },
+  "src/components/sitio/pie.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855947,
+    "ast_hash": "354fac1abbd6f864662b77411ceb2183",
+    "semantic_hash": ""
+  },
+  "src/components/trip/budget-list.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855964,
+    "ast_hash": "2c29b9fc9a57f0ecbfcf604c01b7dc32",
+    "semantic_hash": ""
+  },
+  "src/components/trip/export-buttons.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7855985,
+    "ast_hash": "b0af333e2078e1e0e77d128cc1796dd1",
+    "semantic_hash": ""
+  },
+  "src/components/trip/packing-list.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856007,
+    "ast_hash": "c065537a2d2331d3dcba9a944fc2f786",
+    "semantic_hash": ""
+  },
+  "src/components/trip/qty-stepper.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856028,
+    "ast_hash": "7ff339c368d69eb8cba40bd9b3b6d1ec",
+    "semantic_hash": ""
+  },
+  "src/components/trip/share-controls.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856054,
+    "ast_hash": "328745c0516934c7a26f891db07c97c5",
+    "semantic_hash": ""
+  },
+  "src/components/trip/textos.test.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856073,
+    "ast_hash": "e82b5c53de0a2628b826d97ce0135312",
+    "semantic_hash": ""
+  },
+  "src/components/trip/trip-dashboard.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856095,
+    "ast_hash": "58c675c8cd8701a53f07a7b214ba6b2b",
+    "semantic_hash": ""
+  },
+  "src/components/ui/badge.tsx": {
+    "mtime": 1794287743.9968925,
+    "seen": 1795335541.7856116,
+    "ast_hash": "8510911fff59be294d64dbfc67f5c710",
+    "semantic_hash": ""
+  },
+  "src/components/ui/button.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856135,
+    "ast_hash": "60d912356c068520727edfc1d4c7ae60",
+    "semantic_hash": ""
+  },
+  "src/components/ui/calendar.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856154,
+    "ast_hash": "ff77c78f80e73bfde1e4420305dda6bf",
+    "semantic_hash": ""
+  },
+  "src/components/ui/checkbox.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856174,
+    "ast_hash": "8ab728d8b37af0d62855c63521e6aa5e",
+    "semantic_hash": ""
+  },
+  "src/components/ui/dialog.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856195,
+    "ast_hash": "74eb30ec43a9b5d8597cb71b0ed4578a",
+    "semantic_hash": ""
+  },
+  "src/components/ui/input.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856214,
+    "ast_hash": "186052fef4d6a678824a3ac70ec3bdec",
+    "semantic_hash": ""
+  },
+  "src/components/ui/label.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856236,
+    "ast_hash": "e7e0c4ad98f3485ecd3c0ca516d0a8bf",
+    "semantic_hash": ""
+  },
+  "src/components/ui/select.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856262,
+    "ast_hash": "8f59eda15860f917b57c8c427e6a6960",
+    "semantic_hash": ""
+  },
+  "src/components/ui/separator.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856283,
+    "ast_hash": "31309c8fad1e9a91db2a4bdfb4988b45",
+    "semantic_hash": ""
+  },
+  "src/components/ui/sheet.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856305,
+    "ast_hash": "55395bb670bf3bcddcf17b0b697d9508",
+    "semantic_hash": ""
+  },
+  "src/components/ui/tabs.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856326,
+    "ast_hash": "3db2474e4c66b1e544bb514bf1024612",
+    "semantic_hash": ""
+  },
+  "src/components/vuelos/boton-de-enviar.tsx": {
+    "mtime": 1794287743.997268,
+    "seen": 1795335541.7856345,
+    "ast_hash": "c73ff2978e6c9b2a1a75981a7f8e5e1f",
+    "semantic_hash": ""
+  },
+  "src/components/vuelos/buscador-de-origen.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856367,
+    "ast_hash": "330004140d34a23076278a785edb3e75",
+    "semantic_hash": ""
+  },
+  "src/components/vuelos/opcion-de-aeropuerto.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856388,
+    "ast_hash": "a255f261bfed88765a27c19df9dc8109",
+    "semantic_hash": ""
+  },
+  "src/components/vuelos/radar.tsx": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.7856407,
+    "ast_hash": "768cb081af2b5a2b84b3501e16195411",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/argentina.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7856424,
+    "ast_hash": "c95014c14f9d977c1107f3770b692ffc",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/bolivia.ts": {
+    "mtime": 1794473052.0750725,
+    "seen": 1795335541.7856445,
+    "ast_hash": "199bf1a8e84c40697113ac9db3d52a02",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/brasil.ts": {
+    "mtime": 1794473052.2350726,
+    "seen": 1795335541.7856467,
+    "ast_hash": "38ebac0ff4b127f345ad747d590d9909",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/chile.ts": {
+    "mtime": 1794473052.2350726,
+    "seen": 1795335541.7856486,
+    "ast_hash": "1bc554a4e7b66512b9d204691d3291ef",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/colombia.ts": {
+    "mtime": 1794473052.2350726,
+    "seen": 1795335541.785651,
+    "ast_hash": "d17a9c35de4cca8fe93b1cf4d952603f",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/comidas.test.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856534,
+    "ast_hash": "9fa89af02ea85d38829d1bd82e85855b",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/costa-rica.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856557,
+    "ast_hash": "b3729a0069ced20b8af3023cec283fe9",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/cuba.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.785658,
+    "ast_hash": "21d6caf754f76687a82442e8e216e66d",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/ecuador.ts": {
+    "mtime": 1794473052.2350726,
+    "seen": 1795335541.7856603,
+    "ast_hash": "ef8a158967ce9507ef4ad6d112f08772",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/el-salvador.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856624,
+    "ast_hash": "a6a180a5b4ad3062d0beaad22dd0a4f9",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/fotos.json": {
+    "mtime": 1794287743.9981267,
+    "seen": 1795335541.7856648,
+    "ast_hash": "8a80554c91d9fca8acb82f023de02f11",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/fotos.ts": {
+    "mtime": 1794287743.9981267,
+    "seen": 1795335541.7856672,
+    "ast_hash": "26cdfac0712d0f2a7a48aca3a250e305",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/guatemala.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856693,
+    "ast_hash": "f0f3852ef2c7f6067b7895b051f3747c",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/honduras.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.785672,
+    "ast_hash": "51b913c8f61e304d3d340053eeb0bbfe",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/index.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856743,
+    "ast_hash": "df4bc58367cfa113f51a7947287647ad",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/japon.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7856762,
+    "ast_hash": "7bcc57777aa5d514e4b82cfce779966a",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/mexico.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7856784,
+    "ast_hash": "976f34e3e21f94a98255266c46dbdd16",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/nicaragua.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856803,
+    "ast_hash": "f3091f434b23a976698b1bb8a9672528",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/panama.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856824,
+    "ast_hash": "5d484283ff6037f39b947e24ddce71ad",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/paraguay.ts": {
+    "mtime": 1794473052.2390726,
+    "seen": 1795335541.7856848,
+    "ast_hash": "68b679d1c7676ef1cdd111d76ac13f9c",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/peru.ts": {
+    "mtime": 1794473052.2390726,
+    "seen": 1795335541.7856867,
+    "ast_hash": "2c1a0f15c78959cad65b1c50a8ac2098",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/republica-dominicana.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7856889,
+    "ast_hash": "3933d7ceae2321e0285fca5feaaf6a0d",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/types.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.785691,
+    "ast_hash": "115e6872462694c06943ae9381bb3242",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/uruguay.ts": {
+    "mtime": 1794473052.2390726,
+    "seen": 1795335541.7856932,
+    "ast_hash": "c90773a4bf27919cefa05a46acb75769",
+    "semantic_hash": ""
+  },
+  "src/content/comidas/venezuela.ts": {
+    "mtime": 1794473052.4470725,
+    "seen": 1795335541.7856953,
+    "ast_hash": "84d0410c1af016e4cfdbba22853ba165",
+    "semantic_hash": ""
+  },
+  "src/content/guias/albania.ts": {
+    "mtime": 1794287743.9981267,
+    "seen": 1795335541.7856972,
+    "ast_hash": "d00efc992b2bf38c223a2c7f3a9cbdad",
+    "semantic_hash": ""
+  },
+  "src/content/guias/alemania.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7856994,
+    "ast_hash": "40b4e610253d0d8229d78314ba943268",
+    "semantic_hash": ""
+  },
+  "src/content/guias/andorra.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785702,
+    "ast_hash": "012799c2b64edc31c259bdbef75d33de",
+    "semantic_hash": ""
+  },
+  "src/content/guias/angola.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857041,
+    "ast_hash": "10bdfaf98fb19501c2a4b6c27e563730",
+    "semantic_hash": ""
+  },
+  "src/content/guias/antigua-y-barbuda.ts": {
+    "mtime": 1795304943.5026486,
+    "seen": 1795335541.785706,
+    "ast_hash": "4a01a70e0728d400104edf008136b294",
+    "semantic_hash": ""
+  },
+  "src/content/guias/arabia-saudita.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857077,
+    "ast_hash": "7a48fa22c6c19ec58ad32a4b114e9898",
+    "semantic_hash": ""
+  },
+  "src/content/guias/argelia.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857099,
+    "ast_hash": "f912a58dfeb2848170a48ae0af3d7c18",
+    "semantic_hash": ""
+  },
+  "src/content/guias/argentina.ts": {
+    "mtime": 1795329414.4809566,
+    "seen": 1795335541.7857122,
+    "ast_hash": "e4d3898a91ca77a547a6e78153a6d62d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/armenia.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857141,
+    "ast_hash": "ad2e5b722129e13762ad91bf458de274",
+    "semantic_hash": ""
+  },
+  "src/content/guias/aruba.ts": {
+    "mtime": 1795304943.5066488,
+    "seen": 1795335541.785716,
+    "ast_hash": "34b6de5759e8d6d936681a29b93f1430",
+    "semantic_hash": ""
+  },
+  "src/content/guias/australia.ts": {
+    "mtime": 1795329414.4809566,
+    "seen": 1795335541.785718,
+    "ast_hash": "253816cf66d2b49caed03e7ecc4f8f25",
+    "semantic_hash": ""
+  },
+  "src/content/guias/austria.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857203,
+    "ast_hash": "94a5e9eca8d8a3e355b479aa3b0b64ce",
+    "semantic_hash": ""
+  },
+  "src/content/guias/azerbaiyan.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857223,
+    "ast_hash": "9ab17ec2af2399885b74c40ff4753b1d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/bahamas.ts": {
+    "mtime": 1795304943.7146487,
+    "seen": 1795335541.7857244,
+    "ast_hash": "3019f111cd8efd90462c1f8e25720d2d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/banglades.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857263,
+    "ast_hash": "3df452a6cceb1f15f56f583a290a2d37",
+    "semantic_hash": ""
+  },
+  "src/content/guias/barbados.ts": {
+    "mtime": 1795304943.7146487,
+    "seen": 1795335541.7857282,
+    "ast_hash": "f42d8a86735ffe54bd41da6dbbb7869b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/barein.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857304,
+    "ast_hash": "662a02ca204f8a5810276ac9e4045ce1",
+    "semantic_hash": ""
+  },
+  "src/content/guias/belgica.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857323,
+    "ast_hash": "d576c6ebc7b9b947b93f33a614112757",
+    "semantic_hash": ""
+  },
+  "src/content/guias/belice.ts": {
+    "mtime": 1795304943.7146487,
+    "seen": 1795335541.7857347,
+    "ast_hash": "96a09dfdb28335ecbfd881e4d1f50b3b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/benin.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785737,
+    "ast_hash": "ca753d48e0ca706f7e4f6b34ed5cba1d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/bermudas.ts": {
+    "mtime": 1795304943.7146487,
+    "seen": 1795335541.7857387,
+    "ast_hash": "56672173204fc49be3e2b9026235792e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/bolivia.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785741,
+    "ast_hash": "b55a00c67193a155ea68827e57ca6184",
+    "semantic_hash": ""
+  },
+  "src/content/guias/bosnia-y-herzegovina.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785743,
+    "ast_hash": "5c4209f927199d9fd1da577e528e8509",
+    "semantic_hash": ""
+  },
+  "src/content/guias/botsuana.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785745,
+    "ast_hash": "ea5a1be7c7fa8e0be966b8429fe04fc1",
+    "semantic_hash": ""
+  },
+  "src/content/guias/brasil.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785749,
+    "ast_hash": "400d78fa3ddf6349f039d78afc95bdab",
+    "semantic_hash": ""
+  },
+  "src/content/guias/brunei.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785751,
+    "ast_hash": "f47ae9ad164999add06de2f171bd292e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/bulgaria.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857528,
+    "ast_hash": "beac687bafccd1f0c425c80e6b38be96",
+    "semantic_hash": ""
+  },
+  "src/content/guias/burundi.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785755,
+    "ast_hash": "b995316c271e0c95f3db0169bfabc5eb",
+    "semantic_hash": ""
+  },
+  "src/content/guias/butan.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857568,
+    "ast_hash": "a46a36defe378ca79c72d3ae6c61fbfb",
+    "semantic_hash": ""
+  },
+  "src/content/guias/cabo-verde.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785759,
+    "ast_hash": "f5ff9328b4db0ba442d69397727c7bf1",
+    "semantic_hash": ""
+  },
+  "src/content/guias/camboya.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785761,
+    "ast_hash": "65fd9efe31b7465387052b5590123d31",
+    "semantic_hash": ""
+  },
+  "src/content/guias/camerun.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785763,
+    "ast_hash": "94e51541fe06da0f044c28f9f8d8c20f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/canada.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7857652,
+    "ast_hash": "882a3595a4b545036611728a98fb71d3",
+    "semantic_hash": ""
+  },
+  "src/content/guias/catar.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785767,
+    "ast_hash": "3b3b5808ab70e4d3a947545cb313c87d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/chad.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785769,
+    "ast_hash": "c113cd091810683bb172da5e4b80dd5a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/chequia.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.785771,
+    "ast_hash": "afef29e02701165f55d29623f53cf334",
+    "semantic_hash": ""
+  },
+  "src/content/guias/chile.ts": {
+    "mtime": 1795329414.4809566,
+    "seen": 1795335541.785773,
+    "ast_hash": "76e8a00db15548e777888521d590f79c",
+    "semantic_hash": ""
+  },
+  "src/content/guias/china.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857752,
+    "ast_hash": "e15fa353012f62a89b0a91b391363b13",
+    "semantic_hash": ""
+  },
+  "src/content/guias/chipre.ts": {
+    "mtime": 1794287743.9990017,
+    "seen": 1795335541.7857769,
+    "ast_hash": "836660c360f8b2a821c1331adb9bda54",
+    "semantic_hash": ""
+  },
+  "src/content/guias/colombia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.785779,
+    "ast_hash": "9331dc5cb8612ac27867aaf08e313c5d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/comoras.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7857833,
+    "ast_hash": "3de7e29d774cf5b91c3d150fe78c387d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/continentes.test.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7857852,
+    "ast_hash": "b8fa41012d48bc2c944875cf3bad0432",
+    "semantic_hash": ""
+  },
+  "src/content/guias/continentes.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.785787,
+    "ast_hash": "d83d28cadccd219a94720e58b19bad1b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/corea-del-sur.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7857893,
+    "ast_hash": "38e91078e3a9f03821be551562567fcc",
+    "semantic_hash": ""
+  },
+  "src/content/guias/costa-de-marfil.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7857912,
+    "ast_hash": "d46ae130b5f7fbc80c825041f9af53cd",
+    "semantic_hash": ""
+  },
+  "src/content/guias/costa-rica.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.785793,
+    "ast_hash": "7e48b5ddc72ffc4455fe9b3a679e29a1",
+    "semantic_hash": ""
+  },
+  "src/content/guias/croacia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.785795,
+    "ast_hash": "63456c79f2af17a629b6ef9354646862",
+    "semantic_hash": ""
+  },
+  "src/content/guias/cuba.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.785797,
+    "ast_hash": "dd07832b019434fafbbaaa295822d96d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/curazao.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.785799,
+    "ast_hash": "920ff23ab07cc718ce62dfc6925a5b4f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/destinos-planificables.test.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858007,
+    "ast_hash": "1ef8888599f0bb8fc3050881ea569cad",
+    "semantic_hash": ""
+  },
+  "src/content/guias/dinamarca.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858028,
+    "ast_hash": "2372a428564f4b65581c94307766c27b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/dominica.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858045,
+    "ast_hash": "7928cdb81f8056eec826e6daf1c1a088",
+    "semantic_hash": ""
+  },
+  "src/content/guias/ecuador.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858067,
+    "ast_hash": "9d6af1d52233c0b8222ca6bb7203eda5",
+    "semantic_hash": ""
+  },
+  "src/content/guias/egipto.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858083,
+    "ast_hash": "9a8d672dae4438fa1000d37d3ba7a58a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/el-salvador.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858105,
+    "ast_hash": "fc77201d9fd2ae37267acaf55e5d9160",
+    "semantic_hash": ""
+  },
+  "src/content/guias/emiratos-arabes-unidos.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858124,
+    "ast_hash": "6f71d3c1019a39fca5b23ada43240f83",
+    "semantic_hash": ""
+  },
+  "src/content/guias/eritrea.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858143,
+    "ast_hash": "3a1203191d9615275e338741c25409de",
+    "semantic_hash": ""
+  },
+  "src/content/guias/eslovaquia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858164,
+    "ast_hash": "e22a822258fe933c1efc0d56f0c652ab",
+    "semantic_hash": ""
+  },
+  "src/content/guias/eslovenia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858183,
+    "ast_hash": "d42c10d3a0314f07982d8e25bd0c23fc",
+    "semantic_hash": ""
+  },
+  "src/content/guias/espana.ts": {
+    "mtime": 1795329414.4809566,
+    "seen": 1795335541.7858202,
+    "ast_hash": "7db774bb04c0b26f4c84e5de8ac1e2e7",
+    "semantic_hash": ""
+  },
+  "src/content/guias/estados-unidos.ts": {
+    "mtime": 1795329414.4809566,
+    "seen": 1795335541.7858222,
+    "ast_hash": "eb2d0a451c47d0592ffc2438b9fb09aa",
+    "semantic_hash": ""
+  },
+  "src/content/guias/estonia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858243,
+    "ast_hash": "c282dd25005822ffdede4345ce2caee8",
+    "semantic_hash": ""
+  },
+  "src/content/guias/esuatini.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858262,
+    "ast_hash": "2817f7cdc5c741f325511b8682f53e3a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/etiopia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858284,
+    "ast_hash": "4653416f4186e732b466026308557331",
+    "semantic_hash": ""
+  },
+  "src/content/guias/filipinas.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858305,
+    "ast_hash": "050d81709556bee0783f2a0ea7e11067",
+    "semantic_hash": ""
+  },
+  "src/content/guias/finlandia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858322,
+    "ast_hash": "4b23b1f3443db2f5363c57f3b26b869c",
+    "semantic_hash": ""
+  },
+  "src/content/guias/fiyi.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858343,
+    "ast_hash": "7f22b0dbbd9acdbb5e6a4d9d73b26213",
+    "semantic_hash": ""
+  },
+  "src/content/guias/francia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.785836,
+    "ast_hash": "edaf697932b1c956d8903b7ad7407c2e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/gabon.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858381,
+    "ast_hash": "2c6fb3a0b0364491921b590643cc76e8",
+    "semantic_hash": ""
+  },
+  "src/content/guias/gambia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.7858398,
+    "ast_hash": "45a1c425605e3949c24775081464a339",
+    "semantic_hash": ""
+  },
+  "src/content/guias/georgia.ts": {
+    "mtime": 1794287744.0011692,
+    "seen": 1795335541.785842,
+    "ast_hash": "414fea793972e2697e7c891d36f44bf2",
+    "semantic_hash": ""
+  },
+  "src/content/guias/ghana.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858436,
+    "ast_hash": "6600e44c9c987f7c41fab6d5e7c35a35",
+    "semantic_hash": ""
+  },
+  "src/content/guias/granada.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858458,
+    "ast_hash": "2a65542331225469263f5cfa2c55e1a3",
+    "semantic_hash": ""
+  },
+  "src/content/guias/grecia.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785848,
+    "ast_hash": "9b4d09fb109debad8690b39e187b8baf",
+    "semantic_hash": ""
+  },
+  "src/content/guias/groenlandia.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858496,
+    "ast_hash": "d7b58390d938b64ba809d45316376d7a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/guatemala.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858515,
+    "ast_hash": "7b252d57930af7f397046441eaa4127e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/guias.test.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858534,
+    "ast_hash": "3eb02dfbab608ec7be000db2da4e6925",
+    "semantic_hash": ""
+  },
+  "src/content/guias/guinea-bisau.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858553,
+    "ast_hash": "942ff71e30c0f65b434e459771dbc1da",
+    "semantic_hash": ""
+  },
+  "src/content/guias/guinea-ecuatorial.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858572,
+    "ast_hash": "ae868bfd36f80ab9c01e72e447ea5de9",
+    "semantic_hash": ""
+  },
+  "src/content/guias/guinea.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785859,
+    "ast_hash": "7bf609e6dc6bfee6bfe3ea0ba47bbc27",
+    "semantic_hash": ""
+  },
+  "src/content/guias/guyana.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858608,
+    "ast_hash": "2ebe6a02fd896b0e034396c6f562d5e2",
+    "semantic_hash": ""
+  },
+  "src/content/guias/honduras.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858627,
+    "ast_hash": "a4f47f0901f1490934cdc38c587a83fb",
+    "semantic_hash": ""
+  },
+  "src/content/guias/hong-kong.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785865,
+    "ast_hash": "4c1c9112eb2bc63aebd93fcd87223660",
+    "semantic_hash": ""
+  },
+  "src/content/guias/hungria.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785867,
+    "ast_hash": "29ebdeab7455733ea98a831faba2131f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/index.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858691,
+    "ast_hash": "ef57f28bc275d0d9d877c0c8e7f55e62",
+    "semantic_hash": ""
+  },
+  "src/content/guias/india.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858708,
+    "ast_hash": "eb5ed61c17024739721d069451927112",
+    "semantic_hash": ""
+  },
+  "src/content/guias/indonesia.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785873,
+    "ast_hash": "35ef69c45d661b02888d1ad63f5e65e4",
+    "semantic_hash": ""
+  },
+  "src/content/guias/irak.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858748,
+    "ast_hash": "b89993d916c31adfadfdde3f76dda7e0",
+    "semantic_hash": ""
+  },
+  "src/content/guias/iran.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858768,
+    "ast_hash": "d944fbffc9158222af92d4fc739558ac",
+    "semantic_hash": ""
+  },
+  "src/content/guias/irlanda.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785879,
+    "ast_hash": "c6954ef0183cabb485bccaedfdaaa1fc",
+    "semantic_hash": ""
+  },
+  "src/content/guias/islandia.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858808,
+    "ast_hash": "6125bbc29d55f8d2fccea89b9f3732cd",
+    "semantic_hash": ""
+  },
+  "src/content/guias/islas-caiman.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.785883,
+    "ast_hash": "9886d92749599c683867572ffccc4676",
+    "semantic_hash": ""
+  },
+  "src/content/guias/islas-cook.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858846,
+    "ast_hash": "8f98de675aa061b22a15d4ed80545ae2",
+    "semantic_hash": ""
+  },
+  "src/content/guias/islas-marshall.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858868,
+    "ast_hash": "82034373da59b4bc2e5e1208f2b8bf40",
+    "semantic_hash": ""
+  },
+  "src/content/guias/islas-salomon.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7858887,
+    "ast_hash": "c90e82ea84d34294539b6a5a621ed946",
+    "semantic_hash": ""
+  },
+  "src/content/guias/israel-y-palestina.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785891,
+    "ast_hash": "c1d145d72ec5ff9f1af3847467bc243b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/italia.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785893,
+    "ast_hash": "d93d8f63acc25c40c8bad70da0c2ce46",
+    "semantic_hash": ""
+  },
+  "src/content/guias/jamaica.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7858949,
+    "ast_hash": "ea238b7c62d140450d118ed29ef612c8",
+    "semantic_hash": ""
+  },
+  "src/content/guias/japon.ts": {
+    "mtime": 1795329414.4849565,
+    "seen": 1795335541.785897,
+    "ast_hash": "cd7e052f0068d2118955fcc322f05251",
+    "semantic_hash": ""
+  },
+  "src/content/guias/jordania.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785899,
+    "ast_hash": "6db56c991efa3dbde28a53ddc4ab3e35",
+    "semantic_hash": ""
+  },
+  "src/content/guias/kazajistan.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.785901,
+    "ast_hash": "2256111ead00856d65b0f87b18dc5c9a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/kenia.ts": {
+    "mtime": 1794287744.0051692,
+    "seen": 1795335541.7859035,
+    "ast_hash": "77eb55aef551e1d21060614f9720d508",
+    "semantic_hash": ""
+  },
+  "src/content/guias/kirguistan.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859051,
+    "ast_hash": "df6ce59a987fb1e5e4032890b9c53d14",
+    "semantic_hash": ""
+  },
+  "src/content/guias/kiribati.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859073,
+    "ast_hash": "6fa7af59ade8d27b20599e7e2644326a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/kuwait.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859092,
+    "ast_hash": "bc4a6861ed833b6c19944404834ef8cf",
+    "semantic_hash": ""
+  },
+  "src/content/guias/laos.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859116,
+    "ast_hash": "d968e48440c70537cfb1af93a8c348bb",
+    "semantic_hash": ""
+  },
+  "src/content/guias/lesoto.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859137,
+    "ast_hash": "c160f8a7428aad07df31048949526208",
+    "semantic_hash": ""
+  },
+  "src/content/guias/letonia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859159,
+    "ast_hash": "7eafee9b6bf2daef835eb60f50bca73a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/libano.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859178,
+    "ast_hash": "e05a0a37cfdea5da94f4e62ae379c40d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/liberia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859197,
+    "ast_hash": "9915828510fb3ec986ec935b7a0049e2",
+    "semantic_hash": ""
+  },
+  "src/content/guias/lituania.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859218,
+    "ast_hash": "d170c8fe5baf08b690b129e77cc24a37",
+    "semantic_hash": ""
+  },
+  "src/content/guias/luxemburgo.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859242,
+    "ast_hash": "2238cb14d0dce5e062f92eb5ea72080b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/macao.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.785926,
+    "ast_hash": "1c0624cac1550273273d696c85e00a23",
+    "semantic_hash": ""
+  },
+  "src/content/guias/macedonia-del-norte.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.785928,
+    "ast_hash": "3ca3a0e3684dac12132c1ddad2b5d96f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/madagascar.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859302,
+    "ast_hash": "1abeaa92739ade8bf82077928c88c021",
+    "semantic_hash": ""
+  },
+  "src/content/guias/malasia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859323,
+    "ast_hash": "06c2cf1cfaeded9ff05fc23b9bf5f513",
+    "semantic_hash": ""
+  },
+  "src/content/guias/malaui.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859344,
+    "ast_hash": "b2068072dd737b817c3a3e0712701efd",
+    "semantic_hash": ""
+  },
+  "src/content/guias/maldivas.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859364,
+    "ast_hash": "62500644bc8a0bcfb32e65953858f2e0",
+    "semantic_hash": ""
+  },
+  "src/content/guias/malta.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859385,
+    "ast_hash": "655a3cf32e507eacb8e13a3e9a9a9304",
+    "semantic_hash": ""
+  },
+  "src/content/guias/marruecos.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859404,
+    "ast_hash": "b0dbd382627a5fae09d04037ef67d472",
+    "semantic_hash": ""
+  },
+  "src/content/guias/mauricio.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859428,
+    "ast_hash": "791455e763245c3d6429abbae144aa9a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/mauritania.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.785945,
+    "ast_hash": "6fe514b534c3ee2ac2a84dfd13569d57",
+    "semantic_hash": ""
+  },
+  "src/content/guias/mexico.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859466,
+    "ast_hash": "e3056fd577a42b1971cd1996f4f0e171",
+    "semantic_hash": ""
+  },
+  "src/content/guias/micronesia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859488,
+    "ast_hash": "01988352e7ff48497a53ac7abb2545a1",
+    "semantic_hash": ""
+  },
+  "src/content/guias/moldavia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.785951,
+    "ast_hash": "b863bf26f10bc63e67195f519e7a3ec4",
+    "semantic_hash": ""
+  },
+  "src/content/guias/mongolia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.785953,
+    "ast_hash": "022b1d1dad98d5f60820ecf5c7aad07b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/montenegro.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859547,
+    "ast_hash": "69b5ecc6875a5ebc81c8eef7b10788aa",
+    "semantic_hash": ""
+  },
+  "src/content/guias/mozambique.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859569,
+    "ast_hash": "de5d0cb905658c0e4228b48d926f836d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/myanmar.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.785959,
+    "ast_hash": "deb9aeab561583ab8d119cf61a415109",
+    "semantic_hash": ""
+  },
+  "src/content/guias/namibia.ts": {
+    "mtime": 1794287744.009169,
+    "seen": 1795335541.7859607,
+    "ast_hash": "c564ed5dc9cfa1c98c89efc829847cab",
+    "semantic_hash": ""
+  },
+  "src/content/guias/nauru.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785963,
+    "ast_hash": "ee0666ad8f5a7bd71e9c551d905eb04e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/nepal.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785965,
+    "ast_hash": "4aa60c24047ae139d3678bf29e245646",
+    "semantic_hash": ""
+  },
+  "src/content/guias/nicaragua.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859669,
+    "ast_hash": "a7172d2c4a1f10f240114168073f8da4",
+    "semantic_hash": ""
+  },
+  "src/content/guias/nigeria.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859688,
+    "ast_hash": "aa1e9bd1d8b869fd7fc08185511ef953",
+    "semantic_hash": ""
+  },
+  "src/content/guias/noruega.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859707,
+    "ast_hash": "b90abcc83fe4d64f9e8ed6a434967420",
+    "semantic_hash": ""
+  },
+  "src/content/guias/nueva-caledonia.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859728,
+    "ast_hash": "a19efd0d189e620f743f93fa32e0f02b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/nueva-zelanda.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785975,
+    "ast_hash": "d688df154b05815c93cbf99a4f768829",
+    "semantic_hash": ""
+  },
+  "src/content/guias/oman.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859771,
+    "ast_hash": "0540d383c87ea2698b2623945b04d28e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/paises-bajos.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785979,
+    "ast_hash": "042ad0fb9fcaf2d256c914bcc25b85f2",
+    "semantic_hash": ""
+  },
+  "src/content/guias/pakistan.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859812,
+    "ast_hash": "def90bd35a7b974259657673ebefd64b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/palaos.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785983,
+    "ast_hash": "828940252513e8a9bab2ef2b17f4617d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/panama.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785985,
+    "ast_hash": "ab4b62ae74a673d62746b5054813161f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/papua-nueva-guinea.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859871,
+    "ast_hash": "009ba6ef88e59407a6ab86b8f00e311a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/paraguay.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859888,
+    "ast_hash": "2088733173823924953b298dfbcc4869",
+    "semantic_hash": ""
+  },
+  "src/content/guias/peru.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.785991,
+    "ast_hash": "35e63acdde98a3dad2a5d98ea2282879",
+    "semantic_hash": ""
+  },
+  "src/content/guias/polinesia-francesa.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859926,
+    "ast_hash": "a25bfa26f8c494108971c642fd5774b2",
+    "semantic_hash": ""
+  },
+  "src/content/guias/polonia.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859945,
+    "ast_hash": "9b82d156f0f6a5d46bca8f0b7b4c7443",
+    "semantic_hash": ""
+  },
+  "src/content/guias/portugal.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7859964,
+    "ast_hash": "34a3ba73776953d8ed657b3962badb72",
+    "semantic_hash": ""
+  },
+  "src/content/guias/puerto-rico.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7859983,
+    "ast_hash": "0f60f98ffcb58fa9009c483edf96b839",
+    "semantic_hash": ""
+  },
+  "src/content/guias/reino-unido.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.786,
+    "ast_hash": "22a5d795e7592ed90c3273f879e3775b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/republica-del-congo.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.786002,
+    "ast_hash": "d7ee38675bc9db5d5695c2c04474f0fc",
+    "semantic_hash": ""
+  },
+  "src/content/guias/republica-democratica-del-congo.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860038,
+    "ast_hash": "d14c205c0db59941184f848da83776d3",
+    "semantic_hash": ""
+  },
+  "src/content/guias/republica-dominicana.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860057,
+    "ast_hash": "ec8eb482ade11e4fec30b42eaa6d83e7",
+    "semantic_hash": ""
+  },
+  "src/content/guias/ruanda.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860076,
+    "ast_hash": "b534e89fd6058af00d2d39ef734e89a9",
+    "semantic_hash": ""
+  },
+  "src/content/guias/rumania.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860096,
+    "ast_hash": "f755c6d0ef768f99b1f3539e55155080",
+    "semantic_hash": ""
+  },
+  "src/content/guias/samoa.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860117,
+    "ast_hash": "eab526da87ba637f0de83eb16dbdde7a",
+    "semantic_hash": ""
+  },
+  "src/content/guias/san-cristobal-y-nieves.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7860138,
+    "ast_hash": "25593417a8e2f243a5b3589dbf24848b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/san-vicente-y-las-granadinas.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.7860157,
+    "ast_hash": "002ba74d120b7d0de0eebc826d2a8c1f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/santa-lucia.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.786018,
+    "ast_hash": "05a005a6a1fce84200edc7a1ba9260b8",
+    "semantic_hash": ""
+  },
+  "src/content/guias/santo-tome-y-principe.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860198,
+    "ast_hash": "b0916c3691a5867409570f8f42a94a43",
+    "semantic_hash": ""
+  },
+  "src/content/guias/senegal.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.786022,
+    "ast_hash": "3b322f798efa497ca584537d4cf44272",
+    "semantic_hash": ""
+  },
+  "src/content/guias/serbia.ts": {
+    "mtime": 1794287744.013169,
+    "seen": 1795335541.7860239,
+    "ast_hash": "7364d111324154473d0ba85d3e304af4",
+    "semantic_hash": ""
+  },
+  "src/content/guias/seychelles.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786026,
+    "ast_hash": "f2873ee92ca598c1a4d7c5181074f036",
+    "semantic_hash": ""
+  },
+  "src/content/guias/sierra-leona.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860277,
+    "ast_hash": "2e74fc999dfb450ea8ebca659914a7bc",
+    "semantic_hash": ""
+  },
+  "src/content/guias/singapur.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860298,
+    "ast_hash": "158d7b864473cffd79c8b7e7198e9694",
+    "semantic_hash": ""
+  },
+  "src/content/guias/sri-lanka.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786032,
+    "ast_hash": "368b2e7cf69a082483a372afa2e58540",
+    "semantic_hash": ""
+  },
+  "src/content/guias/sudafrica.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860339,
+    "ast_hash": "b222dfcb85a8a432ea9f39b667dc214d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/suecia.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860358,
+    "ast_hash": "c9fbce706d549de593ee8f5879a6f584",
+    "semantic_hash": ""
+  },
+  "src/content/guias/suiza.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786038,
+    "ast_hash": "c3b263cd43d1a6aaf14bb9195c84ff1f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/surinam.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.78604,
+    "ast_hash": "b247990994ff8a05e5c86103e8200209",
+    "semantic_hash": ""
+  },
+  "src/content/guias/tailandia.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860422,
+    "ast_hash": "b514c35d32dd53e6e469dc54f04e4ccc",
+    "semantic_hash": ""
+  },
+  "src/content/guias/taiwan.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860441,
+    "ast_hash": "c295053154aa3332c94deccc05459197",
+    "semantic_hash": ""
+  },
+  "src/content/guias/tanzania.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786046,
+    "ast_hash": "2b4aca2c7a6cdda87290010c71b95b43",
+    "semantic_hash": ""
+  },
+  "src/content/guias/tayikistan.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786048,
+    "ast_hash": "8e80c44f116c786852c2d3b8b80a5952",
+    "semantic_hash": ""
+  },
+  "src/content/guias/timor-oriental.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.78605,
+    "ast_hash": "8a89d38db7a073a5a798f778250c42a4",
+    "semantic_hash": ""
+  },
+  "src/content/guias/togo.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860518,
+    "ast_hash": "3f0fc77f28de801bdc309ef1a9fd6dba",
+    "semantic_hash": ""
+  },
+  "src/content/guias/tonga.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786054,
+    "ast_hash": "6ae0874f39135fff3798ab6bcfb03fb5",
+    "semantic_hash": ""
+  },
+  "src/content/guias/trinidad-y-tobago.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.786056,
+    "ast_hash": "71d6b233e76cb7c6727b59234563c82b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/tunez.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786058,
+    "ast_hash": "c10ff296f85d088f2f1a18888ca6428f",
+    "semantic_hash": ""
+  },
+  "src/content/guias/turcas-y-caicos.ts": {
+    "mtime": 1795304943.7186487,
+    "seen": 1795335541.78606,
+    "ast_hash": "d46343f9cc680b8006e87003ac586c1d",
+    "semantic_hash": ""
+  },
+  "src/content/guias/turkmenistan.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860618,
+    "ast_hash": "ee2adca7f3093fa682a806e055dd1b4c",
+    "semantic_hash": ""
+  },
+  "src/content/guias/turquia.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786064,
+    "ast_hash": "d2cded000fb1e50f7b8bc8c76e60452b",
+    "semantic_hash": ""
+  },
+  "src/content/guias/tuvalu.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860658,
+    "ast_hash": "7521606704e04fb5a3132157dfc7fdbb",
+    "semantic_hash": ""
+  },
+  "src/content/guias/types.ts": {
+    "mtime": 1795304943.7226486,
+    "seen": 1795335541.7860677,
+    "ast_hash": "842ff65e26678dae54035dfdfba60409",
+    "semantic_hash": ""
+  },
+  "src/content/guias/uganda.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860699,
+    "ast_hash": "7389359ca2e8c35e26a0cdcb37163945",
+    "semantic_hash": ""
+  },
+  "src/content/guias/uruguay.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860715,
+    "ast_hash": "58f22e77759e3f08c6de4adce8f738fe",
+    "semantic_hash": ""
+  },
+  "src/content/guias/uzbekistan.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.786074,
+    "ast_hash": "df29ed40d33a32a2a3a5c0007f431388",
+    "semantic_hash": ""
+  },
+  "src/content/guias/vanuatu.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860756,
+    "ast_hash": "92690dbe4b4a8270ddbeb906883fb99e",
+    "semantic_hash": ""
+  },
+  "src/content/guias/venezuela.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860775,
+    "ast_hash": "b74e432dce590307b8172f5ed918f6f8",
+    "semantic_hash": ""
+  },
+  "src/content/guias/vietnam.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860794,
+    "ast_hash": "fe70281f5a9604eb467997827b0df8f0",
+    "semantic_hash": ""
+  },
+  "src/content/guias/yibuti.ts": {
+    "mtime": 1794287744.0171692,
+    "seen": 1795335541.7860816,
+    "ast_hash": "431a38983de6ea60c68bdac1a92d2197",
+    "semantic_hash": ""
+  },
+  "src/content/guias/zambia.ts": {
+    "mtime": 1794287744.0211692,
+    "seen": 1795335541.7860837,
+    "ast_hash": "e3fc7cd4ee92221fed46ad50ffb00cd9",
+    "semantic_hash": ""
+  },
+  "src/content/guias/zimbabue.ts": {
+    "mtime": 1794287744.0211692,
+    "seen": 1795335541.7860856,
+    "ast_hash": "1c175e581e4ddc8034a65c461efae2fb",
+    "semantic_hash": ""
+  },
+  "src/content/portada.test.ts": {
+    "mtime": 1795304943.7226486,
+    "seen": 1795335541.7860875,
+    "ast_hash": "cee0d784719b7dd7beaa32a9701baf0d",
+    "semantic_hash": ""
+  },
+  "src/content/portada.ts": {
+    "mtime": 1795304943.7226486,
+    "seen": 1795335541.7860894,
+    "ast_hash": "944a8d6e7d56edc745a4e1e6f97b5b9b",
+    "semantic_hash": ""
+  },
+  "src/i18n/cliente.tsx": {
+    "mtime": 1795304943.7226486,
+    "seen": 1795335541.7860947,
+    "ast_hash": "47417cc52c5c75fee14a76a12f0297e6",
+    "semantic_hash": ""
+  },
+  "src/i18n/comidas.ts": {
+    "mtime": 1795304943.7250733,
+    "seen": 1795335541.7860966,
+    "ast_hash": "edddce2993c245d9f1d6b492390dd1bc",
+    "semantic_hash": ""
+  },
+  "src/i18n/destinos.ts": {
+    "mtime": 1795304943.7250733,
+    "seen": 1795335541.7860987,
+    "ast_hash": "6d7ebe6773bd57629a500885446c8599",
+    "semantic_hash": ""
+  },
+  "src/i18n/diccionarios.test.ts": {
+    "mtime": 1795304943.7250733,
+    "seen": 1795335541.7861006,
+    "ast_hash": "d454f596354f6713c7c2de083ee578fc",
+    "semantic_hash": ""
+  },
+  "src/i18n/enriquecer.test.tsx": {
+    "mtime": 1795304943.7250733,
+    "seen": 1795335541.7861025,
+    "ast_hash": "6cd1d03bd9eb53aaaaaa20fed07040da",
+    "semantic_hash": ""
+  },
+  "src/i18n/enriquecer.tsx": {
+    "mtime": 1795304943.7250733,
+    "seen": 1795335541.7861047,
+    "ast_hash": "c33c6ed9ddbf8509c701b984f5469f3d",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/comidas.ts": {
+    "mtime": 1795304943.7250733,
+    "seen": 1795335541.7861063,
+    "ast_hash": "879faefd6b61ed1a0511e97dc21415a3",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/destinos.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.7861085,
+    "ast_hash": "f7df4cc2b1732385454ee4d01c75c681",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/guia.ts": {
+    "mtime": 1795333478.2600963,
+    "seen": 1795335541.7861102,
+    "ast_hash": "32b779f420d838497f3aa756b912aac0",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/mapa.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.7861123,
+    "ast_hash": "6ef47ba5d01044563cb0d5e748e9143e",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/nosotros.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.786114,
+    "ast_hash": "1983abb1fe72cbee0dbd3b3cef9905eb",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/portada.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.7861161,
+    "ast_hash": "72ec83d888c9aa278dd81899adb40224",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/sitio.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.786118,
+    "ast_hash": "67e4228a3c2020d71b8aff5cbacb20b4",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/viaje.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.7861202,
+    "ast_hash": "a2492be6d3aa07b018e1daed077b4a59",
+    "semantic_hash": ""
+  },
+  "src/i18n/es/vuelos.ts": {
+    "mtime": 1795304943.7259188,
+    "seen": 1795335541.7861223,
+    "ast_hash": "3c162eb240ffd65f6efc7b169a92cd72",
+    "semantic_hash": ""
+  },
+  "src/i18n/guia.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861242,
+    "ast_hash": "46ef33dadd02f4449dfcc3afecd7661f",
+    "semantic_hash": ""
+  },
+  "src/i18n/idiomas.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861264,
+    "ast_hash": "36665fb47b2afe68159a948828c90798",
+    "semantic_hash": ""
+  },
+  "src/i18n/mapa.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.786128,
+    "ast_hash": "afbcb52c4b739e172ab67bfed2c9c14c",
+    "semantic_hash": ""
+  },
+  "src/i18n/nosotros.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861302,
+    "ast_hash": "ccd211f84ebbecc66c9084eee942d6e0",
+    "semantic_hash": ""
+  },
+  "src/i18n/portada.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861326,
+    "ast_hash": "09be2e8235398cb97b3d73d91ded2750",
+    "semantic_hash": ""
+  },
+  "src/i18n/servidor.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861345,
+    "ast_hash": "4a15cfec821b20199f0b287aa1d6521c",
+    "semantic_hash": ""
+  },
+  "src/i18n/servidor.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861366,
+    "ast_hash": "46d221bf8e94e19d775bae0945967b97",
+    "semantic_hash": ""
+  },
+  "src/i18n/sitio.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861385,
+    "ast_hash": "9f5abe521ced58650adaa8707f3df74e",
+    "semantic_hash": ""
+  },
+  "src/i18n/viaje.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7861407,
+    "ast_hash": "3f569901384debc196e0fd5976ba4c97",
+    "semantic_hash": ""
+  },
+  "src/i18n/vuelos.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.786143,
+    "ast_hash": "3c19b6cb9647bc3df5586a1b06468481",
+    "semantic_hash": ""
+  },
+  "src/lib/antimeridiano.test.ts": {
+    "mtime": 1794287744.0211692,
+    "seen": 1795335541.7861447,
+    "ast_hash": "407ac6ba1b386fff780834d6a5e2dbc6",
+    "semantic_hash": ""
+  },
+  "src/lib/antimeridiano.ts": {
+    "mtime": 1794287744.024327,
+    "seen": 1795335541.7861469,
+    "ast_hash": "17dbd21eb5d63caf674e06ae74b7f4ec",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/engine.test.ts": {
+    "mtime": 1794287744.024327,
+    "seen": 1795335541.7861485,
+    "ast_hash": "921ec5d4ecbfcd7fd5a136eb01f715ad",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/engine.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861686,
+    "ast_hash": "77e062dad1003cac894bb8543748feae",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/freshness.test.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.786172,
+    "ast_hash": "a899caaece801e4fb150f8a67d4841c9",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/freshness.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861743,
+    "ast_hash": "06fb46ada5931ac170adb0458ab0eb48",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/index.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861762,
+    "ast_hash": "e8317489b94651df85725da5bdfb5e28",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/money.test.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861784,
+    "ast_hash": "d497c33bc3880cd7bf0c6102172e83e2",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/money.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861803,
+    "ast_hash": "7c089e002e6764a87f89b3d6bb36f1ec",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/quotes.test.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861824,
+    "ast_hash": "89a081f63476535e88797baecda72eb9",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/quotes.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861843,
+    "ast_hash": "0df9554ec6b6e8bdb9957676dcbd734c",
+    "semantic_hash": ""
+  },
+  "src/lib/budget/types.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861862,
+    "ast_hash": "5b5f576a07ad345a45b5395b926ea600",
+    "semantic_hash": ""
+  },
+  "src/lib/catalog-order.test.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861881,
+    "ast_hash": "501170af715efaa9efd799f531f01b51",
+    "semantic_hash": ""
+  },
+  "src/lib/catalog-order.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.7861903,
+    "ast_hash": "532cb8ae459ad1161cef31158a452c34",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/base.test.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7861924,
+    "ast_hash": "82a55f06c1146c11fddaad115efeff84",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/base.ts": {
+    "mtime": 1794454039.5143766,
+    "seen": 1795335541.7861948,
+    "ast_hash": "c3b0ecf99aaadde6c7b5e4a2b3466dcd",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/carga.test.ts": {
+    "mtime": 1794473052.4470725,
+    "seen": 1795335541.7861972,
+    "ast_hash": "41cc61e5caa761392f6c78709fdab893",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/carga.ts": {
+    "mtime": 1794473052.4470725,
+    "seen": 1795335541.7861996,
+    "ast_hash": "43091e0f75b324b05154359f784337cb",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/celdas.test.ts": {
+    "mtime": 1794287744.024481,
+    "seen": 1795335541.786202,
+    "ast_hash": "bb451df7649e38cedd03c39977b950bb",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/celdas.ts": {
+    "mtime": 1794287744.0248928,
+    "seen": 1795335541.7862039,
+    "ast_hash": "a25feee6a810440376a062156084d518",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/coincide.test.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.7862062,
+    "ast_hash": "1520ae1dc801041aa630cd3bfe04887b",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/coincide.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.7862082,
+    "ast_hash": "b45c0eaf433c19bf0ba3354e03fcb98c",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/datos.ts": {
+    "mtime": 1794287744.0248928,
+    "seen": 1795335541.78621,
+    "ast_hash": "8c4e603678375fa329056d2830a5afdf",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/etiquetas.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7862124,
+    "ast_hash": "dfb06e1882c1407cc68a33d0fd11bb91",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/extracto.test.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.7862144,
+    "ast_hash": "fd44d83e366f0b7ddfc329db21fd5efe",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/extracto.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.7862165,
+    "ast_hash": "06b96d092eedc0bcc8ec6f45f3bce63e",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/filtros.test.ts": {
+    "mtime": 1794287744.0248928,
+    "seen": 1795335541.7862184,
+    "ast_hash": "4e10fa80c70cf80f348d59b41a288332",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/filtros.ts": {
+    "mtime": 1794287744.0248928,
+    "seen": 1795335541.7862203,
+    "ast_hash": "cd070ecf37b28433974b931131225790",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/horarios.test.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7862222,
+    "ast_hash": "ba09bba9690887774fd1d086dbb3b414",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/horarios.ts": {
+    "mtime": 1794287744.0248928,
+    "seen": 1795335541.7862246,
+    "ast_hash": "da62e3dbe40abb58b4e2248ca6b81705",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/lugares.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.786227,
+    "ast_hash": "3316060f82b4cf27e3e9f4deb2c46d27",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/mapa.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7862287,
+    "ast_hash": "39898c1ccb5661f9dff8801f4e816d3c",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/mapa.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7862306,
+    "ast_hash": "234cd5036c8ce9532ec8664c56ea3766",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/menciones.test.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.7862325,
+    "ast_hash": "1052de00b80413b334d905cb081efb50",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/menciones.ts": {
+    "mtime": 1794380766.666865,
+    "seen": 1795335541.7862346,
+    "ast_hash": "c1f2e3d5cf9193a163bc9cd28c0b7435",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/osm.test.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.7862368,
+    "ast_hash": "73887e82721681cf912d9b347c47cbd8",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/osm.ts": {
+    "mtime": 1795333478.2600963,
+    "seen": 1795335541.786239,
+    "ast_hash": "61ffb6d79736ee529020946088e928fa",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/overpass.test.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.786241,
+    "ast_hash": "afae935beb8c654fe44f80fa5b927b8e",
+    "semantic_hash": ""
+  },
+  "src/lib/comidas/overpass.ts": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335541.786243,
+    "ast_hash": "67936c22b3110d1ab46fc1c6565ca8c5",
+    "semantic_hash": ""
+  },
+  "src/lib/export/csv.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.786245,
+    "ast_hash": "6e26bfd53d9cb7a08b2bfa1ecf90be79",
+    "semantic_hash": ""
+  },
+  "src/lib/export/csv.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7862473,
+    "ast_hash": "139dc560004740201d1fdc43b034083e",
+    "semantic_hash": ""
+  },
+  "src/lib/export/download.ts": {
+    "mtime": 1794287744.025789,
+    "seen": 1795335541.7862492,
+    "ast_hash": "eca1ccd5d6e1b9192370ee0486a84646",
+    "semantic_hash": ""
+  },
+  "src/lib/format.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7862513,
+    "ast_hash": "e29e73638cef28ef2c1b66d66ac6c049",
+    "semantic_hash": ""
+  },
+  "src/lib/format.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7862532,
+    "ast_hash": "c16e3b3b07734258c97240d2fcb197d0",
+    "semantic_hash": ""
+  },
+  "src/lib/geo.test.ts": {
+    "mtime": 1794287744.025789,
+    "seen": 1795335541.7862551,
+    "ast_hash": "0c0b2de5dc9e664902105a62c02f75ed",
+    "semantic_hash": ""
+  },
+  "src/lib/geo.ts": {
+    "mtime": 1794287744.025789,
+    "seen": 1795335541.7862577,
+    "ast_hash": "b30f5b2a92752107726fba4b5e70aaeb",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/buscar.test.ts": {
+    "mtime": 1794807734.963916,
+    "seen": 1795335541.7862597,
+    "ast_hash": "343d7714a73ca520d9e935a9149983b4",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/buscar.ts": {
+    "mtime": 1794807734.9690166,
+    "seen": 1795335541.786262,
+    "ast_hash": "7bb70e7706e7f700477f23de230303bb",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/encuadre.test.ts": {
+    "mtime": 1795335536.7619877,
+    "seen": 1795335541.7862642,
+    "ast_hash": "bdfed7f1a17b038f72c03891b0c33038",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/encuadre.ts": {
+    "mtime": 1795335536.7619877,
+    "seen": 1795335541.786266,
+    "ast_hash": "9bed7739ca9ed63338580e530c2372f4",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/estados.test.ts": {
+    "mtime": 1795335536.7619877,
+    "seen": 1795335541.7862682,
+    "ast_hash": "f2c976aa2982d39aa67707acca867b3b",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/etiquetas.test.ts": {
+    "mtime": 1795335536.7619877,
+    "seen": 1795335541.7862704,
+    "ast_hash": "755f3dc2a6d7a60a6fbe069235ae9a5c",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/etiquetas.ts": {
+    "mtime": 1795335536.7619877,
+    "seen": 1795335541.7862728,
+    "ast_hash": "75cb2b63e9efcb28afae44c678394b76",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/geometria.test.ts": {
+    "mtime": 1794987894.7155473,
+    "seen": 1795335541.786275,
+    "ast_hash": "810d65f6202a0fc69713ecade34ce41d",
+    "semantic_hash": ""
+  },
+  "src/lib/globo/geometria.ts": {
+    "mtime": 1794987894.7155473,
+    "seen": 1795335541.7862768,
+    "ast_hash": "96ad655ef86e4bc0d4870b46c6744a34",
+    "semantic_hash": ""
+  },
+  "src/lib/mapa/estilo.test.ts": {
+    "mtime": 1795329414.4849565,
+    "seen": 1795335541.786279,
+    "ast_hash": "381e2d2837acf5a92f2d71412fb0d9e4",
+    "semantic_hash": ""
+  },
+  "src/lib/mapa/estilo.ts": {
+    "mtime": 1795329414.4849565,
+    "seen": 1795335541.7862806,
+    "ast_hash": "6ffd3b68ee122f01c1ff5eb39c972b77",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/climate.test.ts": {
+    "mtime": 1794287744.0261981,
+    "seen": 1795335541.786283,
+    "ast_hash": "9d4e8f30e3ec0d1091106773f4f79d52",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/climate.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862852,
+    "ast_hash": "bb968e6e044ab3f59eb34d50278cf9d9",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/dates.test.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862868,
+    "ast_hash": "ebd8c1b873e47b58d73deae56caab941",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/dates.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862887,
+    "ast_hash": "c60a42982733faedb4ec5cca2d94d479",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/engine.test.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862904,
+    "ast_hash": "3d9abcb47a6d2cb91d4d95e028d01015",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/engine.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862923,
+    "ast_hash": "d2961e14a8a0bb7dadcfb3d02a69cc2c",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/index.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862942,
+    "ast_hash": "5168db7fbad071c88f49febe712eab62",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/por-ciudad.test.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862964,
+    "ast_hash": "88a57576250fbc1a780c863af1060902",
+    "semantic_hash": ""
+  },
+  "src/lib/packing/types.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862978,
+    "ast_hash": "a788277e3598147c63aaa5dbc672a7f2",
+    "semantic_hash": ""
+  },
+  "src/lib/prepare/climate-year.test.ts": {
+    "mtime": 1794287744.0263286,
+    "seen": 1795335541.7862997,
+    "ast_hash": "c56ffa001b0b5ccb8d329f134d302bf5",
+    "semantic_hash": ""
+  },
+  "src/lib/prepare/climate-year.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.7863014,
+    "ast_hash": "bee1af1ec624214e2862b0ea19aedc6e",
+    "semantic_hash": ""
+  },
+  "src/lib/prepare/group-cities.test.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.786303,
+    "ast_hash": "501fb42e76d3a46aafcdef120c1dea79",
+    "semantic_hash": ""
+  },
+  "src/lib/prepare/group-cities.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.7863047,
+    "ast_hash": "d87cf7f479bba66aa70ee5d024ed2a52",
+    "semantic_hash": ""
+  },
+  "src/lib/prepare/suggest-items.test.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.7863069,
+    "ast_hash": "f6d3239f16e012db9ad10931d04887fd",
+    "semantic_hash": ""
+  },
+  "src/lib/prepare/suggest-items.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.7863083,
+    "ast_hash": "09de86aad2eef45650beda6be83eaa5d",
+    "semantic_hash": ""
+  },
+  "src/lib/quantity.test.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.78631,
+    "ast_hash": "de980e849fdb1e9bc4e20f7bc85ab5ae",
+    "semantic_hash": ""
+  },
+  "src/lib/quantity.ts": {
+    "mtime": 1794287744.0268369,
+    "seen": 1795335541.7863114,
+    "ast_hash": "0f055ba0e573f0bfb315f07a3e86758a",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/corridors.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.786313,
+    "ast_hash": "bcbdee138aaeae2228ccdc6628e35758",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/corridors.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7863147,
+    "ast_hash": "35f39c1bf8e4c98278fe311a546c93c5",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/fetch.test.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.7863164,
+    "ast_hash": "b6bf3dfcd95ff1add09413f50e004d8c",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/fetch.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.7863185,
+    "ast_hash": "f0778a09738cdac0829024661a6a0c77",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/index.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.7863207,
+    "ast_hash": "4da77567214a6388b51fee5b68da7154",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/map.test.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.7863226,
+    "ast_hash": "18f6462481db0c33a24478aad4a57cb0",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/map.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.7863247,
+    "ast_hash": "ffd054cf0c0156b1a1f43d08c5730b38",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/spread.test.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.7863271,
+    "ast_hash": "a4ac97b9e22e53d3899471488443b895",
+    "semantic_hash": ""
+  },
+  "src/lib/quotes/spread.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.786329,
+    "ast_hash": "0a4afcb6e0bcf4c07dbd4709531f68b2",
+    "semantic_hash": ""
+  },
+  "src/lib/seguridad/headers.test.ts": {
+    "mtime": 1794287744.0272508,
+    "seen": 1795335541.786331,
+    "ast_hash": "fa6297a644ce42e80ec4c952fd2a6727",
+    "semantic_hash": ""
+  },
+  "src/lib/seguridad/headers.ts": {
+    "mtime": 1794287744.027973,
+    "seen": 1795335541.7863328,
+    "ast_hash": "810147a6f71cbc07a816f2cb76525cad",
+    "semantic_hash": ""
+  },
+  "src/lib/seguridad/privacidad.test.ts": {
+    "mtime": 1794287744.027973,
+    "seen": 1795335541.786335,
+    "ast_hash": "2c974f73cefde832edeb2e7dea079ea6",
+    "semantic_hash": ""
+  },
+  "src/lib/seguridad/privacidad.ts": {
+    "mtime": 1794287744.027973,
+    "seen": 1795335541.7863364,
+    "ast_hash": "716303c0aa5dbf34d1278f5ae893c57f",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/mapa.test.ts": {
+    "mtime": 1795333478.2600963,
+    "seen": 1795335541.7863383,
+    "ast_hash": "e249ef83574026e8d096a04007674038",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/mapa.ts": {
+    "mtime": 1795333478.2616568,
+    "seen": 1795335541.786341,
+    "ast_hash": "a01584f7c1e9111a13eaa761716fb10b",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/osm.test.ts": {
+    "mtime": 1795333478.2616568,
+    "seen": 1795335541.786343,
+    "ast_hash": "a5dec7347907853285c848c9b9caef52",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/osm.ts": {
+    "mtime": 1795333478.2616568,
+    "seen": 1795335541.7863452,
+    "ast_hash": "fee15d1127e827e319e105517af52a0a",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/overpass.ts": {
+    "mtime": 1795333478.2616568,
+    "seen": 1795335541.7863472,
+    "ast_hash": "8874facd0241438249c7b52168d28d04",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/servicios.test.ts": {
+    "mtime": 1795333478.2616568,
+    "seen": 1795335541.7863493,
+    "ast_hash": "e91f97e041c7f1d155fdf29827da78bd",
+    "semantic_hash": ""
+  },
+  "src/lib/servicios/servicios.ts": {
+    "mtime": 1795333478.2616568,
+    "seen": 1795335541.7863514,
+    "ast_hash": "1024dbab4b576e18c89907b4db6aa260",
+    "semantic_hash": ""
+  },
+  "src/lib/sitio/estadisticas.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7863533,
+    "ast_hash": "1dbc7372134317eb2a3234dca8f7f9bc",
+    "semantic_hash": ""
+  },
+  "src/lib/sitio/marca.ts": {
+    "mtime": 1795072634.611472,
+    "seen": 1795335541.7863555,
+    "ast_hash": "6f17ae677e7d5504d0484f168bb5e711",
+    "semantic_hash": ""
+  },
+  "src/lib/sitio/navegacion.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7863574,
+    "ast_hash": "32782d59029b1c9cc5619421ac4d6c4c",
+    "semantic_hash": ""
+  },
+  "src/lib/sitio/navegacion.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7863595,
+    "ast_hash": "aacb7d765fc448c73fdae6909008682e",
+    "semantic_hash": ""
+  },
+  "src/lib/sitio/url.test.ts": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.786362,
+    "ast_hash": "5b820344f29ca0ae47b1a236a4639ac1",
+    "semantic_hash": ""
+  },
+  "src/lib/sitio/url.ts": {
+    "mtime": 1795071346.6494713,
+    "seen": 1795335541.7863638,
+    "ast_hash": "2dcb3f7e12554c64c44581799bcf4b33",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase/admin.ts": {
+    "mtime": 1794287744.0281343,
+    "seen": 1795335541.7863662,
+    "ast_hash": "07405bfd44e973e2336c320f20e6fcfa",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase/cached.ts": {
+    "mtime": 1794287744.0282104,
+    "seen": 1795335541.786368,
+    "ast_hash": "20d93b1e06ac186a37ce97a26482fe21",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase/client.ts": {
+    "mtime": 1794287744.0282104,
+    "seen": 1795335541.78637,
+    "ast_hash": "22621aad1b46c4896854044ac9ac0f27",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase/env.ts": {
+    "mtime": 1794287744.0282104,
+    "seen": 1795335541.786372,
+    "ast_hash": "1fb83595108ccf98c9242fa6dbc9c9b1",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase/reference.test.ts": {
+    "mtime": 1794287744.0282104,
+    "seen": 1795335541.7863739,
+    "ast_hash": "91a0c36cdf227581a1a61112e97d3ec6",
+    "semantic_hash": ""
+  },
+  "src/lib/supabase/reference.ts": {
+    "mtime": 1794287744.0282104,
+    "seen": 1795335541.786376,
+    "ast_hash": "b00f90592c54fc28279cbd644c0c558b",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/actions.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.786378,
+    "ast_hash": "a604c222985e0d712daa773c059a6cf8",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/create.test.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7863798,
+    "ast_hash": "bd1b73c734b524906b656f3e81ea285c",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/create.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7863822,
+    "ast_hash": "e9eb7366aa761305d2a68f966d97b30a",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/cupo.test.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.786384,
+    "ast_hash": "50237311aadb76b79cfdcf88075796ec",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/cupo.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.786386,
+    "ast_hash": "7ba817051dcac58155a652f03c55466c",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/errors.test.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.7863877,
+    "ast_hash": "4dee004e562da12103ff4d13e020de1a",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/errors.ts": {
+    "mtime": 1795304943.7266486,
+    "seen": 1795335541.78639,
+    "ast_hash": "44d3172326ca1ed23ceb7bbc8a2fcd7e",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/index.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7863917,
+    "ast_hash": "969fdfa75f054797d15e495872071478",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/item-write.test.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.786394,
+    "ast_hash": "2109b0d87f32490bc42f67e8e6492c20",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/item-write.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7863958,
+    "ast_hash": "97e74d65f7f006c3a061778ff728d94d",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/mutate.test.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.786398,
+    "ast_hash": "2dc17c7f44b80a3b76aec6ece62a886e",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/mutate.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7863998,
+    "ast_hash": "60ac2ad630089d78dea54a429efb5677",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/problemas.test.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864017,
+    "ast_hash": "600e436e9ea65fb6cff33e47943fa374",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/problemas.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864041,
+    "ast_hash": "57140b75ec661f80d21a249fdef6dc67",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/read.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.786406,
+    "ast_hash": "4b2b35fc907620a396d206fff3f89991",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/types.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7864084,
+    "ast_hash": "242e96024ffaf4cdad4e66be4c3dc094",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/validate.test.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864106,
+    "ast_hash": "a758031583a0a35b77feff8d7f473ca2",
+    "semantic_hash": ""
+  },
+  "src/lib/trips/validate.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864122,
+    "ast_hash": "141a1d07160eec627522867549613959",
+    "semantic_hash": ""
+  },
+  "src/lib/utils.test.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7864146,
+    "ast_hash": "719e67d86aa73c9669d9bd95fe72c893",
+    "semantic_hash": ""
+  },
+  "src/lib/utils.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7864165,
+    "ast_hash": "d9837f38cc05303254571985e3164050",
+    "semantic_hash": ""
+  },
+  "src/lib/version.test.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7864187,
+    "ast_hash": "1a51945c984038cf0be75ddf701b503a",
+    "semantic_hash": ""
+  },
+  "src/lib/version.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7864206,
+    "ast_hash": "88ad06d55abccc52c74f7c568b9e3a82",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/actions.ts": {
+    "mtime": 1794287744.0285342,
+    "seen": 1795335541.7864227,
+    "ast_hash": "4085ac0e86ac333587744537e5d1b1e8",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/adsb.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864249,
+    "ast_hash": "55dd2d27a1fcc7ef5fd926dbb7f51ecb",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/adsb.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864268,
+    "ast_hash": "ac1c8fb145fce28132c258c3de30f075",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/aeropuertos.json": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.786429,
+    "ast_hash": "ca22d2399bb5faed8f40c95c11d7c946",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/aeropuertos.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.786431,
+    "ast_hash": "46716df80ee30d8935f836e5e6a05af9",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/aeropuertos.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864332,
+    "ast_hash": "d98e215900041514cbcf8d97459d0520",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/buscar.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864354,
+    "ast_hash": "e1758eda7cef32add1096e7adcb007d9",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/buscar.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864373,
+    "ast_hash": "ffbe40eb802fae260d95863f8f40f23b",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/cercanos.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864397,
+    "ast_hash": "9d9cf048fe00ad08c61e192313e5143c",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/cercanos.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864418,
+    "ast_hash": "0c88d60231b388cac3a9ad07d558207e",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/nombres-en-castellano.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864437,
+    "ast_hash": "2e10134000cc4497d07f25add8199ff8",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/origen.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864459,
+    "ast_hash": "a1d8453c6e646fcf80c5f9550d7ea3fa",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/origen.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864475,
+    "ast_hash": "d44c8bc80961b97ac57d627fb9cf4cdf",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/radar.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864497,
+    "ast_hash": "7c93fe0017563e8864000f32366dfbb2",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/radar.ts": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864518,
+    "ast_hash": "9f2d426782872fb02efff407048389f4",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/tipos.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864537,
+    "ast_hash": "39906df4b0738c377915cc38ea176111",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/ubicacion.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864559,
+    "ast_hash": "1ed0b1886a200ab15b2faeecdc0bd1d3",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/ubicacion.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864578,
+    "ast_hash": "de488e5be038035b4e2a821fecf03728",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/zona.test.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864597,
+    "ast_hash": "4b9cc5509b112fe23d1c7398e83a0b4e",
+    "semantic_hash": ""
+  },
+  "src/lib/vuelos/zona.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.7864616,
+    "ast_hash": "d387275c77f808058c3eb602b3c9eca8",
+    "semantic_hash": ""
+  },
+  "src/test/renderizar.tsx": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335541.7864637,
+    "ast_hash": "1ef11b09af88e770e5928345bc262083",
+    "semantic_hash": ""
+  },
+  "src/test/server-only.ts": {
+    "mtime": 1794287744.029498,
+    "seen": 1795335541.786466,
+    "ast_hash": "7a50b1f1aba11af032df2a07fc7f1570",
+    "semantic_hash": ""
+  },
+  "tsconfig.json": {
+    "mtime": 1794287744.050301,
+    "seen": 1795335541.7864678,
+    "ast_hash": "ee17fd1c97c735e9f3564e3f5251f125",
+    "semantic_hash": ""
+  },
+  "vitest.config.mts": {
+    "mtime": 1794287744.050301,
+    "seen": 1795335541.78647,
+    "ast_hash": "566dec49b99d6c74060040a616c76384",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1794287743.9888065,
+    "seen": 1795335541.7864716,
+    "ast_hash": "01e8142356e15c3404e0d84c48187cd0",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1794287743.9888065,
+    "seen": 1795335541.7864738,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1795304943.3346486,
+    "seen": 1795335541.7864757,
+    "ast_hash": "38ff5032b31825d23eae2f8fee83f7a1",
+    "semantic_hash": ""
+  },
+  "docs/administrar.md": {
+    "mtime": 1795333478.2480965,
+    "seen": 1795335541.7864776,
+    "ast_hash": "9dd98ba548c5d38f95344b1be103cf58",
+    "semantic_hash": ""
+  },
+  "docs/agregar-un-pais.md": {
+    "mtime": 1795335536.7539876,
+    "seen": 1795335541.78648,
+    "ast_hash": "8fb32d14b09f0c420eae42f34d18b48b",
+    "semantic_hash": ""
+  },
+  "docs/arquitectura.md": {
+    "mtime": 1795333478.2480965,
+    "seen": 1795335541.7864816,
+    "ast_hash": "0ae0dc9038b9b14a66df38bd2a0a1955",
+    "semantic_hash": ""
+  },
+  "docs/configurar-supabase.md": {
+    "mtime": 1794287743.9893322,
+    "seen": 1795335541.7864835,
+    "ast_hash": "cb4446541fa8551dfdbf04f797e9c32d",
+    "semantic_hash": ""
+  },
+  "docs/datos.md": {
+    "mtime": 1794473052.0710726,
+    "seen": 1795335541.7864854,
+    "ast_hash": "a618d2dfd32378d357083de086c7705e",
+    "semantic_hash": ""
+  },
+  "docs/monetizacion.md": {
+    "mtime": 1794807734.6996267,
+    "seen": 1795335541.7864876,
+    "ast_hash": "7ba84305c2d36bd9b1aaadd3118c2c3e",
+    "semantic_hash": ""
+  },
+  "docs/seguridad.md": {
+    "mtime": 1795333478.2520964,
+    "seen": 1795335541.7864895,
+    "ast_hash": "60b7e5179c620cdb2254d7dbb979bced",
+    "semantic_hash": ""
+  },
+  "spec-mvp-kit-viaje.md": {
+    "mtime": 1795335536.7579877,
+    "seen": 1795335541.7864916,
+    "ast_hash": "32fac01a7f6e9caa16d007d26f5aa87e",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/README.md": {
+    "mtime": 1795071346.645471,
+    "seen": 1795335541.7864938,
+    "ast_hash": "2c83b6cbcd81d28f8905ab5f2811ec38",
+    "semantic_hash": ""
+  },
+  "src/app/apple-icon.png": {
+    "mtime": 1795071346.645471,
+    "seen": 1795335541.7864957,
+    "ast_hash": "d35c614c3f06c262f94dcc40b1e08a4a",
+    "semantic_hash": ""
+  },
+  "src/app/icon.svg": {
+    "mtime": 1795071346.645471,
+    "seen": 1795335541.786503,
+    "ast_hash": "ea22ad3b5476f4718e8429c145bfe3c8",
+    "semantic_hash": ""
+  },
+  "src/assets/globo/fronteras-2048.png": {
+    "mtime": 1795333478.2560964,
+    "seen": 1795335541.7865057,
+    "ast_hash": "c67e987b01cc682a9563b89438f050d3",
+    "semantic_hash": ""
+  },
+  "src/assets/globo/fronteras-4096.png": {
+    "mtime": 1795333478.2560964,
+    "seen": 1795335541.7865078,
+    "ast_hash": "e8322bd1dd03e762f4b9c18683817b23",
+    "semantic_hash": ""
+  },
+  "src/assets/globo/tierra-2048.jpg": {
+    "mtime": 1794987894.4755473,
+    "seen": 1795335541.7865095,
+    "ast_hash": "8b2bc4ecef79c138bc9d67a8f31f4bab",
+    "semantic_hash": ""
+  },
+  "src/assets/globo/tierra-4096.jpg": {
+    "mtime": 1794987894.5235474,
+    "seen": 1795335541.7865117,
+    "ast_hash": "8785903319836c92c8dcaf65cb30a7dd",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/apilado-blanco.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865136,
+    "ast_hash": "6e174bc51f368272e35b549c74fe8396",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/apilado.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865157,
+    "ast_hash": "f8748d7051d53615b7ca23ad67935a31",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/horizontal-blanco.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865176,
+    "ast_hash": "6c18c79d90b20134a40da99b8dc8e614",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/horizontal.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865195,
+    "ast_hash": "6c5f2bd974d39dbc9e6417a636bb58d9",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/nombre-blanco.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865217,
+    "ast_hash": "507a9c0cf96ba09c40f4f38ca7d9fc2b",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/nombre.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865236,
+    "ast_hash": "83d85383f127371fc25219c24c110d8d",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/simbolo-blanco.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865255,
+    "ast_hash": "d10b3f771b8b6458369c118dc3efc1fb",
+    "semantic_hash": ""
+  },
+  "src/assets/marca/simbolo.svg": {
+    "mtime": 1795071346.6479902,
+    "seen": 1795335541.7865274,
+    "ast_hash": "6d34ab0100f0773b041f4a4c6a3246ae",
+    "semantic_hash": ""
+  },
+  "src/assets/portada/mar.jpg": {
+    "mtime": 1794807734.9556265,
+    "seen": 1795335541.7865298,
+    "ast_hash": "cd84636111e4a6ee5ec95cab1da7efb6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260826120000_reference_tables.sql": {
+    "mtime": 1794287744.0340037,
+    "seen": 1795335552.9316533,
+    "ast_hash": "64f8c793064d8f5fca44d5673dbebd40",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260826120100_session_tables.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931656,
+    "ast_hash": "1694bc26775b41f805081f8096a9fc0e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260826120200_rls_policies.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931657,
+    "ast_hash": "f2db69e89da6cc4aee8c0f546495264e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260826120300_seed_climate_thresholds.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931658,
+    "ast_hash": "e33276c4652816f5cd09d2ba26fbb00b",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260826140000_precip_probability_scale.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931659,
+    "ast_hash": "8ff15b7edfcdd3d78e83318f4b3eac0c",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260827100000_seed_reference_data.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.93166,
+    "ast_hash": "1b7fe5d9b7b8d51f5704a8b362f36dbc",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260831040000_ezeiza_por_tramo.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316611,
+    "ast_hash": "3bed4b6dddd84616e6223843206109f5",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260902060000_qty_desde_cero.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931662,
+    "ast_hash": "3afb169dd02bf02a69d222507d4b20c7",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260909120000_destino_rio_de_janeiro.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931663,
+    "ast_hash": "e9247dda709ea6c95148b650538cca82",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260910100000_destinos_por_ciudad.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316642,
+    "ast_hash": "592d0629e796ce31602834a63af1e1d2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260910140000_slug_de_ciudad.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316652,
+    "ast_hash": "f9943dfe1c8ce704183de9a2291e2fdf",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260911100000_destinos_faltantes.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316661,
+    "ast_hash": "0ce218139b16b6ffb0e0f58fa83a80ef",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260911140000_corredor_bolivia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931667,
+    "ast_hash": "44b5f9961f9ae2d47e0a11b624d0b3f2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20260911160000_mas_destinos_bolivia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931668,
+    "ast_hash": "56457ee79faa97789925eacad235f273",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120100_corredor_chile.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931669,
+    "ast_hash": "98ec847356aa47cb13ae55a0f8dafe1d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120200_corredor_uruguay.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.93167,
+    "ast_hash": "bb06f031e78dbc156ee512ce2f22f480",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120300_corredor_paraguay.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316711,
+    "ast_hash": "96052fff02e3c40b85ae1468110b4165",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120400_corredor_peru.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931672,
+    "ast_hash": "29e08ba1d2c11a5a005d86a57553b851",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120500_corredor_ecuador.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931673,
+    "ast_hash": "33418dbe4a3edf959c794fbd9b25e52e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120600_corredor_colombia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931674,
+    "ast_hash": "d16ffd92b04e33886f0d1c9be98dcf6b",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120700_corredor_venezuela.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316752,
+    "ast_hash": "cdd007e55c2ec33c0be601331f19589e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120800_corredor_mexico.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316761,
+    "ast_hash": "463300f21f774bb2113d1c1e43ed3dbf",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002120900_corredor_guatemala.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931677,
+    "ast_hash": "7bf01fe44c84ef2d6aec84ef8f5f3748",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121000_corredor_honduras.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316783,
+    "ast_hash": "77daa34fceab55a486fc76e1994f0381",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121100_corredor_el_salvador.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316792,
+    "ast_hash": "ca96894f58a1abe01080468522e4b06a",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121200_corredor_nicaragua.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316802,
+    "ast_hash": "73bfeec3df805ab1995596ec96b5a518",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121300_corredor_costa_rica.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316814,
+    "ast_hash": "cc3c0e87d05f6407e56b1d493fc7e712",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121400_corredor_panama.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316823,
+    "ast_hash": "4f7f6e0e5323f6c8a53cd37fe760689d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121500_corredor_cuba.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316833,
+    "ast_hash": "aae8416d946002a263529366a41f9e02",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261002121600_corredor_republica_dominicana.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316843,
+    "ast_hash": "2870a84019e1dcf8cd0d2e40b24fce5f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007120100_corredor_espana.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316852,
+    "ast_hash": "f23a126be7ad396514bf0f8cb29072c2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007120200_corredor_italia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931686,
+    "ast_hash": "a13b1c96e1ee6013376fb19aaedc6677",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007120300_corredor_francia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316869,
+    "ast_hash": "bea69f65cbdc2368c6f91149d70719b0",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007120400_corredor_portugal.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316878,
+    "ast_hash": "7b81fc74e87206ecbc8c72a8ba1b6df8",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007120500_corredor_reino_unido.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931689,
+    "ast_hash": "796ad3c0d41284f217ab7b906aca7105",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007120600_corredor_alemania.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.93169,
+    "ast_hash": "4791877f5ba8f990f86b5165cf31f3e0",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007130100_corredor_paises_bajos.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931691,
+    "ast_hash": "9a001cde10c4169d6b54bdde32d2feab",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007130200_corredor_grecia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316921,
+    "ast_hash": "d63c63b76a9b3acbd7c650ee4fc49e6f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007130300_corredor_suiza.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931693,
+    "ast_hash": "ad6969c7e84bca604864f8120c15fba6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007130400_corredor_austria.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316938,
+    "ast_hash": "5938ecefeb7597921710fa46cc025abb",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007130500_corredor_irlanda.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316947,
+    "ast_hash": "0fbc4c50b434c9ced7452cc30fa37060",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007130600_corredor_belgica.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931696,
+    "ast_hash": "c4024c0e34c19aa974afa22fcabeb1d6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007140100_corredor_chequia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931697,
+    "ast_hash": "86a816afe0dfc7571fe05578a1e1b4ff",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007140200_corredor_croacia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9316978,
+    "ast_hash": "299c84f641758a4c7965e985ed594f64",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007140300_corredor_polonia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931699,
+    "ast_hash": "f9904531492110b6f6919c9b82d0dfc3",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007140400_corredor_hungria.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317,
+    "ast_hash": "420a1746c48cfdbee68bbf088d01f772",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007140500_corredor_noruega.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931701,
+    "ast_hash": "f58472df05e799de40e57d13f3e9c794",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007140600_corredor_suecia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931702,
+    "ast_hash": "96136f7f9b932e5ff74e07b15f3657b9",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007150100_corredor_dinamarca.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317029,
+    "ast_hash": "553f89ecd87e7a98d958dfd10c7190d1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007150200_corredor_islandia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317038,
+    "ast_hash": "3ca394ab2bed6162ad1127ddfbd3009a",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007150300_corredor_finlandia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317048,
+    "ast_hash": "1f8ffa293ddcfe2cdc112b9af134193d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007150400_corredor_eslovenia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931706,
+    "ast_hash": "ae991900f8130e45bafff0178430057b",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007150500_corredor_rumania.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317067,
+    "ast_hash": "5f4c0527a94ce86b15d53b642e80a881",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007150600_corredor_bulgaria.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317076,
+    "ast_hash": "63869389cca1f525cfd3634c0b39cb46",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007160100_corredor_estonia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317083,
+    "ast_hash": "5fff16a0fa3c56ef59c560652d36c645",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007160200_corredor_letonia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317095,
+    "ast_hash": "fc05523d11f7b148b808342e91395f5f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007160300_corredor_lituania.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317105,
+    "ast_hash": "3fc66ee3a7e529a67f15e8e118b73efa",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007160400_corredor_eslovaquia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317114,
+    "ast_hash": "98fa2f837ba4267b0bda3cde2aaf293f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007160500_corredor_malta.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317126,
+    "ast_hash": "1543a868485c9045af51aca63409eced",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007160600_corredor_luxemburgo.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317136,
+    "ast_hash": "aacca42f77f845f8017e8cd474a9ef0e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007170100_corredor_montenegro.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317143,
+    "ast_hash": "8368047ee009bc29d77fd79e711fe5b6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007170200_corredor_albania.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317153,
+    "ast_hash": "ba3062a93a22295fb9f302420e6f74de",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007170300_corredor_serbia.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317164,
+    "ast_hash": "c901853275a00d93f0986ef479c13798",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007170400_corredor_bosnia_y_herzegovina.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317174,
+    "ast_hash": "e5c0c4d57fb77b83714826c4cbae317b",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007170500_corredor_macedonia_del_norte.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931718,
+    "ast_hash": "5f69cafaa84c984b2d0a6eedfc1ac5c1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261007170600_corredor_andorra.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931719,
+    "ast_hash": "90cb334d6b87c9111830482c712101ff",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261008120000_endurecer_permisos.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.9317203,
+    "ast_hash": "2524895f5f585fdd12ec2de552d123f5",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261008120100_cupo_de_creacion.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931721,
+    "ast_hash": "3fe9da120fc3b90536f9fc888f1f94f6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261008120200_moneda_coherente.sql": {
+    "mtime": 1794287744.0340726,
+    "seen": 1795335552.931722,
+    "ast_hash": "ef91c3ce909fb5c3ea2ecf29be54101f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261009120100_corredor_moldavia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931723,
+    "ast_hash": "d2896a506b32a29a3fb402b1cc675f67",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261009120200_corredor_chipre.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931724,
+    "ast_hash": "b2998a31bb8621b147b7212e80b218d3",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261009120300_corredor_turquia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931725,
+    "ast_hash": "f0c1822920a60a15bbab70d2486880ca",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261009140000_adaptador_universal.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931726,
+    "ast_hash": "9daf9039fea707b7d647ebbde100cd26",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010120100_corredor_japon.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931727,
+    "ast_hash": "d74ce1368a1b0252055ca934ec5fd5ee",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010120200_corredor_corea_del_sur.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931728,
+    "ast_hash": "8db6f54421fd926853e209fc8a0003f6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010120300_corredor_china.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317288,
+    "ast_hash": "f576beed016633a98bfccc28516bf8f8",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010120400_corredor_tailandia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.93173,
+    "ast_hash": "3cd4d0f68d952a1df04835fec99dac5a",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010120500_corredor_vietnam.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317307,
+    "ast_hash": "3f93f4589967e0b597c7453993635faf",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010120600_corredor_india.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931732,
+    "ast_hash": "b4371a9020b0ae382445e5b021b353bc",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010130100_corredor_indonesia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931733,
+    "ast_hash": "8ec3413ca660d1a3ae3ea7c6dc96d6e6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010130200_corredor_malasia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.931734,
+    "ast_hash": "be7cf455012a918a1d106e5449574d82",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010130300_corredor_singapur.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317348,
+    "ast_hash": "6bead960c0704fdedabaf5304338efec",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010130400_corredor_filipinas.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317362,
+    "ast_hash": "64b7e92ff34ca6e0fd948e3357e59b98",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010130500_corredor_camboya.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317377,
+    "ast_hash": "34e3b722b2d6452c059745b0075cb18e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010130600_corredor_laos.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317386,
+    "ast_hash": "52b4d4be3f127a64036298ab05ce2916",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010140100_corredor_emiratos_arabes_unidos.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317396,
+    "ast_hash": "65f1db9c145e4514bfd0b3df9e928002",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010140200_corredor_catar.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317408,
+    "ast_hash": "05d27ddfd8e170228e17f267a6e7cd9d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010140300_corredor_oman.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317417,
+    "ast_hash": "18564c063c1c7f73102daead51295ccd",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010140400_corredor_jordania.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317427,
+    "ast_hash": "76a8df15e85a89d82b960a19c010b124",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010140500_corredor_nepal.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317439,
+    "ast_hash": "c31fb295b8ff4434787897706871f4b5",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010140600_corredor_sri_lanka.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317446,
+    "ast_hash": "82fd40e3f80b23566e8cad31308bd36d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010150100_corredor_georgia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317455,
+    "ast_hash": "02c56d9979fabd1083e38762d09f4076",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010150200_corredor_armenia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317465,
+    "ast_hash": "109aed54bb635f4f71056adb930d72c8",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010150300_corredor_azerbaiyan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317474,
+    "ast_hash": "56c380ed8037d3bb9b9010345a235186",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010150400_corredor_uzbekistan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317484,
+    "ast_hash": "d2e40565f8ca013ddd94a7418adf47e6",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010150500_corredor_kazajistan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317493,
+    "ast_hash": "bf732f66161fdc486797faf755abba87",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010150600_corredor_kirguistan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317503,
+    "ast_hash": "9272b95488d990d141ebe2b190d1815e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160100_corredor_arabia_saudita.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317515,
+    "ast_hash": "942087d354301ef7e17d44485c6b6400",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160200_corredor_kuwait.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317524,
+    "ast_hash": "31e8d65d197dee8030c68cde0cafdec7",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160300_corredor_barein.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317534,
+    "ast_hash": "ba77b736bba5259551de72bd833a68e2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160400_corredor_tayikistan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317546,
+    "ast_hash": "29573346a18a4f3e979adddcae3e0b19",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160500_corredor_turkmenistan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317553,
+    "ast_hash": "c80590a11dc08944115f70b000c98095",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160600_corredor_maldivas.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317563,
+    "ast_hash": "9f36f075a175d3d395384117537e47c1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160700_corredor_butan.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317572,
+    "ast_hash": "661a86b05d61bf64489726819f1baec9",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160800_corredor_banglades.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317584,
+    "ast_hash": "12199f923c5e180903435f743c5828ba",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010160900_corredor_brunei.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317594,
+    "ast_hash": "daade29559fa9af085d599e27334e645",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010161000_corredor_timor_oriental.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317603,
+    "ast_hash": "80447aaa017f49402c53b378cc0a4f9c",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010161100_corredor_mongolia.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317615,
+    "ast_hash": "2c0319e2613b068c354f5f07b65f1394",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010170100_corredor_irak.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317625,
+    "ast_hash": "c717392952ac89bf18f1f167371b7529",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010170200_corredor_iran.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317632,
+    "ast_hash": "0a5cf81866bb9feab2315c2c866421ef",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010170300_corredor_israel_y_palestina.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317641,
+    "ast_hash": "377cff31b7ceae59a6acfdb428dff355",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010170400_corredor_libano.sql": {
+    "mtime": 1794287744.0371692,
+    "seen": 1795335552.9317663,
+    "ast_hash": "0e88452be099fbc186f6fab2e2421ddb",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010170500_corredor_myanmar.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317672,
+    "ast_hash": "19c44db60ef21619252f18dcca2027ca",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010170600_corredor_pakistan.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317682,
+    "ast_hash": "32c1f55c2fbcb8ab754c36ec7cefdc84",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010180100_corredor_hong_kong.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317691,
+    "ast_hash": "808c4218260785cc76dee13d923550e4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010180200_corredor_macao.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317698,
+    "ast_hash": "18b5d5068824b136a235c8b4c421b63e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261010180300_corredor_taiwan.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317706,
+    "ast_hash": "ab9251eee19487bf95d3f4ff22e7ea34",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011120000_lluvia_en_la_valija.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317718,
+    "ast_hash": "c023b3b3ec049493ad980cc44bb2766f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011130100_corredor_marruecos.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317727,
+    "ast_hash": "87bc03741fd0c9f2bf7fe7c066ff7bc8",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011130200_corredor_egipto.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317734,
+    "ast_hash": "80139715afbfeae3c629ff1c6b5bea13",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011130300_corredor_tunez.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317741,
+    "ast_hash": "85116dbe95237bae5fc3f00799a7960a",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011130400_corredor_sudafrica.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317753,
+    "ast_hash": "cfeb1409226a71a3965425782727b72d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011130500_corredor_kenia.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931776,
+    "ast_hash": "e184bbf2d4c3910548f70bd21a5c44db",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261011130600_corredor_tanzania.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931777,
+    "ast_hash": "e8c977dc246ce395bcbcbe8f390a59f5",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100100_corredor_namibia.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317777,
+    "ast_hash": "b82a043d7c942b0054a8dbe1dc1efc95",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100200_corredor_botsuana.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317787,
+    "ast_hash": "9e6a69dc70f53d120b8aef6c7e8e9741",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100300_corredor_zimbabue.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317796,
+    "ast_hash": "67f409e6de308a2b7edb631ded11cadd",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100400_corredor_zambia.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317803,
+    "ast_hash": "1f79a44ca1910c70bff5b291592aad8e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100500_corredor_mauricio.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317813,
+    "ast_hash": "183fb2eb532c263bd70b82c32471c5bc",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100600_corredor_seychelles.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317822,
+    "ast_hash": "2ecff9a34a08f5f5cbfdee003072f7ab",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100700_corredor_cabo_verde.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317834,
+    "ast_hash": "ef820e556b7d42033ce29b13ced5fde4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012100800_corredor_senegal.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317844,
+    "ast_hash": "6b0ac5af1c8c70ee8a6d3b30f6624121",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110100_corredor_madagascar.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931785,
+    "ast_hash": "786e7e1589575f5f1b0c0af394b18006",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110200_corredor_malaui.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317863,
+    "ast_hash": "c7850a51943c76d3da85e7b6705638a3",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110300_corredor_ghana.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317873,
+    "ast_hash": "eafad9d236a0c7ef67fae1ea6647cf78",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110400_corredor_costa_de_marfil.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931788,
+    "ast_hash": "f014a354fd50f89eff6e27d0555a67e7",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110500_corredor_gambia.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317887,
+    "ast_hash": "08722b4e361bfdd6cacedf96b0d098af",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110600_corredor_lesoto.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317946,
+    "ast_hash": "62a19ba375e4c0082bbd7295d62ff744",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110700_corredor_esuatini.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317954,
+    "ast_hash": "d1f9b5903d8da81ef33c47e636de6efa",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012110800_corredor_santo_tome_y_principe.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317966,
+    "ast_hash": "d2c206ad916e9d3fd44990d55a86ab67",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120100_corredor_nigeria.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317975,
+    "ast_hash": "63c41ba1f88668962b5a18822456da32",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120200_corredor_etiopia.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9317982,
+    "ast_hash": "5428005b64db3c5611c2feae6effc1e4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120300_corredor_uganda.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931799,
+    "ast_hash": "753d85c2c66994bedd310e38770c0d57",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120400_corredor_ruanda.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318,
+    "ast_hash": "8ebc91b6d75ffd5f0bc56e0ebb0058ca",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120500_corredor_mozambique.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318008,
+    "ast_hash": "41280a0bd9cf994e47396463ae5c04b8",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120600_corredor_camerun.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318016,
+    "ast_hash": "9ccd3d851ebd32e7942f290f25144b63",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120700_corredor_republica_democratica_del_congo.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318025,
+    "ast_hash": "1fd1e7801c33155d628a614ff6234219",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012120800_corredor_chad.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318035,
+    "ast_hash": "62c7cbf813d5a2b2368ec3cff98cabab",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130100_corredor_mauritania.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318044,
+    "ast_hash": "c1a15f497a66dcf13ddd5e0fdea7610f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130200_corredor_burundi.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318051,
+    "ast_hash": "636ce80e67158aa6e1a69126a65ae131",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130300_corredor_guinea_bisau.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318063,
+    "ast_hash": "ad9661339c0298b9f93636ae780ebb43",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130400_corredor_argelia.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931807,
+    "ast_hash": "396faccc26b1106908fd4badf5a8ee39",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130500_corredor_angola.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.931808,
+    "ast_hash": "85d87ec2382b0713cebcdaae995882a2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130600_corredor_gabon.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318087,
+    "ast_hash": "c2358090f93a4beb3d84b4fb27da6fd5",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130700_corredor_guinea_ecuatorial.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318094,
+    "ast_hash": "c6650e70fd1d91e89e871c4be0fb5241",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012130800_corredor_republica_del_congo.sql": {
+    "mtime": 1794287744.0411692,
+    "seen": 1795335552.9318104,
+    "ast_hash": "824186e64071683cac4dc16b15ba6acd",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140100_corredor_togo.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.931811,
+    "ast_hash": "0c8086618b8bbaaa3cc182e3031b05b4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140200_corredor_benin.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.931812,
+    "ast_hash": "71a06fb591847d9f8123b3db875d9fba",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140300_corredor_liberia.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318128,
+    "ast_hash": "53cc49173a6e9ba529f3b09d24ab5c2e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140400_corredor_sierra_leona.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318137,
+    "ast_hash": "9af3df657cd5f210bca4ca8dd02fb1d2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140500_corredor_guinea.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318147,
+    "ast_hash": "e7642086d72f1476c8478b83884baedc",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140600_corredor_comoras.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318156,
+    "ast_hash": "a86328a77121b8d695a738be14253828",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140700_corredor_yibuti.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318168,
+    "ast_hash": "a069093504f24337cdf9858255e97d76",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261012140800_corredor_eritrea.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318175,
+    "ast_hash": "0962e583499daf595d740268397d4941",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120100_corredor_australia.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318182,
+    "ast_hash": "1daba42aa8ec233a122b9a52f44588ff",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120200_corredor_nueva_zelanda.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318192,
+    "ast_hash": "00cde935e2452e105873f95e078863b4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120300_corredor_fiyi.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.93182,
+    "ast_hash": "b63f68f12e690aa40c55edec93f26b12",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120400_corredor_papua_nueva_guinea.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.931821,
+    "ast_hash": "7420720f5fc41c41dd0f85512175fcbb",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120500_corredor_islas_salomon.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318218,
+    "ast_hash": "b0c5c08fda1e5628f5b0547b67710021",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120600_corredor_vanuatu.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318225,
+    "ast_hash": "abf51d1b7a971f1a322dad8c85b0a1bf",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120700_corredor_nueva_caledonia.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318233,
+    "ast_hash": "e8006ba4d77ff5a6aa9ca24e222e1b7c",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120800_corredor_polinesia_francesa.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318244,
+    "ast_hash": "ee47141ebf56a3b74f5f56f470df12c2",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013120900_corredor_samoa.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318252,
+    "ast_hash": "0c4d0361a522d5689dc6623e1a020e53",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130100_corredor_tonga.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318259,
+    "ast_hash": "4ad6a8c3fc820679e19fc442148cc66d",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130200_corredor_islas_cook.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318268,
+    "ast_hash": "b0f1df71eeb9959c8930a73038839a86",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130300_corredor_tuvalu.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318278,
+    "ast_hash": "ee83ba138f59f2831650c37f61760767",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130400_corredor_kiribati.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318285,
+    "ast_hash": "1a16125bac711d1665b9fcd5ab4aa136",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130500_corredor_nauru.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318295,
+    "ast_hash": "7cfa4c1b8b2cdb99e1a3a6fbb5a688cd",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130600_corredor_islas_marshall.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318302,
+    "ast_hash": "f737b40cffde109741b9f330f779dd53",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130700_corredor_micronesia.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.9318311,
+    "ast_hash": "2db53f60922ca45f8c095b07dd8ba8c1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261013130800_corredor_palaos.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.931832,
+    "ast_hash": "93a996c44d79d42c9ac7e666487cc7b4",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261111120000_lugares_de_comida.sql": {
+    "mtime": 1794454039.5183766,
+    "seen": 1795335552.9318328,
+    "ast_hash": "a83f3ac7f93e9977db9cc4810dcb2e82",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261112120000_tamano_de_la_base.sql": {
+    "mtime": 1794473052.4470725,
+    "seen": 1795335552.9318335,
+    "ast_hash": "4a3f71771bc3aadca5682e5dcdae2c01",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121120100_corredor_estados_unidos.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318347,
+    "ast_hash": "7d74d7726d669ae1094ac6e8365178be",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121120200_corredor_canada.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318354,
+    "ast_hash": "2e3f9ac5569dd70246e10c047bd644d9",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121120300_corredor_jamaica.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318364,
+    "ast_hash": "677e8390d296bd331b2c98e525145313",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121120400_corredor_belice.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318376,
+    "ast_hash": "ded80d71572d5f1252bf7b9947925549",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121120500_corredor_bahamas.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318383,
+    "ast_hash": "7673ec40425c7e674acd7bcf87cb78b1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121120600_corredor_barbados.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318392,
+    "ast_hash": "34231d2fd3d1c2d4b6a1a7dbc687ec61",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140100_corredor_trinidad_y_tobago.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.93184,
+    "ast_hash": "056b52ba716643e8f014b42602a61850",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140200_corredor_santa_lucia.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318411,
+    "ast_hash": "e78517cb59cb985e5bd2cdfccce6ad8e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140300_corredor_antigua_y_barbuda.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318419,
+    "ast_hash": "bc88b9991de685ef2c7d9ed1ff85518f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140400_corredor_granada.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318426,
+    "ast_hash": "cae4a7186cafb445e2cd9c507f2c2757",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140500_corredor_san_vicente_y_las_granadinas.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318435,
+    "ast_hash": "1b3ea2b0a02749634135cf00815c9e44",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140600_corredor_dominica.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318442,
+    "ast_hash": "36623414f6c8d45926e2e1837e2cec92",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140700_corredor_san_cristobal_y_nieves.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318454,
+    "ast_hash": "8f379878a2034262177c5fb496a13755",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140800_corredor_guyana.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.9318461,
+    "ast_hash": "390a5443f5b9ca5416525e2b78eb3616",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121140900_corredor_surinam.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.931847,
+    "ast_hash": "f36522c4ab0b8d140d47d6c4c1c2e404",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160100_corredor_puerto_rico.sql": {
+    "mtime": 1795304943.7306488,
+    "seen": 1795335552.931848,
+    "ast_hash": "2f55e389778b87df4ab946a6e029f418",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160200_corredor_aruba.sql": {
+    "mtime": 1795304943.7346487,
+    "seen": 1795335552.931849,
+    "ast_hash": "e7112eb246aff0373f4ba04b8479336f",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160300_corredor_curazao.sql": {
+    "mtime": 1795304943.7346487,
+    "seen": 1795335552.9318497,
+    "ast_hash": "b7e7b094d6da9d4ba7de33b601af4493",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160400_corredor_islas_caiman.sql": {
+    "mtime": 1795304943.7346487,
+    "seen": 1795335552.9318507,
+    "ast_hash": "11a7c66093ed03c3533bfeafe14a46c7",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160500_corredor_turcas_y_caicos.sql": {
+    "mtime": 1795304943.7346487,
+    "seen": 1795335552.9318516,
+    "ast_hash": "0499ed330ab3b1e6ca9a5121d61ecede",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160600_corredor_bermudas.sql": {
+    "mtime": 1795304943.7346487,
+    "seen": 1795335552.9318523,
+    "ast_hash": "134da15e5f5d23997d04bc5584c8e30e",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121160700_corredor_groenlandia.sql": {
+    "mtime": 1795304943.7346487,
+    "seen": 1795335552.9318533,
+    "ast_hash": "d7bc45c549cc803efb3b245249e70691",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121180000_estaciones_de_esqui.sql": {
+    "mtime": 1795329414.4849565,
+    "seen": 1795335552.9318542,
+    "ast_hash": "536a990243e3e229f991522c31b5a8ce",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261121180100_guantes_y_ropa_termica.sql": {
+    "mtime": 1795329414.4849565,
+    "seen": 1795335552.9318552,
+    "ast_hash": "c0cf9c23e3966f6a5c99656b9699aab1",
+    "semantic_hash": ""
+  },
+  "supabase/migrations/20261122120000_argentina_renglones_propios.sql": {
+    "mtime": 1795329414.4849565,
+    "seen": 1795335552.9318562,
+    "ast_hash": "ebc55dabad3aa1e43cd41310579ecf38",
+    "semantic_hash": ""
+  },
+  "supabase/tests/integridad.sql": {
+    "mtime": 1794287744.045169,
+    "seen": 1795335552.931857,
+    "ast_hash": "1483c332baf046faf19b402e5bca801c",
+    "semantic_hash": ""
+  },
+  "supabase/tests/rls_smoke.sql": {
+    "mtime": 1794473052.4470725,
+    "seen": 1795335552.9318578,
+    "ast_hash": "19c81e8f51c35d9f8f432ee44f5411ae",
+    "semantic_hash": ""
+  },
+  "supabase/tests/setup-roles.sql": {
+    "mtime": 1794287744.050301,
+    "seen": 1795335552.931859,
+    "ast_hash": "43874558ae3242af05c654a5bd9743b1",
+    "semantic_hash": ""
+  },
+  "package-lock.json": {
+    "mtime": 1795329414.2089565,
+    "seen": 1795335541.786532,
+    "ast_hash": "5f5d9f07c8926efb567b63e192d3f04c",
+    "semantic_hash": ""
+  }
+}
