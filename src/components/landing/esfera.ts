@@ -37,9 +37,9 @@ export interface Esfera {
 }
 
 /** La escala en la que empiezan a aparecer los estados. */
-const ESTADOS_DESDE = 1.8;
+const ESTADOS_DESDE = 1.5;
 /** Cuánta escala más hace falta para verlos del todo. */
-const ESTADOS_RAMPA = 0.8;
+const ESTADOS_RAMPA = 0.6;
 
 /**
  * Cuánto se ven los estados, de 0 a 1, según la escala: nada con el globo
@@ -117,7 +117,7 @@ void main() {
   // la foto se aplasta y una línea entera taparía la costa.
   if (uConFronteras) {
     vec2 lineas = textureGrad(uFronteras, uv, gx, gy).rg;
-    float trazo = max(lineas.r * 0.75, lineas.g * 0.4 * uEstados);
+    float trazo = max(lineas.r * 0.75, lineas.g * 0.55 * uEstados);
     c = mix(c, vec3(1.0), trazo * smoothstep(0.0, 0.35, z));
   }
 

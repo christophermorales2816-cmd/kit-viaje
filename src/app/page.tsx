@@ -45,6 +45,7 @@ function base(guia: DestinationGuide) {
 }
 
 const DESTINOS = GUIAS.map((guia) => ({
+  slug: guia.slug,
   href: `/guia/${guia.slug}`,
   label: guia.country,
   coords: base(guia).coords,

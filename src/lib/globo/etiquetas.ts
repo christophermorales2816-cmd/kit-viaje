@@ -16,7 +16,11 @@
 
 import { distanciaAngular, type Coordenadas } from "./geometria";
 
-export type Lado = "derecha" | "izquierda";
+/**
+ * De qué lado del punto va el nombre. "centro" es para los nombres de
+ * estados, que van sobre su lugar y no al costado de un punto.
+ */
+export type Lado = "derecha" | "izquierda" | "centro";
 
 export interface CandidatoDeEtiqueta {
   /** El índice del destino. */
@@ -29,6 +33,8 @@ export interface CandidatoDeEtiqueta {
   alto: number;
   /** Cuanto más alta, antes se coloca. */
   prioridad: number;
+  /** Centrada sobre el punto, sin probar los costados. */
+  centrada?: boolean;
 }
 
 export interface Obstaculo {
@@ -62,9 +68,11 @@ interface Rectangulo {
 function rectanguloDe(candidato: CandidatoDeEtiqueta, lado: Lado): Rectangulo {
   const arriba = candidato.y - candidato.alto / 2;
   const izq =
-    lado === "derecha"
-      ? candidato.x + SEPARACION_DEL_PUNTO
-      : candidato.x - SEPARACION_DEL_PUNTO - candidato.ancho;
+    lado === "centro"
+      ? candidato.x - candidato.ancho / 2
+      : lado === "derecha"
+        ? candidato.x + SEPARACION_DEL_PUNTO
+        : candidato.x - SEPARACION_DEL_PUNTO - candidato.ancho;
 
   return {
     izq,
@@ -110,8 +118,9 @@ export function colocarEtiquetas(
   const ordenados = [...candidatos].sort((a, b) => b.prioridad - a.prioridad);
 
   for (const candidato of ordenados) {
-    const lados: Lado[] =
-      candidato.x > limites.cx
+    const lados: Lado[] = candidato.centrada
+      ? ["centro"]
+      : candidato.x > limites.cx
         ? ["izquierda", "derecha"]
         : ["derecha", "izquierda"];
 
