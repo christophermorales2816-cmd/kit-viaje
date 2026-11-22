@@ -92,9 +92,14 @@ export const nepal: DestinationGuide = {
         "Arriba de los tres mil metros, el mal de altura es la precaución principal: subir despacio, dormir pocas veces más alto por día y bajar si los síntomas empeoran.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 100 · Ambulancia 102"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -94,9 +94,14 @@ export const liberia: DestinationGuide = {
         "En las rutas hay controles: llevá el pasaporte. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

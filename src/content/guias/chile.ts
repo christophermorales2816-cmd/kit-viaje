@@ -99,9 +99,14 @@ export const chile: DestinationGuide = {
         "El sol del norte y el de la Patagonia queman más de lo que se siente, por la altura en un caso y por el aire limpio y el viento en el otro. El protector solar no es un detalle.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 133 · Ambulancia 131"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const bermudas: DestinationGuide = {
         "Fuera de la playa no se anda en traje de baño: en la ciudad y en los pueblos se considera de mala educación.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

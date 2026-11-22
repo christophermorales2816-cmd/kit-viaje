@@ -93,9 +93,14 @@ export const marruecos: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: los falsos guías que se ofrecen a llevarte por la medina, y la mochila cerrada en los zocos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 19 / 112 · Ambulancia 15"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

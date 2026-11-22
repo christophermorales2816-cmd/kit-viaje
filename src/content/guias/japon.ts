@@ -98,9 +98,14 @@ export const japon: DestinationGuide = {
         "Es de los países más tranquilos para viajar. Lo que más se pierde son cosas olvidadas en el tren, y suelen aparecer en la oficina de objetos perdidos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 110"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

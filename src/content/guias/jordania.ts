@@ -90,9 +90,14 @@ export const jordania: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: acordar el precio antes en los paseos a caballo o en burro de Petra, y la mochila cerrada en los mercados.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

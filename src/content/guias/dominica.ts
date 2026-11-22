@@ -103,9 +103,14 @@ export const dominica: DestinationGuide = {
         "En Roseau el agua corriente está tratada. En el campo, mejor embotellada o hervida.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

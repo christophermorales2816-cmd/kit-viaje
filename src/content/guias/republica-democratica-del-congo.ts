@@ -105,9 +105,14 @@ export const republicaDemocraticaDelCongo: DestinationGuide = {
         "Las ciudades del planificador son Kinshasa, el Congo Central hasta el Atlántico y Lubumbashi. Ninguna está en el este —Kivu del Norte, Kivu del Sur, Ituri—, donde están Goma, Bukavu y los parques de los gorilas, ni en las otras provincias que las recomendaciones desaconsejan.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 114 / 118"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

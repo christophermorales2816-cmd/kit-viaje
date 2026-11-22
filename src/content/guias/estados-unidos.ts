@@ -133,9 +133,14 @@ export const estadosUnidos: DestinationGuide = {
         "La naturaleza pide respeto: en el desierto, agua y nada de caminatas en las horas de más calor; en la montaña, atención a las tormentas de la tarde; en Alaska, a los osos. En el oeste, el humo de los incendios forestales puede cerrar caminos en verano y otoño.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

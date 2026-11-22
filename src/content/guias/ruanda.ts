@@ -106,9 +106,14 @@ export const ruanda: DestinationGuide = {
         "Ninguna ciudad del planificador está en esa franja, ni en Rubavu ni en Rusizi. Musanze queda unos kilómetros afuera, pero el parque de los volcanes, el de los gorilas, llega hasta la frontera: revisá qué dice tu recomendación sobre esa zona antes de reservar el permiso.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 · Ambulancia 912"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

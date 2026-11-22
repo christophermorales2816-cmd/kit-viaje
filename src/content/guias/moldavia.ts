@@ -90,9 +90,14 @@ export const moldavia: DestinationGuide = {
         "Transnistria, la franja al este del río Dniéster, se administra aparte y tiene sus propios controles y su propia moneda: si pensás ir, informate antes. Ninguna de las ciudades del planificador está ahí.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-09",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

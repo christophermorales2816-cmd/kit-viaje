@@ -95,9 +95,14 @@ export const zambia: DestinationGuide = {
         "Desde Livingstone se cruza a pie a Zimbabue por el puente de las cataratas, y en Kazungula hay un puente a Botsuana.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

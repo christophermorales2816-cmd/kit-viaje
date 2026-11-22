@@ -91,9 +91,14 @@ export const tunez: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: acordar el precio antes de los paseos en camello o en calesa, y la mochila cerrada en los zocos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 197 · Ambulancia 190"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

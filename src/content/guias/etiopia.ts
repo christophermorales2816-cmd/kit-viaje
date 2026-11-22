@@ -103,9 +103,14 @@ export const etiopia: DestinationGuide = {
         "Las ciudades del planificador son la capital, el sur, Harar y Dire Dawa. Ninguna está en Amhara, Tigray, Afar ni Oromía, así que Lalibela, Gondar, Axum y el desierto de Danakil no forman parte del planificador. A Harar se llega por ruta desde Dire Dawa: revisá también qué dice la recomendación sobre ese camino.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

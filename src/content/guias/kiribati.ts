@@ -92,9 +92,14 @@ export const kiribati: DestinationGuide = {
         "Se maneja por la izquierda.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

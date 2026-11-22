@@ -110,9 +110,14 @@ export const canada: DestinationGuide = {
         "El agua corriente es potable en todo el país.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

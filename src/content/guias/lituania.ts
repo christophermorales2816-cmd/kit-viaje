@@ -90,9 +90,14 @@ export const lituania: DestinationGuide = {
         "Las precauciones son las de cualquier ciudad visitada: atención al celular y a la mochila en el casco viejo y en el transporte.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

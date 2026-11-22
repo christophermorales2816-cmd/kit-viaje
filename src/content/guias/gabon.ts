@@ -91,9 +91,14 @@ export const gabon: DestinationGuide = {
         "En Libreville hay taxis compartidos: acordá el precio antes de subir. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 1722 · Ambulancia 1300"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

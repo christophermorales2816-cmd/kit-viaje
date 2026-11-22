@@ -92,9 +92,14 @@ export const polinesiaFrancesa: DestinationGuide = {
         "Se maneja por la derecha, como en Francia. Las Marquesas tienen media hora menos que Tahití: revisá la hora de cada vuelo.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

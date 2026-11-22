@@ -90,9 +90,14 @@ export const reinoUnido: DestinationGuide = {
         "Las precauciones son las de cualquier gran ciudad: atención al celular y a la mochila en el metro de Londres y en las zonas más concurridas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999 · 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

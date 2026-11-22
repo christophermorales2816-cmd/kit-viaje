@@ -94,9 +94,14 @@ export const senegal: DestinationGuide = {
         "A Gorea se va en el ferry desde el puerto de Dakar, en un viaje corto.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 17"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

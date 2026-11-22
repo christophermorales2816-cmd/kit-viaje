@@ -102,9 +102,14 @@ export const myanmar: DestinationGuide = {
         "Las rutas, los vuelos internos e internet pueden cortarse sin aviso, y hay cortes de luz frecuentes. Las ciudades del planificador son las de la ruta habitual.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 199 · Ambulancia 192"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

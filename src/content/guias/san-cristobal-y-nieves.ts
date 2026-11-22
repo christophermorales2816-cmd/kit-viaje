@@ -102,9 +102,14 @@ export const sanCristobalYNieves: DestinationGuide = {
         "El agua corriente es potable en la mayor parte de las dos islas. Si tienes el estómago sensible, embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

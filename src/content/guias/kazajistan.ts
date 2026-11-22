@@ -92,9 +92,14 @@ export const kazajistan: DestinationGuide = {
         "En las ciudades hay buses y taxis por app. Desde 2024 todo el país usa la misma hora.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -89,9 +89,14 @@ export const albania: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: atención al celular y a la mochila en las zonas concurridas y en los buses llenos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

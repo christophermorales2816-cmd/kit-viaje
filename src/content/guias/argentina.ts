@@ -90,9 +90,14 @@ export const argentina: DestinationGuide = {
         "Llevá algo de efectivo aunque la tarjeta funcione. Ferias, mercados, remises y pueblos chicos siguen siendo territorio de efectivo, y quedarse sin billetes un domingo es un problema evitable.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

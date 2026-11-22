@@ -91,9 +91,14 @@ export const nuevaCaledonia: DestinationGuide = {
         "Se maneja por la derecha, como en Francia.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

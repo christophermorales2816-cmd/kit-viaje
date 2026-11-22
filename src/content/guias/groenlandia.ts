@@ -102,9 +102,14 @@ export const groenlandia: DestinationGuide = {
         "El agua corriente de los pueblos es potable.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

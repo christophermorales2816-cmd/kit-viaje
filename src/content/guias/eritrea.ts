@@ -103,9 +103,14 @@ export const eritrea: DestinationGuide = {
         "Las ciudades del planificador son la capital, el camino al mar —Debre Bizen, Filfil y Ghinda—, Massawa y las islas Dahlak, Keren y Nakfa. Ninguna está a menos de veinticinco kilómetros de una frontera terrestre: las zonas de frontera con Sudán, Etiopía y Yibuti no forman parte del planificador.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 113 · Ambulancia 114"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

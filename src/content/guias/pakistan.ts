@@ -101,9 +101,14 @@ export const pakistan: DestinationGuide = {
         "Las ciudades del planificador son la capital, Lahore, Karachi y el norte de montaña. Ninguna está en Baluchistán ni en las zonas de frontera con Afganistán.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 15 · Ambulancia 1122"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

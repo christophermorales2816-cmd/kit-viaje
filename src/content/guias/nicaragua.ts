@@ -89,9 +89,14 @@ export const nicaragua: DestinationGuide = {
         "Con el calor de la costa, la deshidratación llega rápido. Agua siempre y sombra al mediodía.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 118 · Ambulancia 128"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

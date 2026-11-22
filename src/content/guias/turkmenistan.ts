@@ -92,9 +92,14 @@ export const turkmenistan: DestinationGuide = {
         "A Darvaza se llega en todoterreno por el desierto, y se duerme en carpa o en yurta junto al cráter.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

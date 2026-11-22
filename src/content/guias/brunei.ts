@@ -91,9 +91,14 @@ export const brunei: DestinationGuide = {
         "Por Kampong Ayer se anda en taxi de agua, que se para desde el muelle.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 993 · Ambulancia 991"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

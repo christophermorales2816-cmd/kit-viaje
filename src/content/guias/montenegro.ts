@@ -90,9 +90,14 @@ export const montenegro: DestinationGuide = {
         "Las precauciones son las de cualquier destino muy visitado: atención al celular y a la mochila en el casco viejo de Kotor y en las playas llenas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

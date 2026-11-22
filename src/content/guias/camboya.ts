@@ -91,9 +91,14 @@ export const camboya: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: la mochila adelante en los mercados y el celular firme en la mano en el tuk-tuk.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 117 · Ambulancia 119"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

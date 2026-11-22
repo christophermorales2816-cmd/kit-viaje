@@ -100,9 +100,14 @@ export const catar: DestinationGuide = {
         "Las precauciones son las de cualquier gran ciudad. En verano, la principal es el calor: agua, sombra y nada de caminatas al mediodía.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999 · 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

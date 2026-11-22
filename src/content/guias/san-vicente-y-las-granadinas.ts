@@ -101,9 +101,14 @@ export const sanVicenteYLasGranadinas: DestinationGuide = {
         "Se conduce por la izquierda, y para alquilar un auto hace falta un permiso local.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 911 / 999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -90,9 +90,14 @@ export const ecuador: DestinationGuide = {
         "Para la Amazonía suele recomendarse la vacuna contra la fiebre amarilla. Consultalo con tiempo, porque necesita días para hacer efecto.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

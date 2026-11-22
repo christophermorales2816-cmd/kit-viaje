@@ -90,9 +90,14 @@ export const rumania: DestinationGuide = {
         "Las precauciones en las ciudades son las de cualquier lugar concurrido: atención al celular y a la mochila en el centro y en el transporte.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

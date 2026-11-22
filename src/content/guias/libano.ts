@@ -102,9 +102,14 @@ export const libano: DestinationGuide = {
         "Lo que está al sur de Sidón y el valle de la Bekaa no forman parte del planificador. Los cortes de luz son comunes: los hoteles tienen generador, y una batería portátil ayuda.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 / 160 · Ambulancia 140"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

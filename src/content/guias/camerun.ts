@@ -105,9 +105,14 @@ export const camerun: DestinationGuide = {
         "Las ciudades del planificador son las del Litoral, el Centro, el Sur, el Este y el Oeste. Ninguna está en el Noroeste ni en el Sudoeste, donde están Limbe y el monte Camerún, ni en el norte del país.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

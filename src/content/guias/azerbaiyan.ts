@@ -92,9 +92,14 @@ export const azerbaiyan: DestinationGuide = {
         "Para Gobustán, los volcanes de lodo y Yanar Dag, que quedan lejos entre sí, muchos viajeros contratan una excursión o un auto con chofer.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

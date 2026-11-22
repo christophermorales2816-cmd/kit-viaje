@@ -92,9 +92,14 @@ export const tailandia: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: acordar el precio del tuk-tuk antes de subir y desconfiar de quien te dice que un templo está cerrado y te ofrece llevarte a otro lado.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 191 · Ambulancia 1669"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

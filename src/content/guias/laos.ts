@@ -92,9 +92,14 @@ export const laos: DestinationGuide = {
         "En el campo quedan restos de bombas de la guerra. En la Llanura de las Jarras y alrededor de cuevas y templos alejados, se sigue por los senderos marcados.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 191 · Ambulancia 195"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

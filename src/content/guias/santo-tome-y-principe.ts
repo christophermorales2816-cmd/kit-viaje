@@ -94,9 +94,14 @@ export const santoTomeYPrincipe: DestinationGuide = {
         "El ritmo de las islas es el leve-leve, despacio: los horarios son aproximados, y conviene dejar margen.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

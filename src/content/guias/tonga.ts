@@ -90,9 +90,14 @@ export const tonga: DestinationGuide = {
         "Se maneja por la izquierda. El domingo no hay vuelos, y casi todo se para.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

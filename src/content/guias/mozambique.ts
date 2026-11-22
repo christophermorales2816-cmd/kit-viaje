@@ -105,9 +105,14 @@ export const mozambique: DestinationGuide = {
         "Las ciudades del planificador son las del sur, la costa de Inhambane, Gorongosa, Chimanimani y la Isla de Mozambique. Ninguna está en Cabo Delgado ni en los distritos del norte de Niassa y Nampula que las recomendaciones señalan. A Gorongosa y a la Isla se llega por ruta desde Beira y Nampula: revisá también qué dice tu recomendación sobre esos caminos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 119 · Ambulancia 198"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

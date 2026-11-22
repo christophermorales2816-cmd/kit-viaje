@@ -91,9 +91,14 @@ export const portugal: DestinationGuide = {
         "Las precauciones son las de cualquier ciudad muy visitada: atención al celular y a la mochila en los tranvías más turísticos de Lisboa y en las zonas concurridas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

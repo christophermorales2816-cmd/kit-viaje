@@ -91,9 +91,14 @@ export const curazao: DestinationGuide = {
         "El agua corriente es potable: sale de plantas desalinizadoras.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

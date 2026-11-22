@@ -95,9 +95,14 @@ export const seychelles: DestinationGuide = {
         "Con los alisios, los ferries pueden moverse mucho: si te mareás, llevá algo.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112 · 999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

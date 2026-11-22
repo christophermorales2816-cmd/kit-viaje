@@ -90,9 +90,14 @@ export const serbia: DestinationGuide = {
         "Las precauciones son las de cualquier ciudad grande: atención al celular y a la mochila en el transporte lleno y en las zonas de bares.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 192 / 92 · Ambulancia 194 / 94"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const indonesia: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: la mochila cerrada en los mercados y el celular firme si vas en moto.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

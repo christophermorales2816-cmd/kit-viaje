@@ -93,9 +93,14 @@ export const georgia: DestinationGuide = {
         "Muchos viajeros contratan un auto con chofer por el día: es la forma más simple de sumar varias paradas en la montaña o en las bodegas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

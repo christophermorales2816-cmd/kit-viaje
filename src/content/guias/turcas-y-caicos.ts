@@ -106,9 +106,14 @@ export const turcasYCaicos: DestinationGuide = {
         "En los hoteles de Providenciales, el agua sale de plantas desalinizadoras. En las otras islas, mejor embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

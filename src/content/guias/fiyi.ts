@@ -92,9 +92,14 @@ export const fiyi: DestinationGuide = {
         "Se maneja por la izquierda. Los taxis tienen taxímetro: pedí que lo usen, o acordá el precio antes de subir.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["000 · 911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

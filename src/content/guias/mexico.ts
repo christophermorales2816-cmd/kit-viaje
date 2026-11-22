@@ -89,9 +89,14 @@ export const mexico: DestinationGuide = {
         "El sargazo, un alga que llega a las playas del Caribe, puede aparecer en grandes cantidades en algunos meses. Si vas por la playa, revisá los reportes antes de elegir dónde quedarte.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

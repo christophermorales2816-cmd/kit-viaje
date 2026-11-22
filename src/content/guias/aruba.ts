@@ -91,9 +91,14 @@ export const aruba: DestinationGuide = {
         "El agua corriente es potable: sale de una de las plantas desalinizadoras más grandes del mundo.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

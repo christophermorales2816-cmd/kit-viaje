@@ -90,9 +90,14 @@ export const coreaDelSur: DestinationGuide = {
         "Las precauciones son las de cualquier gran ciudad: el celular y la mochila a mano en el metro lleno.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 · Ambulancia 119"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

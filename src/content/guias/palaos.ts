@@ -92,9 +92,14 @@ export const palaos: DestinationGuide = {
         "Se maneja por la derecha, aunque muchos autos tienen el volante a la derecha, porque vienen de Japón.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -103,9 +103,14 @@ export const nigeria: DestinationGuide = {
         "Las ciudades del planificador son las del suroeste, Benin City, Abuja y Calabar. Ninguna está en el norte ni en el delta del Níger.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const armenia: DestinationGuide = {
         "Los taxis por app son baratos en Ereván, y muchos viajeros contratan un auto con chofer para sumar varios monasterios en un día.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

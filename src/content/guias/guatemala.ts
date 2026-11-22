@@ -90,9 +90,14 @@ export const guatemala: DestinationGuide = {
         "Para subir volcanes, siempre con guía y con abrigo: arriba hace frío aunque abajo haga calor.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 110 / 120 · Ambulancia 128"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

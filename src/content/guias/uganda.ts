@@ -106,9 +106,14 @@ export const uganda: DestinationGuide = {
         "Las ciudades del planificador son Kampala, Entebbe, Jinja, los parques del oeste y del norte, el lago Bunyonyi y el monte Elgon. Ninguna está en Karamoja ni sobre la frontera con Sudán del Sur, y el Parque Nacional Reina Isabel no forma parte del planificador. Bwindi está cerca de la frontera con el Congo: revisá qué dice tu recomendación sobre esa zona.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 / 999 · Ambulancia 911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

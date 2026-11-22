@@ -92,9 +92,14 @@ export const islasCook: DestinationGuide = {
         "A Aitutaki y a las otras islas se va en vuelo interno desde Rarotonga.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 999 · Ambulancia 998"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

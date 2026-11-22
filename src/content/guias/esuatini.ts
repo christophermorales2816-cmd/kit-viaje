@@ -93,9 +93,14 @@ export const esuatini: DestinationGuide = {
         "En la montaña, la niebla aparece rápido: manejá despacio en las curvas del highveld.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 999 · Ambulancia 977"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

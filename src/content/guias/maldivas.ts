@@ -92,9 +92,14 @@ export const maldivas: DestinationGuide = {
         "Entre islas locales hay ferris públicos, baratos y lentos, que casi no salen los viernes. Las lanchas rápidas son más caras y más frecuentes.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 119 · Ambulancia 102"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

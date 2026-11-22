@@ -95,9 +95,14 @@ export const togo: DestinationGuide = {
         "En las rutas hay controles: llevá el pasaporte. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 117 / 171 / 172"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

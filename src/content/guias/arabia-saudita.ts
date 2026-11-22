@@ -91,9 +91,14 @@ export const arabiaSaudita: DestinationGuide = {
         "En AlUla casi todo —Hegra, los miradores, el desierto— se visita con entrada y en grupo: conviene reservar antes.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112 · 911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

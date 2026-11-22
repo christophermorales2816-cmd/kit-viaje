@@ -89,9 +89,14 @@ export const paraguay: DestinationGuide = {
         "Para el dengue, repelente de día y no solo de noche: el mosquito que lo transmite pica a toda hora.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

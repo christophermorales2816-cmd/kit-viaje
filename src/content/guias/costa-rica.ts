@@ -90,9 +90,14 @@ export const costaRica: DestinationGuide = {
         "En casi todo el país el agua de la canilla es potable. En zonas rurales o de playa, preguntá en el alojamiento.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911 · 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

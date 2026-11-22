@@ -91,9 +91,14 @@ export const banglades: DestinationGuide = {
         "Los barcos son parte del viaje: a los Sundarbans se va en barco, y por los ríos hay ferris y lanchas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

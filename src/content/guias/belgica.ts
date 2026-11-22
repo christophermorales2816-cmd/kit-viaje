@@ -90,9 +90,14 @@ export const belgica: DestinationGuide = {
         "Las precauciones son las de cualquier ciudad muy visitada: atención al celular y a la mochila en las estaciones grandes de Bruselas y en el centro.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

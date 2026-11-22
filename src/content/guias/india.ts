@@ -92,9 +92,14 @@ export const india: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico grande: en estaciones y monumentos, ignorar a quien ofrece una ayuda que no pediste, y comer en lugares concurridos, con comida recién hecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

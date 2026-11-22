@@ -91,9 +91,14 @@ export const malasia: DestinationGuide = {
         "Las precauciones son las de cualquier gran ciudad: el celular firme en la mano en la vereda y la mochila adelante en los mercados.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

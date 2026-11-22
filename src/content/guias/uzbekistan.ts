@@ -91,9 +91,14 @@ export const uzbekistan: DestinationGuide = {
         "En Taskent hay metro, con estaciones decoradas, y taxis por app. Entre ciudades chicas, taxis compartidos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

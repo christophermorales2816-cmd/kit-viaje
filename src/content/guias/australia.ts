@@ -100,9 +100,14 @@ export const australia: DestinationGuide = {
         "Se maneja por la izquierda. En las rutas del interior hay animales sueltos al atardecer, y las distancias entre estaciones de servicio son largas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["000"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

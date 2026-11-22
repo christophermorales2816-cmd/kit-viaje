@@ -93,9 +93,14 @@ export const sudafrica: DestinationGuide = {
         "Las precauciones son las de una ciudad grande: nada a la vista en el auto, el teléfono guardado en la calle y los cajeros dentro de los shoppings.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

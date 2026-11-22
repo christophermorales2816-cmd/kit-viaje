@@ -91,9 +91,14 @@ export const macao: DestinationGuide = {
         "A Hong Kong se vuelve en ferry o en bus por el puente, en alrededor de una hora.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {
