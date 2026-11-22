@@ -91,9 +91,14 @@ export const filipinas: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: la mochila adelante en Manila y el celular firme en la mano en la vereda.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

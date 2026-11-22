@@ -97,9 +97,14 @@ export const zimbabue: DestinationGuide = {
         "Cataratas Victoria se camina de día, y a Zambia se cruza a pie por el puente sobre el Zambeze.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

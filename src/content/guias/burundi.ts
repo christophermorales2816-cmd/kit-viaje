@@ -105,9 +105,14 @@ export const burundi: DestinationGuide = {
         "Ninguna ciudad del planificador está en Cibitoke ni en Bubanza, en el parque de la Kibira ni sobre la frontera con el Congo, al oeste de Buyumbura. El parque de la Rusizi, sobre esa frontera, no forma parte del planificador.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 · Ambulancia 117"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

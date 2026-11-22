@@ -93,9 +93,14 @@ export const lesoto: DestinationGuide = {
         "En invierno, revisá el estado de las rutas antes de salir: la nieve corta los pasos altos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 · Ambulancia 114"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

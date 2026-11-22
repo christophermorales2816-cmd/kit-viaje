@@ -94,9 +94,14 @@ export const malaui: DestinationGuide = {
         "Las distancias son cortas en el mapa y largas en la ruta. De noche no se maneja: hay peatones, bicicletas y pozos, y casi nada de luz.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 997 / 990 · Ambulancia 998"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -100,9 +100,14 @@ export const puertoRico: DestinationGuide = {
         "El agua corriente es potable. Después de un huracán, mejor embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -104,9 +104,14 @@ export const guineaBisau: DestinationGuide = {
         "Ninguna ciudad del planificador está a menos de veinte kilómetros de la frontera con Senegal: Varela y São Domingos no forman parte del planificador.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

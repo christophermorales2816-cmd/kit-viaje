@@ -101,9 +101,14 @@ export const santaLucia: DestinationGuide = {
         "En hoteles y ciudades el agua corriente está tratada. Si tienes el estómago sensible, embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 999 · Ambulancia 911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

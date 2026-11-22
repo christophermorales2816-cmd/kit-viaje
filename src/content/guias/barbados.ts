@@ -104,9 +104,14 @@ export const barbados: DestinationGuide = {
         "El agua corriente es potable: se filtra a través de la piedra de coral de la isla.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

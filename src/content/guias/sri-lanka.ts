@@ -91,9 +91,14 @@ export const sriLanka: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: acordar el precio del tuk-tuk antes de subir y desconfiar de quien te ofrece un desvío hacia una tienda.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 119 · Ambulancia 110"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

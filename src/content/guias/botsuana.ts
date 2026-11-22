@@ -95,9 +95,14 @@ export const botsuana: DestinationGuide = {
         "En las rutas hay vacas, burros y, en el norte, elefantes: no se maneja de noche.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

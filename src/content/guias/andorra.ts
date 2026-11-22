@@ -90,9 +90,14 @@ export const andorra: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: atención a la mochila en las zonas de compras y en las estaciones de esquí.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

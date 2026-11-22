@@ -90,9 +90,14 @@ export const eslovenia: DestinationGuide = {
         "Las precauciones son las de cualquier destino visitado: atención al celular y a la mochila en las zonas concurridas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

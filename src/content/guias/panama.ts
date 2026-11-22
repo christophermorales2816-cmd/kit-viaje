@@ -90,9 +90,14 @@ export const panama: DestinationGuide = {
         "Guna Yala es un territorio autónomo con sus propias reglas y tasas de ingreso. Respetá lo que piden las comunidades, incluido pedir permiso para sacar fotos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

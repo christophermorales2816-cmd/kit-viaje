@@ -89,9 +89,14 @@ export const austria: DestinationGuide = {
         "Los domingos casi todo cierra: supermercados y tiendas, salvo algunos en estaciones de tren y aeropuertos. Las precauciones son las de cualquier ciudad muy visitada: atención al celular y a la mochila en las zonas concurridas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

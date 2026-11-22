@@ -94,9 +94,14 @@ export const angola: DestinationGuide = {
         "Fuera de las ciudades, las rutas tienen tramos malos: viajá de día. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 113 · Ambulancia 116"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

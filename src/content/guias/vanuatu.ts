@@ -91,9 +91,14 @@ export const vanuatu: DestinationGuide = {
         "Se maneja por la derecha. En Tanna los caminos son de tierra, y al volcán se va en camioneta.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

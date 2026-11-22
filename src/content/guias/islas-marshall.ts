@@ -92,9 +92,14 @@ export const islasMarshall: DestinationGuide = {
         "Se maneja por la derecha, como en Estados Unidos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

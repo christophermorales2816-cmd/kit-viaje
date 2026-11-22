@@ -106,9 +106,14 @@ export const mauritania: DestinationGuide = {
         "Las ciudades del planificador son la capital, el Banc d'Arguin, el Adrar y el río Senegal. Ninguna está al norte del trópico de Cáncer, en el este ni cerca de las fronteras con Malí, Argelia o el Sahara Occidental; por eso Nuadibú no forma parte del planificador.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 117 · Ambulancia 101"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

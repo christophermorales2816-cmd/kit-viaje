@@ -98,9 +98,14 @@ export const surinam: DestinationGuide = {
         "En Paramaribo el agua corriente está tratada, pero mucha gente toma embotellada. En el interior, siempre embotellada o filtrada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -103,9 +103,14 @@ export const antiguaYBarbuda: DestinationGuide = {
         "El manzanillo es un árbol de playa venenoso: su savia quema la piel. No conviene refugiarse debajo cuando llueve.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999 · 911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

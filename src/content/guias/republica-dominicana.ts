@@ -89,9 +89,14 @@ export const republicaDominicana: DestinationGuide = {
         "El sargazo, un alga que llega a algunas playas del este en ciertos meses, puede aparecer en grandes cantidades. Revisá los reportes antes de elegir playa.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const venezuela: DestinationGuide = {
         "Las precauciones de cualquier ciudad grande valen doble en Caracas: nada de valor a la vista, el celular guardado y traslados organizados de antemano.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

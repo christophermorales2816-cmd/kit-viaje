@@ -103,9 +103,14 @@ export const papuaNuevaGuinea: DestinationGuide = {
         "Las ciudades del planificador son la capital, el comienzo del camino de Kokoda, Tufi, Alotau, Madang, Rabaul, Kavieng, Kimbe y Goroka. Las provincias de Hela, Southern Highlands y Enga, el centro de Bougainville y el resto de las tierras altas no forman parte del planificador.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 · Ambulancia 111"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

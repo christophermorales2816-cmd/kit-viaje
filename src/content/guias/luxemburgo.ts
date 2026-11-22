@@ -91,9 +91,14 @@ export const luxemburgo: DestinationGuide = {
         "Las precauciones son las de cualquier ciudad europea: atención al celular y a la mochila en las estaciones y en el transporte lleno.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

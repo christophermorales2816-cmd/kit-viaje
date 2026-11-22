@@ -91,9 +91,14 @@ export const timorOriental: DestinationGuide = {
         "A Atauro se llega en ferry o en lancha desde Dili.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

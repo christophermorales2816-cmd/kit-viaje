@@ -91,9 +91,14 @@ export const oman: DestinationGuide = {
         "En las rutas, atención a los camellos que cruzan y a las lluvias repentinas en los wadis: el agua baja rápido por los cauces secos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

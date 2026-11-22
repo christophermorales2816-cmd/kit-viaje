@@ -89,9 +89,14 @@ export const macedoniaDelNorte: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: atención al celular y a la mochila en el bazar de Skopie y en el paseo de Ohrid en verano.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

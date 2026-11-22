@@ -102,9 +102,14 @@ export const iran: DestinationGuide = {
         "Internet está filtrada y varias aplicaciones y sitios no funcionan. Descargá antes lo que vayas a necesitar.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 110 · Ambulancia 115"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

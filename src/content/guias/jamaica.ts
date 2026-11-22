@@ -107,9 +107,14 @@ export const jamaica: DestinationGuide = {
         "En hoteles y ciudades el agua corriente suele ser potable. Fuera de ellos, y después de un huracán, agua embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["110"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

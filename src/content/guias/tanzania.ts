@@ -94,9 +94,14 @@ export const tanzania: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico. Zanzíbar es mayormente musulmana: fuera de la playa, se espera ropa que cubra hombros y rodillas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112 · Ambulancia 115"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

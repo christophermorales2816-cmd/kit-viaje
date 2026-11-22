@@ -90,9 +90,14 @@ export const barein: DestinationGuide = {
         "A las islas Hawar se llega en lancha desde la costa sur.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999 · 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

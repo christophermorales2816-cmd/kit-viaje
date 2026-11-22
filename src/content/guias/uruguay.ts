@@ -89,9 +89,14 @@ export const uruguay: DestinationGuide = {
         "El agua de la canilla es potable en todo el país.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

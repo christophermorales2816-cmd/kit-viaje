@@ -91,9 +91,14 @@ export const cuba: DestinationGuide = {
         "El agua de la canilla no es para tomar. Agua embotellada o hervida.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 106 · Ambulancia 104"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

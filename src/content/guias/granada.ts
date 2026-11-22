@@ -100,9 +100,14 @@ export const granada: DestinationGuide = {
         "En las zonas urbanas el agua corriente está tratada. Si tienes el estómago sensible, o en Carriacou, embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

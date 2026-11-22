@@ -91,9 +91,14 @@ export const tayikistan: DestinationGuide = {
         "En Dusambé hay buses, minibuses y taxis.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

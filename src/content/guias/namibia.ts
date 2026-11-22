@@ -95,9 +95,14 @@ export const namibia: DestinationGuide = {
         "Sin auto, hay buses entre Windhoek y la costa, vuelos internos y safaris organizados, con chofer y guía.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

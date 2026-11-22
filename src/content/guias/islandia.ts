@@ -90,9 +90,14 @@ export const islandia: DestinationGuide = {
         "En las playas del sur hay olas que arrastran sin aviso, y los glaciares tienen grietas que no se ven: el mar se mira desde lejos y el hielo se camina con guía.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

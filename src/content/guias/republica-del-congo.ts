@@ -94,9 +94,14 @@ export const republicaDelCongo: DestinationGuide = {
         "En las ciudades hay taxis: acordá el precio antes de subir. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 117"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

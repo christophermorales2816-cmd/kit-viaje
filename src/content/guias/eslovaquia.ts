@@ -89,9 +89,14 @@ export const eslovaquia: DestinationGuide = {
         "En la montaña, algunos senderos altos de los Tatras cierran en invierno y primavera: revisá antes de salir. Las precauciones en las ciudades son las de cualquier lugar concurrido.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

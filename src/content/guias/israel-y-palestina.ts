@@ -102,9 +102,14 @@ export const israelYPalestina: DestinationGuide = {
         "Gaza está cerrada a los viajeros. Los controles entre Israel y Cisjordania pueden cerrarse sin aviso: llevá siempre el pasaporte y la tarjeta de entrada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Israel: Policía 100 · Ambulancia 101"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

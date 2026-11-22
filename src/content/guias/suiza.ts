@@ -93,9 +93,14 @@ export const suiza: DestinationGuide = {
         "Los trenes panorámicos, como el Glacier Express o el Bernina Express, piden reserva de asiento. Las precauciones son las de cualquier lugar concurrido: atención a la mochila en las estaciones grandes.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

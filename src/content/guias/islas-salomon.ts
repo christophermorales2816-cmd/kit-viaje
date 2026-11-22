@@ -91,9 +91,14 @@ export const islasSalomon: DestinationGuide = {
         "Se maneja por la izquierda. Los vuelos y los barcos cambian de horario seguido: conviene dejar días de margen.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 999 · Ambulancia 911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

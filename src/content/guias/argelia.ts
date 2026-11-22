@@ -95,9 +95,14 @@ export const argelia: DestinationGuide = {
         "En las rutas hay controles policiales: llevá el pasaporte siempre. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 17 / 1548 · Ambulancia 14"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

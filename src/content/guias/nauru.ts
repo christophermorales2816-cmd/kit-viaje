@@ -92,9 +92,14 @@ export const nauru: DestinationGuide = {
         "Se maneja por la izquierda.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 110 · Ambulancia 111"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

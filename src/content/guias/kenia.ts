@@ -95,9 +95,14 @@ export const kenia: DestinationGuide = {
         "Las precauciones son las de una ciudad grande: el teléfono guardado en la calle y nada de joyas a la vista. Se maneja por la izquierda.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112 · 999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -94,9 +94,14 @@ export const caboVerde: DestinationGuide = {
         "Sal y Boa Vista son planas y se recorren en un día; Santiago, Fogo y Santo Antão tienen montañas y caminos de empedrado.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 132 · Ambulancia 130"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

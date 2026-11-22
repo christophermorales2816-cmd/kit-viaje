@@ -104,9 +104,14 @@ export const chad: DestinationGuide = {
         "Las ciudades del planificador son la capital, Zakouma, el Guéra, el lago Fitri y el sur. El norte, con el Ennedi y los lagos de Ounianga, el lago Chad y las zonas de frontera no forman parte del planificador.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 17 · Ambulancia 18"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

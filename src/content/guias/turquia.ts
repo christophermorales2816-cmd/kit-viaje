@@ -91,9 +91,14 @@ export const turquia: DestinationGuide = {
         "Las precauciones son las de cualquier gran ciudad turística: atención al celular y a la mochila en el Gran Bazar, en la zona de Sultanahmet y en el transporte lleno.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-09",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -89,9 +89,14 @@ export const dinamarca: DestinationGuide = {
         "Las precauciones son las de cualquier ciudad: atención al celular y a la mochila en las zonas concurridas, y candado siempre para la bici.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const taiwan: DestinationGuide = {
         "Para el lago del Sol y la Luna, Alishan y Kenting, buses turísticos desde las estaciones del tren rápido.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

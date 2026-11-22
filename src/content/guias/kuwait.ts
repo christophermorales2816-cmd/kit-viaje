@@ -90,9 +90,14 @@ export const kuwait: DestinationGuide = {
         "A Failaka se llega en lancha o ferry desde la ciudad, en alrededor de una hora.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

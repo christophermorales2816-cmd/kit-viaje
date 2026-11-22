@@ -104,9 +104,14 @@ export const guyana: DestinationGuide = {
         "El agua corriente no es para tomar. Agua embotellada o filtrada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

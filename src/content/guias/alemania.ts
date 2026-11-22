@@ -99,9 +99,14 @@ export const alemania: DestinationGuide = {
         "Los peatones esperan el verde aunque no venga nadie. Las precauciones son las de cualquier gran ciudad: atención al celular y a la mochila en el transporte y en las zonas concurridas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -90,9 +90,14 @@ export const malta: DestinationGuide = {
         "Al cruzar la calle, mirá primero a la derecha. Las precauciones son las de cualquier destino muy visitado: atención al celular y a la mochila en las zonas concurridas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

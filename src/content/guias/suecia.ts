@@ -90,9 +90,14 @@ export const suecia: DestinationGuide = {
         "El libre acceso a la naturaleza viene con la obligación de no dejar rastro. Las precauciones en las ciudades son las de cualquier lugar concurrido.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

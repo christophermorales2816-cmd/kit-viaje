@@ -105,9 +105,14 @@ export const trinidadYTobago: DestinationGuide = {
         "El agua corriente de las ciudades está tratada, pero mucha gente toma embotellada. En el campo, agua embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 999 / 911 · Ambulancia 811"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

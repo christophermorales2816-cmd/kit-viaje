@@ -102,9 +102,14 @@ export const bahamas: DestinationGuide = {
         "En Nasáu el agua corriente está tratada, pero mucha gente toma embotellada. En las islas remotas, agua embotellada.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["919"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

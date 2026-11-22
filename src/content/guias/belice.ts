@@ -111,9 +111,14 @@ export const belice: DestinationGuide = {
         "El agua corriente no es para tomar. Agua embotellada o filtrada, que se consigue en todos lados.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

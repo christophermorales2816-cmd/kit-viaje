@@ -93,9 +93,14 @@ export const nuevaZelanda: DestinationGuide = {
         "Se maneja por la izquierda. Muchos puentes de la isla Sur son de una sola mano: un cartel indica quién tiene prioridad.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["111"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

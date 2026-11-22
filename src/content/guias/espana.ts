@@ -100,9 +100,14 @@ export const espana: DestinationGuide = {
         "Las precauciones son las de cualquier destino muy visitado: atención al celular y a la mochila en el metro y en las calles más turísticas de Barcelona y Madrid.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-11-21",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

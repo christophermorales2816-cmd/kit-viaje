@@ -92,9 +92,14 @@ export const italia: DestinationGuide = {
         "Las precauciones son las de cualquier destino muy visitado: atención al celular y a la mochila en el transporte de Roma y en las estaciones grandes.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

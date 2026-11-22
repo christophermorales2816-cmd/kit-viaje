@@ -91,9 +91,14 @@ export const chipre: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: atención al celular y a la mochila en las playas llenas y en la vida nocturna de Ayia Napa.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-09",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

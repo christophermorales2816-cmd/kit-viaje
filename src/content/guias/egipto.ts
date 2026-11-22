@@ -92,9 +92,14 @@ export const egipto: DestinationGuide = {
         "Las precauciones son las de cualquier destino turístico: acordar el precio antes de subir a un camello, a un caballo o a un taxi sin taxímetro, y paciencia con los vendedores de los sitios.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 122 · Ambulancia 123"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

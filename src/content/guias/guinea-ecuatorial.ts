@@ -91,9 +91,14 @@ export const guineaEcuatorial: DestinationGuide = {
         "En las ciudades hay taxis compartidos. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 113 / 114 · Ambulancia 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

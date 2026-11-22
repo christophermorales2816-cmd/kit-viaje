@@ -94,9 +94,14 @@ export const mauricio: DestinationGuide = {
         "A Rodrigues se llega en un vuelo corto desde el aeropuerto principal, o en barco, en más de un día.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 999 / 112 · Ambulancia 114"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

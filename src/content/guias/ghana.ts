@@ -95,9 +95,14 @@ export const ghana: DestinationGuide = {
         "Las precauciones son las de una ciudad grande: el teléfono guardado en la calle y, de noche, siempre en auto. Se maneja por la derecha.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-12",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

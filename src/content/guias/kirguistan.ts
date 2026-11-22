@@ -92,9 +92,14 @@ export const kirguistan: DestinationGuide = {
         "En Biskek hay taxis por app. Para la montaña, muchos viajeros contratan un auto con chofer o una agencia.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 102 · Ambulancia 103"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const hongKong: DestinationGuide = {
         "A Macao se llega en ferry o en bus por el puente, en alrededor de una hora, pasando la frontera.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["999"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -91,9 +91,14 @@ export const butan: DestinationGuide = {
         "Entre Timbu y Paro hay alrededor de una hora; hacia Bumthang, en el centro, un día entero de ruta.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 113 · Ambulancia 112"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

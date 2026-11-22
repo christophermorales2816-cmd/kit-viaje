@@ -91,9 +91,14 @@ export const mongolia: DestinationGuide = {
         "En Ulán Bator, el tránsito es lento; hay buses y taxis.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 102 · Ambulancia 103"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

@@ -102,9 +102,14 @@ export const china: DestinationGuide = {
         "Las precauciones son las de cualquier gran ciudad: el celular y la mochila a mano en el metro lleno y en los lugares turísticos.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 110 · Ambulancia 120"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

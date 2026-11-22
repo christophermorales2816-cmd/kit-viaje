@@ -92,9 +92,14 @@ export const bolivia: DestinationGuide = {
         "Para la Amazonía suele recomendarse la vacuna contra la fiebre amarilla, y algunos países la exigen al volver. Necesita días para hacer efecto, así que se consulta con semanas de anticipación y no en el aeropuerto.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-09-11",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

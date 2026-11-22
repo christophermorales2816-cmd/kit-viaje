@@ -90,9 +90,14 @@ export const honduras: DestinationGuide = {
         "Para el dengue, repelente de día y de noche, sobre todo en la costa y las islas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["199"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

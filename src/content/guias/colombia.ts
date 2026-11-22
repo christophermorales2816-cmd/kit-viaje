@@ -90,9 +90,14 @@ export const colombia: DestinationGuide = {
         "Para la Amazonía y algunas zonas rurales suele recomendarse la vacuna contra la fiebre amarilla. Consultalo con tiempo, porque necesita días para hacer efecto.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["123"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

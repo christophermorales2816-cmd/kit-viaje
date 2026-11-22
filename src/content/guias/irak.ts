@@ -101,9 +101,14 @@ export const irak: DestinationGuide = {
         "Las ciudades del planificador son las de los viajes organizados habituales. Con un operador local conocido, que maneje los controles y las rutas, todo es más simple.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

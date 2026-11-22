@@ -92,9 +92,14 @@ export const brasil: DestinationGuide = {
         "Para el Amazonas y algunas zonas del centro y el norte suele recomendarse la vacuna contra la fiebre amarilla, y algunos países la exigen al volver. Consultalo con tiempo, porque necesita días para hacer efecto y no es algo que se resuelva en el aeropuerto.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["Policía 190 · Ambulancia 192"],
+    },
   ],
 
-  factsUpdatedAt: "2026-09-09",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {

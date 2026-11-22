@@ -89,9 +89,14 @@ export const elSalvador: DestinationGuide = {
         "El sol de la costa pega fuerte y la arena oscura quema. Protector, gorro y ojotas.",
       ],
     },
+    {
+      id: "emergencias",
+      title: "Emergencias",
+      body: ["911"],
+    },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-22",
 
   scores: [
     {
