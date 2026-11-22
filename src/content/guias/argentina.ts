@@ -64,6 +64,15 @@ export const argentina: DestinationGuide = {
       ],
     },
     {
+      id: "nieve",
+      title: "Nieve y esquí",
+      body: [
+        "La temporada va de junio a septiembre, y julio es el mes más concurrido por las vacaciones de invierno. Los centros principales son Cerro Catedral, junto a Bariloche; Chapelco, en San Martín de los Andes; Cerro Bayo, en Villa La Angostura; La Hoya, en Esquel; Las Leñas, en el sur de Mendoza, y Cerro Castor, en Ushuaia, el más austral del mundo.",
+        "El pase, el alquiler de equipo y las clases se pagan aparte, y en julio todo sube: conviene reservar el alojamiento con tiempo. En la altura el sol quema aunque haga frío, así que hacen falta protector, gafas de sol y ropa térmica.",
+        "Para subir en auto, en invierno muchos caminos de montaña exigen cadenas.",
+      ],
+    },
+    {
       id: "moverse",
       title: "Las distancias son continentales",
       body: [
@@ -83,7 +92,7 @@ export const argentina: DestinationGuide = {
     },
   ],
 
-  factsUpdatedAt: "2026-09-01",
+  factsUpdatedAt: "2026-11-21",
 
   scores: [
     {
@@ -187,7 +196,7 @@ export const argentina: DestinationGuide = {
       region: "Patagonia",
       tag: "Lagos y montaña",
       blurb:
-        "Lagos, bosque andino y cerros a la vez, con la infraestructura turística más armada de la Patagonia. Funciona en verano para caminar y en invierno para esquiar.",
+        "Lagos, bosque andino y cerros a la vez, con la infraestructura turística más armada de la Patagonia. Funciona en verano para caminar y en invierno para esquiar en el Cerro Catedral.",
       coords: [-41.1335, -71.3103],
       image: null,
     },
@@ -239,6 +248,16 @@ export const argentina: DestinationGuide = {
       blurb:
         "Bodegas al pie de los Andes, con el Aconcagua a una excursión de distancia. El otoño trae la vendimia, que es cuando la ciudad se pone interesante de verdad.",
       coords: [-32.8895, -68.8458],
+      image: null,
+    },
+    {
+      id: "las-lenas",
+      name: "Las Leñas",
+      region: "Cuyo",
+      tag: "Esquí",
+      blurb:
+        "Un centro de esquí de alta montaña en el sur de Mendoza, con nieve seca, pistas para expertos y el alojamiento al pie de las pistas. La temporada va de junio a septiembre.",
+      coords: [-35.1497, -70.0832],
       image: null,
     },
   ],
