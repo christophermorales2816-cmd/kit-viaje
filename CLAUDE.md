@@ -16,10 +16,22 @@ listo al arrancar. Si `graphify-out/graph.json` no existe, generalo:
 
 ### Cuándo usarlo
 
-Úsalo para preguntas sobre el código: dónde se define algo, quién lo usa, qué
-se rompe si lo cambio, cómo llega un dato de A a B. Ahí reemplaza rondas de
-`grep` y de abrir archivos. Para editar contenido o datos en un directorio
-conocido (por ejemplo `src/content/guias/`), no aporta: andá directo.
+Úsalo antes de crear o cambiar algo: contenido nuevo, una herramienta, un
+arreglo. Muestra la estructura: dónde se define algo, quién lo importa o lo
+llama, qué tests lo validan, qué se rompe si cambia y qué piezas existentes
+conviene reutilizar. Reemplaza rondas de `grep` y de abrir archivos.
+
+- **Contenido nuevo** (por ejemplo una guía): `graphify explain "allGuides"`
+  lista dónde se registra, los tests que recorren todas las guías y las
+  páginas que la van a mostrar.
+- **Herramienta nueva**: buscá con `explain` las piezas parecidas que ya
+  existen (por ejemplo `textos()` para los textos traducidos) y reutilizalas
+  en vez de inventar otras.
+
+Lo que no tiene: valores dentro del código, como strings o las claves de un
+objeto (que `guias.test.ts` necesite una caja geográfica por país está adentro
+de un objeto y no se ve), ni datos de afuera. Esos se leen en el archivo que
+el grafo te señaló, o en la fuente externa.
 
 ### Cómo consultarlo (lo que funciona)
 
