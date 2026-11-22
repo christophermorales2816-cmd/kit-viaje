@@ -1,5 +1,32 @@
 @AGENTS.md
 
+## Cómo trabajamos: una sesión por tarea
+
+Cada tarea compleja arranca en una sesión nueva. Una sesión larga procesa la
+conversación entera en cada turno, y al llenarse el contexto se resume y se
+pierde detalle. Una sesión nueva arranca liviana.
+
+La sesión nueva no recuerda las anteriores. Lo que tiene que sobrevivir se
+guarda en el repo, cada cosa en su lugar:
+
+- **El código**: lo encontrás con el grafo (sección siguiente).
+- **El porqué de una decisión**: en un comentario junto al código que afecta,
+  como los de `src/content/guias/types.ts`.
+- **Reglas de trabajo que valen para todo el proyecto**: en este archivo.
+- **Qué se hizo y qué quedó pendiente**: en la descripción del PR.
+
+Reglas:
+
+1. **El primer prompt de la sesión se basta solo.** Si depende de trabajo
+   anterior, nombra el PR, el archivo o la decisión ("seguí lo pendiente del
+   PR #112"). Si falta contexto, preguntá antes de suponer.
+2. **Seguimientos en la misma sesión, tareas nuevas en otra.** Una corrección
+   o una pregunta sobre lo que se acaba de hacer sigue en la sesión actual.
+   Rearmar ese contexto en otra cuesta más.
+3. **Al cerrar una tarea, lo que deba perdurar queda escrito en el repo**, no
+   en el chat. Las decisiones que no están en el código, en un comentario o en
+   el PR se pierden en la sesión siguiente.
+
 ## Graphify: orientarse por el grafo
 
 `graphify-out/` tiene el grafo del código (`graph.json`, `GRAPH_REPORT.md`).
