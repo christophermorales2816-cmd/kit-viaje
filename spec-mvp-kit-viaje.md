@@ -3639,9 +3639,13 @@ sentido:
 
 Las Leñas parte de Buenos Aires, cuyos renglones tienen nombre propio (el
 Delta, Ezeiza, el tango, el fútbol, la SUBE), y se corrige uno por uno. Las
-otras ciudades argentinas derivadas de Buenos Aires —Bariloche, Mendoza, El
-Calafate y el resto— heredaron esos mismos nombres. Es anterior a esta sección
-y queda pendiente.
+otras ocho ciudades argentinas derivadas de Buenos Aires —Bariloche, Mendoza,
+El Calafate y el resto— habían heredado esos mismos nombres, y se corrigen en
+`20261122120000_argentina_renglones_propios.sql`. Ahí solo se renombra y se
+ajusta el precio: nada se borra, porque un viaje guardado puede tener el
+renglón elegido y `trip_budget_items` lo referencia con `on delete restrict`.
+El traslado a Ezeiza pasa a ser el de cada ciudad, con su precio; el partido de
+fútbol, una visita guiada; el resto conserva el precio con un nombre genérico.
 
 ### 23.3 Guantes y ropa térmica
 
