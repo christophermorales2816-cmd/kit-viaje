@@ -47,6 +47,17 @@ describe("colocarEtiquetas", () => {
     expect(colocadas.size).toBe(0);
   });
 
+  it("un nombre centrado va sobre su lugar, sin probar los costados", () => {
+    const estado = { ...candidato(1, 200, 200, 1), centrada: true };
+    const pisado = { ...candidato(2, 205, 200, 0), centrada: true };
+
+    const colocadas = colocarEtiquetas([estado, pisado], [], LIMITES);
+
+    expect(colocadas.get(1)).toBe("centro");
+    // El segundo no se corre a un costado: queda sin nombre.
+    expect(colocadas.has(2)).toBe(false);
+  });
+
   it("no tapa el punto de otro destino", () => {
     const colocadas = colocarEtiquetas(
       [candidato(1, 100, 200, 1)],

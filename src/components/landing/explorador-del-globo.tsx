@@ -23,8 +23,10 @@ export function ExploradorDelGlobo({
   const t = useTextos(TEXTOS_DE_LA_PORTADA).globo;
   const [destacado, setDestacado] = useState<number | null>(null);
 
+  // En la portada va al lado del título: con más de la mitad del ancho llega a
+  // sus 600 px sin que el texto lo apriete (spec, 27).
   return (
-    <div className="flex w-full max-w-[460px] flex-col gap-4">
+    <div className="flex w-full max-w-[600px] flex-col gap-4 md:w-[55%] md:shrink-0">
       <GlobeHero
         destinations={destinos}
         inicio={inicio}

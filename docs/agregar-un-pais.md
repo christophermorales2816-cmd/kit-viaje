@@ -25,6 +25,11 @@ Son cuatro, siempre los mismos, y ninguno es un refactor:
 | `src/lib/quotes/corridors.ts`                     | El corredor de cotizaciones                                                |
 | `supabase/migrations/<fecha>_corredor_<pais>.sql` | Destinos, clima y precios                                                  |
 
+Además, `src/assets/globo/estados.json` se regenera con
+`herramientas/globo/estados.py`: son los nombres de los estados que el globo de
+la portada muestra al elegir el país (spec, 27). El script dice cómo correrlo,
+y `estados.test.ts` falla hasta que el país nuevo tiene su lista.
+
 Si hubo que tocar otra cosa, o es un bug del motor o el país está pidiendo algo
 que el modelo todavía no sabe expresar. Las dos merecen una conversación, no un
 parche.
@@ -284,6 +289,7 @@ migración no se aplicó.**
 - [ ] `lint`, `test`, `build`, `typecheck`
 - [ ] Migraciones sobre base virgen + smoke de RLS e integridad en verde
 - [ ] La app mirada en el navegador: dos ciudades opuestas, listas opuestas
+- [ ] Los estados del globo regenerados (`src/assets/globo/estados.json`, ver `herramientas/globo/estados.py`)
 - [ ] Spec actualizado
 - [ ] Si tiene catálogo de comida: `src/content/comidas/<pais>.ts` con su `extracto`, su línea en `index.ts`, las fotos regeneradas y el mapa de un plato mirado con datos reales
 - [ ] **Post-merge: la corrida de Migraciones en verde**

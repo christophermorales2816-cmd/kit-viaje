@@ -10,6 +10,7 @@ import tierraChica from "@/assets/globo/tierra-2048.jpg";
 import tierraGrande from "@/assets/globo/tierra-4096.jpg";
 import { useTextos } from "@/i18n/cliente";
 import { TEXTOS_DE_LA_PORTADA } from "@/i18n/portada";
+import { encuadreDelPais, escalaParaElPais } from "@/lib/globo/encuadre";
 import {
   colocarEtiquetas,
   masCercano,
@@ -75,6 +76,8 @@ import { crearEsfera } from "./esfera";
  */
 
 export interface GlobeDestination {
+  /** El slug de la guía: con él se buscan los estados del país. */
+  slug: string;
   href: string;
   /** El nombre del destino. */
   label: string;
@@ -112,6 +115,13 @@ const ESCALA_AL_ELEGIR = 2.2;
  */
 const ALTURA_DEL_ELEGIDO = 0.35;
 
+/**
+ * Lo mismo para el centro del país, cuando se acerca para mostrar sus estados
+ * (spec, 27): un poco más abajo que el punto, para que el país entero quede
+ * entre el nombre de arriba y la tarjeta de abajo.
+ */
+const ALTURA_DEL_PAIS = 0.2;
+
 /** Lo mínimo que se acerca cuando el buscador resalta un destino. */
 const ESCALA_AL_BUSCAR = 1.8;
 
@@ -121,6 +131,49 @@ const ALCANCE_DEL_DEDO = 26;
 
 /** Lo que tiene que moverse un toque para ser un arrastre y no un click. */
 const UMBRAL_DE_ARRASTRE = 5;
+
+/** Un estado o provincia del país elegido, con el punto de su nombre. */
+interface EstadoDelGlobo {
+  nombre: string;
+  coords: Coordenadas;
+}
+
+/** Lo que el bucle del globo necesita de cada nombre de estado. */
+interface EstadoEnPantalla {
+  coords: Coordenadas;
+  el: HTMLSpanElement;
+  ancho: number;
+  alto: number;
+}
+
+/**
+ * Desde qué escala se muestran los nombres de los estados: más lejos, un país
+ * es una mancha y los nombres no caben.
+ */
+const ESCALA_DE_LOS_ESTADOS = 1.6;
+
+/** Lo que se le suma al índice de un estado, para no confundirlo con un destino. */
+const BASE_DE_LOS_ESTADOS = 100_000;
+
+/** Sin país elegido no hay estados: siempre la misma lista vacía. */
+const SIN_ESTADOS: EstadoDelGlobo[] = [];
+
+/**
+ * Los estados de cada guía (herramientas/globo/estados.py), en un archivo
+ * aparte que se baja recién la primera vez que alguien elige un país: quien
+ * solo mira el globo no lo descarga.
+ */
+let estadosDeLasGuias: Promise<
+  Record<string, [string, number, number][]>
+> | null = null;
+
+function cargarEstados() {
+  estadosDeLasGuias ??= import("@/assets/globo/estados.json").then(
+    (modulo) =>
+      modulo.default as unknown as Record<string, [string, number, number][]>,
+  );
+  return estadosDeLasGuias;
+}
 
 function esMac(): boolean {
   return /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
@@ -133,6 +186,10 @@ interface Control {
   escala: () => number;
   acercar: (factor: number) => void;
   reiniciar: () => void;
+  /** Los nombres de estados cambiaron: se vuelve a pintar. */
+  repintar: () => void;
+  /** Acerca al país elegido `i` para que se lean sus estados. */
+  encuadrar: (i: number, centro: Coordenadas, escala: number) => void;
 }
 
 export function GlobeHero({
@@ -151,12 +208,22 @@ export function GlobeHero({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const marcadoresRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const etiquetasRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const estadosRef = useRef<(HTMLSpanElement | null)[]>([]);
+  // Los nombres de estados ya medidos, que el bucle del globo lee en cada
+  // frame. Los pone el efecto de los estados, más abajo.
+  const estadosEnPantallaRef = useRef<EstadoEnPantalla[]>([]);
   // Lo que los botones y el buscador le piden al globo, que vive en el efecto.
   const controlRef = useRef<Control | null>(null);
 
   const [elegido, setElegido] = useState<number | null>(null);
   const [escala, setEscala] = useState(ESCALA_MINIMA);
   const [pista, setPista] = useState<string | null>(null);
+  // Los estados de la última guía que se pidió. Si es de otra guía que la
+  // elegida —se eligió otra mientras cargaba—, no se muestran.
+  const [estadosDe, setEstadosDe] = useState<{
+    slug: string;
+    lista: EstadoDelGlobo[];
+  } | null>(null);
 
   const [LAT, LON] = inicio;
 
@@ -277,24 +344,67 @@ export function GlobeHero({
         .map((pos, i) => ({ i, ...pos }))
         .filter((pos) => pos.visible);
 
+      // Los estados del país elegido (spec, 27): van centrados sobre su
+      // lugar, después del nombre del elegido y antes que los de otros
+      // países, en el orden de importancia que trae la lista.
+      const estados = estadosEnPantallaRef.current;
+      const conEstados =
+        elegidoAhora !== null && vista.escala >= ESCALA_DE_LOS_ESTADOS;
+      const lugaresDeEstados = estados.map((estado) => {
+        if (!conEstados) return null;
+        const p = proyectar(estado.coords, centro);
+        const { px, py } = aPixeles(p.x, p.y, l, vista.escala);
+        const adentro =
+          p.visible && px * px + py * py <= radioVisible * radioVisible;
+        return adentro ? { x: r + px, y: r + py } : null;
+      });
+
       etiquetas = colocarEtiquetas(
-        visibles.map(({ i, x, y }) => ({
-          i,
-          x,
-          y,
-          ancho: anchos[i],
-          alto: altoDeEtiqueta,
-          prioridad:
-            i === elegidoAhora
-              ? 1e9
-              : i === resaltado
-                ? 1e8
-                : // Los que ya se veían siguen, para que no titilen al girar.
-                  (etiquetas.has(i) ? 400 : 0) - Math.hypot(x - r, y - r),
-        })),
+        [
+          ...visibles.map(({ i, x, y }) => ({
+            i,
+            x,
+            y,
+            ancho: anchos[i],
+            alto: altoDeEtiqueta,
+            prioridad:
+              i === elegidoAhora
+                ? 1e9
+                : i === resaltado
+                  ? 1e8
+                  : // Los que ya se veían siguen, para que no titilen al girar.
+                    (etiquetas.has(i) ? 400 : 0) - Math.hypot(x - r, y - r),
+          })),
+          ...lugaresDeEstados.flatMap((lugar, k) =>
+            lugar
+              ? [
+                  {
+                    i: BASE_DE_LOS_ESTADOS + k,
+                    x: lugar.x,
+                    y: lugar.y,
+                    ancho: estados[k].ancho,
+                    alto: estados[k].alto,
+                    prioridad: 1e7 - k,
+                    centrada: true,
+                  },
+                ]
+              : [],
+          ),
+        ],
         visibles.map(({ i, x, y }) => ({ i, x, y, radio: 5 })),
         { cx: r, cy: r, radio: r - 2 },
       );
+
+      estados.forEach((estado, k) => {
+        const lugar = lugaresDeEstados[k];
+        const visible =
+          lugar !== null && etiquetas.has(BASE_DE_LOS_ESTADOS + k);
+        if (lugar) {
+          estado.el.style.left = `${lugar.x.toFixed(1)}px`;
+          estado.el.style.top = `${lugar.y.toFixed(1)}px`;
+        }
+        estado.el.dataset.visible = visible ? "true" : "false";
+      });
 
       destinations.forEach((_, i) => {
         const el = marcadoresRef.current[i];
@@ -480,6 +590,17 @@ export function GlobeHero({
       reiniciar: () => {
         elegir(null);
         volarA({ lat: LAT, lon: LON, escala: ESCALA_MINIMA });
+      },
+      repintar,
+      encuadrar: (i, centroDelPais, escalaDelPais) => {
+        // Si mientras cargaban los estados se eligió otro, o ninguno, nada.
+        if (elegidoAhora !== i) return;
+        const escala = Math.max(escalaDelPais, vista.escala);
+        const [lat, lon] = centroConDestinoArriba(
+          centroDelPais,
+          ALTURA_DEL_PAIS / (RADIO_DE_LA_ESFERA * escala),
+        );
+        volarA({ lat, lon, escala });
       },
     };
 
@@ -767,11 +888,69 @@ export function GlobeHero({
   }, [destacado]);
 
   const elegida = elegido === null ? null : destinations[elegido];
+  const estados =
+    elegida && estadosDe?.slug === elegida.slug ? estadosDe.lista : SIN_ESTADOS;
+
+  // Al elegir un país se piden sus estados; la primera vez, eso baja la
+  // lista. Con ellos, el globo se acerca lo que haga falta para leerlos.
+  useEffect(() => {
+    if (elegido === null || !elegida) return;
+
+    let vigente = true;
+    void cargarEstados()
+      .then((todos) => {
+        if (!vigente) return;
+        const lista = (todos[elegida.slug] ?? []).map(
+          ([nombre, lat, lon]): EstadoDelGlobo => ({
+            nombre,
+            coords: [lat, lon],
+          }),
+        );
+        setEstadosDe({ slug: elegida.slug, lista });
+
+        const encuadre = encuadreDelPais(
+          elegida.coords,
+          lista.map((estado) => estado.coords),
+        );
+        if (encuadre) {
+          controlRef.current?.encuadrar(
+            elegido,
+            encuadre.centro,
+            escalaParaElPais(encuadre.radioEnGrados, ESCALA_AL_ELEGIR),
+          );
+        }
+      })
+      .catch(() => {
+        // Sin la lista, el globo sigue igual, sin nombres de estados.
+      });
+
+    return () => {
+      vigente = false;
+    };
+  }, [elegido, elegida]);
+
+  // Los nombres ya están en el DOM: se miden y el globo los ubica.
+  useEffect(() => {
+    estadosEnPantallaRef.current = estados.flatMap((estado, k) => {
+      const el = estadosRef.current[k];
+      return el
+        ? [
+            {
+              coords: estado.coords,
+              el,
+              ancho: el.offsetWidth,
+              alto: el.offsetHeight,
+            },
+          ]
+        : [];
+    });
+    controlRef.current?.repintar();
+  }, [estados]);
   const cercaDeLaElegida = elegido === null ? [] : vecinos[elegido];
   const enInicio = escala <= ESCALA_MINIMA + 0.01 && elegido === null;
 
   return (
-    <div className="relative mx-auto w-full max-w-[460px]">
+    <div className="relative mx-auto w-full max-w-[600px]">
       <div
         ref={contenedorRef}
         role="group"
@@ -802,6 +981,25 @@ export function GlobeHero({
           se dibujan. La posición del primer render es la que ve quien no
           tiene JavaScript; después, el globo los mueve en cada frame.
         */}
+        {/*
+          Los nombres de los estados del país elegido, como en un mapa: sin
+          fondo, debajo de los puntos y de los nombres de los países.
+        */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          {estados.map((estado, k) => (
+            <span
+              key={`${estado.nombre}-${k}`}
+              ref={(el) => {
+                estadosRef.current[k] = el;
+              }}
+              data-visible="false"
+              className="absolute -translate-x-1/2 -translate-y-1/2 text-[11px] leading-3 font-semibold whitespace-nowrap text-white/90 italic opacity-0 transition-opacity duration-200 [text-shadow:0_1px_2px_rgba(2,6,23,0.95),0_0_6px_rgba(2,6,23,0.7)] data-[visible=true]:opacity-100"
+            >
+              {estado.nombre}
+            </span>
+          ))}
+        </div>
+
         <div aria-hidden className="pointer-events-none absolute inset-0">
           {destinations.map((destino, i) => {
             const p = proyectar(destino.coords, inicio);

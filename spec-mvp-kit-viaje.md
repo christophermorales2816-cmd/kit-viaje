@@ -3842,3 +3842,63 @@ La fecha de los datos queda a la vista, como en el mapa de cada plato.
   - el ancho de un teléfono.
 
   No hubo errores en la página.
+
+## 27. El globo: más grande, y los estados del país elegido
+
+Quienes probaron el sitio pidieron ver los estados en el globo: "al clicar un
+país, que se muestren los nombres de los estados". Las líneas de los estados
+existían desde la sección 25, pero con el zoom de elegir un país apenas se
+veían, y no tenían nombres.
+
+### 27.1 Qué cambia
+
+- **El globo pasa de 460 a 600 píxeles**, un 30 % más grande. En la portada
+  ocupa más de la mitad del ancho, al lado del título; en el teléfono sigue
+  ocupando el ancho de la pantalla.
+- **Al elegir un país aparecen los nombres de sus estados o provincias**, en
+  castellano y sin fondo, como en un mapa. Van sobre su lugar, con el mismo
+  colocador que los nombres de los países (`colocarEtiquetas`, que suma el
+  lado "centro"): si dos se pisan, queda el más importante para Natural Earth.
+  Tienen prioridad sobre los nombres de los otros países, nunca sobre el del
+  elegido.
+- **El globo se acerca según el tamaño del país.** Centra en sus estados, no
+  en la capital, y elige el zoom para que el país ocupe algo menos de la mitad
+  del globo (`src/lib/globo/encuadre.ts`). Las regiones de ultramar —la
+  Guayana Francesa, Hawái— no cuentan para el tamaño.
+- **Las líneas de los estados se ven del todo al elegir un país**: empiezan a
+  aparecer en la escala 1,5 y están enteras en la 2,1. Antes, en la 2,2 del
+  país elegido, se veían a medias.
+
+### 27.2 De dónde salen los nombres
+
+De Natural Earth (dominio público, escala 1:10 millones), como las fronteras:
+el nombre en castellano (`name_es`) y el punto donde Natural Earth pone la
+etiqueta. `herramientas/globo/estados.py` arma la lista de cada guía en
+`src/assets/globo/estados.json` (87 KB), que se baja recién la primera vez que
+alguien elige un país.
+
+A qué país corresponde cada guía sale de sus destinos, por el polígono que los
+contiene: Puerto Rico y Groenlandia quedan con lo suyo y no con lo de Estados
+Unidos o Dinamarca.
+
+Algunos países tienen como primer nivel subdivisiones muy chicas para un globo,
+como los departamentos de Francia, las provincias de Italia y de España o los
+distritos del Reino Unido. Esos se muestran por las regiones que los agrupan,
+con su nombre en castellano: Bretaña, Toscana, Andalucía, Escocia.
+
+### 27.3 Verificado
+
+- El lint, los tests, el build y el typecheck, en verde. Los tests nuevos
+  cuidan que cada guía tenga su lista y que sus estados queden cerca de sus
+  destinos, el encuadre (con ultramar y con el antimeridiano) y la etiqueta
+  centrada.
+- En el navegador, a 1280 px el globo mide 600 y la portada queda equilibrada.
+  Al elegir un país se ven estos nombres:
+  - Argentina, 11 provincias;
+  - Estados Unidos, 23 estados;
+  - México, 11 estados;
+  - Japón, 8 prefecturas;
+  - Italia, 6 regiones;
+  - Francia, 5 regiones, con el globo acercado.
+
+  En el teléfono, Argentina muestra 9. No hubo errores en la página.
