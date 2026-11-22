@@ -3723,3 +3723,36 @@ clima u otro presupuesto, no para llenar el mapa.
   con Alaska y Hawái en el encuadre; Fiyi, que cruza el antimeridiano, con los
   pines juntos; Andorra, con el tope de zoom; y Groenlandia. Los pines se
   abren con el mouse y con Enter, y sin WebGL queda el aviso.
+
+## 25. El globo: fronteras y estados
+
+El globo de la portada (19.7) mostraba la Tierra de la foto de NASA sin una sola
+frontera: para ubicar un destino había que reconocer la costa. Ahora:
+
+- **Las fronteras entre países, siempre**, en blanco tenue. Las internacionales
+  van enteras, y las disputadas, las indefinidas y las líneas de control, a
+  media intensidad, con el mismo criterio que el trazo punteado de los mapas de
+  la guía. Los límites de arriendo y lo no reconocido no se dibujan.
+- **Los estados y las provincias, al acercar.** Aparecen desde la escala 1,8 y
+  se ven del todo desde la 2,6 (`opacidadDeLosEstados`), más tenues que las
+  fronteras, para que se lea cuál es cuál.
+
+Van como la foto: una imagen equirrectangular que el shader lee con las mismas
+coordenadas, con los países en el canal rojo y los estados en el verde. Y en
+dos tamaños, también como la foto: la de 2048 (47 KB, solo países) con el globo
+entero, y la de 4096 (330 KB, con los estados) recién al acercar, junto con la
+foto grande. Las genera `herramientas/globo/fronteras.py` con los datos de
+Natural Earth (dominio público, escala 1:10 millones). Las líneas se dibujan al
+cuádruple y se achican, porque Pillow no las suaviza.
+
+Las ciudades no van en el globo. Su trabajo es elegir un destino, y los nombres
+de las ciudades competirían con los de los destinos. Las ciudades y los estados
+con su nombre están en el mapa de cada guía (24).
+
+### 25.1 Verificado
+
+- El lint, los tests, el build y el typecheck, en verde.
+- En el navegador: el globo entero con las fronteras; al acercar sobre
+  Sudamérica, los estados de Brasil; sobre el Mediterráneo, las provincias de
+  España, las wilayas de Argelia y las regiones de Marruecos, más tenues que
+  las fronteras. Sin errores en la página.

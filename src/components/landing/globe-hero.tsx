@@ -4,6 +4,8 @@ import { ArrowRight, Minus, Plus, RotateCcw, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
+import fronterasChica from "@/assets/globo/fronteras-2048.png";
+import fronterasGrande from "@/assets/globo/fronteras-4096.png";
 import tierraChica from "@/assets/globo/tierra-2048.jpg";
 import tierraGrande from "@/assets/globo/tierra-4096.jpg";
 import { useTextos } from "@/i18n/cliente";
@@ -178,6 +180,7 @@ export function GlobeHero({
     // hace de planeta: los destinos funcionan igual.
     const esfera = crearEsfera(canvas, {
       textura: tierraChica.src,
+      fronteras: fronterasChica.src,
       alCargar: () => repintar(),
     });
     if (esfera) contenedor.dataset.esfera = "true";
@@ -251,6 +254,8 @@ export function GlobeHero({
       if (!fotoGrande && vista.escala > ESCALA_DE_LA_FOTO_GRANDE) {
         fotoGrande = true;
         esfera?.cambiarTextura(tierraGrande.src);
+        // Las fronteras grandes traen los estados (spec, 25).
+        esfera?.cambiarFronteras(fronterasGrande.src);
       }
       esfera?.dibujar(vista);
 
