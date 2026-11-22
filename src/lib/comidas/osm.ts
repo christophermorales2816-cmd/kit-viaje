@@ -129,9 +129,10 @@ export interface ElementoCrudo {
   timestamp?: unknown;
 }
 
-type Etiquetas = Record<string, string>;
+export type Etiquetas = Record<string, string>;
 
-function etiquetasDe(crudo: ElementoCrudo): Etiquetas {
+/** Las etiquetas de un elemento, solo las que son texto. */
+export function etiquetasDe(crudo: ElementoCrudo): Etiquetas {
   const etiquetas: Etiquetas = {};
 
   for (const [clave, valor] of Object.entries(crudo.tags ?? {})) {
@@ -203,7 +204,7 @@ const NOMBRES_LATINOS = [
   "int_name",
 ];
 
-function nombreLatino(etiquetas: Etiquetas): string | null {
+export function nombreLatino(etiquetas: Etiquetas): string | null {
   for (const clave of NOMBRES_LATINOS) {
     const nombre = etiquetas[clave]?.trim();
 
@@ -213,7 +214,7 @@ function nombreLatino(etiquetas: Etiquetas): string | null {
   return null;
 }
 
-function direccion(etiquetas: Etiquetas): string | null {
+export function direccion(etiquetas: Etiquetas): string | null {
   const completa = etiquetas["addr:full"]?.trim();
   if (completa) return completa;
 
@@ -248,7 +249,8 @@ export function webSegura(crudo: string | undefined): string | null {
   }
 }
 
-function telefono(etiquetas: Etiquetas): string | null {
+/** El primer teléfono, sin lo que no sea parte de un número; null si no parece uno. */
+export function telefono(etiquetas: Etiquetas): string | null {
   const crudo = (etiquetas.phone ?? etiquetas["contact:phone"])?.split(";")[0];
   const limpio = crudo?.replace(/[^\d+()\- ]/g, "").trim();
 

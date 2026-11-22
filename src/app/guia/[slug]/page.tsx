@@ -107,7 +107,16 @@ export default async function GuidePage({ params }: PageProps<"/guia/[slug]">) {
 
       <PlacesGrid places={guia.places} guideSlug={guia.slug} />
 
-      <PlacesMap country={guia.country} places={guia.places} />
+      {/*
+        Con la clave, ir de una guía a otra arma un mapa nuevo: los servicios
+        prendidos, la vista y las celdas pedidas son de cada guía.
+      */}
+      <PlacesMap
+        key={guia.slug}
+        guia={guia.slug}
+        country={guia.country}
+        places={guia.places}
+      />
 
       {comida && (
         <Link

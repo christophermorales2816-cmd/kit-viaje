@@ -3,8 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 // El CSS sí puede ir arriba: no toca window. La librería no (cargarMapLibre).
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { Map as MapaDeMapLibre } from "maplibre-gl";
+import type {
+  GeoJSONSource,
+  LngLatBounds,
+  Map as MapaDeMapLibre,
+  Popup,
+} from "maplibre-gl";
 
+import {
+  PanelDeServicios,
+  contenidoDelServicio,
+  useServiciosCerca,
+} from "@/components/guia/servicios-cerca";
 import {
   cargarMapLibre,
   mostrarEstados,
@@ -13,6 +23,16 @@ import {
 import type { GuidePlace } from "@/content/guias";
 import { sinSaltoDeAntimeridiano } from "@/lib/antimeridiano";
 import { ESTILO_DEL_MAPA, textosDelMapa } from "@/lib/mapa/estilo";
+import {
+  type VistaDeServicios,
+  geojsonDeServicios,
+  vistaDeServicios,
+} from "@/lib/servicios/mapa";
+import {
+  type ServicioCercano,
+  ZOOM_DE_SERVICIOS,
+  ZOOM_MINIMO_DE_SERVICIOS,
+} from "@/lib/servicios/servicios";
 import { useTextos } from "@/i18n/cliente";
 import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
 import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
@@ -37,10 +57,20 @@ import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
  * el orden de tabulación y se abre con Enter o con la barra, siempre que el
  * popup se ponga después de sumar el pin al mapa (ver el bucle de los pines).
  *
+ * SERVICIOS PARA VIAJEROS
+ *
+ * El popup de cada destino tiene "Servicios cerca": acerca el mapa y muestra
+ * lo que sirve lejos de una ciudad —información, salud, policía, combustible,
+ * cajeros, refugios— con su teléfono y su horario cuando OpenStreetMap los
+ * tiene (spec, 26). Se piden solo cuando alguien los activa y el mapa está
+ * cerca: el servidor de OpenStreetMap es ajeno. Lo que los pide y el panel de
+ * abajo del mapa están en servicios-cerca.tsx; acá, la capa del mapa.
+ *
  * SIN WEBGL NO HAY MAPA
  *
  * El navegador que no tiene WebGL no puede dibujarlo. Queda el aviso en el
- * lugar del mapa y la lista por región, que tiene los mismos destinos.
+ * lugar del mapa y la lista por región, que tiene los mismos destinos. Los
+ * servicios, que se ven sobre el mapa, no se ofrecen.
  */
 
 const PIN = `
@@ -50,23 +80,82 @@ const PIN = `
   <circle cx="12" cy="9" r="2.5" fill="#ffffff" />
 </svg>`;
 
-/** El contenido del popup, armado con nodos: el texto nunca se lee como HTML. */
-function contenidoDelPopup(place: GuidePlace): HTMLElement {
+/**
+ * El contenido del popup, armado con nodos: el texto nunca se lee como HTML.
+ * El botón lleva a los servicios de alrededor del destino.
+ */
+function contenidoDelPopup(
+  place: GuidePlace,
+  textoDelBoton: string,
+  alTocar: () => void,
+): HTMLElement {
   const contenido = document.createElement("div");
   const nombre = document.createElement("strong");
   const etiqueta = document.createElement("span");
+  const boton = document.createElement("button");
 
   nombre.textContent = place.name;
   etiqueta.textContent = place.tag;
-  contenido.append(nombre, document.createElement("br"), etiqueta);
+  boton.type = "button";
+  boton.textContent = textoDelBoton;
+  boton.className =
+    "hover:bg-muted mt-2 block rounded-md border px-2 py-1 text-xs font-medium";
+  boton.addEventListener("click", alTocar);
+  contenido.append(nombre, document.createElement("br"), etiqueta, boton);
 
   return contenido;
 }
 
+/**
+ * Desde qué zoom se dibujan los servicios ya cargados. Un poco antes de donde
+ * se piden (ZOOM_MINIMO_DE_SERVICIOS), para que no desaparezcan con solo
+ * alejar un paso; con el país entero, no: serían un manchón sobre el pin.
+ */
+const ZOOM_DE_LA_CAPA = ZOOM_MINIMO_DE_SERVICIOS - 2;
+
+/** La capa de servicios: un círculo de color por servicio, con su letra. */
+function sumarCapaDeServicios(mapa: MapaDeMapLibre) {
+  mapa.addSource("servicios", {
+    type: "geojson",
+    data: geojsonDeServicios([]),
+  });
+  mapa.addLayer({
+    id: "servicios",
+    type: "circle",
+    source: "servicios",
+    minzoom: ZOOM_DE_LA_CAPA,
+    paint: {
+      "circle-color": ["get", "color"],
+      "circle-radius": 9,
+      "circle-stroke-color": "#ffffff",
+      "circle-stroke-width": 1.5,
+    },
+  });
+  mapa.addLayer({
+    id: "servicios-letra",
+    type: "symbol",
+    source: "servicios",
+    minzoom: ZOOM_DE_LA_CAPA,
+    layout: {
+      "text-field": ["get", "letra"],
+      "text-font": ["Noto Sans Bold"],
+      "text-size": 11,
+      // La letra es lo que distingue los tipos sin depender del color: va
+      // siempre, aunque se pise con otra en una ciudad con muchos.
+      "text-allow-overlap": true,
+      "text-ignore-placement": true,
+    },
+    paint: { "text-color": "#ffffff" },
+  });
+}
+
 export function PlacesMap({
+  guia,
   country,
   places,
 }: {
+  /** El slug de la guía: la API de servicios lo pide. */
+  guia: string;
   country: string;
   places: GuidePlace[];
 }) {
@@ -74,11 +163,32 @@ export function PlacesMap({
   const textosDelMapaDeLaPagina = useTextos(TEXTOS_DEL_MAPA);
   const contenedor = useRef<HTMLDivElement>(null);
   const [mapaRoto, setMapaRoto] = useState(false);
+  const [mapaListo, setMapaListo] = useState(false);
+
+  // Los servicios (spec, 26). `activo` va también en una ref: los oyentes del
+  // mapa se ponen una vez, al montarlo, y tienen que leer el valor de ahora.
+  const [activo, setActivo] = useState(false);
+  const activoAhora = useRef(false);
+  const [vista, setVista] = useState<VistaDeServicios>({ tipo: "apagado" });
+  const [centro, setCentro] = useState<[number, number]>(
+    places[0]?.coords ?? [0, 0],
+  );
+  const { celdas, servicios, reintentar } = useServiciosCerca(guia, vista);
+  const mapa = useRef<MapaDeMapLibre | null>(null);
+  const encuadreDelPais = useRef<LngLatBounds | null>(null);
+  const actualizarVista = useRef<() => void>(() => {});
+  const serviciosPorId = useRef(new Map<string, ServicioCercano>());
+  // El popup del servicio abierto: se cierra cuando el servicio deja de verse.
+  const popupDelServicio = useRef<Popup | null>(null);
 
   // Los textos de los controles se leen una sola vez, al montar el mapa: el
   // efecto depende solo de los destinos, y cambiar el idioma no tiene por qué
   // volver a crearlo.
-  const textos = useRef({ titulo: t.titulo, mapa: textosDelMapaDeLaPagina });
+  const textos = useRef({
+    titulo: t.titulo,
+    mapa: textosDelMapaDeLaPagina,
+    servicios: t.servicios,
+  });
 
   // Agrupado en el orden en que aparecen los destinos, no alfabético: es el
   // mismo orden del mosaico de arriba, y leer las dos secciones seguidas no
@@ -124,6 +234,7 @@ export function PlacesMap({
         posiciones[0],
       );
       for (const posicion of posiciones) encuadre.extend(posicion);
+      encuadreDelPais.current = encuadre;
 
       try {
         instancia = new maplibregl.Map({
@@ -150,16 +261,72 @@ export function PlacesMap({
         return;
       }
 
-      const mapa = instancia;
-      mapa.touchZoomRotate.disableRotation();
-      mapa.addControl(
+      const delMapa = instancia;
+      mapa.current = delMapa;
+      delMapa.touchZoomRotate.disableRotation();
+      delMapa.addControl(
         new maplibregl.NavigationControl({ showCompass: false }),
         "top-right",
       );
 
-      mapa.on("load", () => {
-        ponerEtiquetasEnCastellano(mapa);
-        mostrarEstados(mapa);
+      actualizarVista.current = () => {
+        const { lat, lng } = delMapa.getCenter().wrap();
+        const limites = delMapa.getBounds();
+
+        // Con el país entero la capa no se dibuja: el popup quedaría
+        // flotando sobre un servicio que ya no se ve.
+        if (delMapa.getZoom() < ZOOM_DE_LA_CAPA) {
+          popupDelServicio.current?.remove();
+        }
+
+        setCentro([lat, lng]);
+        setVista(
+          vistaDeServicios({
+            activo: activoAhora.current,
+            zoom: delMapa.getZoom(),
+            limites: {
+              sur: limites.getSouth(),
+              oeste: limites.getWest(),
+              norte: limites.getNorth(),
+              este: limites.getEast(),
+            },
+            places,
+          }),
+        );
+      };
+
+      delMapa.on("load", () => {
+        ponerEtiquetasEnCastellano(delMapa);
+        mostrarEstados(delMapa);
+        sumarCapaDeServicios(delMapa);
+        setMapaListo(true);
+      });
+
+      delMapa.on("moveend", () => actualizarVista.current());
+
+      delMapa.on("click", "servicios", (evento) => {
+        const id = evento.features?.[0]?.properties?.id;
+        const servicio =
+          typeof id === "string" ? serviciosPorId.current.get(id) : undefined;
+
+        if (!servicio) return;
+
+        popupDelServicio.current?.remove();
+        popupDelServicio.current = new maplibregl.Popup({
+          offset: 12,
+          maxWidth: "260px",
+        })
+          .setLngLat([servicio.lon, servicio.lat])
+          .setDOMContent(
+            contenidoDelServicio(servicio, textos.current.servicios),
+          )
+          .addTo(delMapa);
+      });
+      delMapa.on("mouseenter", "servicios", () => {
+        delMapa.getCanvas().style.cursor = "pointer";
+      });
+      delMapa.on("mouseleave", "servicios", () => {
+        delMapa.getCanvas().style.cursor = "";
       });
 
       for (const [i, place] of places.entries()) {
@@ -171,27 +338,66 @@ export function PlacesMap({
         pin.setAttribute("aria-label", place.name);
         pin.style.cursor = "pointer";
 
+        const popup = new maplibregl.Popup({ offset: 26, closeButton: false });
+        popup.setDOMContent(
+          contenidoDelPopup(place, textos.current.servicios.cerca, () => {
+            popup.remove();
+            activoAhora.current = true;
+            setActivo(true);
+            delMapa.flyTo({ center: posiciones[i], zoom: ZOOM_DE_SERVICIOS });
+          }),
+        );
+
         // El popup va después de `addTo`, no antes: `addTo` empieza por
         // `remove`, que le saca al pin el oyente del teclado que puso
         // `setPopup`. En el otro orden, el pin se abre con el mouse pero no
         // con Enter ni con la barra.
         new maplibregl.Marker({ element: pin, anchor: "bottom" })
           .setLngLat(posiciones[i])
-          .addTo(mapa)
-          .setPopup(
-            new maplibregl.Popup({
-              offset: 26,
-              closeButton: false,
-            }).setDOMContent(contenidoDelPopup(place)),
-          );
+          .addTo(delMapa)
+          .setPopup(popup);
       }
     })();
 
     return () => {
       cancelado = true;
       instancia?.remove();
+      mapa.current = null;
+      setMapaListo(false);
     };
   }, [places]);
+
+  // Al prender o apagar los servicios, la vista se calcula de nuevo: si el
+  // mapa ya estaba cerca, se piden sin tener que moverlo. Si está volando
+  // —"Servicios cerca" lo manda al destino—, la calcula el fin del vuelo:
+  // ahora daría "acerca el mapa" a mitad de camino.
+  useEffect(() => {
+    activoAhora.current = activo;
+    if (mapaListo && !mapa.current?.isMoving()) actualizarVista.current();
+  }, [activo, mapaListo]);
+
+  // Lo que se dibuja: los servicios cargados, si están prendidos.
+  useEffect(() => {
+    if (!mapaListo) return;
+
+    const visibles = activo ? servicios : [];
+    if (!activo) popupDelServicio.current?.remove();
+    serviciosPorId.current = new Map(
+      visibles.map((servicio) => [servicio.id, servicio]),
+    );
+    (
+      mapa.current?.getSource("servicios") as GeoJSONSource | undefined
+    )?.setData(geojsonDeServicios(visibles));
+  }, [mapaListo, activo, servicios]);
+
+  function verElPais() {
+    if (encuadreDelPais.current) {
+      mapa.current?.fitBounds(encuadreDelPais.current, {
+        padding: 40,
+        maxZoom: 9,
+      });
+    }
+  }
 
   return (
     <section
@@ -229,14 +435,27 @@ export function PlacesMap({
             {t.sinMapa}
           </p>
         ) : (
-          <div
-            ref={contenedor}
-            // La altura va en el elemento y no en una clase de utilidad porque
-            // MapLibre mide el contenedor al montar: sin alto resuelto, el
-            // mapa se inicializa en cero.
-            style={{ height: 560 }}
-            className="w-full overflow-hidden rounded-xl border bg-muted"
-          />
+          <div className="flex min-w-0 flex-col gap-4">
+            <div
+              ref={contenedor}
+              // La altura va en el elemento y no en una clase de utilidad
+              // porque MapLibre mide el contenedor al montar: sin alto
+              // resuelto, el mapa se inicializa en cero.
+              style={{ height: 560 }}
+              className="w-full overflow-hidden rounded-xl border bg-muted"
+            />
+
+            <PanelDeServicios
+              activo={activo}
+              onCambiar={setActivo}
+              onVerElPais={verElPais}
+              vista={vista}
+              celdas={celdas}
+              servicios={servicios}
+              centro={centro}
+              onReintentar={reintentar}
+            />
+          </div>
         )}
 
         <div className="flex flex-col gap-5">

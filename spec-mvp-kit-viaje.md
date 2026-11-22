@@ -468,6 +468,9 @@ El bloque que cumple la promesa de "en tiempo real". No hay que construir casi n
 
 > **Revisado en la sección 24:** el mapa pasó de Leaflet a MapLibre, con los
 > nombres en castellano y los estados y las provincias a la vista.
+>
+> **Ampliado en la sección 26:** el popup de cada destino suma "Servicios
+> cerca", con lo que sirve en una zona remota y su teléfono.
 
 Dos bloques que salen de **una sola lista** (`places` en el contenido de la guía). Que compartan la fuente no es economía de código: es lo que evita que el mapa marque un lugar que el mosaico no menciona.
 
@@ -3723,3 +3726,86 @@ clima u otro presupuesto, no para llenar el mapa.
   con Alaska y Hawái en el encuadre; Fiyi, que cruza el antimeridiano, con los
   pines juntos; Andorra, con el tope de zoom; y Groenlandia. Los pines se
   abren con el mouse y con Enter, y sin WebGL queda el aviso.
+
+## 26. Servicios para viajeros en el mapa de la guía
+
+Quienes probaron el sitio pidieron saber qué hay en los lugares remotos,
+"aunque sea referencias o números telefónicos de lugares para viajeros".
+
+### 26.1 Qué se muestra
+
+El popup de cada destino del mapa de la guía (8.8 y 24) tiene **"Servicios
+cerca"**: acerca el mapa unos 15 km alrededor del destino y prende la capa de
+servicios. También se prende con "Mostrar servicios", debajo del mapa. Son
+siete tipos, en el orden de la leyenda:
+
+- **Información y guardaparques:** la oficina de turismo y el centro de
+  visitantes (`tourism=information` con `information=office` o
+  `visitor_centre`), y la estación de guardaparques (`amenity=ranger_station`).
+  No cada cartel ni cada mapa al costado del camino.
+- **Hospitales y médicos:** `amenity=hospital`, `clinic` y `doctors`.
+- **Farmacias:** `amenity=pharmacy`.
+- **Policía y rescate:** `amenity=police` y `emergency=mountain_rescue`.
+- **Combustible:** `amenity=fuel`.
+- **Cajeros y cambio:** `amenity=atm`, `bank` y `bureau_de_change`.
+- **Refugios de montaña:** `tourism=alpine_hut` y `wilderness_hut`. No
+  `amenity=shelter`, que en OpenStreetMap es también cada parada con techo.
+
+De cada servicio se muestra el nombre (y el nombre en alfabeto latino, si el de
+allá no lo está), la dirección, el teléfono como enlace para llamar, el horario
+en castellano (18.4), la web, "Cómo llegar" y "Ver en OpenStreetMap". En el
+mapa, cada servicio es un círculo de color con una letra blanca. La letra
+distingue los tipos sin depender del color: rojo y verde —salud y farmacia— se
+confunden con el daltonismo más común. Cada color tiene un contraste de 4,5:1 o
+más con el blanco, y un test lo cuida. Debajo del mapa está la lista de lo que
+se ve, del más cercano al más lejano del centro, para quien no usa el mapa.
+
+No se muestra lo que OpenStreetMap ya marca como cerrado (con las mismas reglas
+que los lugares de comida) ni lo que no es para el público (`access=private`,
+`no`, `customers` o `delivery`).
+
+### 26.2 Cuándo se le pregunta a OpenStreetMap
+
+El servidor de Overpass es ajeno (18.4), así que se le pregunta lo menos
+posible:
+
+- **Solo cuando alguien prende la capa** y el mapa está a zoom 11 o más. Se
+  piden las celdas que se ven, de la misma grilla que el mapa de cada plato.
+- **Una consulta fija por celda**, con una salida por tipo y un tope de 150
+  servicios por tipo, para que los cajeros de una ciudad no dejen afuera a su
+  hospital. Si de algún tipo había más, el panel lo dice.
+- **Una semana de caché por celda**, porque un hospital no abre ni cierra de un
+  día para otro, y un día en la CDN. Lo que tiene más de una semana sale igual,
+  avisando que se está renovando, como los lugares de comida.
+- **El mismo pedido, el mismo turno y la misma pausa que los lugares de
+  comida.** Cada instancia manda dos pedidos a la vez, sumando los dos mapas.
+  Cuando Overpass frena al sitio, nadie le pregunta nada durante ese rato.
+- **Solo cerca de la guía.** La API acepta celdas a menos de 150 km de algún
+  destino de esa guía: no sirve para preguntarle a Overpass por cualquier
+  lugar.
+
+La fecha de los datos queda a la vista, como en el mapa de cada plato.
+
+### 26.3 Lo que queda para después
+
+- **Datos propios.** Con un extracto diario, como los lugares de comida
+  (18.10), la capa dejaría de depender de Overpass. Es el paso siguiente si se
+  usa mucho.
+- **Los números de emergencia de cada país.** Están pendientes hasta elegir la
+  fuente.
+
+### 26.4 Verificado
+
+- El lint, los tests, el build y el typecheck, en verde. Hay 39 tests nuevos:
+  la consulta, la lectura de la respuesta, el teléfono, el radio alrededor de
+  los destinos y la API.
+- En el navegador, con la API reemplazada por datos de prueba, porque desde el
+  entorno de desarrollo no se llega a Overpass:
+  - el pin de Ushuaia, abierto con Enter;
+  - "Servicios cerca", con el teclado;
+  - los servicios de las cuatro celdas, el popup de un hospital y la lista;
+  - "Ver el país entero", que oculta la capa y cierra el popup;
+  - la pausa, y la falla con "Reintentar";
+  - el ancho de un teléfono.
+
+  No hubo errores en la página.

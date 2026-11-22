@@ -86,10 +86,65 @@ const guia = {
   mapa: {
     titulo: "El país de un vistazo",
     bajada: (pais: string) =>
-      `Las distancias de ${pais} no se entienden en una lista. Toca un marcador para ver de qué destino se trata.`,
+      `Las distancias de ${pais} no se entienden en una lista. Toca un marcador para ver de qué destino se trata y qué servicios hay cerca.`,
     /** Sin WebGL no hay mapa; la lista de la derecha sigue sirviendo. */
     sinMapa:
       "Este navegador no puede mostrar el mapa. Los destinos están en la lista.",
+
+    /** La capa de servicios para viajeros (spec, 26). */
+    servicios: {
+      titulo: "Servicios para viajeros",
+      bajada:
+        "Información turística, salud, farmacias, policía, combustible, cajeros y refugios de montaña, con teléfono y horario cuando OpenStreetMap los tiene. Sirven sobre todo lejos de las ciudades.",
+      mostrar: "Mostrar servicios",
+      ocultar: "Ocultar servicios",
+      /** El botón del popup de cada destino. */
+      cerca: "Servicios cerca",
+      verElPais: "Ver el país entero",
+      acercalo:
+        "Acerca el mapa para ver los servicios, o toca un destino y elige «Servicios cerca».",
+      fuera: "Esta parte del mapa queda lejos de los destinos de la guía.",
+      buscando: "Buscando servicios en OpenStreetMap…",
+      pausa: (minutos: number) =>
+        minutos <= 1
+          ? "OpenStreetMap pidió una pausa: volvemos a buscar en un minuto."
+          : `OpenStreetMap no está atendiendo nuestros pedidos: volvemos a buscar en ${minutos} minutos.`,
+      fallo: "No pudimos traer los servicios de una parte del mapa.",
+      reintentar: "Reintentar",
+      sinServicios:
+        "OpenStreetMap no tiene servicios cargados en esta zona. Que no figuren no quiere decir que no haya: pregunta en el último pueblo antes de seguir.",
+      enLaZona: (cantidad: number, formateada: string) =>
+        `${formateada} ${cantidad === 1 ? "servicio" : "servicios"} en esta zona.`,
+      actualizando: (cuando: string) =>
+        `Estamos actualizando los datos de OpenStreetMap, que son del ${cuando}`,
+      datosDel: (cuando: string) => `Datos de OpenStreetMap del ${cuando}`,
+      recortado:
+        "En esta zona hay más servicios de los que entran en el mapa: de cada tipo mostramos los primeros que encontramos.",
+      /** El nombre de la leyenda para el lector de pantalla. */
+      leyenda: "Qué es cada color",
+      tipos: {
+        informacion: "Información y guardaparques",
+        salud: "Hospitales y médicos",
+        farmacia: "Farmacias",
+        policia: "Policía y rescate",
+        combustible: "Combustible",
+        dinero: "Cajeros y cambio",
+        refugio: "Refugios de montaña",
+      },
+      verLaLista: (cantidad: string) =>
+        `Ver los servicios en una lista (${cantidad})`,
+      /** Cuando la lista se corta: el resto está en el mapa. */
+      yMas: (cantidad: string) => `Y ${cantidad} más en el mapa.`,
+      sinNombre: "Sin nombre cargado",
+      delCentro: (distancia: string) => `${distancia} del centro del mapa`,
+      telefono: "Teléfono",
+      horario: "Horario",
+      web: "Web",
+      comoLlegar: "Cómo llegar",
+      verEnOpenStreetMap: "Ver en OpenStreetMap",
+      fuentes:
+        "Servicios: © colaboradores de <osm>OpenStreetMap</osm>, con licencia ODbL. Los cargan voluntarios: antes de un tramo largo, confirma por teléfono lo que dependa de un horario.",
+    },
   },
 
   preparar: {
