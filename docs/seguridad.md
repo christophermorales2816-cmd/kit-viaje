@@ -9,16 +9,16 @@ quien tenga que auditarlo o extenderlo. La guía operativa para el dueño está 
 La app no tiene cuentas, pagos ni datos personales: un viaje son fechas, una
 ciudad y dos listas. Lo que sí tiene valor:
 
-| Activo                              | Por qué importa                                                              |
-| ----------------------------------- | ---------------------------------------------------------------------------- |
-| El `edit_token` de cada viaje       | Es la única llave de edición: quien lo tiene, edita                          |
-| La service role key                 | Saltea toda la RLS: lee y escribe cualquier tabla                            |
-| Las credenciales de CI              | Aplican migraciones a la base de producción y cargan los lugares de comida   |
-| La disponibilidad y el costo        | La base es gratuita/limitada: llenarla o saturarla tiene costo               |
-| La integridad de los datos maestros | Un precio en la moneda equivocada da un presupuesto falso sin error          |
-| El acceso a adsb.lol                | Es gratis y con límite: si el sitio lo satura, nos corta y el radar se apaga |
-| El acceso a Overpass                | Igual, para el mapa de lugares de "Qué comer" mientras no hay datos propios  |
-| Los lugares de comida en la base    | Si se vacían o se ensucian, el mapa de cada plato muestra mal o nada         |
+| Activo                              | Por qué importa                                                                                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| El `edit_token` de cada viaje       | Es la única llave de edición: quien lo tiene, edita                                                                     |
+| La service role key                 | Saltea toda la RLS: lee y escribe cualquier tabla                                                                       |
+| Las credenciales de CI              | Aplican migraciones a la base de producción y cargan los lugares de comida                                              |
+| La disponibilidad y el costo        | La base es gratuita/limitada: llenarla o saturarla tiene costo                                                          |
+| La integridad de los datos maestros | Un precio en la moneda equivocada da un presupuesto falso sin error                                                     |
+| El acceso a adsb.lol                | Es gratis y con límite: si el sitio lo satura, nos corta y el radar se apaga                                            |
+| El acceso a Overpass                | Igual, para el mapa de lugares de "Qué comer" mientras no hay datos propios, y para los servicios del mapa de cada guía |
+| Los lugares de comida en la base    | Si se vacían o se ensucian, el mapa de cada plato muestra mal o nada                                                    |
 
 ## Modelo de acceso
 
@@ -75,6 +75,9 @@ Navegador ──(HTML, Server Actions, /api)──> Next.js en Vercel ──(ser
 | Mostrar aviones que pidieron no aparecer                                         | Se filtran los de la lista LADD y las direcciones PIA                                                                                                                                                          | `src/lib/vuelos/adsb.ts`; `adsb.test.ts`                                        |
 | Texto raro en un transpondedor (un "vuelo" `<script>`)                           | Solo se aceptan vuelos, modelos y matrículas con su forma; se muestran como texto                                                                                                                              | `src/lib/vuelos/adsb.ts`                                                        |
 | Usar el sitio para hacerle a Overpass cualquier consulta                         | La consulta sale del contenido del repo; la URL solo elige un plato del catálogo y una celda de la grilla dentro del país                                                                                      | `src/lib/comidas/osm.ts`; `celdas.ts`; `src/app/api/que-comer/lugares/route.ts` |
+| Usar la API de servicios para preguntarle a Overpass por cualquier lugar         | La consulta es fija y sale del repo; la URL solo elige una guía y una celda de la grilla a menos de 150 km de alguno de sus destinos                                                                           | `src/lib/servicios/osm.ts`; `servicios.ts`; `src/app/api/servicios/route.ts`    |
+| Usar los servicios para saturar a Overpass                                       | Se piden solo cuando alguien los prende y el mapa está cerca; una semana de caché por celda; CDN; el mismo turno y la misma pausa que los lugares de comida                                                    | `src/lib/servicios/overpass.ts`; `src/app/api/servicios/route.ts`               |
+| Un servicio de OpenStreetMap con texto o enlaces armados para atacar             | El popup se arma con nodos y texto; la web pasa por `webSegura` (solo http o https) y el teléfono, por `hrefDeTelefono` (solo dígitos)                                                                         | `src/components/guia/servicios-cerca.tsx`; `src/lib/servicios/servicios.ts`     |
 | Usar el sitio para saturar a Overpass                                            | Celdas fijas; doce horas de caché por celda y búsqueda; CDN; dos pedidos a la vez por instancia; con un 429 o un 504, nadie le pregunta un minuto; con un 403 o un 406, quince                                 | `src/lib/comidas/overpass.ts`; `route.ts`                                       |
 | Un extracto roto o adulterado vacía o ensucia el mapa                            | Si un país trae menos de la mitad de los lugares de la vez anterior, no se toca nada y el workflow falla; los lugares pasan por las mismas reglas que con Overpass (webs solo http o https, textos como texto) | `src/lib/comidas/carga.ts`; `extracto.ts`; `osm.ts`                             |
 | Robar la service role key desde el workflow de lugares                           | Corre solo desde main, por horario o a mano, nunca en un PR; acciones fijadas por SHA; la clave no se imprime                                                                                                  | `.github/workflows/lugares.yml`                                                 |

@@ -306,6 +306,10 @@ preguntarle quince minutos por vez para no empeorarlo, y vos:
    comparten todos los pedidos del sitio. Cambiar de servidor es una decisión
    aparte, que se toma leyendo sus condiciones, como se hizo con Private.coffee.
 
+Los servicios del mapa de cada guía (spec, 26) usan el mismo servidor, el
+mismo turno y la misma pausa: cuando el mapa de un plato dice que OpenStreetMap
+no está atendiendo, los servicios dicen lo mismo, y se arregla igual.
+
 **Alguien está creando viajes en masa.**
 La app ya lo frena: 30 viajes por hora por conexión y 2.000 por hora en total
 (`src/lib/trips/cupo.ts`). Si igual molesta, Vercel → Firewall → _Attack

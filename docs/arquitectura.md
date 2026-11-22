@@ -24,7 +24,8 @@ vuelve a ellos por un link con un token.
 | Aeropuertos               | OurAirports, en un JSON del repo, solo del servidor                                                                                            | `src/lib/vuelos`, `herramientas/aeropuertos`                                             |
 | Aviones en vivo           | adsb.lol, desde el servidor; el mapa es MapLibre con mosaicos de OpenFreeMap                                                                   | `src/lib/vuelos/adsb.ts`, `src/components/vuelos/radar.tsx`                              |
 | Qué comer                 | Catálogos en TypeScript; los lugares, de OpenStreetMap: una base propia que se renueva cada día, y Overpass de respaldo; las fotos, de Commons | `src/content/comidas`, `src/lib/comidas`, `src/components/comer`, `herramientas/lugares` |
-| Mapas de MapLibre         | Lo común al radar y al mapa de lugares: el estilo, los textos y la carga de la librería                                                        | `src/lib/mapa`, `src/components/mapa`                                                    |
+| Servicios para viajeros   | OpenStreetMap por Overpass, a pedido desde el mapa de cada guía, con una semana de caché                                                       | `src/lib/servicios`, `src/components/guia/servicios-cerca.tsx`, `src/app/api/servicios`  |
+| Mapas de MapLibre         | Lo común al radar, al mapa de lugares y al de cada guía: el estilo, los textos y la carga de la librería                                       | `src/lib/mapa`, `src/components/mapa`                                                    |
 | CI                        | GitHub Actions: lint, tests, build, typecheck; migraciones + RLS + integridad sobre Postgres 16                                                | `.github/workflows/ci.yml`                                                               |
 | Lugares de comida         | GitHub Actions, una vez por día: extractos de Geofabrik, osmium y la carga en Supabase                                                         | `.github/workflows/lugares.yml`, `herramientas/lugares`                                  |
 | Migraciones en producción | GitHub Actions con el CLI de Supabase, al mergear                                                                                              | `.github/workflows/migraciones.yml`                                                      |
@@ -49,6 +50,7 @@ vuelve a ellos por un link con un token.
 | `/que-comer/[slug]`           | El catálogo de un país, con sus filtros                                    | Estática; se regenera una vez por día (las menciones de honor)                        | No                   |
 | `/que-comer/[slug]/[plato]`   | La ficha de un plato; desde el catálogo, se abre en una ventana (`@ficha`) | Estática; se regenera una vez por día                                                 | No                   |
 | `/api/que-comer/lugares`      | Los lugares de una celda del mapa, en JSON                                 | Dinámica; caché de 12 h en Next y 10 minutos en la CDN                                | No                   |
+| `/api/servicios`              | Los servicios para viajeros de una celda del mapa de la guía, en JSON      | Dinámica; caché de una semana en Next y un día en la CDN                              | No                   |
 | `/robots.txt`, `/sitemap.xml` | Para buscadores                                                            | Estáticos                                                                             | No                   |
 
 Las páginas de guía no dependen de la base a propósito: si Supabase se cae, la
@@ -100,6 +102,16 @@ el país todavía no tiene datos propios, o la base falla, arma la consulta a
 Overpass (`osm.ts`) y la guarda doce horas (`overpass.ts`); lo que tiene más de
 un día sale sin CDN, avisando, y el mapa lo vuelve a pedir cuando ya se
 renovó.
+
+**Servicios cerca de un destino** (`src/components/guia/places-map.tsx`, spec
+26): el popup de cada destino del mapa de la guía tiene "Servicios cerca", que
+acerca el mapa y prende la capa. Con el mapa cerca, se pide
+`/api/servicios` por cada celda que se ve, con la misma grilla que el mapa de
+cada plato. La API valida la guía y que la celda quede a menos de 150 km de
+alguno de sus destinos, arma una consulta fija con una salida por tipo de
+servicio (`src/lib/servicios/osm.ts`) y la guarda una semana
+(`src/lib/servicios/overpass.ts`), con el mismo pedido, el mismo turno y la
+misma pausa que los lugares de comida.
 
 **Editar** (`mutate.ts`): cada tilde o cantidad es una Server Action que
 resuelve el token contra la base, verifica que el ítem o el gasto pertenezca al
