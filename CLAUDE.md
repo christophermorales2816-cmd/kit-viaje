@@ -2,23 +2,41 @@
 
 ## Graphify: orientarse por el grafo
 
-El grafo del código está en `graphify-out/` (`GRAPH_REPORT.md`, `graph.json`,
-`graph.html`). Se genera con [graphify](https://pypi.org/project/graphifyy/),
-solo con análisis sintáctico local: no usa ningún modelo ni manda código afuera.
+`graphify-out/` tiene el grafo del código (`graph.json`, `GRAPH_REPORT.md`).
+Lo genera [graphify](https://pypi.org/project/graphifyy/) con análisis
+sintáctico local: no usa ningún modelo ni manda código afuera.
 
-Instalación, una vez por máquina o sesión:
+**No va en Git.** Se genera en cada sesión. Una regeneración completa tarda
+unos 6 segundos y da siempre el mismo resultado. Si estuviera versionado,
+cada cambio de código reescribiría megabytes en el PR y dos PRs en paralelo
+chocarían en `graphify-out/`. El script de setup del entorno cloud lo deja
+listo al arrancar. Si `graphify-out/graph.json` no existe, generalo:
 
-    pip install "graphifyy[sql]"
+    pip install -q "graphifyy[sql]" && graphify update .
 
-Reglas obligatorias:
+### Cuándo usarlo
 
-1. **Primero el grafo.** Antes de un `grep` o una búsqueda amplia por el repo,
-   lee `graphify-out/GRAPH_REPORT.md` y consulta el grafo
-   (`graphify query "<pregunta>"`, `graphify explain "<nodo>"`,
-   `graphify path "<A>" "<B>"`) para ubicar los nodos, las aristas y las
-   comunidades afectadas. Abre solo los archivos que están en ese camino.
-2. **Actualizar al cambiar código.** Si se agrega, renombra, borra o
-   refactoriza código, corre `graphify update .` antes de terminar la tarea,
-   para que `graphify-out/` no quede viejo.
-3. **`graphify-out/` va en Git**, para que cada sesión de Claude Code en la web
-   lo tenga desde el arranque. Su caché (`graphify-out/cache/`) no va.
+Úsalo para preguntas sobre el código: dónde se define algo, quién lo usa, qué
+se rompe si lo cambio, cómo llega un dato de A a B. Ahí reemplaza rondas de
+`grep` y de abrir archivos. Para editar contenido o datos en un directorio
+conocido (por ejemplo `src/content/guias/`), no aporta: andá directo.
+
+### Cómo consultarlo (lo que funciona)
+
+Con **nombres de símbolos o archivos**, no con frases:
+
+- `graphify explain "FactsBoard"`: dónde está y quién lo llama o importa.
+- `graphify affected "DestinationGuide" --depth 1`: qué depende de algo. Con
+  tipos de las guías la lista trae una línea por país (unas 200); filtralas
+  con `| grep -v src/content/guias/`.
+- `graphify path "A" "B" --undirected`: cómo se conectan dos nodos.
+
+No uses `graphify query` con preguntas en lenguaje natural: busca palabras
+sueltas y devuelve nodos que no tienen que ver ("llega" encuentra
+`urlParaLlegar`). Tampoco leas `GRAPH_REPORT.md` entero: son unos 8.000
+tokens y casi todo es una lista de comunidades.
+
+### Después de cambiar código
+
+Si agregás, renombrás o borrás código, corré `graphify update .` para que las
+consultas siguientes de la sesión vean el cambio. No hay nada que commitear.
