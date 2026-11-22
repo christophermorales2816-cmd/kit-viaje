@@ -84,6 +84,14 @@ export const australia: DestinationGuide = {
       ],
     },
     {
+      id: "nieve",
+      title: "Nieve y esquí",
+      body: [
+        "De junio a septiembre se esquía en las Montañas Nevadas —Thredbo y Perisher, al sur de Canberra— y en los Alpes de Victoria, con Falls Creek y Mount Buller. Es una temporada corta, y la nieve cambia mucho de un año a otro.",
+        "Los pases salen más baratos comprados en línea con anticipación. Para subir en auto, en invierno hay que llevar cadenas y pagar la entrada al parque nacional por vehículo.",
+      ],
+    },
+    {
       id: "moverse",
       title: "Moverse por Australia",
       body: [
@@ -94,7 +102,7 @@ export const australia: DestinationGuide = {
     },
   ],
 
-  factsUpdatedAt: "2026-10-13",
+  factsUpdatedAt: "2026-11-21",
 
   scores: [
     {
@@ -243,6 +251,16 @@ export const australia: DestinationGuide = {
       blurb:
         "Una ciudad de parques con los viñedos de Barossa y McLaren Vale cerca, y la isla Canguro a un ferry. Veranos secos y calurosos.",
       coords: [-34.9285, 138.6007],
+      image: null,
+    },
+    {
+      id: "thredbo",
+      name: "Thredbo y Perisher",
+      region: "Nueva Gales del Sur",
+      tag: "Esquí",
+      blurb:
+        "Los centros de esquí de las Montañas Nevadas, al pie del monte Kosciuszko, el más alto del país, a dos horas y media de Canberra. La temporada va de junio a septiembre.",
+      coords: [-36.5049, 148.306],
       image: null,
     },
   ],

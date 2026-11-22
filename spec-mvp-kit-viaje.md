@@ -3586,3 +3586,85 @@ busca por el aeropuerto de Providenciales.
   Kangerlussuaq en julio dan abrigo; Bermudas en febrero, polar e impermeable
   sin abrigo; Aruba en agosto, playa y nada de lluvia.
 - Las guías y la lista de destinos, en el navegador.
+
+## 23. Nieve: estaciones de esquí en el planificador
+
+Quienes probaron el sitio preguntaron por "los de la nieve". La sección 22 sumó
+los países fríos que faltaban (Canadá, Alaska, Groenlandia); esta suma la nieve
+a las guías que ya estaban.
+
+### 23.1 Seis estaciones
+
+En Europa las estaciones ya tenían lugar propio: Chamonix, Zermatt, St. Moritz,
+las Dolomitas, Kitzbühel, Soldeu y Gudauri. Fuera de Europa, las guías nombraban
+el esquí —Bariloche, Denver, Sapporo—, pero el planificador no tenía dónde
+ponerlo. Seis países suman una estación con clima y presupuesto propios:
+
+| País           | Estación                  | Altura          | Temporada          |
+| -------------- | ------------------------- | --------------- | ------------------ |
+| Argentina      | Las Leñas                 | 2.240 m         | junio a septiembre |
+| Chile          | Valle Nevado y Farellones | 2.400 a 3.600 m | junio a septiembre |
+| España         | Sierra Nevada             | 2.100 m         | diciembre a abril  |
+| Estados Unidos | Vail y Breckenridge       | 2.500 m         | noviembre a abril  |
+| Japón          | Niseko                    | 180 m (pueblo)  | diciembre a abril  |
+| Australia      | Thredbo y Perisher        | 1.380 m         | junio a septiembre |
+
+Van en una sola migración (`20261121180000_estaciones_de_esqui.sql`), con el id
+que sigue a los de cada corredor. Cada guía suma la estación al final del
+mosaico y una entrada "Nieve y esquí" en sus datos, con los demás centros del
+país, la temporada y lo que se paga aparte. Sapporo deja de decir que es la
+ciudad más fría de Japón en el planificador: ahora lo es Niseko.
+
+Lo que gana quien viaja a esquiar es sobre todo el presupuesto. El clima de la
+estación importa menos de lo que parecía: la ciudad base ya caía en `frio` en
+invierno (Santiago en julio anda entre 3 y 15 °C, y eso ya daba abrigo).
+
+### 23.2 El presupuesto de una estación
+
+Los precios salen de la base del corredor con un factor, como en las ciudades
+derivadas, y después se corrigen los renglones que en una estación no tienen
+sentido:
+
+- La excursión de día completo pasa a ser el **día de esquí con pase**, y va
+  uno por día de viaje, no uno cada cuatro días como la excursión.
+- La atracción principal pasa a ser el **alquiler de equipo**, también uno por
+  día.
+- La visita guiada pasa a ser una **clase grupal** de medio día.
+- El traslado sale de donde se sube: Santiago, Denver, Granada, Canberra, el
+  aeropuerto de New Chitose, San Rafael o Malargüe.
+- En Niseko, el museo pasa a ser un baño en un onsen.
+- Lo que arriba no existe —el metro, el museo— se borra.
+- El hotel se corrige donde el factor quedaba corto para la temporada: Las
+  Leñas, Valle Nevado, Niseko y Thredbo.
+
+Las Leñas parte de Buenos Aires, cuyos renglones tienen nombre propio (el
+Delta, Ezeiza, el tango, el fútbol, la SUBE), y se corrige uno por uno. Las
+otras ciudades argentinas derivadas de Buenos Aires —Bariloche, Mendoza, El
+Calafate y el resto— heredaron esos mismos nombres. Es anterior a esta sección
+y queda pendiente.
+
+### 23.3 Guantes y ropa térmica
+
+Para el frío, el catálogo tenía abrigo, gorro y bufanda, buzo, pantalón largo y
+crema para los labios, pero no guantes ni una primera capa térmica. Como la
+lista arranca en cero (sección 4), lo que el motor no genera no se puede
+agregar a mano: quien iba a Yellowknife en enero, a Qaanaaq o a una estación de
+esquí no tenía dónde tildar los guantes, aunque la guía los pidiera. Se suman
+los dos (`20261121180100_guantes_y_ropa_termica.sql`), con la etiqueta `frio` y
+para cualquier tipo de viaje, como el abrigo.
+
+### 23.4 Texto nuevo en guías con voseo
+
+Las guías anteriores a 19.9 siguen en voseo hasta el paso de los textos
+(sección 21). Lo que se suma en ellas va en impersonal ("se esquía", "conviene
+reservar", "hacen falta"), que no choca con ninguna de las dos voces.
+
+### 23.5 Verificado
+
+- El lint, los tests, el build y el typecheck, en verde.
+- Las migraciones, sobre una base virgen, con el smoke de RLS y la integridad,
+  en verde.
+- El motor de equipaje: guantes, ropa térmica y abrigo en Valle Nevado, Las
+  Leñas, Sierra Nevada, Vail, Niseko, Thredbo y Yellowknife; nada de eso en
+  Aruba.
+- Las seis guías, con la estación y la entrada de nieve, en el navegador.

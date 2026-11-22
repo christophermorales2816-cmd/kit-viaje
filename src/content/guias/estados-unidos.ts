@@ -7,8 +7,9 @@ import type { DestinationGuide } from "./types";
  * volátil en prosa y la fecha de revisión visible. Al tocar `facts`, mover
  * `factsUpdatedAt`.
  *
- * Lo que este país aporta: es el primero con doce ciudades en el planificador
- * y no nueve (spec, 22). Con nueve, Alaska y Hawái no entraban sin sacar a
+ * Lo que este país aporta: es el primero con más de nueve ciudades en el
+ * planificador (spec, 22): doce, y trece desde que se sumó Vail para el
+ * esquí (spec, 23). Con nueve, Alaska y Hawái no entraban sin sacar a
  * Nueva York o a California, y son justo los dos extremos que hacen que la
  * maleta dependa de la ciudad: Anchorage en enero y Honolulu en el mismo mes.
  * También es el primer país donde el precio de la etiqueta no es el que se
@@ -105,6 +106,15 @@ export const estadosUnidos: DestinationGuide = {
         "Son más de sesenta, del Gran Cañón a Yellowstone, Yosemite y Denali. Hay un pase anual que cubre la entrada a todos.",
         "Desde 2026, quienes no residen en Estados Unidos pagan un recargo por persona en los once parques más visitados, y el pase anual les cuesta más.",
         "En temporada alta, algunos parques piden reservar un horario de entrada, y los alojamientos de adentro o de al lado se llenan con meses de anticipación.",
+      ],
+    },
+    {
+      id: "nieve",
+      title: "Nieve y esquí",
+      body: [
+        "De noviembre a abril se esquía en las Rocosas —Vail, Breckenridge y Aspen, en Colorado; Park City, en Utah, y Jackson Hole, en Wyoming—, en Lake Tahoe, entre California y Nevada, y en Vermont, en el noreste.",
+        "El pase del día comprado en la ventanilla es de los más caros del mundo: los pases de varios días o de temporada, comprados con anticipación, rinden mucho más. El equipo y las clases se pagan aparte.",
+        "En Colorado se esquía por encima de los 2.500 metros: el aire es seco, el sol es fuerte y algunos sienten la altura los primeros días.",
       ],
     },
     {
@@ -307,6 +317,16 @@ export const estadosUnidos: DestinationGuide = {
       blurb:
         "La puerta de Alaska: glaciares, fiordos, osos y el Denali, la montaña más alta de Norteamérica. Veranos de días larguísimos e inviernos de nieve y auroras.",
       coords: [61.2181, -149.9003],
+      image: null,
+    },
+    {
+      id: "vail",
+      name: "Vail y Breckenridge",
+      region: "Montañas Rocosas",
+      tag: "Esquí",
+      blurb:
+        "Dos de los centros de esquí más grandes del país, en las Rocosas de Colorado, a unas dos horas de Denver por la autopista de montaña. La temporada va de noviembre a abril.",
+      coords: [39.6403, -106.3742],
       image: null,
     },
   ],

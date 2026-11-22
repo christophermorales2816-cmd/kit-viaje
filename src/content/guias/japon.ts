@@ -81,6 +81,15 @@ export const japon: DestinationGuide = {
       ],
     },
     {
+      id: "nieve",
+      title: "Nieve y esquí",
+      body: [
+        "De diciembre a abril, Hokkaido y los Alpes japoneses tienen una de las nieves polvo más famosas del mundo: Niseko y Furano, en Hokkaido, y Hakuba y Nozawa Onsen, en Nagano. Enero y febrero son los meses de más nieve.",
+        "Muchos centros alquilan equipo y tienen escuelas con clases en inglés. Después de esquiar, el plan es un onsen, un baño de aguas termales.",
+        "Los servicios de envío de equipaje llevan las maletas o los esquís del aeropuerto al hotel, y el tren se toma con lo justo.",
+      ],
+    },
+    {
       id: "moverse",
       title: "Moverse por Japón",
       body: [
@@ -91,7 +100,7 @@ export const japon: DestinationGuide = {
     },
   ],
 
-  factsUpdatedAt: "2026-10-10",
+  factsUpdatedAt: "2026-11-21",
 
   scores: [
     {
@@ -221,7 +230,7 @@ export const japon: DestinationGuide = {
       region: "Hokkaido",
       tag: "Nieve y festival de hielo",
       blurb:
-        "La capital de Hokkaido, con esquí cerca, el festival de esculturas de nieve en febrero y veranos frescos. La más fría de Japón en el planificador.",
+        "La capital de Hokkaido, puerta de Niseko y de los centros de esquí de la isla, con el festival de esculturas de nieve en febrero y veranos frescos.",
       coords: [43.0618, 141.3545],
       image: null,
     },
@@ -243,6 +252,16 @@ export const japon: DestinationGuide = {
       blurb:
         "Playas de agua turquesa, arrecifes y una cultura propia, la del antiguo reino de Ryukyu. Nunca hace frío; la lluvia y los tifones se concentran de mayo a septiembre.",
       coords: [26.2124, 127.6809],
+      image: null,
+    },
+    {
+      id: "niseko",
+      name: "Niseko",
+      region: "Hokkaido",
+      tag: "Nieve polvo",
+      blurb:
+        "El centro de esquí más conocido de Japón, al pie del monte Yotei, con nieve polvo casi todos los días de invierno y aguas termales para terminar el día. La temporada va de diciembre a abril.",
+      coords: [42.862, 140.6985],
       image: null,
     },
   ],

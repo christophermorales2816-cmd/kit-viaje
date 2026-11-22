@@ -73,6 +73,15 @@ export const chile: DestinationGuide = {
       ],
     },
     {
+      id: "nieve",
+      title: "Nieve y esquí",
+      body: [
+        "La temporada va de junio a septiembre. A menos de dos horas de Santiago están Valle Nevado, La Parva y El Colorado, conectados entre sí; más al norte, Portillo, junto a la laguna del Inca, y en el sur, Nevados de Chillán, con termas, Corralco, al pie del volcán Lonquimay, y el centro del volcán Osorno, cerca de Puerto Varas.",
+        "El camino a Farellones tiene cuarenta curvas y en invierno pide cadenas: muchos suben en bus o en traslado desde Santiago. El pase, el alquiler de equipo y las clases se pagan aparte.",
+        "En la altura el sol quema aunque haga frío: hacen falta protector, gafas de sol y ropa térmica.",
+      ],
+    },
+    {
       id: "moverse",
       title: "Moverse por un país de cuatro mil kilómetros",
       body: [
@@ -92,7 +101,7 @@ export const chile: DestinationGuide = {
     },
   ],
 
-  factsUpdatedAt: "2026-10-02",
+  factsUpdatedAt: "2026-11-21",
 
   scores: [
     {
@@ -244,6 +253,16 @@ export const chile: DestinationGuide = {
       blurb:
         "Rapa Nui, a cinco horas de vuelo del continente: los moáis, una cultura polinesia viva y clima subtropical parejo. Es el destino más caro del país y se planifica aparte.",
       coords: [-27.1127, -109.3497],
+      image: null,
+    },
+    {
+      id: "valle-nevado",
+      name: "Valle Nevado y Farellones",
+      region: "Zona central",
+      tag: "Esquí",
+      blurb:
+        "Tres centros de esquí conectados —Valle Nevado, La Parva y El Colorado— a menos de dos horas de Santiago, entre los 2.400 y los 3.600 metros. La temporada va de junio a septiembre.",
+      coords: [-33.3555, -70.2852],
       image: null,
     },
   ],

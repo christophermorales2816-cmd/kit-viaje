@@ -83,6 +83,15 @@ export const espana: DestinationGuide = {
       ],
     },
     {
+      id: "nieve",
+      title: "Nieve y esquí",
+      body: [
+        "De diciembre a abril se esquía en Sierra Nevada, a menos de una hora de Granada, y en el Pirineo, donde Baqueira-Beret, en el valle de Arán, es la estación más grande del país. Muchas estaciones fabrican nieve para cubrir los años secos.",
+        "Fuera de los fines de semana y de las fiestas hay menos gente y mejores precios. El pase, el alquiler de equipo y las clases se pagan aparte.",
+        "En la montaña el sol quema aunque haga frío: hacen falta protector, gafas de sol y capas.",
+      ],
+    },
+    {
       id: "ritmo",
       title: "El ritmo español",
       body: [
@@ -93,7 +102,7 @@ export const espana: DestinationGuide = {
     },
   ],
 
-  factsUpdatedAt: "2026-10-07",
+  factsUpdatedAt: "2026-11-21",
 
   scores: [
     {
@@ -245,6 +254,16 @@ export const espana: DestinationGuide = {
       blurb:
         "Frente a la costa de África, con el Teide —el pico más alto de España— y temperaturas templadas los doce meses. Es el destino de invierno de media Europa, con una hora menos que la península.",
       coords: [28.4636, -16.2518],
+      image: null,
+    },
+    {
+      id: "sierra-nevada",
+      name: "Sierra Nevada",
+      region: "Andalucía",
+      tag: "Esquí",
+      blurb:
+        "La estación de esquí más al sur de Europa, a menos de una hora de Granada, con mucho sol y, en días claros, vista al Mediterráneo. La temporada va de diciembre a abril.",
+      coords: [37.0954, -3.3976],
       image: null,
     },
   ],
