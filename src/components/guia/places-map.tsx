@@ -1,44 +1,46 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-// El CSS sí puede ir arriba: no toca window. La librería no — ver el efecto.
-import "leaflet/dist/leaflet.css";
+import { useEffect, useMemo, useRef, useState } from "react";
+// El CSS sí puede ir arriba: no toca window. La librería no (cargarMapLibre).
+import "maplibre-gl/dist/maplibre-gl.css";
+import type { Map as MapaDeMapLibre } from "maplibre-gl";
 
+import {
+  cargarMapLibre,
+  mostrarEstados,
+  ponerEtiquetasEnCastellano,
+} from "@/components/mapa/maplibre";
 import type { GuidePlace } from "@/content/guias";
 import { sinSaltoDeAntimeridiano } from "@/lib/antimeridiano";
+import { ESTILO_DEL_MAPA, textosDelMapa } from "@/lib/mapa/estilo";
 import { useTextos } from "@/i18n/cliente";
 import { TEXTOS_DE_LA_GUIA } from "@/i18n/guia";
+import { TEXTOS_DEL_MAPA } from "@/i18n/mapa";
 
 /**
- * "El país de un vistazo" (spec, sección 8.8).
+ * "El país de un vistazo" (spec, secciones 8.8 y 24).
  *
- * Leaflet directo, sin react-leaflet: es el mismo patrón que el globo — una
- * librería imperativa dentro de un efecto — y evita sumar un wrapper para
- * montar un mapa que no cambia después de montado.
+ * MAPLIBRE, COMO LOS OTROS MAPAS DEL SITIO
  *
- * LEAFLET SE IMPORTA ADENTRO DEL EFECTO
- *
- * Leaflet lee `window` al evaluarse. Un componente de cliente igual se
- * renderiza en el servidor, así que importarlo arriba rompe el prerender con
- * "window is not defined" y tira el build entero. La alternativa habitual es
- * `next/dynamic` con `ssr: false`, que obliga a un componente extra porque en
- * un Server Component esa opción no está permitida. Importarlo adentro del
- * efecto resuelve lo mismo con una línea: el efecto solo corre en el browser.
+ * Era Leaflet con mosaicos raster de CARTO: nombres en el idioma de cada país
+ * y, al encuadrar el país entero, nada adentro del contorno. Quienes probaron
+ * el sitio pidieron ver los estados. Con MapLibre y los mosaicos vectoriales
+ * de OpenFreeMap —los mismos del radar de vuelos y del mapa de cada plato—
+ * los nombres salen en castellano y los estados y provincias se ven desde que
+ * se ve el país (`mostrarEstados`).
  *
  * EL PIN ABRE UN POPUP, NO UNA PÁGINA
  *
- * En el patrón de referencia el pin lleva a la guía de ese destino. Acá esas
- * páginas no existen, así que el pin muestra el mismo texto que la tarjeta del
- * mosaico. Es la misma decisión que en `places-grid.tsx`: sin enlaces que no
- * llevan a ningún lado.
+ * El pin muestra el mismo texto que la tarjeta del mosaico. Es la misma
+ * decisión que en `places-grid.tsx`: sin enlaces que no llevan a ningún lado.
+ * MapLibre hace el pin accesible con el teclado cuando tiene popup: entra en
+ * el orden de tabulación y se abre con Enter o con la barra, siempre que el
+ * popup se ponga después de sumar el pin al mapa (ver el bucle de los pines).
  *
- * MARCADOR PROPIO EN VEZ DEL ÍCONO POR DEFECTO
+ * SIN WEBGL NO HAY MAPA
  *
- * El ícono default de Leaflet son PNG que la librería busca por una URL
- * relativa a su CSS. Con el bundler de Next esa ruta no resuelve y los pines
- * salen rotos — es el error más conocido de Leaflet con webpack. Un `divIcon`
- * con un SVG inline no depende de ninguna ruta, y de paso queda del color de
- * la marca.
+ * El navegador que no tiene WebGL no puede dibujarlo. Queda el aviso en el
+ * lugar del mapa y la lista por región, que tiene los mismos destinos.
  */
 
 const PIN = `
@@ -48,18 +50,17 @@ const PIN = `
   <circle cx="12" cy="9" r="2.5" fill="#ffffff" />
 </svg>`;
 
-/**
- * El popup de Leaflet recibe HTML. Los nombres vienen del contenido del repo,
- * no del usuario, pero el día que vengan de otro lado un "<" en un nombre no
- * puede convertirse en una etiqueta.
- */
-function escaparHtml(texto: string): string {
-  return texto
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+/** El contenido del popup, armado con nodos: el texto nunca se lee como HTML. */
+function contenidoDelPopup(place: GuidePlace): HTMLElement {
+  const contenido = document.createElement("div");
+  const nombre = document.createElement("strong");
+  const etiqueta = document.createElement("span");
+
+  nombre.textContent = place.name;
+  etiqueta.textContent = place.tag;
+  contenido.append(nombre, document.createElement("br"), etiqueta);
+
+  return contenido;
 }
 
 export function PlacesMap({
@@ -70,7 +71,14 @@ export function PlacesMap({
   places: GuidePlace[];
 }) {
   const t = useTextos(TEXTOS_DE_LA_GUIA).mapa;
+  const textosDelMapaDeLaPagina = useTextos(TEXTOS_DEL_MAPA);
   const contenedor = useRef<HTMLDivElement>(null);
+  const [mapaRoto, setMapaRoto] = useState(false);
+
+  // Los textos de los controles se leen una sola vez, al montar el mapa: el
+  // efecto depende solo de los destinos, y cambiar el idioma no tiene por qué
+  // volver a crearlo.
+  const textos = useRef({ titulo: t.titulo, mapa: textosDelMapaDeLaPagina });
 
   // Agrupado en el orden en que aparecen los destinos, no alfabético: es el
   // mismo orden del mosaico de arriba, y leer las dos secciones seguidas no
@@ -91,65 +99,97 @@ export function PlacesMap({
     const nodo = contenedor.current;
     if (!nodo || places.length === 0) return;
 
-    let mapa: import("leaflet").Map | null = null;
+    let instancia: MapaDeMapLibre | null = null;
     let cancelado = false;
 
     void (async () => {
-      const L = (await import("leaflet")).default;
+      const maplibregl = await cargarMapLibre();
 
       // Si el componente se desmontó mientras cargaba la librería, no hay que
       // montar un mapa que nadie va a limpiar.
       if (cancelado) return;
 
-      mapa = L.map(nodo, {
-        // Sin scroll-zoom: el mapa ocupa el ancho de la lectura, y capturar la
-        // rueda dejaría al usuario atrapado a mitad de la página.
-        scrollWheelZoom: false,
-        attributionControl: true,
-      });
-
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        {
-          maxZoom: 18,
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        },
-      ).addTo(mapa);
-
-      const icono = L.divIcon({
-        html: PIN,
-        className: "",
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-        popupAnchor: [0, -26],
-      });
-
       // Fiyi y Kiribati cruzan el antimeridiano: sin esto, sus pines quedan en
       // las dos puntas del mapa y el encuadre muestra el planeta entero.
-      const coords = sinSaltoDeAntimeridiano(
+      // MapLibre acepta longitudes de más de 180 y las dibuja seguidas.
+      const posiciones = sinSaltoDeAntimeridiano(
         places.map((place) => place.coords),
-      );
-
-      for (const [i, place] of places.entries()) {
-        L.marker(coords[i], { icon: icono, title: place.name })
-          .addTo(mapa)
-          .bindPopup(
-            `<strong>${escaparHtml(place.name)}</strong><br><span>${escaparHtml(place.tag)}</span>`,
-          );
-      }
+      ).map(([lat, lon]) => [lon, lat] as [number, number]);
 
       // El encuadre sale de los destinos, no de un centro y un zoom a mano: si
       // mañana se suma un destino en otra punta del país, el mapa se reencuadra
       // solo en vez de dejarlo afuera.
-      mapa.fitBounds(L.latLngBounds(coords), {
-        padding: [32, 32],
+      const encuadre = new maplibregl.LngLatBounds(
+        posiciones[0],
+        posiciones[0],
+      );
+      for (const posicion of posiciones) encuadre.extend(posicion);
+
+      try {
+        instancia = new maplibregl.Map({
+          container: nodo,
+          style: ESTILO_DEL_MAPA,
+          bounds: encuadre,
+          // El tope evita que un país de destinos muy juntos arranque a nivel
+          // de calle.
+          fitBoundsOptions: { padding: 40, maxZoom: 9 },
+          // Un mapa que gira o se inclina no ayuda a ubicar el país: el norte
+          // queda siempre arriba.
+          dragRotate: false,
+          pitchWithRotate: false,
+          touchPitch: false,
+          // La página sigue bajando con la rueda o con un dedo; el mapa se
+          // mueve con Ctrl o con dos dedos. Sin esto, quien baja por la guía
+          // queda atrapado adentro del mapa.
+          cooperativeGestures: true,
+          attributionControl: { compact: true },
+          locale: textosDelMapa(textos.current.titulo, textos.current.mapa),
+        });
+      } catch {
+        setMapaRoto(true);
+        return;
+      }
+
+      const mapa = instancia;
+      mapa.touchZoomRotate.disableRotation();
+      mapa.addControl(
+        new maplibregl.NavigationControl({ showCompass: false }),
+        "top-right",
+      );
+
+      mapa.on("load", () => {
+        ponerEtiquetasEnCastellano(mapa);
+        mostrarEstados(mapa);
       });
+
+      for (const [i, place] of places.entries()) {
+        const pin = document.createElement("div");
+        pin.innerHTML = PIN;
+        // MapLibre le pone el rol solo a su pin por defecto; este abre un
+        // popup, así que para el lector de pantalla es un botón con nombre.
+        pin.setAttribute("role", "button");
+        pin.setAttribute("aria-label", place.name);
+        pin.style.cursor = "pointer";
+
+        // El popup va después de `addTo`, no antes: `addTo` empieza por
+        // `remove`, que le saca al pin el oyente del teclado que puso
+        // `setPopup`. En el otro orden, el pin se abre con el mouse pero no
+        // con Enter ni con la barra.
+        new maplibregl.Marker({ element: pin, anchor: "bottom" })
+          .setLngLat(posiciones[i])
+          .addTo(mapa)
+          .setPopup(
+            new maplibregl.Popup({
+              offset: 26,
+              closeButton: false,
+            }).setDOMContent(contenidoDelPopup(place)),
+          );
+      }
     })();
 
     return () => {
       cancelado = true;
-      mapa?.remove();
+      instancia?.remove();
     };
   }, [places]);
 
@@ -181,14 +221,23 @@ export function PlacesMap({
         del mapa.
       */}
       <div className="grid gap-6 md:grid-cols-[minmax(0,420px)_1fr]">
-        <div
-          ref={contenedor}
-          // La altura va en el elemento y no en una clase de utilidad porque
-          // Leaflet mide el contenedor al montar: sin alto resuelto, el mapa
-          // se inicializa en cero y no se recupera.
-          style={{ height: 560 }}
-          className="w-full overflow-hidden rounded-xl border bg-muted"
-        />
+        {mapaRoto ? (
+          <p
+            style={{ height: 560 }}
+            className="text-muted-foreground flex w-full items-center justify-center rounded-xl border bg-muted p-6 text-center text-sm"
+          >
+            {t.sinMapa}
+          </p>
+        ) : (
+          <div
+            ref={contenedor}
+            // La altura va en el elemento y no en una clase de utilidad porque
+            // MapLibre mide el contenedor al montar: sin alto resuelto, el
+            // mapa se inicializa en cero.
+            style={{ height: 560 }}
+            className="w-full overflow-hidden rounded-xl border bg-muted"
+          />
+        )}
 
         <div className="flex flex-col gap-5">
           {porRegion.map(([region, delRegion]) => (
